@@ -1,0 +1,115 @@
+
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml">
+
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
+    <title>Babylon - Basic scene</title>
+
+
+    <style>
+      html, body {
+        overflow: hidden;
+        height: 100%;
+        margin: 0px;
+        padding: 0px;
+      }
+
+      #renderCanvas {
+        position: relative;
+        touch-action: none;
+        height: 100%;
+        width: 100%;
+      }
+
+      #renderCanvas:focus {
+        outline: none;
+      }
+
+      .wrapper {
+        display: grid;
+        grid-template-columns: 200px auto 400px;
+        grid-auto-rows: calc(100% / 6);
+        //grid-gap: 10px;
+        height: 100%;
+        //padding: 5px;
+      }
+
+      .box {
+        background: black;
+      }
+
+      .a {
+        grid-column: 1;
+        grid-row: 1 / 7;
+      }
+
+      .b {
+        grid-column: 2;
+        grid-row: 1 / 5;
+      }
+
+      .c {
+        grid-column: 2;
+        grid-row: 5 / 7;
+      }
+
+      .d {
+        grid-column: 3;
+        grid-row: 1 / 4;
+      }
+
+      .e {
+        grid-column: 3;
+        grid-row: 4 / 7;
+      }
+
+      #chatwindow {
+        padding: 10px;
+        background: #eee;
+        position: relative;
+        font-size: 1.25em;
+      }
+      #chatwindow input {
+        position: absolute;
+        left:    0;
+        bottom:   0;
+        height: 2.5em;
+        width: 100%;
+        font-size: 0.75em;
+        display:block;
+        border-width:0;
+        box-sizing: border-box;
+        text-indent: 5px;
+      }
+
+      input:focus {
+          outline:none;
+      }
+    </style>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/babylonjs/2.5.0/babylon.max.js"></script>
+    <script src="js/babylon.objFileLoader.js"></script>
+    <script src="https://code.jquery.com/pep/0.4.3/pep.js"></script>
+  </head>
+  <body>
+  <div class="wrapper">
+    <div class='box a'>
+      <img width="100%" src="assets/trading-graphs.png"/>
+    </div>
+    <div class='box b'>
+      <canvas id="renderCanvas"></canvas>
+    </div>
+    <div id="chatwindow" class='box c'>
+      <pre>Hello, and welcome to Ф Sim!</pre>
+      <input placeholder="PHImessage..."></input>
+    </div>
+    <div class='box d'>
+      <iframe width="100%" height="100%" frameborder="0" scrolling="no" marginheight="0" marginwidth="0" src="http://www.openstreetmap.org/export/embed.html?bbox=162.48435974121094%2C56.21200263134773%2C162.55645751953128%2C56.246402170991054&amp;layer=cyclemap" ></iframe>
+    </div>
+    <div class='box e'><img width="100%" src="assets/cctv.png"/></div>
+  </div>
+  <script src="js/main.js"></script>
+  </body>
+</html>
+
+
