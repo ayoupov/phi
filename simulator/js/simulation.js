@@ -3,7 +3,6 @@
 var canvas = document.getElementById("renderCanvas");
 
 // Load the BABYLON 3D engine
-var engine = new BABYLON.Engine(canvas, true);
 
 var generateNodes = function(numNodes) {
   var n = numNodes;  // num entities
@@ -65,7 +64,7 @@ var findEdges = function(nodes, threshold) {
 
 
 
-var createScene = function(mgNodes) {
+var createScene = function(engine, mgNodes, connectivityThreshold) {
 
   var scene = new BABYLON.Scene(engine);
 
@@ -119,7 +118,7 @@ var createScene = function(mgNodes) {
 
     mgNodes.map(function(node) {
       var turpin = task.loadedMeshes[0].clone('turpin')
-      turpin.position = new BABYLON.Vector3(node.latitude,0.05,node.longitude);
+      turpin.position = new BABYLON.Vector3(node.latitude,0.15,node.longitude);
     });
 
     mesh.dispose();
@@ -141,12 +140,12 @@ var createScene = function(mgNodes) {
   });
 
   // create edges
-  edges = findEdges(mgNodes, 7);
+  edges = findEdges(mgNodes, connectivityThreshold);
   edges.map(function(mgPair) {
     var line = BABYLON.MeshBuilder.CreateTube("tube", {path: [
       new BABYLON.Vector3(mgPair[0].latitude, 0, mgPair[0].longitude),
       new BABYLON.Vector3(mgPair[1].latitude, 0, mgPair[1].longitude)],
-      radius: 0.005, updatable: true}, scene);
+      radius: 0.005}, scene);
       line.material = materialTube;
   });
 
@@ -165,11 +164,28 @@ var createScene = function(mgNodes) {
 
 };
 
-var mgNodes = generateNodes(200);
-var scene = createScene(mgNodes);
+$(document).ready(function() {
 
-scene.activeCamera.attachControl(canvas);
+  $('.controls button').click(function() {
+    var numNodes = parseInt($('#num-grids').val());
+    var connThreshold = parseInt($('#conn-threshold').val());
 
-window.addEventListener("resize", function() {
-  engine.resize();
+    if (scene != null)  {
+      scene.dispose();
+      engine.dispose();
+      scene = null;
+      engine = null;
+    }
+    var engine = new BABYLON.Engine(canvas, true);
+
+    var mgNodes = generateNodes(numNodes);
+    var scene = createScene(engine, mgNodes, connThreshold);
+    scene.activeCamera.attachControl(canvas);
+
+    window.addEventListener("resize", function() {
+      engine.resize();
+    });
+
+  });
+
 });
