@@ -16,7 +16,7 @@ var createScene = function () {
   var camera = new BABYLON.ArcRotateCamera(
       "ArcRotateCamera", 0, 0, 0, BABYLON.Vector3.Zero(), scene
   );
-  camera.setPosition(new BABYLON.Vector3(0, 1, 10));
+  camera.setPosition(new BABYLON.Vector3(0, 5, 20));
 
   //var light = new BABYLON.HemisphericLight("light1", new BABYLON.Vector3(0, 30, 0), scene);
 
@@ -61,31 +61,6 @@ var createScene = function () {
   //materialGround1.diffuseTexture.vScale = 3.0;
   //materialGround1.specularTexture.uScale = 3.0;
   //materialGround1.specularTexture.vScale = 3.0;
-
-
-
-
-  var knot = BABYLON.Mesh.CreateTorusKnot("knot", 2, 0.5, 128, 30, 0, 4, scene);
-  knot.scaling = new BABYLON.Vector3(0.1,0.1,0.1);
-  knot.position = new BABYLON.Vector3(1,1,0.5);
-
-  //var ground = BABYLON.Mesh.CreateGround("ground1", 10, 10, 2, scene);
-  //ground.material = materialGround1;
-
-
-  var lines = BABYLON.MeshBuilder.CreateTube("tube", {path: [
-    new BABYLON.Vector3(1, 2, 1),
-    new BABYLON.Vector3(1, 3, -1),
-    new BABYLON.Vector3(-1, 1, -1),
-    new BABYLON.Vector3(-1, 1, 1),
-    new BABYLON.Vector3(1, 2, 1)], radius: 0.02}, scene);
-
-  var sphere = BABYLON.Mesh.CreateSphere("sphere", 6, 0.5, scene);
-  sphere.position = new BABYLON.Vector3(2,2,2);
-
-
-
-
 
   return scene;
 
