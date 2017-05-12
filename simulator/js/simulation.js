@@ -69,7 +69,7 @@ var createScene = function(mgNodes) {
 
   var scene = new BABYLON.Scene(engine);
 
-  scene.clearColor = new BABYLON.Color3(0.15,0.15,0.15);
+  scene.clearColor = new BABYLON.Color3(0.15,0.15,0.20);
 
   // Create an ArcRotateCamera aimed at 0,0,0, with no alpha, beta or radius
   var camera = new BABYLON.ArcRotateCamera(
@@ -84,8 +84,11 @@ var createScene = function(mgNodes) {
   light0.diffuse = new BABYLON.Color3(.5, .5, .5);
   light0.specular = new BABYLON.Color3(1, 1, 1);
 
-  var materialSphere = new BABYLON.StandardMaterial("sphereTexture", scene);
-  materialSphere.diffuseColor = new BABYLON.Color3(.9,.2,.2);
+  var materialSurplus = new BABYLON.StandardMaterial("sphereTexture", scene);
+  materialSurplus.diffuseColor = new BABYLON.Color3(.2,.9,.2);
+
+  var materialDeficit = new BABYLON.StandardMaterial("sphereTexture", scene);
+  materialDeficit.diffuseColor = new BABYLON.Color3(.9,.2,.2);
 
   var materialTube = new BABYLON.StandardMaterial("tubeTexture", scene);
   materialTube.emissiveColor = new BABYLON.Color3(0,1,1);
@@ -123,11 +126,18 @@ var createScene = function(mgNodes) {
   }
 
 
-  // create nodes
+  // create surplus
   mgNodes.map(function(node) {
     var torus = BABYLON.Mesh.CreateTorus("torus", node.q, 0.03, 10, scene);
     torus.position = new BABYLON.Vector3(node.latitude,0,node.longitude);
-    torus.material = materialSphere;
+    torus.material = materialSurplus;
+  });
+
+  // create deficit
+  mgNodes.map(function(node) {
+    var torus = BABYLON.Mesh.CreateTorus("torus", node.s, 0.03, 10, scene);
+    torus.position = new BABYLON.Vector3(node.latitude,0,node.longitude);
+    torus.material = materialDeficit;
   });
 
   // create edges
@@ -155,7 +165,7 @@ var createScene = function(mgNodes) {
 
 };
 
-var mgNodes = generateNodes(250);
+var mgNodes = generateNodes(200);
 var scene = createScene(mgNodes);
 
 scene.activeCamera.attachControl(canvas);
