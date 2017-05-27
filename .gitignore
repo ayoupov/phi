@@ -1,3 +1,4 @@
 ipython/.ipynb_checkpoints/*
 .DS_Store
 *.mb
+elmsim/elm-stuff/*
