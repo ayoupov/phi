@@ -4,7 +4,7 @@
     "repository": "http://github.com/strelka-2017/phi.git",
     "license": "--",
     "source-directories": [
-        "nesting"
+        "src"
     ],
     "exposed-modules": [],
     "dependencies": {

@@ -1,0 +1,9 @@
+.simulation {
+  position: absolute;
+  padding: 10px;
+  width: 50%;
+  height: 100%;
+  top: 0px;
+  left: 50%;
+  overflow: scroll;
+}

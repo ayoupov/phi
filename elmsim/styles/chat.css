@@ -3,22 +3,23 @@
 }
 
 body {
-  background-color: #edeff2;
+  background-image: url("/assets/background.jpg");
+  background-size: cover;
   font-family: "Calibri", "Roboto", sans-serif;
+  color: white;
 }
 
 .chat_window {
+  opacity: 0.9;
   position: absolute;
   width: calc(100% - 20px);
-  max-width: 800px;
-  height: 500px;
-  border-radius: 10px;
-  background-color: #fff;
-  left: 50%;
-  top: 50%;
-  transform: translateX(-50%) translateY(-50%);
+  max-width: 50%;
+  height: 100%;
+  background-color: rgba(255,255,255,0.0);
+  left: 0px;
+  top: 0px;
+  transform: translateX(0) translateY(0);
   box-shadow: 0 10px 20px rgba(0, 0, 0, 0.15);
-  background-color: #f8f8f8;
   overflow: hidden;
 }
 
@@ -60,7 +61,7 @@ body {
   list-style: none;
   padding: 20px 10px 0 10px;
   margin: 0;
-  height: 347px;
+  height: calc(100% - 88px);
   overflow: scroll;
 }
 .messages .message {
@@ -70,35 +71,35 @@ body {
   transition: all 0.5s linear;
   opacity: 0;
 }
-.messages .message.left .avatar {
+.messages .message.bot-sent .avatar {
   background-color: #f5886e;
   float: left;
 }
-.messages .message.left .text_wrapper {
-  background-color: #dde6cb;
+.messages .message.bot-sent .text_wrapper {
+  background-color: #ddeecb;
   margin-left: 20px;
 }
-.messages .message.left .text_wrapper::after, .messages .message.left .text_wrapper::before {
+.messages .message.bot-sent .text_wrapper::after, .messages .message.bot-sent .text_wrapper::before {
   right: 100%;
-  border-right-color: #ffe6cb;
+  border-right-color: #ddeecb;
 }
-.messages .message.left .text {
+.messages .message.bot-sent .text {
   color: #c48843;
 }
-.messages .message.right .avatar {
+.messages .message.user-sent .avatar {
   background-color: #bdafa8;
   float: right;
 }
-.messages .message.right .text_wrapper {
+.messages .message.user-sent .text_wrapper {
   background-color: #d7dadc;
   margin-right: 20px;
   float: right;
 }
-.messages .message.right .text_wrapper::after, .messages .message.right .text_wrapper::before {
+.messages .message.user-sent .text_wrapper::after, .messages .message.user-sent .text_wrapper::before {
   left: 100%;
   border-left-color: #d7dadc;
 }
-.messages .message.right .text {
+.messages .message.user-sent .text {
   color: #45829b;
 }
 .messages .message.appeared {
@@ -143,7 +144,7 @@ body {
 .bottom_wrapper {
   position: relative;
   width: 100%;
-  background-color: #fff;
+  background-color: rgba(0,0,0,0.3);
   padding: 20px 20px;
   position: absolute;
   bottom: 0;
@@ -164,14 +165,15 @@ body {
   width: calc(100% - 40px);
   position: absolute;
   outline-width: 0;
-  color: gray;
+  background-color: rgba(0,0,0,0);
+  color: #ccc;
 }
 .bottom_wrapper .send_message {
   width: 140px;
   height: 50px;
   display: inline-block;
   border-radius: 50px;
-  background-color: #a3a0a3;
+  background-color: rbga(0,0,0,1);
   border: 2px solid #a3a0a3;
   color: #fff;
   cursor: pointer;
@@ -181,7 +183,7 @@ body {
 }
 .bottom_wrapper .send_message:hover {
   color: #a3a0a3;
-  background-color: #fff;
+  background-color: rgba(0,0,0,0.3);
 }
 .bottom_wrapper .send_message .text {
   font-size: 18px;
@@ -198,4 +200,3 @@ body {
 .message_template {
   display: none;
 }
-
