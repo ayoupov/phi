@@ -97,11 +97,11 @@ update msg model =
 view : Model -> Html Msg
 view model =
   div []
---    [ stylesheetLink "../styles/main.css"
-    [ div [class "chat_window"]
-        [ ul [id "toScroll", class "messages"] (List.map viewChatMsg (List.reverse model.messages))
-        , inputFooter model
-        ]
+    [ div [ class "chat_window" ]
+      [ ul [ id "toScroll", class "messages" ]
+        (List.map viewChatMsg (List.reverse model.messages))
+      ]
+    , inputFooter model
     , Html.map SimMsg <| Simulation.view model.simModel
     ]
 
@@ -120,17 +120,6 @@ inputFooter model =
           ]
     ]
 
-topMenu : Html Msg
-topMenu =
-  div [ class "top_menu" ]
-      [ div [ class "buttons" ]
-            [ div [ class "button close" ] []
-            , div [ class "button minimize" ] []
-            , div [ class "button maximize" ] []
-            ]
-      , div [ class "title" ] [ text "Φ Chat" ]
-      ]
-
 sender_class : Sender -> String
 sender_class sender =
   case sender of
@@ -140,20 +129,9 @@ sender_class sender =
 viewChatMsg : ChatMsg -> Html msg
 viewChatMsg msg =
   li [ class <| "message " ++ (sender_class msg.sender) ++ " appeared" ]
-      [ div [ class "avatar" ] []
-      , div [ class "text_wrapper" ]
+      [ div [ class "text_wrapper" ]
             [ div [ class "text" ] [text msg.text] ]
       ]
-
-stylesheetLink : String -> Html msg
-stylesheetLink url =
-    node
-        "link"
-        [ property "rel" (string "stylesheet")
-        , property "type" (string "text/css")
-        , property "href" (string url)
-        ]
-        []
 
 onEnter : Msg -> Attribute Msg
 onEnter msg =

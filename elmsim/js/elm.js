@@ -9720,15 +9720,7 @@ var _strelka_2017$phi$Simulation$view = function (model) {
 			ctor: '::',
 			_0: A2(
 				_elm_lang$svg$Svg$svg,
-				{
-					ctor: '::',
-					_0: _elm_lang$html$Html_Attributes$width(600),
-					_1: {
-						ctor: '::',
-						_0: _elm_lang$html$Html_Attributes$height(400),
-						_1: {ctor: '[]'}
-					}
-				},
+				{ctor: '[]'},
 				{ctor: '[]'}),
 			_1: {ctor: '[]'}
 		});
@@ -9739,20 +9731,21 @@ var _strelka_2017$phi$Simulation$renderNetwork = _elm_lang$core$Native_Platform.
 		return {
 			pvPanels: _elm_lang$core$Native_List.toArray(v.pvPanels).map(
 				function (v) {
-					return {maxGeneration: v.maxGeneration, generatedEnergy: v.generatedEnergy, y: v.y, x: v.x};
+					return {uid: v.uid, maxGeneration: v.maxGeneration, generatedEnergy: v.generatedEnergy, y: v.y, x: v.x};
 				}),
 			windTurbines: _elm_lang$core$Native_List.toArray(v.windTurbines).map(
 				function (v) {
-					return {maxGeneration: v.maxGeneration, generatedEnergy: v.generatedEnergy, y: v.y, x: v.x};
+					return {uid: v.uid, maxGeneration: v.maxGeneration, generatedEnergy: v.generatedEnergy, y: v.y, x: v.x};
 				}),
 			batteries: _elm_lang$core$Native_List.toArray(v.batteries).map(
 				function (v) {
-					return {capacity: v.capacity, storage: v.storage, y: v.y, x: v.x};
+					return {uid: v.uid, capacity: v.capacity, storage: v.storage, y: v.y, x: v.x};
 				}),
 			residences: _elm_lang$core$Native_List.toArray(v.residences).map(
 				function (v) {
-					return {dailyConsumption: v.dailyConsumption, y: v.y, x: v.x};
-				})
+					return {uid: v.uid, dailyConsumption: v.dailyConsumption, y: v.y, x: v.x};
+				}),
+			maxId: v.maxId
 		};
 	});
 var _strelka_2017$phi$Simulation$update = F2(
@@ -9760,10 +9753,14 @@ var _strelka_2017$phi$Simulation$update = F2(
 		var _p0 = msg;
 		switch (_p0.ctor) {
 			case 'AddPVPanel':
+				var nodeWithId = _elm_lang$core$Native_Utils.update(
+					_p0._0,
+					{uid: model.maxId + 1});
 				var newModel = _elm_lang$core$Native_Utils.update(
 					model,
 					{
-						pvPanels: {ctor: '::', _0: _p0._0, _1: model.pvPanels}
+						pvPanels: {ctor: '::', _0: nodeWithId, _1: model.pvPanels},
+						maxId: model.maxId + 1
 					});
 				return {
 					ctor: '_Tuple2',
@@ -9771,10 +9768,14 @@ var _strelka_2017$phi$Simulation$update = F2(
 					_1: _strelka_2017$phi$Simulation$renderNetwork(newModel)
 				};
 			case 'AddWindTurbine':
+				var nodeWithId = _elm_lang$core$Native_Utils.update(
+					_p0._0,
+					{uid: model.maxId + 1});
 				var newModel = _elm_lang$core$Native_Utils.update(
 					model,
 					{
-						windTurbines: {ctor: '::', _0: _p0._0, _1: model.windTurbines}
+						windTurbines: {ctor: '::', _0: nodeWithId, _1: model.windTurbines},
+						maxId: model.maxId + 1
 					});
 				return {
 					ctor: '_Tuple2',
@@ -9782,10 +9783,14 @@ var _strelka_2017$phi$Simulation$update = F2(
 					_1: _strelka_2017$phi$Simulation$renderNetwork(newModel)
 				};
 			case 'AddResidence':
+				var nodeWithId = _elm_lang$core$Native_Utils.update(
+					_p0._0,
+					{uid: model.maxId + 1});
 				var newModel = _elm_lang$core$Native_Utils.update(
 					model,
 					{
-						residences: {ctor: '::', _0: _p0._0, _1: model.residences}
+						residences: {ctor: '::', _0: nodeWithId, _1: model.residences},
+						maxId: model.maxId + 1
 					});
 				return {
 					ctor: '_Tuple2',
@@ -9800,25 +9805,25 @@ var _strelka_2017$phi$Simulation$update = F2(
 				};
 		}
 	});
-var _strelka_2017$phi$Simulation$Model = F4(
-	function (a, b, c, d) {
-		return {pvPanels: a, windTurbines: b, batteries: c, residences: d};
+var _strelka_2017$phi$Simulation$Model = F5(
+	function (a, b, c, d, e) {
+		return {pvPanels: a, windTurbines: b, batteries: c, residences: d, maxId: e};
 	});
-var _strelka_2017$phi$Simulation$PVPanel = F4(
-	function (a, b, c, d) {
-		return {maxGeneration: a, generatedEnergy: b, y: c, x: d};
+var _strelka_2017$phi$Simulation$PVPanel = F5(
+	function (a, b, c, d, e) {
+		return {uid: a, maxGeneration: b, generatedEnergy: c, y: d, x: e};
 	});
-var _strelka_2017$phi$Simulation$WindTurbine = F4(
-	function (a, b, c, d) {
-		return {maxGeneration: a, generatedEnergy: b, y: c, x: d};
+var _strelka_2017$phi$Simulation$WindTurbine = F5(
+	function (a, b, c, d, e) {
+		return {uid: a, maxGeneration: b, generatedEnergy: c, y: d, x: e};
 	});
-var _strelka_2017$phi$Simulation$Battery = F4(
-	function (a, b, c, d) {
-		return {capacity: a, storage: b, y: c, x: d};
+var _strelka_2017$phi$Simulation$Battery = F5(
+	function (a, b, c, d, e) {
+		return {uid: a, capacity: b, storage: c, y: d, x: e};
 	});
-var _strelka_2017$phi$Simulation$Residence = F3(
-	function (a, b, c) {
-		return {dailyConsumption: a, y: b, x: c};
+var _strelka_2017$phi$Simulation$Residence = F4(
+	function (a, b, c, d) {
+		return {uid: a, dailyConsumption: b, y: c, x: d};
 	});
 var _strelka_2017$phi$Simulation$TransmissionLine = F2(
 	function (a, b) {
@@ -9845,7 +9850,7 @@ var _strelka_2017$phi$Simulation$randomResidence = A2(
 	_strelka_2017$phi$Simulation$AddResidence,
 	A4(
 		_elm_lang$core$Random$map3,
-		_strelka_2017$phi$Simulation$Residence,
+		_strelka_2017$phi$Simulation$Residence(-1),
 		A2(_elm_lang$core$Random$float, 7, 10),
 		A2(_elm_lang$core$Random$float, 50.4501 - 1.0e-2, 50.4501 + 1.0e-2),
 		A2(_elm_lang$core$Random$float, 30.5234 - 1.0e-2, 30.5234 + 1.0e-2)));
@@ -9857,7 +9862,7 @@ var _strelka_2017$phi$Simulation$randomWindTurbine = A2(
 	_strelka_2017$phi$Simulation$AddWindTurbine,
 	A5(
 		_elm_lang$core$Random$map4,
-		_strelka_2017$phi$Simulation$WindTurbine,
+		_strelka_2017$phi$Simulation$WindTurbine(-1),
 		A2(_elm_lang$core$Random$float, 7, 10),
 		A2(_elm_lang$core$Random$float, 0, 1),
 		A2(_elm_lang$core$Random$float, 50.4501 - 1.0e-2, 50.4501 + 1.0e-2),
@@ -9870,19 +9875,20 @@ var _strelka_2017$phi$Simulation$randomPVPanel = A2(
 	_strelka_2017$phi$Simulation$AddPVPanel,
 	A5(
 		_elm_lang$core$Random$map4,
-		_strelka_2017$phi$Simulation$PVPanel,
+		_strelka_2017$phi$Simulation$PVPanel(-1),
 		A2(_elm_lang$core$Random$float, 7, 10),
 		A2(_elm_lang$core$Random$float, 0, 1),
-		A2(_elm_lang$core$Random$float, 0, 300),
-		A2(_elm_lang$core$Random$float, 0, 600)));
+		A2(_elm_lang$core$Random$float, 50.4501 - 1.0e-2, 50.4501 + 1.0e-2),
+		A2(_elm_lang$core$Random$float, 30.5234 - 1.0e-2, 30.5234 + 1.0e-2)));
 var _strelka_2017$phi$Simulation$init = {
 	ctor: '_Tuple2',
-	_0: A4(
+	_0: A5(
 		_strelka_2017$phi$Simulation$Model,
 		{ctor: '[]'},
 		{ctor: '[]'},
 		{ctor: '[]'},
-		{ctor: '[]'}),
+		{ctor: '[]'},
+		0),
 	_1: _elm_lang$core$Platform_Cmd$batch(
 		A2(
 			_elm_lang$core$Basics_ops['++'],
@@ -9899,34 +9905,6 @@ var _strelka_2017$phi$Simulation$addNRandomPVPanels = function (n) {
 
 var _strelka_2017$phi$Main$subscriptions = function (model) {
 	return _elm_lang$core$Platform_Sub$none;
-};
-var _strelka_2017$phi$Main$stylesheetLink = function (url) {
-	return A3(
-		_elm_lang$html$Html$node,
-		'link',
-		{
-			ctor: '::',
-			_0: A2(
-				_elm_lang$html$Html_Attributes$property,
-				'rel',
-				_elm_lang$core$Json_Encode$string('stylesheet')),
-			_1: {
-				ctor: '::',
-				_0: A2(
-					_elm_lang$html$Html_Attributes$property,
-					'type',
-					_elm_lang$core$Json_Encode$string('text/css')),
-				_1: {
-					ctor: '::',
-					_0: A2(
-						_elm_lang$html$Html_Attributes$property,
-						'href',
-						_elm_lang$core$Json_Encode$string(url)),
-					_1: {ctor: '[]'}
-				}
-			}
-		},
-		{ctor: '[]'});
 };
 var _strelka_2017$phi$Main$sender_class = function (sender) {
 	var _p0 = sender;
@@ -9957,106 +9935,28 @@ var _strelka_2017$phi$Main$viewChatMsg = function (msg) {
 				_elm_lang$html$Html$div,
 				{
 					ctor: '::',
-					_0: _elm_lang$html$Html_Attributes$class('avatar'),
+					_0: _elm_lang$html$Html_Attributes$class('text_wrapper'),
 					_1: {ctor: '[]'}
 				},
-				{ctor: '[]'}),
-			_1: {
-				ctor: '::',
-				_0: A2(
-					_elm_lang$html$Html$div,
-					{
-						ctor: '::',
-						_0: _elm_lang$html$Html_Attributes$class('text_wrapper'),
-						_1: {ctor: '[]'}
-					},
-					{
-						ctor: '::',
-						_0: A2(
-							_elm_lang$html$Html$div,
-							{
-								ctor: '::',
-								_0: _elm_lang$html$Html_Attributes$class('text'),
-								_1: {ctor: '[]'}
-							},
-							{
-								ctor: '::',
-								_0: _elm_lang$html$Html$text(msg.text),
-								_1: {ctor: '[]'}
-							}),
-						_1: {ctor: '[]'}
-					}),
-				_1: {ctor: '[]'}
-			}
-		});
-};
-var _strelka_2017$phi$Main$topMenu = A2(
-	_elm_lang$html$Html$div,
-	{
-		ctor: '::',
-		_0: _elm_lang$html$Html_Attributes$class('top_menu'),
-		_1: {ctor: '[]'}
-	},
-	{
-		ctor: '::',
-		_0: A2(
-			_elm_lang$html$Html$div,
-			{
-				ctor: '::',
-				_0: _elm_lang$html$Html_Attributes$class('buttons'),
-				_1: {ctor: '[]'}
-			},
-			{
-				ctor: '::',
-				_0: A2(
-					_elm_lang$html$Html$div,
-					{
-						ctor: '::',
-						_0: _elm_lang$html$Html_Attributes$class('button close'),
-						_1: {ctor: '[]'}
-					},
-					{ctor: '[]'}),
-				_1: {
+				{
 					ctor: '::',
 					_0: A2(
 						_elm_lang$html$Html$div,
 						{
 							ctor: '::',
-							_0: _elm_lang$html$Html_Attributes$class('button minimize'),
+							_0: _elm_lang$html$Html_Attributes$class('text'),
 							_1: {ctor: '[]'}
 						},
-						{ctor: '[]'}),
-					_1: {
-						ctor: '::',
-						_0: A2(
-							_elm_lang$html$Html$div,
-							{
-								ctor: '::',
-								_0: _elm_lang$html$Html_Attributes$class('button maximize'),
-								_1: {ctor: '[]'}
-							},
-							{ctor: '[]'}),
-						_1: {ctor: '[]'}
-					}
-				}
-			}),
-		_1: {
-			ctor: '::',
-			_0: A2(
-				_elm_lang$html$Html$div,
-				{
-					ctor: '::',
-					_0: _elm_lang$html$Html_Attributes$class('title'),
-					_1: {ctor: '[]'}
-				},
-				{
-					ctor: '::',
-					_0: _elm_lang$html$Html$text('Φ Chat'),
+						{
+							ctor: '::',
+							_0: _elm_lang$html$Html$text(msg.text),
+							_1: {ctor: '[]'}
+						}),
 					_1: {ctor: '[]'}
 				}),
 			_1: {ctor: '[]'}
-		}
-	});
+		});
+};
 var _strelka_2017$phi$Main$Model = F3(
 	function (a, b, c) {
 		return {input: a, messages: b, simModel: c};
@@ -10288,19 +10188,19 @@ var _strelka_2017$phi$Main$view = function (model) {
 							_elm_lang$core$List$map,
 							_strelka_2017$phi$Main$viewChatMsg,
 							_elm_lang$core$List$reverse(model.messages))),
-					_1: {
-						ctor: '::',
-						_0: _strelka_2017$phi$Main$inputFooter(model),
-						_1: {ctor: '[]'}
-					}
+					_1: {ctor: '[]'}
 				}),
 			_1: {
 				ctor: '::',
-				_0: A2(
-					_elm_lang$html$Html$map,
-					_strelka_2017$phi$Main$SimMsg,
-					_strelka_2017$phi$Simulation$view(model.simModel)),
-				_1: {ctor: '[]'}
+				_0: _strelka_2017$phi$Main$inputFooter(model),
+				_1: {
+					ctor: '::',
+					_0: A2(
+						_elm_lang$html$Html$map,
+						_strelka_2017$phi$Main$SimMsg,
+						_strelka_2017$phi$Simulation$view(model.simModel)),
+					_1: {ctor: '[]'}
+				}
 			}
 		});
 };

@@ -7,3 +7,41 @@
   left: 50%;
   overflow: scroll;
 }
+
+.simulation svg {
+  margin: 30px;
+  width: calc(100% - 60px);
+  height: 400px;
+  background: rgba(0,0,0,0.6);
+  border-radius: 20px;
+  border: 2px solid #555;
+  transition: all 0.3s linear;
+}
+
+.simulation svg:hover {
+  margin: 30px;
+  width: calc(100% - 60px);
+  height: 400px;
+  background: rgba(0,0,0,0.63);
+  border-radius: 20px;
+  border: 2px solid #555;
+}
+
+.pvPanel {
+  fill:orange;
+  stroke:orange;
+  fill-opacity: 0.4;
+}
+
+.windTurbine {
+  fill: cyan;
+  stroke: cyan;
+  fill-opacity: 0.4;
+}
+
+.residence {
+  fill: green;
+  stroke: green;
+  fill-opacity: 0.4;
+}
+

@@ -12,6 +12,7 @@ type alias Model =
   , batteries: List Battery
   , residences: List Residence
 --  , transmissionLines: List TransmissionLine
+  , maxId: Int
   }
 
 type alias KWHour = Float
@@ -19,28 +20,32 @@ type alias Latitude = Float
 type alias Longitude = Float
 
 type alias PVPanel =
-  { maxGeneration: KWHour
+  { uid: Int
+  , maxGeneration: KWHour
   , generatedEnergy: KWHour
   , y: Latitude
   , x: Longitude
   }
 
 type alias WindTurbine =
-  { maxGeneration: KWHour
+  { uid: Int
+  , maxGeneration: KWHour
   , generatedEnergy: KWHour
   , y: Latitude
   , x: Longitude
   }
 
 type alias Battery =
-  { capacity: KWHour
+  { uid: Int
+  , capacity: KWHour
   , storage: KWHour
   , y: Latitude
   , x: Longitude
   }
 
 type alias Residence =
-  { dailyConsumption: KWHour
+  { uid: Int
+  , dailyConsumption: KWHour
   , y: Latitude
   , x: Longitude
   }
@@ -57,7 +62,7 @@ type alias TransmissionLine =
 
 init : (Model, Cmd Msg)
 init =
-  ( Model [] [] [] []
+  ( Model [] [] [] [] 0
   , (List.repeat 5 randomResidence)
     ++ (List.repeat 10 randomPVPanel)
     ++ (List.repeat 10 randomWindTurbine)
@@ -66,16 +71,16 @@ init =
 
 randomPVPanel : Cmd Msg
 randomPVPanel =
-  Random.map4 PVPanel
+  Random.map4 (PVPanel -1)
     (Random.float 7 10) -- maxGeneration
     (Random.float 0 1) -- percent generated
-    (Random.float 0 300) -- latitude
-    (Random.float 0 600) -- longitude
+    (Random.float (50.4501 - 0.01) (50.4501 + 0.01)) -- latitude
+    (Random.float (30.5234 - 0.01) (30.5234 + 0.01)) -- longitude
   |> Random.generate AddPVPanel
 
 randomWindTurbine : Cmd Msg
 randomWindTurbine =
-  Random.map4 WindTurbine
+  Random.map4 (WindTurbine -1)
     (Random.float 7 10) -- capacity
     (Random.float 0 1) -- current storage
     (Random.float (50.4501 - 0.01) (50.4501 + 0.01)) -- latitude
@@ -84,7 +89,7 @@ randomWindTurbine =
 
 randomResidence : Cmd Msg
 randomResidence =
-  Random.map3 Residence
+  Random.map3 (Residence -1)
     (Random.float 7 10) -- daily consumption
     (Random.float (50.4501 - 0.01) (50.4501 + 0.01)) -- latitude
     (Random.float (30.5234 - 0.01) (30.5234 + 0.01)) -- longitude
@@ -105,19 +110,28 @@ type Msg = AddPVPanel PVPanel
 update : Msg -> Model -> (Model, Cmd Msg)
 update msg model =
   case msg of
-    AddPVPanel pvPanel ->
+    AddPVPanel node ->
       let
-        newModel = { model | pvPanels = ( pvPanel :: model.pvPanels ) }
+        nodeWithId = { node | uid = model.maxId + 1 }
+        newModel = { model | pvPanels = ( nodeWithId :: model.pvPanels )
+                           , maxId = model.maxId + 1
+                   }
       in
         (newModel, renderNetwork newModel)
-    AddWindTurbine windTurbine ->
+    AddWindTurbine node ->
       let
-        newModel = { model | windTurbines = ( windTurbine :: model.windTurbines ) }
+        nodeWithId = { node | uid = model.maxId + 1 }
+        newModel = { model | windTurbines = ( nodeWithId :: model.windTurbines )
+                           , maxId = model.maxId + 1
+                   }
       in
         (newModel, renderNetwork newModel)
-    AddResidence residence ->
+    AddResidence node ->
       let
-        newModel = { model | residences = ( residence :: model.residences ) }
+        nodeWithId = { node | uid = model.maxId + 1 }
+        newModel = { model | residences = ( nodeWithId :: model.residences )
+                           , maxId = model.maxId + 1
+                   }
       in
         (newModel, renderNetwork newModel)
     RenderNetwork ->
@@ -133,4 +147,4 @@ port renderNetwork : Model -> Cmd msg
 -- VIEW
 
 view : Model -> Html Msg
-view model = div [class "simulation"] [svg []]
+view model = div [class "simulation"] [svg [] []]
