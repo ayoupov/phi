@@ -10192,13 +10192,13 @@ var _strelka_2017$phi$Main$view = function (model) {
 				}),
 			_1: {
 				ctor: '::',
-				_0: _strelka_2017$phi$Main$inputFooter(model),
+				_0: A2(
+					_elm_lang$html$Html$map,
+					_strelka_2017$phi$Main$SimMsg,
+					_strelka_2017$phi$Simulation$view(model.simModel)),
 				_1: {
 					ctor: '::',
-					_0: A2(
-						_elm_lang$html$Html$map,
-						_strelka_2017$phi$Main$SimMsg,
-						_strelka_2017$phi$Simulation$view(model.simModel)),
+					_0: _strelka_2017$phi$Main$inputFooter(model),
 					_1: {ctor: '[]'}
 				}
 			}

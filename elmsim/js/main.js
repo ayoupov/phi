@@ -1,50 +1,50 @@
-var app = Elm.Main.fullscreen();
 
-var simModel = null;
+document.addEventListener("DOMContentLoaded", function(event) {
+  var simModel = null;
+  var app = Elm.Main.fullscreen();
 
+  app.ports.renderNetwork.subscribe(function(model) {
+    var svg = d3.select("svg");
 
+    simModel = model;
 
+    var svgBox = svg.node().getBBox();
 
-app.ports.renderNetwork.subscribe(function(model) {
-  var svg = d3.select("svg");
+    var xScale = d3.scaleLinear()
+                         .domain([30.5234 - 0.01, 30.5234 + 0.01])
+                         .range([0,600]);
 
-  simModel = model;
+    var yScale = d3.scaleLinear()
+                         .domain([50.4501 - 0.01, 50.4501 + 0.01])
+                         .range([0,400]);
 
-  var svgBox = svg.node().getBBox();
+    function setX(node) {
+      return xScale(node.x);
+    }
 
-  var xScale = d3.scaleLinear()
-                       .domain([30.5234 - 0.01, 30.5234 + 0.01])
-                       .range([0,600]);
+    function setY(node) {
+      return yScale(node.y);
+    }
 
-  var yScale = d3.scaleLinear()
-                       .domain([50.4501 - 0.01, 50.4501 + 0.01])
-                       .range([0,400]);
+    function drawCircles(nodes, nodeClass) {
+      var circles = svg.selectAll("circle")
+                       .data(nodes, function(d) { return d.uid; });
 
-  function setX(node) {
-    return xScale(node.x);
-  }
+      circles.enter()
+             .append("circle")
+             .attr("cx", setX)
+             .attr("cy", setY)
+             .attr("r", 5)
+             .attr("class", nodeClass);
 
-  function setY(node) {
-    return yScale(node.y);
-  }
+      circles.attr("cx", setX)
+             .attr("cy", setY);
+    }
 
-  function drawCircles(nodes, nodeClass) {
-    var circles = svg.selectAll("circle")
-                     .data(nodes, function(d) { return d.uid; });
+    drawCircles(model.pvPanels, "pvPanel");
+    drawCircles(model.windTurbines, "windTurbine");
+    drawCircles(model.residences, "residence");
 
-    circles.enter()
-           .append("circle")
-           .attr("cx", setX)
-           .attr("cy", setY)
-           .attr("r", 10)
-           .attr("class", nodeClass);
-
-    circles.attr("cx", setX)
-           .attr("cy", setY);
-  }
-
-  drawCircles(model.pvPanels, "pvPanel");
-  drawCircles(model.windTurbines, "windTurbine");
-  drawCircles(model.residences, "residence");
+  });
 
 });

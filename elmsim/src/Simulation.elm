@@ -11,7 +11,7 @@ type alias Model =
   , windTurbines: List WindTurbine
   , batteries: List Battery
   , residences: List Residence
---  , transmissionLines: List TransmissionLine
+  , transmissionLines: List TransmissionLine
   , maxId: Int
   }
 
@@ -138,6 +138,11 @@ update msg model =
       ( model
       , renderNetwork model
       )
+
+
+renderableModel : Model -> RenderableModel
+renderableModel model = 
+  { model | 
 
 -- PORTS
 

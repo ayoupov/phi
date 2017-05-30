@@ -101,8 +101,8 @@ view model =
       [ ul [ id "toScroll", class "messages" ]
         (List.map viewChatMsg (List.reverse model.messages))
       ]
-    , inputFooter model
     , Html.map SimMsg <| Simulation.view model.simModel
+    , inputFooter model
     ]
 
 inputFooter : Model -> Html Msg
