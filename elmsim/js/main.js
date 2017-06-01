@@ -1,12 +1,14 @@
+var simModel;
+var edges;
 
 document.addEventListener("DOMContentLoaded", function(event) {
-  var simModel = null;
   var app = Elm.Main.fullscreen();
 
   app.ports.renderNetwork.subscribe(function(model) {
     var svg = d3.select("svg");
 
-    simModel = model;
+    simModel = model[0];
+    edges = model[1];
 
     var svgBox = svg.node().getBBox();
 
@@ -19,31 +21,57 @@ document.addEventListener("DOMContentLoaded", function(event) {
                          .range([0,400]);
 
     function setX(node) {
-      return xScale(node.x);
+      return xScale(node.pos.x);
     }
 
     function setY(node) {
-      return yScale(node.y);
+      return yScale(node.pos.y);
     }
 
     function drawCircles(nodes, nodeClass) {
-      var circles = svg.selectAll("circle")
+      var nodes = svg.selectAll(".node")
                        .data(nodes, function(d) { return d.uid; });
 
-      circles.enter()
-             .append("circle")
-             .attr("cx", setX)
-             .attr("cy", setY)
-             .attr("r", 5)
-             .attr("class", nodeClass);
+      nodes.enter()
+           .append("circle")
+           .attr("cx", setX)
+           .attr("cy", setY)
+           .attr("r", 7)
+           .attr("class", "node " + nodeClass);
 
-      circles.attr("cx", setX)
-             .attr("cy", setY);
+      nodes.attr("cx", setX)
+           .attr("cy", setY);
     }
 
-    drawCircles(model.pvPanels, "pvPanel");
-    drawCircles(model.windTurbines, "windTurbine");
-    drawCircles(model.residences, "residence");
+    function drawLinks(links) {
+      var dataLinks = links.map(function(link) {
+        return { source: link.transmissionLine.from
+               , target: link.transmissionLine.to
+               };
+      });
+
+      var link = svg.selectAll(".link")
+                    .data(links);
+
+      link.enter()
+           .append("line")
+           .attr("class", "link")
+           .attr("x1", function(d) { return xScale(d.pos.from.x) })
+           .attr("y1", function(d) { return yScale(d.pos.from.y) })
+           .attr("x2", function(d) { return xScale(d.pos.to.x) })
+           .attr("y2", function(d) { return yScale(d.pos.to.y) });
+           //.attr("x1", function(d) { return d.source.x; })
+           //.attr("y1", function(d) { return d.source.y; })
+           //.attr("x2", function(d) { return d.target.x; })
+           //.attr("y2", function(d) { return d.target.y; });
+
+
+    }
+
+    drawCircles(simModel.pvPanels, "pvPanel");
+    drawCircles(simModel.windTurbines, "windTurbine");
+    drawCircles(simModel.residences, "residence");
+    drawLinks(edges);
 
   });
 

@@ -135,6 +135,5107 @@ function A9(fun, a, b, c, d, e, f, g, h, i)
     : fun(a)(b)(c)(d)(e)(f)(g)(h)(i);
 }
 
+//import Native.Utils //
+
+var _elm_lang$core$Native_Basics = function() {
+
+function div(a, b)
+{
+	return (a / b) | 0;
+}
+function rem(a, b)
+{
+	return a % b;
+}
+function mod(a, b)
+{
+	if (b === 0)
+	{
+		throw new Error('Cannot perform mod 0. Division by zero error.');
+	}
+	var r = a % b;
+	var m = a === 0 ? 0 : (b > 0 ? (a >= 0 ? r : r + b) : -mod(-a, -b));
+
+	return m === b ? 0 : m;
+}
+function logBase(base, n)
+{
+	return Math.log(n) / Math.log(base);
+}
+function negate(n)
+{
+	return -n;
+}
+function abs(n)
+{
+	return n < 0 ? -n : n;
+}
+
+function min(a, b)
+{
+	return _elm_lang$core$Native_Utils.cmp(a, b) < 0 ? a : b;
+}
+function max(a, b)
+{
+	return _elm_lang$core$Native_Utils.cmp(a, b) > 0 ? a : b;
+}
+function clamp(lo, hi, n)
+{
+	return _elm_lang$core$Native_Utils.cmp(n, lo) < 0
+		? lo
+		: _elm_lang$core$Native_Utils.cmp(n, hi) > 0
+			? hi
+			: n;
+}
+
+var ord = ['LT', 'EQ', 'GT'];
+
+function compare(x, y)
+{
+	return { ctor: ord[_elm_lang$core$Native_Utils.cmp(x, y) + 1] };
+}
+
+function xor(a, b)
+{
+	return a !== b;
+}
+function not(b)
+{
+	return !b;
+}
+function isInfinite(n)
+{
+	return n === Infinity || n === -Infinity;
+}
+
+function truncate(n)
+{
+	return n | 0;
+}
+
+function degrees(d)
+{
+	return d * Math.PI / 180;
+}
+function turns(t)
+{
+	return 2 * Math.PI * t;
+}
+function fromPolar(point)
+{
+	var r = point._0;
+	var t = point._1;
+	return _elm_lang$core$Native_Utils.Tuple2(r * Math.cos(t), r * Math.sin(t));
+}
+function toPolar(point)
+{
+	var x = point._0;
+	var y = point._1;
+	return _elm_lang$core$Native_Utils.Tuple2(Math.sqrt(x * x + y * y), Math.atan2(y, x));
+}
+
+return {
+	div: F2(div),
+	rem: F2(rem),
+	mod: F2(mod),
+
+	pi: Math.PI,
+	e: Math.E,
+	cos: Math.cos,
+	sin: Math.sin,
+	tan: Math.tan,
+	acos: Math.acos,
+	asin: Math.asin,
+	atan: Math.atan,
+	atan2: F2(Math.atan2),
+
+	degrees: degrees,
+	turns: turns,
+	fromPolar: fromPolar,
+	toPolar: toPolar,
+
+	sqrt: Math.sqrt,
+	logBase: F2(logBase),
+	negate: negate,
+	abs: abs,
+	min: F2(min),
+	max: F2(max),
+	clamp: F3(clamp),
+	compare: F2(compare),
+
+	xor: F2(xor),
+	not: not,
+
+	truncate: truncate,
+	ceiling: Math.ceil,
+	floor: Math.floor,
+	round: Math.round,
+	toFloat: function(x) { return x; },
+	isNaN: isNaN,
+	isInfinite: isInfinite
+};
+
+}();
+//import //
+
+var _elm_lang$core$Native_Utils = function() {
+
+// COMPARISONS
+
+function eq(x, y)
+{
+	var stack = [];
+	var isEqual = eqHelp(x, y, 0, stack);
+	var pair;
+	while (isEqual && (pair = stack.pop()))
+	{
+		isEqual = eqHelp(pair.x, pair.y, 0, stack);
+	}
+	return isEqual;
+}
+
+
+function eqHelp(x, y, depth, stack)
+{
+	if (depth > 100)
+	{
+		stack.push({ x: x, y: y });
+		return true;
+	}
+
+	if (x === y)
+	{
+		return true;
+	}
+
+	if (typeof x !== 'object')
+	{
+		if (typeof x === 'function')
+		{
+			throw new Error(
+				'Trying to use `(==)` on functions. There is no way to know if functions are "the same" in the Elm sense.'
+				+ ' Read more about this at http://package.elm-lang.org/packages/elm-lang/core/latest/Basics#=='
+				+ ' which describes why it is this way and what the better version will look like.'
+			);
+		}
+		return false;
+	}
+
+	if (x === null || y === null)
+	{
+		return false
+	}
+
+	if (x instanceof Date)
+	{
+		return x.getTime() === y.getTime();
+	}
+
+	if (!('ctor' in x))
+	{
+		for (var key in x)
+		{
+			if (!eqHelp(x[key], y[key], depth + 1, stack))
+			{
+				return false;
+			}
+		}
+		return true;
+	}
+
+	// convert Dicts and Sets to lists
+	if (x.ctor === 'RBNode_elm_builtin' || x.ctor === 'RBEmpty_elm_builtin')
+	{
+		x = _elm_lang$core$Dict$toList(x);
+		y = _elm_lang$core$Dict$toList(y);
+	}
+	if (x.ctor === 'Set_elm_builtin')
+	{
+		x = _elm_lang$core$Set$toList(x);
+		y = _elm_lang$core$Set$toList(y);
+	}
+
+	// check if lists are equal without recursion
+	if (x.ctor === '::')
+	{
+		var a = x;
+		var b = y;
+		while (a.ctor === '::' && b.ctor === '::')
+		{
+			if (!eqHelp(a._0, b._0, depth + 1, stack))
+			{
+				return false;
+			}
+			a = a._1;
+			b = b._1;
+		}
+		return a.ctor === b.ctor;
+	}
+
+	// check if Arrays are equal
+	if (x.ctor === '_Array')
+	{
+		var xs = _elm_lang$core$Native_Array.toJSArray(x);
+		var ys = _elm_lang$core$Native_Array.toJSArray(y);
+		if (xs.length !== ys.length)
+		{
+			return false;
+		}
+		for (var i = 0; i < xs.length; i++)
+		{
+			if (!eqHelp(xs[i], ys[i], depth + 1, stack))
+			{
+				return false;
+			}
+		}
+		return true;
+	}
+
+	if (!eqHelp(x.ctor, y.ctor, depth + 1, stack))
+	{
+		return false;
+	}
+
+	for (var key in x)
+	{
+		if (!eqHelp(x[key], y[key], depth + 1, stack))
+		{
+			return false;
+		}
+	}
+	return true;
+}
+
+// Code in Generate/JavaScript.hs, Basics.js, and List.js depends on
+// the particular integer values assigned to LT, EQ, and GT.
+
+var LT = -1, EQ = 0, GT = 1;
+
+function cmp(x, y)
+{
+	if (typeof x !== 'object')
+	{
+		return x === y ? EQ : x < y ? LT : GT;
+	}
+
+	if (x instanceof String)
+	{
+		var a = x.valueOf();
+		var b = y.valueOf();
+		return a === b ? EQ : a < b ? LT : GT;
+	}
+
+	if (x.ctor === '::' || x.ctor === '[]')
+	{
+		while (x.ctor === '::' && y.ctor === '::')
+		{
+			var ord = cmp(x._0, y._0);
+			if (ord !== EQ)
+			{
+				return ord;
+			}
+			x = x._1;
+			y = y._1;
+		}
+		return x.ctor === y.ctor ? EQ : x.ctor === '[]' ? LT : GT;
+	}
+
+	if (x.ctor.slice(0, 6) === '_Tuple')
+	{
+		var ord;
+		var n = x.ctor.slice(6) - 0;
+		var err = 'cannot compare tuples with more than 6 elements.';
+		if (n === 0) return EQ;
+		if (n >= 1) { ord = cmp(x._0, y._0); if (ord !== EQ) return ord;
+		if (n >= 2) { ord = cmp(x._1, y._1); if (ord !== EQ) return ord;
+		if (n >= 3) { ord = cmp(x._2, y._2); if (ord !== EQ) return ord;
+		if (n >= 4) { ord = cmp(x._3, y._3); if (ord !== EQ) return ord;
+		if (n >= 5) { ord = cmp(x._4, y._4); if (ord !== EQ) return ord;
+		if (n >= 6) { ord = cmp(x._5, y._5); if (ord !== EQ) return ord;
+		if (n >= 7) throw new Error('Comparison error: ' + err); } } } } } }
+		return EQ;
+	}
+
+	throw new Error(
+		'Comparison error: comparison is only defined on ints, '
+		+ 'floats, times, chars, strings, lists of comparable values, '
+		+ 'and tuples of comparable values.'
+	);
+}
+
+
+// COMMON VALUES
+
+var Tuple0 = {
+	ctor: '_Tuple0'
+};
+
+function Tuple2(x, y)
+{
+	return {
+		ctor: '_Tuple2',
+		_0: x,
+		_1: y
+	};
+}
+
+function chr(c)
+{
+	return new String(c);
+}
+
+
+// GUID
+
+var count = 0;
+function guid(_)
+{
+	return count++;
+}
+
+
+// RECORDS
+
+function update(oldRecord, updatedFields)
+{
+	var newRecord = {};
+
+	for (var key in oldRecord)
+	{
+		newRecord[key] = oldRecord[key];
+	}
+
+	for (var key in updatedFields)
+	{
+		newRecord[key] = updatedFields[key];
+	}
+
+	return newRecord;
+}
+
+
+//// LIST STUFF ////
+
+var Nil = { ctor: '[]' };
+
+function Cons(hd, tl)
+{
+	return {
+		ctor: '::',
+		_0: hd,
+		_1: tl
+	};
+}
+
+function append(xs, ys)
+{
+	// append Strings
+	if (typeof xs === 'string')
+	{
+		return xs + ys;
+	}
+
+	// append Lists
+	if (xs.ctor === '[]')
+	{
+		return ys;
+	}
+	var root = Cons(xs._0, Nil);
+	var curr = root;
+	xs = xs._1;
+	while (xs.ctor !== '[]')
+	{
+		curr._1 = Cons(xs._0, Nil);
+		xs = xs._1;
+		curr = curr._1;
+	}
+	curr._1 = ys;
+	return root;
+}
+
+
+// CRASHES
+
+function crash(moduleName, region)
+{
+	return function(message) {
+		throw new Error(
+			'Ran into a `Debug.crash` in module `' + moduleName + '` ' + regionToString(region) + '\n'
+			+ 'The message provided by the code author is:\n\n    '
+			+ message
+		);
+	};
+}
+
+function crashCase(moduleName, region, value)
+{
+	return function(message) {
+		throw new Error(
+			'Ran into a `Debug.crash` in module `' + moduleName + '`\n\n'
+			+ 'This was caused by the `case` expression ' + regionToString(region) + '.\n'
+			+ 'One of the branches ended with a crash and the following value got through:\n\n    ' + toString(value) + '\n\n'
+			+ 'The message provided by the code author is:\n\n    '
+			+ message
+		);
+	};
+}
+
+function regionToString(region)
+{
+	if (region.start.line == region.end.line)
+	{
+		return 'on line ' + region.start.line;
+	}
+	return 'between lines ' + region.start.line + ' and ' + region.end.line;
+}
+
+
+// TO STRING
+
+function toString(v)
+{
+	var type = typeof v;
+	if (type === 'function')
+	{
+		return '<function>';
+	}
+
+	if (type === 'boolean')
+	{
+		return v ? 'True' : 'False';
+	}
+
+	if (type === 'number')
+	{
+		return v + '';
+	}
+
+	if (v instanceof String)
+	{
+		return '\'' + addSlashes(v, true) + '\'';
+	}
+
+	if (type === 'string')
+	{
+		return '"' + addSlashes(v, false) + '"';
+	}
+
+	if (v === null)
+	{
+		return 'null';
+	}
+
+	if (type === 'object' && 'ctor' in v)
+	{
+		var ctorStarter = v.ctor.substring(0, 5);
+
+		if (ctorStarter === '_Tupl')
+		{
+			var output = [];
+			for (var k in v)
+			{
+				if (k === 'ctor') continue;
+				output.push(toString(v[k]));
+			}
+			return '(' + output.join(',') + ')';
+		}
+
+		if (ctorStarter === '_Task')
+		{
+			return '<task>'
+		}
+
+		if (v.ctor === '_Array')
+		{
+			var list = _elm_lang$core$Array$toList(v);
+			return 'Array.fromList ' + toString(list);
+		}
+
+		if (v.ctor === '<decoder>')
+		{
+			return '<decoder>';
+		}
+
+		if (v.ctor === '_Process')
+		{
+			return '<process:' + v.id + '>';
+		}
+
+		if (v.ctor === '::')
+		{
+			var output = '[' + toString(v._0);
+			v = v._1;
+			while (v.ctor === '::')
+			{
+				output += ',' + toString(v._0);
+				v = v._1;
+			}
+			return output + ']';
+		}
+
+		if (v.ctor === '[]')
+		{
+			return '[]';
+		}
+
+		if (v.ctor === 'Set_elm_builtin')
+		{
+			return 'Set.fromList ' + toString(_elm_lang$core$Set$toList(v));
+		}
+
+		if (v.ctor === 'RBNode_elm_builtin' || v.ctor === 'RBEmpty_elm_builtin')
+		{
+			return 'Dict.fromList ' + toString(_elm_lang$core$Dict$toList(v));
+		}
+
+		var output = '';
+		for (var i in v)
+		{
+			if (i === 'ctor') continue;
+			var str = toString(v[i]);
+			var c0 = str[0];
+			var parenless = c0 === '{' || c0 === '(' || c0 === '<' || c0 === '"' || str.indexOf(' ') < 0;
+			output += ' ' + (parenless ? str : '(' + str + ')');
+		}
+		return v.ctor + output;
+	}
+
+	if (type === 'object')
+	{
+		if (v instanceof Date)
+		{
+			return '<' + v.toString() + '>';
+		}
+
+		if (v.elm_web_socket)
+		{
+			return '<websocket>';
+		}
+
+		var output = [];
+		for (var k in v)
+		{
+			output.push(k + ' = ' + toString(v[k]));
+		}
+		if (output.length === 0)
+		{
+			return '{}';
+		}
+		return '{ ' + output.join(', ') + ' }';
+	}
+
+	return '<internal structure>';
+}
+
+function addSlashes(str, isChar)
+{
+	var s = str.replace(/\\/g, '\\\\')
+			  .replace(/\n/g, '\\n')
+			  .replace(/\t/g, '\\t')
+			  .replace(/\r/g, '\\r')
+			  .replace(/\v/g, '\\v')
+			  .replace(/\0/g, '\\0');
+	if (isChar)
+	{
+		return s.replace(/\'/g, '\\\'');
+	}
+	else
+	{
+		return s.replace(/\"/g, '\\"');
+	}
+}
+
+
+return {
+	eq: eq,
+	cmp: cmp,
+	Tuple0: Tuple0,
+	Tuple2: Tuple2,
+	chr: chr,
+	update: update,
+	guid: guid,
+
+	append: F2(append),
+
+	crash: crash,
+	crashCase: crashCase,
+
+	toString: toString
+};
+
+}();
+var _elm_lang$core$Basics$never = function (_p0) {
+	never:
+	while (true) {
+		var _p1 = _p0;
+		var _v1 = _p1._0;
+		_p0 = _v1;
+		continue never;
+	}
+};
+var _elm_lang$core$Basics$uncurry = F2(
+	function (f, _p2) {
+		var _p3 = _p2;
+		return A2(f, _p3._0, _p3._1);
+	});
+var _elm_lang$core$Basics$curry = F3(
+	function (f, a, b) {
+		return f(
+			{ctor: '_Tuple2', _0: a, _1: b});
+	});
+var _elm_lang$core$Basics$flip = F3(
+	function (f, b, a) {
+		return A2(f, a, b);
+	});
+var _elm_lang$core$Basics$always = F2(
+	function (a, _p4) {
+		return a;
+	});
+var _elm_lang$core$Basics$identity = function (x) {
+	return x;
+};
+var _elm_lang$core$Basics_ops = _elm_lang$core$Basics_ops || {};
+_elm_lang$core$Basics_ops['<|'] = F2(
+	function (f, x) {
+		return f(x);
+	});
+var _elm_lang$core$Basics_ops = _elm_lang$core$Basics_ops || {};
+_elm_lang$core$Basics_ops['|>'] = F2(
+	function (x, f) {
+		return f(x);
+	});
+var _elm_lang$core$Basics_ops = _elm_lang$core$Basics_ops || {};
+_elm_lang$core$Basics_ops['>>'] = F3(
+	function (f, g, x) {
+		return g(
+			f(x));
+	});
+var _elm_lang$core$Basics_ops = _elm_lang$core$Basics_ops || {};
+_elm_lang$core$Basics_ops['<<'] = F3(
+	function (g, f, x) {
+		return g(
+			f(x));
+	});
+var _elm_lang$core$Basics_ops = _elm_lang$core$Basics_ops || {};
+_elm_lang$core$Basics_ops['++'] = _elm_lang$core$Native_Utils.append;
+var _elm_lang$core$Basics$toString = _elm_lang$core$Native_Utils.toString;
+var _elm_lang$core$Basics$isInfinite = _elm_lang$core$Native_Basics.isInfinite;
+var _elm_lang$core$Basics$isNaN = _elm_lang$core$Native_Basics.isNaN;
+var _elm_lang$core$Basics$toFloat = _elm_lang$core$Native_Basics.toFloat;
+var _elm_lang$core$Basics$ceiling = _elm_lang$core$Native_Basics.ceiling;
+var _elm_lang$core$Basics$floor = _elm_lang$core$Native_Basics.floor;
+var _elm_lang$core$Basics$truncate = _elm_lang$core$Native_Basics.truncate;
+var _elm_lang$core$Basics$round = _elm_lang$core$Native_Basics.round;
+var _elm_lang$core$Basics$not = _elm_lang$core$Native_Basics.not;
+var _elm_lang$core$Basics$xor = _elm_lang$core$Native_Basics.xor;
+var _elm_lang$core$Basics_ops = _elm_lang$core$Basics_ops || {};
+_elm_lang$core$Basics_ops['||'] = _elm_lang$core$Native_Basics.or;
+var _elm_lang$core$Basics_ops = _elm_lang$core$Basics_ops || {};
+_elm_lang$core$Basics_ops['&&'] = _elm_lang$core$Native_Basics.and;
+var _elm_lang$core$Basics$max = _elm_lang$core$Native_Basics.max;
+var _elm_lang$core$Basics$min = _elm_lang$core$Native_Basics.min;
+var _elm_lang$core$Basics$compare = _elm_lang$core$Native_Basics.compare;
+var _elm_lang$core$Basics_ops = _elm_lang$core$Basics_ops || {};
+_elm_lang$core$Basics_ops['>='] = _elm_lang$core$Native_Basics.ge;
+var _elm_lang$core$Basics_ops = _elm_lang$core$Basics_ops || {};
+_elm_lang$core$Basics_ops['<='] = _elm_lang$core$Native_Basics.le;
+var _elm_lang$core$Basics_ops = _elm_lang$core$Basics_ops || {};
+_elm_lang$core$Basics_ops['>'] = _elm_lang$core$Native_Basics.gt;
+var _elm_lang$core$Basics_ops = _elm_lang$core$Basics_ops || {};
+_elm_lang$core$Basics_ops['<'] = _elm_lang$core$Native_Basics.lt;
+var _elm_lang$core$Basics_ops = _elm_lang$core$Basics_ops || {};
+_elm_lang$core$Basics_ops['/='] = _elm_lang$core$Native_Basics.neq;
+var _elm_lang$core$Basics_ops = _elm_lang$core$Basics_ops || {};
+_elm_lang$core$Basics_ops['=='] = _elm_lang$core$Native_Basics.eq;
+var _elm_lang$core$Basics$e = _elm_lang$core$Native_Basics.e;
+var _elm_lang$core$Basics$pi = _elm_lang$core$Native_Basics.pi;
+var _elm_lang$core$Basics$clamp = _elm_lang$core$Native_Basics.clamp;
+var _elm_lang$core$Basics$logBase = _elm_lang$core$Native_Basics.logBase;
+var _elm_lang$core$Basics$abs = _elm_lang$core$Native_Basics.abs;
+var _elm_lang$core$Basics$negate = _elm_lang$core$Native_Basics.negate;
+var _elm_lang$core$Basics$sqrt = _elm_lang$core$Native_Basics.sqrt;
+var _elm_lang$core$Basics$atan2 = _elm_lang$core$Native_Basics.atan2;
+var _elm_lang$core$Basics$atan = _elm_lang$core$Native_Basics.atan;
+var _elm_lang$core$Basics$asin = _elm_lang$core$Native_Basics.asin;
+var _elm_lang$core$Basics$acos = _elm_lang$core$Native_Basics.acos;
+var _elm_lang$core$Basics$tan = _elm_lang$core$Native_Basics.tan;
+var _elm_lang$core$Basics$sin = _elm_lang$core$Native_Basics.sin;
+var _elm_lang$core$Basics$cos = _elm_lang$core$Native_Basics.cos;
+var _elm_lang$core$Basics_ops = _elm_lang$core$Basics_ops || {};
+_elm_lang$core$Basics_ops['^'] = _elm_lang$core$Native_Basics.exp;
+var _elm_lang$core$Basics_ops = _elm_lang$core$Basics_ops || {};
+_elm_lang$core$Basics_ops['%'] = _elm_lang$core$Native_Basics.mod;
+var _elm_lang$core$Basics$rem = _elm_lang$core$Native_Basics.rem;
+var _elm_lang$core$Basics_ops = _elm_lang$core$Basics_ops || {};
+_elm_lang$core$Basics_ops['//'] = _elm_lang$core$Native_Basics.div;
+var _elm_lang$core$Basics_ops = _elm_lang$core$Basics_ops || {};
+_elm_lang$core$Basics_ops['/'] = _elm_lang$core$Native_Basics.floatDiv;
+var _elm_lang$core$Basics_ops = _elm_lang$core$Basics_ops || {};
+_elm_lang$core$Basics_ops['*'] = _elm_lang$core$Native_Basics.mul;
+var _elm_lang$core$Basics_ops = _elm_lang$core$Basics_ops || {};
+_elm_lang$core$Basics_ops['-'] = _elm_lang$core$Native_Basics.sub;
+var _elm_lang$core$Basics_ops = _elm_lang$core$Basics_ops || {};
+_elm_lang$core$Basics_ops['+'] = _elm_lang$core$Native_Basics.add;
+var _elm_lang$core$Basics$toPolar = _elm_lang$core$Native_Basics.toPolar;
+var _elm_lang$core$Basics$fromPolar = _elm_lang$core$Native_Basics.fromPolar;
+var _elm_lang$core$Basics$turns = _elm_lang$core$Native_Basics.turns;
+var _elm_lang$core$Basics$degrees = _elm_lang$core$Native_Basics.degrees;
+var _elm_lang$core$Basics$radians = function (t) {
+	return t;
+};
+var _elm_lang$core$Basics$GT = {ctor: 'GT'};
+var _elm_lang$core$Basics$EQ = {ctor: 'EQ'};
+var _elm_lang$core$Basics$LT = {ctor: 'LT'};
+var _elm_lang$core$Basics$JustOneMore = function (a) {
+	return {ctor: 'JustOneMore', _0: a};
+};
+
+//import Native.Utils //
+
+var _elm_lang$core$Native_Debug = function() {
+
+function log(tag, value)
+{
+	var msg = tag + ': ' + _elm_lang$core$Native_Utils.toString(value);
+	var process = process || {};
+	if (process.stdout)
+	{
+		process.stdout.write(msg);
+	}
+	else
+	{
+		console.log(msg);
+	}
+	return value;
+}
+
+function crash(message)
+{
+	throw new Error(message);
+}
+
+return {
+	crash: crash,
+	log: F2(log)
+};
+
+}();
+var _elm_lang$core$Debug$crash = _elm_lang$core$Native_Debug.crash;
+var _elm_lang$core$Debug$log = _elm_lang$core$Native_Debug.log;
+
+var _elm_lang$core$Maybe$withDefault = F2(
+	function ($default, maybe) {
+		var _p0 = maybe;
+		if (_p0.ctor === 'Just') {
+			return _p0._0;
+		} else {
+			return $default;
+		}
+	});
+var _elm_lang$core$Maybe$Nothing = {ctor: 'Nothing'};
+var _elm_lang$core$Maybe$andThen = F2(
+	function (callback, maybeValue) {
+		var _p1 = maybeValue;
+		if (_p1.ctor === 'Just') {
+			return callback(_p1._0);
+		} else {
+			return _elm_lang$core$Maybe$Nothing;
+		}
+	});
+var _elm_lang$core$Maybe$Just = function (a) {
+	return {ctor: 'Just', _0: a};
+};
+var _elm_lang$core$Maybe$map = F2(
+	function (f, maybe) {
+		var _p2 = maybe;
+		if (_p2.ctor === 'Just') {
+			return _elm_lang$core$Maybe$Just(
+				f(_p2._0));
+		} else {
+			return _elm_lang$core$Maybe$Nothing;
+		}
+	});
+var _elm_lang$core$Maybe$map2 = F3(
+	function (func, ma, mb) {
+		var _p3 = {ctor: '_Tuple2', _0: ma, _1: mb};
+		if (((_p3.ctor === '_Tuple2') && (_p3._0.ctor === 'Just')) && (_p3._1.ctor === 'Just')) {
+			return _elm_lang$core$Maybe$Just(
+				A2(func, _p3._0._0, _p3._1._0));
+		} else {
+			return _elm_lang$core$Maybe$Nothing;
+		}
+	});
+var _elm_lang$core$Maybe$map3 = F4(
+	function (func, ma, mb, mc) {
+		var _p4 = {ctor: '_Tuple3', _0: ma, _1: mb, _2: mc};
+		if ((((_p4.ctor === '_Tuple3') && (_p4._0.ctor === 'Just')) && (_p4._1.ctor === 'Just')) && (_p4._2.ctor === 'Just')) {
+			return _elm_lang$core$Maybe$Just(
+				A3(func, _p4._0._0, _p4._1._0, _p4._2._0));
+		} else {
+			return _elm_lang$core$Maybe$Nothing;
+		}
+	});
+var _elm_lang$core$Maybe$map4 = F5(
+	function (func, ma, mb, mc, md) {
+		var _p5 = {ctor: '_Tuple4', _0: ma, _1: mb, _2: mc, _3: md};
+		if (((((_p5.ctor === '_Tuple4') && (_p5._0.ctor === 'Just')) && (_p5._1.ctor === 'Just')) && (_p5._2.ctor === 'Just')) && (_p5._3.ctor === 'Just')) {
+			return _elm_lang$core$Maybe$Just(
+				A4(func, _p5._0._0, _p5._1._0, _p5._2._0, _p5._3._0));
+		} else {
+			return _elm_lang$core$Maybe$Nothing;
+		}
+	});
+var _elm_lang$core$Maybe$map5 = F6(
+	function (func, ma, mb, mc, md, me) {
+		var _p6 = {ctor: '_Tuple5', _0: ma, _1: mb, _2: mc, _3: md, _4: me};
+		if ((((((_p6.ctor === '_Tuple5') && (_p6._0.ctor === 'Just')) && (_p6._1.ctor === 'Just')) && (_p6._2.ctor === 'Just')) && (_p6._3.ctor === 'Just')) && (_p6._4.ctor === 'Just')) {
+			return _elm_lang$core$Maybe$Just(
+				A5(func, _p6._0._0, _p6._1._0, _p6._2._0, _p6._3._0, _p6._4._0));
+		} else {
+			return _elm_lang$core$Maybe$Nothing;
+		}
+	});
+
+//import Native.Utils //
+
+var _elm_lang$core$Native_List = function() {
+
+var Nil = { ctor: '[]' };
+
+function Cons(hd, tl)
+{
+	return { ctor: '::', _0: hd, _1: tl };
+}
+
+function fromArray(arr)
+{
+	var out = Nil;
+	for (var i = arr.length; i--; )
+	{
+		out = Cons(arr[i], out);
+	}
+	return out;
+}
+
+function toArray(xs)
+{
+	var out = [];
+	while (xs.ctor !== '[]')
+	{
+		out.push(xs._0);
+		xs = xs._1;
+	}
+	return out;
+}
+
+function foldr(f, b, xs)
+{
+	var arr = toArray(xs);
+	var acc = b;
+	for (var i = arr.length; i--; )
+	{
+		acc = A2(f, arr[i], acc);
+	}
+	return acc;
+}
+
+function map2(f, xs, ys)
+{
+	var arr = [];
+	while (xs.ctor !== '[]' && ys.ctor !== '[]')
+	{
+		arr.push(A2(f, xs._0, ys._0));
+		xs = xs._1;
+		ys = ys._1;
+	}
+	return fromArray(arr);
+}
+
+function map3(f, xs, ys, zs)
+{
+	var arr = [];
+	while (xs.ctor !== '[]' && ys.ctor !== '[]' && zs.ctor !== '[]')
+	{
+		arr.push(A3(f, xs._0, ys._0, zs._0));
+		xs = xs._1;
+		ys = ys._1;
+		zs = zs._1;
+	}
+	return fromArray(arr);
+}
+
+function map4(f, ws, xs, ys, zs)
+{
+	var arr = [];
+	while (   ws.ctor !== '[]'
+		   && xs.ctor !== '[]'
+		   && ys.ctor !== '[]'
+		   && zs.ctor !== '[]')
+	{
+		arr.push(A4(f, ws._0, xs._0, ys._0, zs._0));
+		ws = ws._1;
+		xs = xs._1;
+		ys = ys._1;
+		zs = zs._1;
+	}
+	return fromArray(arr);
+}
+
+function map5(f, vs, ws, xs, ys, zs)
+{
+	var arr = [];
+	while (   vs.ctor !== '[]'
+		   && ws.ctor !== '[]'
+		   && xs.ctor !== '[]'
+		   && ys.ctor !== '[]'
+		   && zs.ctor !== '[]')
+	{
+		arr.push(A5(f, vs._0, ws._0, xs._0, ys._0, zs._0));
+		vs = vs._1;
+		ws = ws._1;
+		xs = xs._1;
+		ys = ys._1;
+		zs = zs._1;
+	}
+	return fromArray(arr);
+}
+
+function sortBy(f, xs)
+{
+	return fromArray(toArray(xs).sort(function(a, b) {
+		return _elm_lang$core$Native_Utils.cmp(f(a), f(b));
+	}));
+}
+
+function sortWith(f, xs)
+{
+	return fromArray(toArray(xs).sort(function(a, b) {
+		var ord = f(a)(b).ctor;
+		return ord === 'EQ' ? 0 : ord === 'LT' ? -1 : 1;
+	}));
+}
+
+return {
+	Nil: Nil,
+	Cons: Cons,
+	cons: F2(Cons),
+	toArray: toArray,
+	fromArray: fromArray,
+
+	foldr: F3(foldr),
+
+	map2: F3(map2),
+	map3: F4(map3),
+	map4: F5(map4),
+	map5: F6(map5),
+	sortBy: F2(sortBy),
+	sortWith: F2(sortWith)
+};
+
+}();
+var _elm_lang$core$List$sortWith = _elm_lang$core$Native_List.sortWith;
+var _elm_lang$core$List$sortBy = _elm_lang$core$Native_List.sortBy;
+var _elm_lang$core$List$sort = function (xs) {
+	return A2(_elm_lang$core$List$sortBy, _elm_lang$core$Basics$identity, xs);
+};
+var _elm_lang$core$List$singleton = function (value) {
+	return {
+		ctor: '::',
+		_0: value,
+		_1: {ctor: '[]'}
+	};
+};
+var _elm_lang$core$List$drop = F2(
+	function (n, list) {
+		drop:
+		while (true) {
+			if (_elm_lang$core$Native_Utils.cmp(n, 0) < 1) {
+				return list;
+			} else {
+				var _p0 = list;
+				if (_p0.ctor === '[]') {
+					return list;
+				} else {
+					var _v1 = n - 1,
+						_v2 = _p0._1;
+					n = _v1;
+					list = _v2;
+					continue drop;
+				}
+			}
+		}
+	});
+var _elm_lang$core$List$map5 = _elm_lang$core$Native_List.map5;
+var _elm_lang$core$List$map4 = _elm_lang$core$Native_List.map4;
+var _elm_lang$core$List$map3 = _elm_lang$core$Native_List.map3;
+var _elm_lang$core$List$map2 = _elm_lang$core$Native_List.map2;
+var _elm_lang$core$List$any = F2(
+	function (isOkay, list) {
+		any:
+		while (true) {
+			var _p1 = list;
+			if (_p1.ctor === '[]') {
+				return false;
+			} else {
+				if (isOkay(_p1._0)) {
+					return true;
+				} else {
+					var _v4 = isOkay,
+						_v5 = _p1._1;
+					isOkay = _v4;
+					list = _v5;
+					continue any;
+				}
+			}
+		}
+	});
+var _elm_lang$core$List$all = F2(
+	function (isOkay, list) {
+		return !A2(
+			_elm_lang$core$List$any,
+			function (_p2) {
+				return !isOkay(_p2);
+			},
+			list);
+	});
+var _elm_lang$core$List$foldr = _elm_lang$core$Native_List.foldr;
+var _elm_lang$core$List$foldl = F3(
+	function (func, acc, list) {
+		foldl:
+		while (true) {
+			var _p3 = list;
+			if (_p3.ctor === '[]') {
+				return acc;
+			} else {
+				var _v7 = func,
+					_v8 = A2(func, _p3._0, acc),
+					_v9 = _p3._1;
+				func = _v7;
+				acc = _v8;
+				list = _v9;
+				continue foldl;
+			}
+		}
+	});
+var _elm_lang$core$List$length = function (xs) {
+	return A3(
+		_elm_lang$core$List$foldl,
+		F2(
+			function (_p4, i) {
+				return i + 1;
+			}),
+		0,
+		xs);
+};
+var _elm_lang$core$List$sum = function (numbers) {
+	return A3(
+		_elm_lang$core$List$foldl,
+		F2(
+			function (x, y) {
+				return x + y;
+			}),
+		0,
+		numbers);
+};
+var _elm_lang$core$List$product = function (numbers) {
+	return A3(
+		_elm_lang$core$List$foldl,
+		F2(
+			function (x, y) {
+				return x * y;
+			}),
+		1,
+		numbers);
+};
+var _elm_lang$core$List$maximum = function (list) {
+	var _p5 = list;
+	if (_p5.ctor === '::') {
+		return _elm_lang$core$Maybe$Just(
+			A3(_elm_lang$core$List$foldl, _elm_lang$core$Basics$max, _p5._0, _p5._1));
+	} else {
+		return _elm_lang$core$Maybe$Nothing;
+	}
+};
+var _elm_lang$core$List$minimum = function (list) {
+	var _p6 = list;
+	if (_p6.ctor === '::') {
+		return _elm_lang$core$Maybe$Just(
+			A3(_elm_lang$core$List$foldl, _elm_lang$core$Basics$min, _p6._0, _p6._1));
+	} else {
+		return _elm_lang$core$Maybe$Nothing;
+	}
+};
+var _elm_lang$core$List$member = F2(
+	function (x, xs) {
+		return A2(
+			_elm_lang$core$List$any,
+			function (a) {
+				return _elm_lang$core$Native_Utils.eq(a, x);
+			},
+			xs);
+	});
+var _elm_lang$core$List$isEmpty = function (xs) {
+	var _p7 = xs;
+	if (_p7.ctor === '[]') {
+		return true;
+	} else {
+		return false;
+	}
+};
+var _elm_lang$core$List$tail = function (list) {
+	var _p8 = list;
+	if (_p8.ctor === '::') {
+		return _elm_lang$core$Maybe$Just(_p8._1);
+	} else {
+		return _elm_lang$core$Maybe$Nothing;
+	}
+};
+var _elm_lang$core$List$head = function (list) {
+	var _p9 = list;
+	if (_p9.ctor === '::') {
+		return _elm_lang$core$Maybe$Just(_p9._0);
+	} else {
+		return _elm_lang$core$Maybe$Nothing;
+	}
+};
+var _elm_lang$core$List_ops = _elm_lang$core$List_ops || {};
+_elm_lang$core$List_ops['::'] = _elm_lang$core$Native_List.cons;
+var _elm_lang$core$List$map = F2(
+	function (f, xs) {
+		return A3(
+			_elm_lang$core$List$foldr,
+			F2(
+				function (x, acc) {
+					return {
+						ctor: '::',
+						_0: f(x),
+						_1: acc
+					};
+				}),
+			{ctor: '[]'},
+			xs);
+	});
+var _elm_lang$core$List$filter = F2(
+	function (pred, xs) {
+		var conditionalCons = F2(
+			function (front, back) {
+				return pred(front) ? {ctor: '::', _0: front, _1: back} : back;
+			});
+		return A3(
+			_elm_lang$core$List$foldr,
+			conditionalCons,
+			{ctor: '[]'},
+			xs);
+	});
+var _elm_lang$core$List$maybeCons = F3(
+	function (f, mx, xs) {
+		var _p10 = f(mx);
+		if (_p10.ctor === 'Just') {
+			return {ctor: '::', _0: _p10._0, _1: xs};
+		} else {
+			return xs;
+		}
+	});
+var _elm_lang$core$List$filterMap = F2(
+	function (f, xs) {
+		return A3(
+			_elm_lang$core$List$foldr,
+			_elm_lang$core$List$maybeCons(f),
+			{ctor: '[]'},
+			xs);
+	});
+var _elm_lang$core$List$reverse = function (list) {
+	return A3(
+		_elm_lang$core$List$foldl,
+		F2(
+			function (x, y) {
+				return {ctor: '::', _0: x, _1: y};
+			}),
+		{ctor: '[]'},
+		list);
+};
+var _elm_lang$core$List$scanl = F3(
+	function (f, b, xs) {
+		var scan1 = F2(
+			function (x, accAcc) {
+				var _p11 = accAcc;
+				if (_p11.ctor === '::') {
+					return {
+						ctor: '::',
+						_0: A2(f, x, _p11._0),
+						_1: accAcc
+					};
+				} else {
+					return {ctor: '[]'};
+				}
+			});
+		return _elm_lang$core$List$reverse(
+			A3(
+				_elm_lang$core$List$foldl,
+				scan1,
+				{
+					ctor: '::',
+					_0: b,
+					_1: {ctor: '[]'}
+				},
+				xs));
+	});
+var _elm_lang$core$List$append = F2(
+	function (xs, ys) {
+		var _p12 = ys;
+		if (_p12.ctor === '[]') {
+			return xs;
+		} else {
+			return A3(
+				_elm_lang$core$List$foldr,
+				F2(
+					function (x, y) {
+						return {ctor: '::', _0: x, _1: y};
+					}),
+				ys,
+				xs);
+		}
+	});
+var _elm_lang$core$List$concat = function (lists) {
+	return A3(
+		_elm_lang$core$List$foldr,
+		_elm_lang$core$List$append,
+		{ctor: '[]'},
+		lists);
+};
+var _elm_lang$core$List$concatMap = F2(
+	function (f, list) {
+		return _elm_lang$core$List$concat(
+			A2(_elm_lang$core$List$map, f, list));
+	});
+var _elm_lang$core$List$partition = F2(
+	function (pred, list) {
+		var step = F2(
+			function (x, _p13) {
+				var _p14 = _p13;
+				var _p16 = _p14._0;
+				var _p15 = _p14._1;
+				return pred(x) ? {
+					ctor: '_Tuple2',
+					_0: {ctor: '::', _0: x, _1: _p16},
+					_1: _p15
+				} : {
+					ctor: '_Tuple2',
+					_0: _p16,
+					_1: {ctor: '::', _0: x, _1: _p15}
+				};
+			});
+		return A3(
+			_elm_lang$core$List$foldr,
+			step,
+			{
+				ctor: '_Tuple2',
+				_0: {ctor: '[]'},
+				_1: {ctor: '[]'}
+			},
+			list);
+	});
+var _elm_lang$core$List$unzip = function (pairs) {
+	var step = F2(
+		function (_p18, _p17) {
+			var _p19 = _p18;
+			var _p20 = _p17;
+			return {
+				ctor: '_Tuple2',
+				_0: {ctor: '::', _0: _p19._0, _1: _p20._0},
+				_1: {ctor: '::', _0: _p19._1, _1: _p20._1}
+			};
+		});
+	return A3(
+		_elm_lang$core$List$foldr,
+		step,
+		{
+			ctor: '_Tuple2',
+			_0: {ctor: '[]'},
+			_1: {ctor: '[]'}
+		},
+		pairs);
+};
+var _elm_lang$core$List$intersperse = F2(
+	function (sep, xs) {
+		var _p21 = xs;
+		if (_p21.ctor === '[]') {
+			return {ctor: '[]'};
+		} else {
+			var step = F2(
+				function (x, rest) {
+					return {
+						ctor: '::',
+						_0: sep,
+						_1: {ctor: '::', _0: x, _1: rest}
+					};
+				});
+			var spersed = A3(
+				_elm_lang$core$List$foldr,
+				step,
+				{ctor: '[]'},
+				_p21._1);
+			return {ctor: '::', _0: _p21._0, _1: spersed};
+		}
+	});
+var _elm_lang$core$List$takeReverse = F3(
+	function (n, list, taken) {
+		takeReverse:
+		while (true) {
+			if (_elm_lang$core$Native_Utils.cmp(n, 0) < 1) {
+				return taken;
+			} else {
+				var _p22 = list;
+				if (_p22.ctor === '[]') {
+					return taken;
+				} else {
+					var _v23 = n - 1,
+						_v24 = _p22._1,
+						_v25 = {ctor: '::', _0: _p22._0, _1: taken};
+					n = _v23;
+					list = _v24;
+					taken = _v25;
+					continue takeReverse;
+				}
+			}
+		}
+	});
+var _elm_lang$core$List$takeTailRec = F2(
+	function (n, list) {
+		return _elm_lang$core$List$reverse(
+			A3(
+				_elm_lang$core$List$takeReverse,
+				n,
+				list,
+				{ctor: '[]'}));
+	});
+var _elm_lang$core$List$takeFast = F3(
+	function (ctr, n, list) {
+		if (_elm_lang$core$Native_Utils.cmp(n, 0) < 1) {
+			return {ctor: '[]'};
+		} else {
+			var _p23 = {ctor: '_Tuple2', _0: n, _1: list};
+			_v26_5:
+			do {
+				_v26_1:
+				do {
+					if (_p23.ctor === '_Tuple2') {
+						if (_p23._1.ctor === '[]') {
+							return list;
+						} else {
+							if (_p23._1._1.ctor === '::') {
+								switch (_p23._0) {
+									case 1:
+										break _v26_1;
+									case 2:
+										return {
+											ctor: '::',
+											_0: _p23._1._0,
+											_1: {
+												ctor: '::',
+												_0: _p23._1._1._0,
+												_1: {ctor: '[]'}
+											}
+										};
+									case 3:
+										if (_p23._1._1._1.ctor === '::') {
+											return {
+												ctor: '::',
+												_0: _p23._1._0,
+												_1: {
+													ctor: '::',
+													_0: _p23._1._1._0,
+													_1: {
+														ctor: '::',
+														_0: _p23._1._1._1._0,
+														_1: {ctor: '[]'}
+													}
+												}
+											};
+										} else {
+											break _v26_5;
+										}
+									default:
+										if ((_p23._1._1._1.ctor === '::') && (_p23._1._1._1._1.ctor === '::')) {
+											var _p28 = _p23._1._1._1._0;
+											var _p27 = _p23._1._1._0;
+											var _p26 = _p23._1._0;
+											var _p25 = _p23._1._1._1._1._0;
+											var _p24 = _p23._1._1._1._1._1;
+											return (_elm_lang$core$Native_Utils.cmp(ctr, 1000) > 0) ? {
+												ctor: '::',
+												_0: _p26,
+												_1: {
+													ctor: '::',
+													_0: _p27,
+													_1: {
+														ctor: '::',
+														_0: _p28,
+														_1: {
+															ctor: '::',
+															_0: _p25,
+															_1: A2(_elm_lang$core$List$takeTailRec, n - 4, _p24)
+														}
+													}
+												}
+											} : {
+												ctor: '::',
+												_0: _p26,
+												_1: {
+													ctor: '::',
+													_0: _p27,
+													_1: {
+														ctor: '::',
+														_0: _p28,
+														_1: {
+															ctor: '::',
+															_0: _p25,
+															_1: A3(_elm_lang$core$List$takeFast, ctr + 1, n - 4, _p24)
+														}
+													}
+												}
+											};
+										} else {
+											break _v26_5;
+										}
+								}
+							} else {
+								if (_p23._0 === 1) {
+									break _v26_1;
+								} else {
+									break _v26_5;
+								}
+							}
+						}
+					} else {
+						break _v26_5;
+					}
+				} while(false);
+				return {
+					ctor: '::',
+					_0: _p23._1._0,
+					_1: {ctor: '[]'}
+				};
+			} while(false);
+			return list;
+		}
+	});
+var _elm_lang$core$List$take = F2(
+	function (n, list) {
+		return A3(_elm_lang$core$List$takeFast, 0, n, list);
+	});
+var _elm_lang$core$List$repeatHelp = F3(
+	function (result, n, value) {
+		repeatHelp:
+		while (true) {
+			if (_elm_lang$core$Native_Utils.cmp(n, 0) < 1) {
+				return result;
+			} else {
+				var _v27 = {ctor: '::', _0: value, _1: result},
+					_v28 = n - 1,
+					_v29 = value;
+				result = _v27;
+				n = _v28;
+				value = _v29;
+				continue repeatHelp;
+			}
+		}
+	});
+var _elm_lang$core$List$repeat = F2(
+	function (n, value) {
+		return A3(
+			_elm_lang$core$List$repeatHelp,
+			{ctor: '[]'},
+			n,
+			value);
+	});
+var _elm_lang$core$List$rangeHelp = F3(
+	function (lo, hi, list) {
+		rangeHelp:
+		while (true) {
+			if (_elm_lang$core$Native_Utils.cmp(lo, hi) < 1) {
+				var _v30 = lo,
+					_v31 = hi - 1,
+					_v32 = {ctor: '::', _0: hi, _1: list};
+				lo = _v30;
+				hi = _v31;
+				list = _v32;
+				continue rangeHelp;
+			} else {
+				return list;
+			}
+		}
+	});
+var _elm_lang$core$List$range = F2(
+	function (lo, hi) {
+		return A3(
+			_elm_lang$core$List$rangeHelp,
+			lo,
+			hi,
+			{ctor: '[]'});
+	});
+var _elm_lang$core$List$indexedMap = F2(
+	function (f, xs) {
+		return A3(
+			_elm_lang$core$List$map2,
+			f,
+			A2(
+				_elm_lang$core$List$range,
+				0,
+				_elm_lang$core$List$length(xs) - 1),
+			xs);
+	});
+
+var _elm_lang$core$Result$toMaybe = function (result) {
+	var _p0 = result;
+	if (_p0.ctor === 'Ok') {
+		return _elm_lang$core$Maybe$Just(_p0._0);
+	} else {
+		return _elm_lang$core$Maybe$Nothing;
+	}
+};
+var _elm_lang$core$Result$withDefault = F2(
+	function (def, result) {
+		var _p1 = result;
+		if (_p1.ctor === 'Ok') {
+			return _p1._0;
+		} else {
+			return def;
+		}
+	});
+var _elm_lang$core$Result$Err = function (a) {
+	return {ctor: 'Err', _0: a};
+};
+var _elm_lang$core$Result$andThen = F2(
+	function (callback, result) {
+		var _p2 = result;
+		if (_p2.ctor === 'Ok') {
+			return callback(_p2._0);
+		} else {
+			return _elm_lang$core$Result$Err(_p2._0);
+		}
+	});
+var _elm_lang$core$Result$Ok = function (a) {
+	return {ctor: 'Ok', _0: a};
+};
+var _elm_lang$core$Result$map = F2(
+	function (func, ra) {
+		var _p3 = ra;
+		if (_p3.ctor === 'Ok') {
+			return _elm_lang$core$Result$Ok(
+				func(_p3._0));
+		} else {
+			return _elm_lang$core$Result$Err(_p3._0);
+		}
+	});
+var _elm_lang$core$Result$map2 = F3(
+	function (func, ra, rb) {
+		var _p4 = {ctor: '_Tuple2', _0: ra, _1: rb};
+		if (_p4._0.ctor === 'Ok') {
+			if (_p4._1.ctor === 'Ok') {
+				return _elm_lang$core$Result$Ok(
+					A2(func, _p4._0._0, _p4._1._0));
+			} else {
+				return _elm_lang$core$Result$Err(_p4._1._0);
+			}
+		} else {
+			return _elm_lang$core$Result$Err(_p4._0._0);
+		}
+	});
+var _elm_lang$core$Result$map3 = F4(
+	function (func, ra, rb, rc) {
+		var _p5 = {ctor: '_Tuple3', _0: ra, _1: rb, _2: rc};
+		if (_p5._0.ctor === 'Ok') {
+			if (_p5._1.ctor === 'Ok') {
+				if (_p5._2.ctor === 'Ok') {
+					return _elm_lang$core$Result$Ok(
+						A3(func, _p5._0._0, _p5._1._0, _p5._2._0));
+				} else {
+					return _elm_lang$core$Result$Err(_p5._2._0);
+				}
+			} else {
+				return _elm_lang$core$Result$Err(_p5._1._0);
+			}
+		} else {
+			return _elm_lang$core$Result$Err(_p5._0._0);
+		}
+	});
+var _elm_lang$core$Result$map4 = F5(
+	function (func, ra, rb, rc, rd) {
+		var _p6 = {ctor: '_Tuple4', _0: ra, _1: rb, _2: rc, _3: rd};
+		if (_p6._0.ctor === 'Ok') {
+			if (_p6._1.ctor === 'Ok') {
+				if (_p6._2.ctor === 'Ok') {
+					if (_p6._3.ctor === 'Ok') {
+						return _elm_lang$core$Result$Ok(
+							A4(func, _p6._0._0, _p6._1._0, _p6._2._0, _p6._3._0));
+					} else {
+						return _elm_lang$core$Result$Err(_p6._3._0);
+					}
+				} else {
+					return _elm_lang$core$Result$Err(_p6._2._0);
+				}
+			} else {
+				return _elm_lang$core$Result$Err(_p6._1._0);
+			}
+		} else {
+			return _elm_lang$core$Result$Err(_p6._0._0);
+		}
+	});
+var _elm_lang$core$Result$map5 = F6(
+	function (func, ra, rb, rc, rd, re) {
+		var _p7 = {ctor: '_Tuple5', _0: ra, _1: rb, _2: rc, _3: rd, _4: re};
+		if (_p7._0.ctor === 'Ok') {
+			if (_p7._1.ctor === 'Ok') {
+				if (_p7._2.ctor === 'Ok') {
+					if (_p7._3.ctor === 'Ok') {
+						if (_p7._4.ctor === 'Ok') {
+							return _elm_lang$core$Result$Ok(
+								A5(func, _p7._0._0, _p7._1._0, _p7._2._0, _p7._3._0, _p7._4._0));
+						} else {
+							return _elm_lang$core$Result$Err(_p7._4._0);
+						}
+					} else {
+						return _elm_lang$core$Result$Err(_p7._3._0);
+					}
+				} else {
+					return _elm_lang$core$Result$Err(_p7._2._0);
+				}
+			} else {
+				return _elm_lang$core$Result$Err(_p7._1._0);
+			}
+		} else {
+			return _elm_lang$core$Result$Err(_p7._0._0);
+		}
+	});
+var _elm_lang$core$Result$mapError = F2(
+	function (f, result) {
+		var _p8 = result;
+		if (_p8.ctor === 'Ok') {
+			return _elm_lang$core$Result$Ok(_p8._0);
+		} else {
+			return _elm_lang$core$Result$Err(
+				f(_p8._0));
+		}
+	});
+var _elm_lang$core$Result$fromMaybe = F2(
+	function (err, maybe) {
+		var _p9 = maybe;
+		if (_p9.ctor === 'Just') {
+			return _elm_lang$core$Result$Ok(_p9._0);
+		} else {
+			return _elm_lang$core$Result$Err(err);
+		}
+	});
+
+//import Maybe, Native.List, Native.Utils, Result //
+
+var _elm_lang$core$Native_String = function() {
+
+function isEmpty(str)
+{
+	return str.length === 0;
+}
+function cons(chr, str)
+{
+	return chr + str;
+}
+function uncons(str)
+{
+	var hd = str[0];
+	if (hd)
+	{
+		return _elm_lang$core$Maybe$Just(_elm_lang$core$Native_Utils.Tuple2(_elm_lang$core$Native_Utils.chr(hd), str.slice(1)));
+	}
+	return _elm_lang$core$Maybe$Nothing;
+}
+function append(a, b)
+{
+	return a + b;
+}
+function concat(strs)
+{
+	return _elm_lang$core$Native_List.toArray(strs).join('');
+}
+function length(str)
+{
+	return str.length;
+}
+function map(f, str)
+{
+	var out = str.split('');
+	for (var i = out.length; i--; )
+	{
+		out[i] = f(_elm_lang$core$Native_Utils.chr(out[i]));
+	}
+	return out.join('');
+}
+function filter(pred, str)
+{
+	return str.split('').map(_elm_lang$core$Native_Utils.chr).filter(pred).join('');
+}
+function reverse(str)
+{
+	return str.split('').reverse().join('');
+}
+function foldl(f, b, str)
+{
+	var len = str.length;
+	for (var i = 0; i < len; ++i)
+	{
+		b = A2(f, _elm_lang$core$Native_Utils.chr(str[i]), b);
+	}
+	return b;
+}
+function foldr(f, b, str)
+{
+	for (var i = str.length; i--; )
+	{
+		b = A2(f, _elm_lang$core$Native_Utils.chr(str[i]), b);
+	}
+	return b;
+}
+function split(sep, str)
+{
+	return _elm_lang$core$Native_List.fromArray(str.split(sep));
+}
+function join(sep, strs)
+{
+	return _elm_lang$core$Native_List.toArray(strs).join(sep);
+}
+function repeat(n, str)
+{
+	var result = '';
+	while (n > 0)
+	{
+		if (n & 1)
+		{
+			result += str;
+		}
+		n >>= 1, str += str;
+	}
+	return result;
+}
+function slice(start, end, str)
+{
+	return str.slice(start, end);
+}
+function left(n, str)
+{
+	return n < 1 ? '' : str.slice(0, n);
+}
+function right(n, str)
+{
+	return n < 1 ? '' : str.slice(-n);
+}
+function dropLeft(n, str)
+{
+	return n < 1 ? str : str.slice(n);
+}
+function dropRight(n, str)
+{
+	return n < 1 ? str : str.slice(0, -n);
+}
+function pad(n, chr, str)
+{
+	var half = (n - str.length) / 2;
+	return repeat(Math.ceil(half), chr) + str + repeat(half | 0, chr);
+}
+function padRight(n, chr, str)
+{
+	return str + repeat(n - str.length, chr);
+}
+function padLeft(n, chr, str)
+{
+	return repeat(n - str.length, chr) + str;
+}
+
+function trim(str)
+{
+	return str.trim();
+}
+function trimLeft(str)
+{
+	return str.replace(/^\s+/, '');
+}
+function trimRight(str)
+{
+	return str.replace(/\s+$/, '');
+}
+
+function words(str)
+{
+	return _elm_lang$core$Native_List.fromArray(str.trim().split(/\s+/g));
+}
+function lines(str)
+{
+	return _elm_lang$core$Native_List.fromArray(str.split(/\r\n|\r|\n/g));
+}
+
+function toUpper(str)
+{
+	return str.toUpperCase();
+}
+function toLower(str)
+{
+	return str.toLowerCase();
+}
+
+function any(pred, str)
+{
+	for (var i = str.length; i--; )
+	{
+		if (pred(_elm_lang$core$Native_Utils.chr(str[i])))
+		{
+			return true;
+		}
+	}
+	return false;
+}
+function all(pred, str)
+{
+	for (var i = str.length; i--; )
+	{
+		if (!pred(_elm_lang$core$Native_Utils.chr(str[i])))
+		{
+			return false;
+		}
+	}
+	return true;
+}
+
+function contains(sub, str)
+{
+	return str.indexOf(sub) > -1;
+}
+function startsWith(sub, str)
+{
+	return str.indexOf(sub) === 0;
+}
+function endsWith(sub, str)
+{
+	return str.length >= sub.length &&
+		str.lastIndexOf(sub) === str.length - sub.length;
+}
+function indexes(sub, str)
+{
+	var subLen = sub.length;
+
+	if (subLen < 1)
+	{
+		return _elm_lang$core$Native_List.Nil;
+	}
+
+	var i = 0;
+	var is = [];
+
+	while ((i = str.indexOf(sub, i)) > -1)
+	{
+		is.push(i);
+		i = i + subLen;
+	}
+
+	return _elm_lang$core$Native_List.fromArray(is);
+}
+
+
+function toInt(s)
+{
+	var len = s.length;
+
+	// if empty
+	if (len === 0)
+	{
+		return intErr(s);
+	}
+
+	// if hex
+	var c = s[0];
+	if (c === '0' && s[1] === 'x')
+	{
+		for (var i = 2; i < len; ++i)
+		{
+			var c = s[i];
+			if (('0' <= c && c <= '9') || ('A' <= c && c <= 'F') || ('a' <= c && c <= 'f'))
+			{
+				continue;
+			}
+			return intErr(s);
+		}
+		return _elm_lang$core$Result$Ok(parseInt(s, 16));
+	}
+
+	// is decimal
+	if (c > '9' || (c < '0' && c !== '-' && c !== '+'))
+	{
+		return intErr(s);
+	}
+	for (var i = 1; i < len; ++i)
+	{
+		var c = s[i];
+		if (c < '0' || '9' < c)
+		{
+			return intErr(s);
+		}
+	}
+
+	return _elm_lang$core$Result$Ok(parseInt(s, 10));
+}
+
+function intErr(s)
+{
+	return _elm_lang$core$Result$Err("could not convert string '" + s + "' to an Int");
+}
+
+
+function toFloat(s)
+{
+	// check if it is a hex, octal, or binary number
+	if (s.length === 0 || /[\sxbo]/.test(s))
+	{
+		return floatErr(s);
+	}
+	var n = +s;
+	// faster isNaN check
+	return n === n ? _elm_lang$core$Result$Ok(n) : floatErr(s);
+}
+
+function floatErr(s)
+{
+	return _elm_lang$core$Result$Err("could not convert string '" + s + "' to a Float");
+}
+
+
+function toList(str)
+{
+	return _elm_lang$core$Native_List.fromArray(str.split('').map(_elm_lang$core$Native_Utils.chr));
+}
+function fromList(chars)
+{
+	return _elm_lang$core$Native_List.toArray(chars).join('');
+}
+
+return {
+	isEmpty: isEmpty,
+	cons: F2(cons),
+	uncons: uncons,
+	append: F2(append),
+	concat: concat,
+	length: length,
+	map: F2(map),
+	filter: F2(filter),
+	reverse: reverse,
+	foldl: F3(foldl),
+	foldr: F3(foldr),
+
+	split: F2(split),
+	join: F2(join),
+	repeat: F2(repeat),
+
+	slice: F3(slice),
+	left: F2(left),
+	right: F2(right),
+	dropLeft: F2(dropLeft),
+	dropRight: F2(dropRight),
+
+	pad: F3(pad),
+	padLeft: F3(padLeft),
+	padRight: F3(padRight),
+
+	trim: trim,
+	trimLeft: trimLeft,
+	trimRight: trimRight,
+
+	words: words,
+	lines: lines,
+
+	toUpper: toUpper,
+	toLower: toLower,
+
+	any: F2(any),
+	all: F2(all),
+
+	contains: F2(contains),
+	startsWith: F2(startsWith),
+	endsWith: F2(endsWith),
+	indexes: F2(indexes),
+
+	toInt: toInt,
+	toFloat: toFloat,
+	toList: toList,
+	fromList: fromList
+};
+
+}();
+
+//import Native.Utils //
+
+var _elm_lang$core$Native_Char = function() {
+
+return {
+	fromCode: function(c) { return _elm_lang$core$Native_Utils.chr(String.fromCharCode(c)); },
+	toCode: function(c) { return c.charCodeAt(0); },
+	toUpper: function(c) { return _elm_lang$core$Native_Utils.chr(c.toUpperCase()); },
+	toLower: function(c) { return _elm_lang$core$Native_Utils.chr(c.toLowerCase()); },
+	toLocaleUpper: function(c) { return _elm_lang$core$Native_Utils.chr(c.toLocaleUpperCase()); },
+	toLocaleLower: function(c) { return _elm_lang$core$Native_Utils.chr(c.toLocaleLowerCase()); }
+};
+
+}();
+var _elm_lang$core$Char$fromCode = _elm_lang$core$Native_Char.fromCode;
+var _elm_lang$core$Char$toCode = _elm_lang$core$Native_Char.toCode;
+var _elm_lang$core$Char$toLocaleLower = _elm_lang$core$Native_Char.toLocaleLower;
+var _elm_lang$core$Char$toLocaleUpper = _elm_lang$core$Native_Char.toLocaleUpper;
+var _elm_lang$core$Char$toLower = _elm_lang$core$Native_Char.toLower;
+var _elm_lang$core$Char$toUpper = _elm_lang$core$Native_Char.toUpper;
+var _elm_lang$core$Char$isBetween = F3(
+	function (low, high, $char) {
+		var code = _elm_lang$core$Char$toCode($char);
+		return (_elm_lang$core$Native_Utils.cmp(
+			code,
+			_elm_lang$core$Char$toCode(low)) > -1) && (_elm_lang$core$Native_Utils.cmp(
+			code,
+			_elm_lang$core$Char$toCode(high)) < 1);
+	});
+var _elm_lang$core$Char$isUpper = A2(
+	_elm_lang$core$Char$isBetween,
+	_elm_lang$core$Native_Utils.chr('A'),
+	_elm_lang$core$Native_Utils.chr('Z'));
+var _elm_lang$core$Char$isLower = A2(
+	_elm_lang$core$Char$isBetween,
+	_elm_lang$core$Native_Utils.chr('a'),
+	_elm_lang$core$Native_Utils.chr('z'));
+var _elm_lang$core$Char$isDigit = A2(
+	_elm_lang$core$Char$isBetween,
+	_elm_lang$core$Native_Utils.chr('0'),
+	_elm_lang$core$Native_Utils.chr('9'));
+var _elm_lang$core$Char$isOctDigit = A2(
+	_elm_lang$core$Char$isBetween,
+	_elm_lang$core$Native_Utils.chr('0'),
+	_elm_lang$core$Native_Utils.chr('7'));
+var _elm_lang$core$Char$isHexDigit = function ($char) {
+	return _elm_lang$core$Char$isDigit($char) || (A3(
+		_elm_lang$core$Char$isBetween,
+		_elm_lang$core$Native_Utils.chr('a'),
+		_elm_lang$core$Native_Utils.chr('f'),
+		$char) || A3(
+		_elm_lang$core$Char$isBetween,
+		_elm_lang$core$Native_Utils.chr('A'),
+		_elm_lang$core$Native_Utils.chr('F'),
+		$char));
+};
+
+var _elm_lang$core$String$fromList = _elm_lang$core$Native_String.fromList;
+var _elm_lang$core$String$toList = _elm_lang$core$Native_String.toList;
+var _elm_lang$core$String$toFloat = _elm_lang$core$Native_String.toFloat;
+var _elm_lang$core$String$toInt = _elm_lang$core$Native_String.toInt;
+var _elm_lang$core$String$indices = _elm_lang$core$Native_String.indexes;
+var _elm_lang$core$String$indexes = _elm_lang$core$Native_String.indexes;
+var _elm_lang$core$String$endsWith = _elm_lang$core$Native_String.endsWith;
+var _elm_lang$core$String$startsWith = _elm_lang$core$Native_String.startsWith;
+var _elm_lang$core$String$contains = _elm_lang$core$Native_String.contains;
+var _elm_lang$core$String$all = _elm_lang$core$Native_String.all;
+var _elm_lang$core$String$any = _elm_lang$core$Native_String.any;
+var _elm_lang$core$String$toLower = _elm_lang$core$Native_String.toLower;
+var _elm_lang$core$String$toUpper = _elm_lang$core$Native_String.toUpper;
+var _elm_lang$core$String$lines = _elm_lang$core$Native_String.lines;
+var _elm_lang$core$String$words = _elm_lang$core$Native_String.words;
+var _elm_lang$core$String$trimRight = _elm_lang$core$Native_String.trimRight;
+var _elm_lang$core$String$trimLeft = _elm_lang$core$Native_String.trimLeft;
+var _elm_lang$core$String$trim = _elm_lang$core$Native_String.trim;
+var _elm_lang$core$String$padRight = _elm_lang$core$Native_String.padRight;
+var _elm_lang$core$String$padLeft = _elm_lang$core$Native_String.padLeft;
+var _elm_lang$core$String$pad = _elm_lang$core$Native_String.pad;
+var _elm_lang$core$String$dropRight = _elm_lang$core$Native_String.dropRight;
+var _elm_lang$core$String$dropLeft = _elm_lang$core$Native_String.dropLeft;
+var _elm_lang$core$String$right = _elm_lang$core$Native_String.right;
+var _elm_lang$core$String$left = _elm_lang$core$Native_String.left;
+var _elm_lang$core$String$slice = _elm_lang$core$Native_String.slice;
+var _elm_lang$core$String$repeat = _elm_lang$core$Native_String.repeat;
+var _elm_lang$core$String$join = _elm_lang$core$Native_String.join;
+var _elm_lang$core$String$split = _elm_lang$core$Native_String.split;
+var _elm_lang$core$String$foldr = _elm_lang$core$Native_String.foldr;
+var _elm_lang$core$String$foldl = _elm_lang$core$Native_String.foldl;
+var _elm_lang$core$String$reverse = _elm_lang$core$Native_String.reverse;
+var _elm_lang$core$String$filter = _elm_lang$core$Native_String.filter;
+var _elm_lang$core$String$map = _elm_lang$core$Native_String.map;
+var _elm_lang$core$String$length = _elm_lang$core$Native_String.length;
+var _elm_lang$core$String$concat = _elm_lang$core$Native_String.concat;
+var _elm_lang$core$String$append = _elm_lang$core$Native_String.append;
+var _elm_lang$core$String$uncons = _elm_lang$core$Native_String.uncons;
+var _elm_lang$core$String$cons = _elm_lang$core$Native_String.cons;
+var _elm_lang$core$String$fromChar = function ($char) {
+	return A2(_elm_lang$core$String$cons, $char, '');
+};
+var _elm_lang$core$String$isEmpty = _elm_lang$core$Native_String.isEmpty;
+
+var _elm_lang$core$Tuple$mapSecond = F2(
+	function (func, _p0) {
+		var _p1 = _p0;
+		return {
+			ctor: '_Tuple2',
+			_0: _p1._0,
+			_1: func(_p1._1)
+		};
+	});
+var _elm_lang$core$Tuple$mapFirst = F2(
+	function (func, _p2) {
+		var _p3 = _p2;
+		return {
+			ctor: '_Tuple2',
+			_0: func(_p3._0),
+			_1: _p3._1
+		};
+	});
+var _elm_lang$core$Tuple$second = function (_p4) {
+	var _p5 = _p4;
+	return _p5._1;
+};
+var _elm_lang$core$Tuple$first = function (_p6) {
+	var _p7 = _p6;
+	return _p7._0;
+};
+
+//import //
+
+var _elm_lang$core$Native_Platform = function() {
+
+
+// PROGRAMS
+
+function program(impl)
+{
+	return function(flagDecoder)
+	{
+		return function(object, moduleName)
+		{
+			object['worker'] = function worker(flags)
+			{
+				if (typeof flags !== 'undefined')
+				{
+					throw new Error(
+						'The `' + moduleName + '` module does not need flags.\n'
+						+ 'Call ' + moduleName + '.worker() with no arguments and you should be all set!'
+					);
+				}
+
+				return initialize(
+					impl.init,
+					impl.update,
+					impl.subscriptions,
+					renderer
+				);
+			};
+		};
+	};
+}
+
+function programWithFlags(impl)
+{
+	return function(flagDecoder)
+	{
+		return function(object, moduleName)
+		{
+			object['worker'] = function worker(flags)
+			{
+				if (typeof flagDecoder === 'undefined')
+				{
+					throw new Error(
+						'Are you trying to sneak a Never value into Elm? Trickster!\n'
+						+ 'It looks like ' + moduleName + '.main is defined with `programWithFlags` but has type `Program Never`.\n'
+						+ 'Use `program` instead if you do not want flags.'
+					);
+				}
+
+				var result = A2(_elm_lang$core$Native_Json.run, flagDecoder, flags);
+				if (result.ctor === 'Err')
+				{
+					throw new Error(
+						moduleName + '.worker(...) was called with an unexpected argument.\n'
+						+ 'I tried to convert it to an Elm value, but ran into this problem:\n\n'
+						+ result._0
+					);
+				}
+
+				return initialize(
+					impl.init(result._0),
+					impl.update,
+					impl.subscriptions,
+					renderer
+				);
+			};
+		};
+	};
+}
+
+function renderer(enqueue, _)
+{
+	return function(_) {};
+}
+
+
+// HTML TO PROGRAM
+
+function htmlToProgram(vnode)
+{
+	var emptyBag = batch(_elm_lang$core$Native_List.Nil);
+	var noChange = _elm_lang$core$Native_Utils.Tuple2(
+		_elm_lang$core$Native_Utils.Tuple0,
+		emptyBag
+	);
+
+	return _elm_lang$virtual_dom$VirtualDom$program({
+		init: noChange,
+		view: function(model) { return main; },
+		update: F2(function(msg, model) { return noChange; }),
+		subscriptions: function (model) { return emptyBag; }
+	});
+}
+
+
+// INITIALIZE A PROGRAM
+
+function initialize(init, update, subscriptions, renderer)
+{
+	// ambient state
+	var managers = {};
+	var updateView;
+
+	// init and update state in main process
+	var initApp = _elm_lang$core$Native_Scheduler.nativeBinding(function(callback) {
+		var model = init._0;
+		updateView = renderer(enqueue, model);
+		var cmds = init._1;
+		var subs = subscriptions(model);
+		dispatchEffects(managers, cmds, subs);
+		callback(_elm_lang$core$Native_Scheduler.succeed(model));
+	});
+
+	function onMessage(msg, model)
+	{
+		return _elm_lang$core$Native_Scheduler.nativeBinding(function(callback) {
+			var results = A2(update, msg, model);
+			model = results._0;
+			updateView(model);
+			var cmds = results._1;
+			var subs = subscriptions(model);
+			dispatchEffects(managers, cmds, subs);
+			callback(_elm_lang$core$Native_Scheduler.succeed(model));
+		});
+	}
+
+	var mainProcess = spawnLoop(initApp, onMessage);
+
+	function enqueue(msg)
+	{
+		_elm_lang$core$Native_Scheduler.rawSend(mainProcess, msg);
+	}
+
+	var ports = setupEffects(managers, enqueue);
+
+	return ports ? { ports: ports } : {};
+}
+
+
+// EFFECT MANAGERS
+
+var effectManagers = {};
+
+function setupEffects(managers, callback)
+{
+	var ports;
+
+	// setup all necessary effect managers
+	for (var key in effectManagers)
+	{
+		var manager = effectManagers[key];
+
+		if (manager.isForeign)
+		{
+			ports = ports || {};
+			ports[key] = manager.tag === 'cmd'
+				? setupOutgoingPort(key)
+				: setupIncomingPort(key, callback);
+		}
+
+		managers[key] = makeManager(manager, callback);
+	}
+
+	return ports;
+}
+
+function makeManager(info, callback)
+{
+	var router = {
+		main: callback,
+		self: undefined
+	};
+
+	var tag = info.tag;
+	var onEffects = info.onEffects;
+	var onSelfMsg = info.onSelfMsg;
+
+	function onMessage(msg, state)
+	{
+		if (msg.ctor === 'self')
+		{
+			return A3(onSelfMsg, router, msg._0, state);
+		}
+
+		var fx = msg._0;
+		switch (tag)
+		{
+			case 'cmd':
+				return A3(onEffects, router, fx.cmds, state);
+
+			case 'sub':
+				return A3(onEffects, router, fx.subs, state);
+
+			case 'fx':
+				return A4(onEffects, router, fx.cmds, fx.subs, state);
+		}
+	}
+
+	var process = spawnLoop(info.init, onMessage);
+	router.self = process;
+	return process;
+}
+
+function sendToApp(router, msg)
+{
+	return _elm_lang$core$Native_Scheduler.nativeBinding(function(callback)
+	{
+		router.main(msg);
+		callback(_elm_lang$core$Native_Scheduler.succeed(_elm_lang$core$Native_Utils.Tuple0));
+	});
+}
+
+function sendToSelf(router, msg)
+{
+	return A2(_elm_lang$core$Native_Scheduler.send, router.self, {
+		ctor: 'self',
+		_0: msg
+	});
+}
+
+
+// HELPER for STATEFUL LOOPS
+
+function spawnLoop(init, onMessage)
+{
+	var andThen = _elm_lang$core$Native_Scheduler.andThen;
+
+	function loop(state)
+	{
+		var handleMsg = _elm_lang$core$Native_Scheduler.receive(function(msg) {
+			return onMessage(msg, state);
+		});
+		return A2(andThen, loop, handleMsg);
+	}
+
+	var task = A2(andThen, loop, init);
+
+	return _elm_lang$core$Native_Scheduler.rawSpawn(task);
+}
+
+
+// BAGS
+
+function leaf(home)
+{
+	return function(value)
+	{
+		return {
+			type: 'leaf',
+			home: home,
+			value: value
+		};
+	};
+}
+
+function batch(list)
+{
+	return {
+		type: 'node',
+		branches: list
+	};
+}
+
+function map(tagger, bag)
+{
+	return {
+		type: 'map',
+		tagger: tagger,
+		tree: bag
+	}
+}
+
+
+// PIPE BAGS INTO EFFECT MANAGERS
+
+function dispatchEffects(managers, cmdBag, subBag)
+{
+	var effectsDict = {};
+	gatherEffects(true, cmdBag, effectsDict, null);
+	gatherEffects(false, subBag, effectsDict, null);
+
+	for (var home in managers)
+	{
+		var fx = home in effectsDict
+			? effectsDict[home]
+			: {
+				cmds: _elm_lang$core$Native_List.Nil,
+				subs: _elm_lang$core$Native_List.Nil
+			};
+
+		_elm_lang$core$Native_Scheduler.rawSend(managers[home], { ctor: 'fx', _0: fx });
+	}
+}
+
+function gatherEffects(isCmd, bag, effectsDict, taggers)
+{
+	switch (bag.type)
+	{
+		case 'leaf':
+			var home = bag.home;
+			var effect = toEffect(isCmd, home, taggers, bag.value);
+			effectsDict[home] = insert(isCmd, effect, effectsDict[home]);
+			return;
+
+		case 'node':
+			var list = bag.branches;
+			while (list.ctor !== '[]')
+			{
+				gatherEffects(isCmd, list._0, effectsDict, taggers);
+				list = list._1;
+			}
+			return;
+
+		case 'map':
+			gatherEffects(isCmd, bag.tree, effectsDict, {
+				tagger: bag.tagger,
+				rest: taggers
+			});
+			return;
+	}
+}
+
+function toEffect(isCmd, home, taggers, value)
+{
+	function applyTaggers(x)
+	{
+		var temp = taggers;
+		while (temp)
+		{
+			x = temp.tagger(x);
+			temp = temp.rest;
+		}
+		return x;
+	}
+
+	var map = isCmd
+		? effectManagers[home].cmdMap
+		: effectManagers[home].subMap;
+
+	return A2(map, applyTaggers, value)
+}
+
+function insert(isCmd, newEffect, effects)
+{
+	effects = effects || {
+		cmds: _elm_lang$core$Native_List.Nil,
+		subs: _elm_lang$core$Native_List.Nil
+	};
+	if (isCmd)
+	{
+		effects.cmds = _elm_lang$core$Native_List.Cons(newEffect, effects.cmds);
+		return effects;
+	}
+	effects.subs = _elm_lang$core$Native_List.Cons(newEffect, effects.subs);
+	return effects;
+}
+
+
+// PORTS
+
+function checkPortName(name)
+{
+	if (name in effectManagers)
+	{
+		throw new Error('There can only be one port named `' + name + '`, but your program has multiple.');
+	}
+}
+
+
+// OUTGOING PORTS
+
+function outgoingPort(name, converter)
+{
+	checkPortName(name);
+	effectManagers[name] = {
+		tag: 'cmd',
+		cmdMap: outgoingPortMap,
+		converter: converter,
+		isForeign: true
+	};
+	return leaf(name);
+}
+
+var outgoingPortMap = F2(function cmdMap(tagger, value) {
+	return value;
+});
+
+function setupOutgoingPort(name)
+{
+	var subs = [];
+	var converter = effectManagers[name].converter;
+
+	// CREATE MANAGER
+
+	var init = _elm_lang$core$Native_Scheduler.succeed(null);
+
+	function onEffects(router, cmdList, state)
+	{
+		while (cmdList.ctor !== '[]')
+		{
+			// grab a separate reference to subs in case unsubscribe is called
+			var currentSubs = subs;
+			var value = converter(cmdList._0);
+			for (var i = 0; i < currentSubs.length; i++)
+			{
+				currentSubs[i](value);
+			}
+			cmdList = cmdList._1;
+		}
+		return init;
+	}
+
+	effectManagers[name].init = init;
+	effectManagers[name].onEffects = F3(onEffects);
+
+	// PUBLIC API
+
+	function subscribe(callback)
+	{
+		subs.push(callback);
+	}
+
+	function unsubscribe(callback)
+	{
+		// copy subs into a new array in case unsubscribe is called within a
+		// subscribed callback
+		subs = subs.slice();
+		var index = subs.indexOf(callback);
+		if (index >= 0)
+		{
+			subs.splice(index, 1);
+		}
+	}
+
+	return {
+		subscribe: subscribe,
+		unsubscribe: unsubscribe
+	};
+}
+
+
+// INCOMING PORTS
+
+function incomingPort(name, converter)
+{
+	checkPortName(name);
+	effectManagers[name] = {
+		tag: 'sub',
+		subMap: incomingPortMap,
+		converter: converter,
+		isForeign: true
+	};
+	return leaf(name);
+}
+
+var incomingPortMap = F2(function subMap(tagger, finalTagger)
+{
+	return function(value)
+	{
+		return tagger(finalTagger(value));
+	};
+});
+
+function setupIncomingPort(name, callback)
+{
+	var sentBeforeInit = [];
+	var subs = _elm_lang$core$Native_List.Nil;
+	var converter = effectManagers[name].converter;
+	var currentOnEffects = preInitOnEffects;
+	var currentSend = preInitSend;
+
+	// CREATE MANAGER
+
+	var init = _elm_lang$core$Native_Scheduler.succeed(null);
+
+	function preInitOnEffects(router, subList, state)
+	{
+		var postInitResult = postInitOnEffects(router, subList, state);
+
+		for(var i = 0; i < sentBeforeInit.length; i++)
+		{
+			postInitSend(sentBeforeInit[i]);
+		}
+
+		sentBeforeInit = null; // to release objects held in queue
+		currentSend = postInitSend;
+		currentOnEffects = postInitOnEffects;
+		return postInitResult;
+	}
+
+	function postInitOnEffects(router, subList, state)
+	{
+		subs = subList;
+		return init;
+	}
+
+	function onEffects(router, subList, state)
+	{
+		return currentOnEffects(router, subList, state);
+	}
+
+	effectManagers[name].init = init;
+	effectManagers[name].onEffects = F3(onEffects);
+
+	// PUBLIC API
+
+	function preInitSend(value)
+	{
+		sentBeforeInit.push(value);
+	}
+
+	function postInitSend(value)
+	{
+		var temp = subs;
+		while (temp.ctor !== '[]')
+		{
+			callback(temp._0(value));
+			temp = temp._1;
+		}
+	}
+
+	function send(incomingValue)
+	{
+		var result = A2(_elm_lang$core$Json_Decode$decodeValue, converter, incomingValue);
+		if (result.ctor === 'Err')
+		{
+			throw new Error('Trying to send an unexpected type of value through port `' + name + '`:\n' + result._0);
+		}
+
+		currentSend(result._0);
+	}
+
+	return { send: send };
+}
+
+return {
+	// routers
+	sendToApp: F2(sendToApp),
+	sendToSelf: F2(sendToSelf),
+
+	// global setup
+	effectManagers: effectManagers,
+	outgoingPort: outgoingPort,
+	incomingPort: incomingPort,
+
+	htmlToProgram: htmlToProgram,
+	program: program,
+	programWithFlags: programWithFlags,
+	initialize: initialize,
+
+	// effect bags
+	leaf: leaf,
+	batch: batch,
+	map: F2(map)
+};
+
+}();
+
+//import Native.Utils //
+
+var _elm_lang$core$Native_Scheduler = function() {
+
+var MAX_STEPS = 10000;
+
+
+// TASKS
+
+function succeed(value)
+{
+	return {
+		ctor: '_Task_succeed',
+		value: value
+	};
+}
+
+function fail(error)
+{
+	return {
+		ctor: '_Task_fail',
+		value: error
+	};
+}
+
+function nativeBinding(callback)
+{
+	return {
+		ctor: '_Task_nativeBinding',
+		callback: callback,
+		cancel: null
+	};
+}
+
+function andThen(callback, task)
+{
+	return {
+		ctor: '_Task_andThen',
+		callback: callback,
+		task: task
+	};
+}
+
+function onError(callback, task)
+{
+	return {
+		ctor: '_Task_onError',
+		callback: callback,
+		task: task
+	};
+}
+
+function receive(callback)
+{
+	return {
+		ctor: '_Task_receive',
+		callback: callback
+	};
+}
+
+
+// PROCESSES
+
+function rawSpawn(task)
+{
+	var process = {
+		ctor: '_Process',
+		id: _elm_lang$core$Native_Utils.guid(),
+		root: task,
+		stack: null,
+		mailbox: []
+	};
+
+	enqueue(process);
+
+	return process;
+}
+
+function spawn(task)
+{
+	return nativeBinding(function(callback) {
+		var process = rawSpawn(task);
+		callback(succeed(process));
+	});
+}
+
+function rawSend(process, msg)
+{
+	process.mailbox.push(msg);
+	enqueue(process);
+}
+
+function send(process, msg)
+{
+	return nativeBinding(function(callback) {
+		rawSend(process, msg);
+		callback(succeed(_elm_lang$core$Native_Utils.Tuple0));
+	});
+}
+
+function kill(process)
+{
+	return nativeBinding(function(callback) {
+		var root = process.root;
+		if (root.ctor === '_Task_nativeBinding' && root.cancel)
+		{
+			root.cancel();
+		}
+
+		process.root = null;
+
+		callback(succeed(_elm_lang$core$Native_Utils.Tuple0));
+	});
+}
+
+function sleep(time)
+{
+	return nativeBinding(function(callback) {
+		var id = setTimeout(function() {
+			callback(succeed(_elm_lang$core$Native_Utils.Tuple0));
+		}, time);
+
+		return function() { clearTimeout(id); };
+	});
+}
+
+
+// STEP PROCESSES
+
+function step(numSteps, process)
+{
+	while (numSteps < MAX_STEPS)
+	{
+		var ctor = process.root.ctor;
+
+		if (ctor === '_Task_succeed')
+		{
+			while (process.stack && process.stack.ctor === '_Task_onError')
+			{
+				process.stack = process.stack.rest;
+			}
+			if (process.stack === null)
+			{
+				break;
+			}
+			process.root = process.stack.callback(process.root.value);
+			process.stack = process.stack.rest;
+			++numSteps;
+			continue;
+		}
+
+		if (ctor === '_Task_fail')
+		{
+			while (process.stack && process.stack.ctor === '_Task_andThen')
+			{
+				process.stack = process.stack.rest;
+			}
+			if (process.stack === null)
+			{
+				break;
+			}
+			process.root = process.stack.callback(process.root.value);
+			process.stack = process.stack.rest;
+			++numSteps;
+			continue;
+		}
+
+		if (ctor === '_Task_andThen')
+		{
+			process.stack = {
+				ctor: '_Task_andThen',
+				callback: process.root.callback,
+				rest: process.stack
+			};
+			process.root = process.root.task;
+			++numSteps;
+			continue;
+		}
+
+		if (ctor === '_Task_onError')
+		{
+			process.stack = {
+				ctor: '_Task_onError',
+				callback: process.root.callback,
+				rest: process.stack
+			};
+			process.root = process.root.task;
+			++numSteps;
+			continue;
+		}
+
+		if (ctor === '_Task_nativeBinding')
+		{
+			process.root.cancel = process.root.callback(function(newRoot) {
+				process.root = newRoot;
+				enqueue(process);
+			});
+
+			break;
+		}
+
+		if (ctor === '_Task_receive')
+		{
+			var mailbox = process.mailbox;
+			if (mailbox.length === 0)
+			{
+				break;
+			}
+
+			process.root = process.root.callback(mailbox.shift());
+			++numSteps;
+			continue;
+		}
+
+		throw new Error(ctor);
+	}
+
+	if (numSteps < MAX_STEPS)
+	{
+		return numSteps + 1;
+	}
+	enqueue(process);
+
+	return numSteps;
+}
+
+
+// WORK QUEUE
+
+var working = false;
+var workQueue = [];
+
+function enqueue(process)
+{
+	workQueue.push(process);
+
+	if (!working)
+	{
+		setTimeout(work, 0);
+		working = true;
+	}
+}
+
+function work()
+{
+	var numSteps = 0;
+	var process;
+	while (numSteps < MAX_STEPS && (process = workQueue.shift()))
+	{
+		if (process.root)
+		{
+			numSteps = step(numSteps, process);
+		}
+	}
+	if (!process)
+	{
+		working = false;
+		return;
+	}
+	setTimeout(work, 0);
+}
+
+
+return {
+	succeed: succeed,
+	fail: fail,
+	nativeBinding: nativeBinding,
+	andThen: F2(andThen),
+	onError: F2(onError),
+	receive: receive,
+
+	spawn: spawn,
+	kill: kill,
+	sleep: sleep,
+	send: F2(send),
+
+	rawSpawn: rawSpawn,
+	rawSend: rawSend
+};
+
+}();
+var _elm_lang$core$Platform_Cmd$batch = _elm_lang$core$Native_Platform.batch;
+var _elm_lang$core$Platform_Cmd$none = _elm_lang$core$Platform_Cmd$batch(
+	{ctor: '[]'});
+var _elm_lang$core$Platform_Cmd_ops = _elm_lang$core$Platform_Cmd_ops || {};
+_elm_lang$core$Platform_Cmd_ops['!'] = F2(
+	function (model, commands) {
+		return {
+			ctor: '_Tuple2',
+			_0: model,
+			_1: _elm_lang$core$Platform_Cmd$batch(commands)
+		};
+	});
+var _elm_lang$core$Platform_Cmd$map = _elm_lang$core$Native_Platform.map;
+var _elm_lang$core$Platform_Cmd$Cmd = {ctor: 'Cmd'};
+
+var _elm_lang$core$Platform_Sub$batch = _elm_lang$core$Native_Platform.batch;
+var _elm_lang$core$Platform_Sub$none = _elm_lang$core$Platform_Sub$batch(
+	{ctor: '[]'});
+var _elm_lang$core$Platform_Sub$map = _elm_lang$core$Native_Platform.map;
+var _elm_lang$core$Platform_Sub$Sub = {ctor: 'Sub'};
+
+var _elm_lang$core$Platform$hack = _elm_lang$core$Native_Scheduler.succeed;
+var _elm_lang$core$Platform$sendToSelf = _elm_lang$core$Native_Platform.sendToSelf;
+var _elm_lang$core$Platform$sendToApp = _elm_lang$core$Native_Platform.sendToApp;
+var _elm_lang$core$Platform$programWithFlags = _elm_lang$core$Native_Platform.programWithFlags;
+var _elm_lang$core$Platform$program = _elm_lang$core$Native_Platform.program;
+var _elm_lang$core$Platform$Program = {ctor: 'Program'};
+var _elm_lang$core$Platform$Task = {ctor: 'Task'};
+var _elm_lang$core$Platform$ProcessId = {ctor: 'ProcessId'};
+var _elm_lang$core$Platform$Router = {ctor: 'Router'};
+
+var _avh4$elm_fifo$Fifo$toList = function (_p0) {
+	var _p1 = _p0;
+	return A2(
+		_elm_lang$core$Basics_ops['++'],
+		_p1._0,
+		_elm_lang$core$List$reverse(_p1._1));
+};
+var _avh4$elm_fifo$Fifo$Fifo = F2(
+	function (a, b) {
+		return {ctor: 'Fifo', _0: a, _1: b};
+	});
+var _avh4$elm_fifo$Fifo$empty = A2(
+	_avh4$elm_fifo$Fifo$Fifo,
+	{ctor: '[]'},
+	{ctor: '[]'});
+var _avh4$elm_fifo$Fifo$insert = F2(
+	function (a, _p2) {
+		var _p3 = _p2;
+		return A2(
+			_avh4$elm_fifo$Fifo$Fifo,
+			_p3._0,
+			{ctor: '::', _0: a, _1: _p3._1});
+	});
+var _avh4$elm_fifo$Fifo$remove = function (fifo) {
+	remove:
+	while (true) {
+		var _p4 = fifo;
+		if (_p4._0.ctor === '[]') {
+			if (_p4._1.ctor === '[]') {
+				return {ctor: '_Tuple2', _0: _elm_lang$core$Maybe$Nothing, _1: _avh4$elm_fifo$Fifo$empty};
+			} else {
+				var _v3 = A2(
+					_avh4$elm_fifo$Fifo$Fifo,
+					_elm_lang$core$List$reverse(_p4._1),
+					{ctor: '[]'});
+				fifo = _v3;
+				continue remove;
+			}
+		} else {
+			return {
+				ctor: '_Tuple2',
+				_0: _elm_lang$core$Maybe$Just(_p4._0._0),
+				_1: A2(_avh4$elm_fifo$Fifo$Fifo, _p4._0._1, _p4._1)
+			};
+		}
+	}
+};
+var _avh4$elm_fifo$Fifo$fromList = function (list) {
+	return A2(
+		_avh4$elm_fifo$Fifo$Fifo,
+		list,
+		{ctor: '[]'});
+};
+
+var _elm_community$graph$Graph_Tree$pushMany = F2(
+	function (vals, queue) {
+		return A3(_elm_lang$core$List$foldl, _avh4$elm_fifo$Fifo$insert, queue, vals);
+	});
+var _elm_community$graph$Graph_Tree$listForTraversal = F2(
+	function (traversal, tree) {
+		var acc = _elm_lang$core$Basics$identity;
+		var f = F3(
+			function (label, children, rest) {
+				return function (_p0) {
+					return rest(
+						A2(
+							F2(
+								function (x, y) {
+									return {ctor: '::', _0: x, _1: y};
+								}),
+							label,
+							_p0));
+				};
+			});
+		return A4(
+			traversal,
+			f,
+			acc,
+			tree,
+			{ctor: '[]'});
+	});
+var _elm_community$graph$Graph_Tree$size = function (tree) {
+	var _p1 = tree;
+	return _p1._0;
+};
+var _elm_community$graph$Graph_Tree$root = function (tree) {
+	var _p2 = tree;
+	return _p2._1;
+};
+var _elm_community$graph$Graph_Tree$height = function (tree) {
+	var go = F2(
+		function (h, t) {
+			var _p3 = _elm_community$graph$Graph_Tree$root(t);
+			if (_p3.ctor === 'Just') {
+				return A3(
+					_elm_lang$core$List$foldl,
+					function (_p4) {
+						return _elm_lang$core$Basics$max(
+							A2(go, h + 1, _p4));
+					},
+					h + 1,
+					_p3._0._1);
+			} else {
+				return h;
+			}
+		});
+	return A2(go, 0, tree);
+};
+var _elm_community$graph$Graph_Tree$levelOrder = F3(
+	function (visit, acc, tree) {
+		var go = F2(
+			function (acc, toVisit) {
+				go:
+				while (true) {
+					var _p5 = _avh4$elm_fifo$Fifo$remove(toVisit);
+					if (_p5._0.ctor === 'Nothing') {
+						return acc;
+					} else {
+						var _p8 = _p5._1;
+						var _p6 = _elm_community$graph$Graph_Tree$root(_p5._0._0);
+						if (_p6.ctor === 'Nothing') {
+							var _v5 = acc,
+								_v6 = _p8;
+							acc = _v5;
+							toVisit = _v6;
+							continue go;
+						} else {
+							var _p7 = _p6._0._1;
+							var _v7 = A3(visit, _p6._0._0, _p7, acc),
+								_v8 = A2(_elm_community$graph$Graph_Tree$pushMany, _p7, _p8);
+							acc = _v7;
+							toVisit = _v8;
+							continue go;
+						}
+					}
+				}
+			});
+		return A2(
+			go,
+			acc,
+			A2(_avh4$elm_fifo$Fifo$insert, tree, _avh4$elm_fifo$Fifo$empty));
+	});
+var _elm_community$graph$Graph_Tree$levelOrderList = _elm_community$graph$Graph_Tree$listForTraversal(_elm_community$graph$Graph_Tree$levelOrder);
+var _elm_community$graph$Graph_Tree$postOrder = F3(
+	function (visit, acc, tree) {
+		var folder = _elm_lang$core$Basics$flip(
+			_elm_community$graph$Graph_Tree$postOrder(visit));
+		var _p9 = _elm_community$graph$Graph_Tree$root(tree);
+		if (_p9.ctor === 'Nothing') {
+			return acc;
+		} else {
+			var _p10 = _p9._0._1;
+			return A3(
+				visit,
+				_p9._0._0,
+				_p10,
+				A3(_elm_lang$core$List$foldl, folder, acc, _p10));
+		}
+	});
+var _elm_community$graph$Graph_Tree$postOrderList = _elm_community$graph$Graph_Tree$listForTraversal(_elm_community$graph$Graph_Tree$postOrder);
+var _elm_community$graph$Graph_Tree$preOrder = F3(
+	function (visit, acc, tree) {
+		var folder = _elm_lang$core$Basics$flip(
+			_elm_community$graph$Graph_Tree$preOrder(visit));
+		var _p11 = _elm_community$graph$Graph_Tree$root(tree);
+		if (_p11.ctor === 'Nothing') {
+			return acc;
+		} else {
+			var _p12 = _p11._0._1;
+			return A3(
+				_elm_lang$core$List$foldl,
+				folder,
+				A3(visit, _p11._0._0, _p12, acc),
+				_p12);
+		}
+	});
+var _elm_community$graph$Graph_Tree$preOrderList = _elm_community$graph$Graph_Tree$listForTraversal(_elm_community$graph$Graph_Tree$preOrder);
+var _elm_community$graph$Graph_Tree$MkTree = F2(
+	function (a, b) {
+		return {ctor: 'MkTree', _0: a, _1: b};
+	});
+var _elm_community$graph$Graph_Tree$empty = A2(_elm_community$graph$Graph_Tree$MkTree, 0, _elm_lang$core$Maybe$Nothing);
+var _elm_community$graph$Graph_Tree$isEmpty = function (tree) {
+	return _elm_lang$core$Native_Utils.eq(tree, _elm_community$graph$Graph_Tree$empty);
+};
+var _elm_community$graph$Graph_Tree$inner = F2(
+	function (label, children) {
+		var nonEmptyChildren = A2(
+			_elm_lang$core$List$filter,
+			function (_p13) {
+				return !_elm_community$graph$Graph_Tree$isEmpty(_p13);
+			},
+			children);
+		var totalSize = A3(
+			_elm_lang$core$List$foldl,
+			function (_p14) {
+				return F2(
+					function (x, y) {
+						return x + y;
+					})(
+					_elm_community$graph$Graph_Tree$size(_p14));
+			},
+			1,
+			nonEmptyChildren);
+		return A2(
+			_elm_community$graph$Graph_Tree$MkTree,
+			totalSize,
+			_elm_lang$core$Maybe$Just(
+				{ctor: '_Tuple2', _0: label, _1: nonEmptyChildren}));
+	});
+var _elm_community$graph$Graph_Tree$leaf = function (val) {
+	return A2(
+		_elm_community$graph$Graph_Tree$inner,
+		val,
+		{ctor: '[]'});
+};
+var _elm_community$graph$Graph_Tree$unfoldTree = F2(
+	function (next, seed) {
+		var _p15 = next(seed);
+		var label = _p15._0;
+		var seeds = _p15._1;
+		return A2(
+			_elm_community$graph$Graph_Tree$inner,
+			label,
+			A2(
+				_elm_lang$core$List$map,
+				_elm_community$graph$Graph_Tree$unfoldTree(next),
+				seeds));
+	});
+var _elm_community$graph$Graph_Tree$unfoldForest = F2(
+	function (next, seeds) {
+		return A2(
+			_elm_lang$core$List$map,
+			_elm_community$graph$Graph_Tree$unfoldTree(next),
+			seeds);
+	});
+
+var _elm_lang$core$Native_Bitwise = function() {
+
+return {
+	and: F2(function and(a, b) { return a & b; }),
+	or: F2(function or(a, b) { return a | b; }),
+	xor: F2(function xor(a, b) { return a ^ b; }),
+	complement: function complement(a) { return ~a; },
+	shiftLeftBy: F2(function(offset, a) { return a << offset; }),
+	shiftRightBy: F2(function(offset, a) { return a >> offset; }),
+	shiftRightZfBy: F2(function(offset, a) { return a >>> offset; })
+};
+
+}();
+
+var _elm_lang$core$Bitwise$shiftRightZfBy = _elm_lang$core$Native_Bitwise.shiftRightZfBy;
+var _elm_lang$core$Bitwise$shiftRightBy = _elm_lang$core$Native_Bitwise.shiftRightBy;
+var _elm_lang$core$Bitwise$shiftLeftBy = _elm_lang$core$Native_Bitwise.shiftLeftBy;
+var _elm_lang$core$Bitwise$complement = _elm_lang$core$Native_Bitwise.complement;
+var _elm_lang$core$Bitwise$xor = _elm_lang$core$Native_Bitwise.xor;
+var _elm_lang$core$Bitwise$or = _elm_lang$core$Native_Bitwise.or;
+var _elm_lang$core$Bitwise$and = _elm_lang$core$Native_Bitwise.and;
+
+var _elm_community$intdict$IntDict$combineBits = F3(
+	function (a, b, mask) {
+		return (a & (~mask)) | (b & mask);
+	});
+var _elm_community$intdict$IntDict$foldr = F3(
+	function (f, acc, dict) {
+		foldr:
+		while (true) {
+			var _p0 = dict;
+			switch (_p0.ctor) {
+				case 'Empty':
+					return acc;
+				case 'Leaf':
+					var _p1 = _p0._0;
+					return A3(f, _p1.key, _p1.value, acc);
+				default:
+					var _p2 = _p0._0;
+					var _v1 = f,
+						_v2 = A3(_elm_community$intdict$IntDict$foldr, f, acc, _p2.right),
+						_v3 = _p2.left;
+					f = _v1;
+					acc = _v2;
+					dict = _v3;
+					continue foldr;
+			}
+		}
+	});
+var _elm_community$intdict$IntDict$keys = function (dict) {
+	return A3(
+		_elm_community$intdict$IntDict$foldr,
+		F3(
+			function (key, value, keyList) {
+				return {ctor: '::', _0: key, _1: keyList};
+			}),
+		{ctor: '[]'},
+		dict);
+};
+var _elm_community$intdict$IntDict$values = function (dict) {
+	return A3(
+		_elm_community$intdict$IntDict$foldr,
+		F3(
+			function (key, value, valueList) {
+				return {ctor: '::', _0: value, _1: valueList};
+			}),
+		{ctor: '[]'},
+		dict);
+};
+var _elm_community$intdict$IntDict$toList = function (dict) {
+	return A3(
+		_elm_community$intdict$IntDict$foldr,
+		F3(
+			function (key, value, list) {
+				return {
+					ctor: '::',
+					_0: {ctor: '_Tuple2', _0: key, _1: value},
+					_1: list
+				};
+			}),
+		{ctor: '[]'},
+		dict);
+};
+var _elm_community$intdict$IntDict$toString = function (dict) {
+	return A2(
+		_elm_lang$core$Basics_ops['++'],
+		'IntDict.fromList ',
+		_elm_lang$core$Basics$toString(
+			_elm_community$intdict$IntDict$toList(dict)));
+};
+var _elm_community$intdict$IntDict$foldl = F3(
+	function (f, acc, dict) {
+		foldl:
+		while (true) {
+			var _p3 = dict;
+			switch (_p3.ctor) {
+				case 'Empty':
+					return acc;
+				case 'Leaf':
+					var _p4 = _p3._0;
+					return A3(f, _p4.key, _p4.value, acc);
+				default:
+					var _p5 = _p3._0;
+					var _v5 = f,
+						_v6 = A3(_elm_community$intdict$IntDict$foldl, f, acc, _p5.left),
+						_v7 = _p5.right;
+					f = _v5;
+					acc = _v6;
+					dict = _v7;
+					continue foldl;
+			}
+		}
+	});
+var _elm_community$intdict$IntDict$findMax = function (dict) {
+	findMax:
+	while (true) {
+		var _p6 = dict;
+		switch (_p6.ctor) {
+			case 'Empty':
+				return _elm_lang$core$Maybe$Nothing;
+			case 'Leaf':
+				var _p7 = _p6._0;
+				return _elm_lang$core$Maybe$Just(
+					{ctor: '_Tuple2', _0: _p7.key, _1: _p7.value});
+			default:
+				var _v9 = _p6._0.right;
+				dict = _v9;
+				continue findMax;
+		}
+	}
+};
+var _elm_community$intdict$IntDict$findMin = function (dict) {
+	findMin:
+	while (true) {
+		var _p8 = dict;
+		switch (_p8.ctor) {
+			case 'Empty':
+				return _elm_lang$core$Maybe$Nothing;
+			case 'Leaf':
+				var _p9 = _p8._0;
+				return _elm_lang$core$Maybe$Just(
+					{ctor: '_Tuple2', _0: _p9.key, _1: _p9.value});
+			default:
+				var _v11 = _p8._0.left;
+				dict = _v11;
+				continue findMin;
+		}
+	}
+};
+var _elm_community$intdict$IntDict$size = function (dict) {
+	var _p10 = dict;
+	switch (_p10.ctor) {
+		case 'Empty':
+			return 0;
+		case 'Leaf':
+			return 1;
+		default:
+			return _p10._0.size;
+	}
+};
+var _elm_community$intdict$IntDict$isEmpty = function (dict) {
+	var _p11 = dict;
+	if (_p11.ctor === 'Empty') {
+		return true;
+	} else {
+		return false;
+	}
+};
+var _elm_community$intdict$IntDict$highestBitSet = function (n) {
+	var shiftOr = F2(
+		function (i, shift) {
+			return i | (i >>> shift);
+		});
+	var n1 = A2(shiftOr, n, 1);
+	var n2 = A2(shiftOr, n1, 2);
+	var n3 = A2(shiftOr, n2, 4);
+	var n4 = A2(shiftOr, n3, 8);
+	var n5 = A2(shiftOr, n4, 16);
+	return n5 & (~(n5 >>> 1));
+};
+var _elm_community$intdict$IntDict$signBit = _elm_community$intdict$IntDict$highestBitSet(-1);
+var _elm_community$intdict$IntDict$isBranchingBitSet = function (p) {
+	return function (_p12) {
+		return A2(
+			F2(
+				function (x, y) {
+					return !_elm_lang$core$Native_Utils.eq(x, y);
+				}),
+			0,
+			p.branchingBit & (_elm_community$intdict$IntDict$signBit ^ _p12));
+	};
+};
+var _elm_community$intdict$IntDict$higherBitMask = function (branchingBit) {
+	return ~((branchingBit * 2) - 1);
+};
+var _elm_community$intdict$IntDict$prefixMatches = F2(
+	function (p, n) {
+		return _elm_lang$core$Native_Utils.eq(
+			n & _elm_community$intdict$IntDict$higherBitMask(p.branchingBit),
+			p.prefixBits);
+	});
+var _elm_community$intdict$IntDict$get = F2(
+	function (key, dict) {
+		get:
+		while (true) {
+			var _p13 = dict;
+			switch (_p13.ctor) {
+				case 'Empty':
+					return _elm_lang$core$Maybe$Nothing;
+				case 'Leaf':
+					var _p14 = _p13._0;
+					return _elm_lang$core$Native_Utils.eq(_p14.key, key) ? _elm_lang$core$Maybe$Just(_p14.value) : _elm_lang$core$Maybe$Nothing;
+				default:
+					var _p15 = _p13._0;
+					if (!A2(_elm_community$intdict$IntDict$prefixMatches, _p15.prefix, key)) {
+						return _elm_lang$core$Maybe$Nothing;
+					} else {
+						if (A2(_elm_community$intdict$IntDict$isBranchingBitSet, _p15.prefix, key)) {
+							var _v15 = key,
+								_v16 = _p15.right;
+							key = _v15;
+							dict = _v16;
+							continue get;
+						} else {
+							var _v17 = key,
+								_v18 = _p15.left;
+							key = _v17;
+							dict = _v18;
+							continue get;
+						}
+					}
+			}
+		}
+	});
+var _elm_community$intdict$IntDict$member = F2(
+	function (key, dict) {
+		var _p16 = A2(_elm_community$intdict$IntDict$get, key, dict);
+		if (_p16.ctor === 'Just') {
+			return true;
+		} else {
+			return false;
+		}
+	});
+var _elm_community$intdict$IntDict$lcp = F2(
+	function (x, y) {
+		var diff = x ^ y;
+		var branchingBit = _elm_community$intdict$IntDict$highestBitSet(diff);
+		var mask = _elm_community$intdict$IntDict$higherBitMask(branchingBit);
+		var prefixBits = x & mask;
+		return {prefixBits: prefixBits, branchingBit: branchingBit};
+	});
+var _elm_community$intdict$IntDict$isValidKey = function (k) {
+	return _elm_lang$core$Native_Utils.eq(k | 0, k);
+};
+var _elm_community$intdict$IntDict$KeyPrefix = F2(
+	function (a, b) {
+		return {prefixBits: a, branchingBit: b};
+	});
+var _elm_community$intdict$IntDict$InnerType = F4(
+	function (a, b, c, d) {
+		return {prefix: a, left: b, right: c, size: d};
+	});
+var _elm_community$intdict$IntDict$Inner = function (a) {
+	return {ctor: 'Inner', _0: a};
+};
+var _elm_community$intdict$IntDict$inner = F3(
+	function (p, l, r) {
+		var _p17 = {ctor: '_Tuple2', _0: l, _1: r};
+		if (_p17._0.ctor === 'Empty') {
+			return r;
+		} else {
+			if (_p17._1.ctor === 'Empty') {
+				return l;
+			} else {
+				return _elm_community$intdict$IntDict$Inner(
+					{
+						prefix: p,
+						left: l,
+						right: r,
+						size: _elm_community$intdict$IntDict$size(l) + _elm_community$intdict$IntDict$size(r)
+					});
+			}
+		}
+	});
+var _elm_community$intdict$IntDict$Leaf = function (a) {
+	return {ctor: 'Leaf', _0: a};
+};
+var _elm_community$intdict$IntDict$leaf = F2(
+	function (k, v) {
+		return _elm_community$intdict$IntDict$Leaf(
+			{key: k, value: v});
+	});
+var _elm_community$intdict$IntDict$singleton = F2(
+	function (key, value) {
+		return A2(_elm_community$intdict$IntDict$leaf, key, value);
+	});
+var _elm_community$intdict$IntDict$Empty = {ctor: 'Empty'};
+var _elm_community$intdict$IntDict$empty = _elm_community$intdict$IntDict$Empty;
+var _elm_community$intdict$IntDict$update = F3(
+	function (key, alter, dict) {
+		var join = F2(
+			function (_p19, _p18) {
+				var _p20 = _p19;
+				var _p24 = _p20._1;
+				var _p21 = _p18;
+				var _p23 = _p21._1;
+				var _p22 = _p21._0;
+				var prefix = A2(_elm_community$intdict$IntDict$lcp, _p20._0, _p22);
+				return A2(_elm_community$intdict$IntDict$isBranchingBitSet, prefix, _p22) ? A3(_elm_community$intdict$IntDict$inner, prefix, _p24, _p23) : A3(_elm_community$intdict$IntDict$inner, prefix, _p23, _p24);
+			});
+		var alteredNode = function (mv) {
+			var _p25 = alter(mv);
+			if (_p25.ctor === 'Just') {
+				return A2(_elm_community$intdict$IntDict$leaf, key, _p25._0);
+			} else {
+				return _elm_community$intdict$IntDict$empty;
+			}
+		};
+		var _p26 = dict;
+		switch (_p26.ctor) {
+			case 'Empty':
+				return alteredNode(_elm_lang$core$Maybe$Nothing);
+			case 'Leaf':
+				var _p27 = _p26._0;
+				return _elm_lang$core$Native_Utils.eq(_p27.key, key) ? alteredNode(
+					_elm_lang$core$Maybe$Just(_p27.value)) : A2(
+					join,
+					{
+						ctor: '_Tuple2',
+						_0: key,
+						_1: alteredNode(_elm_lang$core$Maybe$Nothing)
+					},
+					{ctor: '_Tuple2', _0: _p27.key, _1: dict});
+			default:
+				var _p28 = _p26._0;
+				return A2(_elm_community$intdict$IntDict$prefixMatches, _p28.prefix, key) ? (A2(_elm_community$intdict$IntDict$isBranchingBitSet, _p28.prefix, key) ? A3(
+					_elm_community$intdict$IntDict$inner,
+					_p28.prefix,
+					_p28.left,
+					A3(_elm_community$intdict$IntDict$update, key, alter, _p28.right)) : A3(
+					_elm_community$intdict$IntDict$inner,
+					_p28.prefix,
+					A3(_elm_community$intdict$IntDict$update, key, alter, _p28.left),
+					_p28.right)) : A2(
+					join,
+					{
+						ctor: '_Tuple2',
+						_0: key,
+						_1: alteredNode(_elm_lang$core$Maybe$Nothing)
+					},
+					{ctor: '_Tuple2', _0: _p28.prefix.prefixBits, _1: dict});
+		}
+	});
+var _elm_community$intdict$IntDict$insert = F3(
+	function (key, value, dict) {
+		return A3(
+			_elm_community$intdict$IntDict$update,
+			key,
+			_elm_lang$core$Basics$always(
+				_elm_lang$core$Maybe$Just(value)),
+			dict);
+	});
+var _elm_community$intdict$IntDict$remove = F2(
+	function (key, dict) {
+		return A3(
+			_elm_community$intdict$IntDict$update,
+			key,
+			_elm_lang$core$Basics$always(_elm_lang$core$Maybe$Nothing),
+			dict);
+	});
+var _elm_community$intdict$IntDict$filter = F2(
+	function (predicate, dict) {
+		var add = F3(
+			function (k, v, d) {
+				return A2(predicate, k, v) ? A3(_elm_community$intdict$IntDict$insert, k, v, d) : d;
+			});
+		return A3(_elm_community$intdict$IntDict$foldl, add, _elm_community$intdict$IntDict$empty, dict);
+	});
+var _elm_community$intdict$IntDict$map = F2(
+	function (f, dict) {
+		var _p29 = dict;
+		switch (_p29.ctor) {
+			case 'Empty':
+				return _elm_community$intdict$IntDict$empty;
+			case 'Leaf':
+				var _p30 = _p29._0;
+				return A2(
+					_elm_community$intdict$IntDict$leaf,
+					_p30.key,
+					A2(f, _p30.key, _p30.value));
+			default:
+				var _p31 = _p29._0;
+				return A3(
+					_elm_community$intdict$IntDict$inner,
+					_p31.prefix,
+					A2(_elm_community$intdict$IntDict$map, f, _p31.left),
+					A2(_elm_community$intdict$IntDict$map, f, _p31.right));
+		}
+	});
+var _elm_community$intdict$IntDict$partition = F2(
+	function (predicate, dict) {
+		var add = F3(
+			function (key, value, _p32) {
+				var _p33 = _p32;
+				var _p35 = _p33._1;
+				var _p34 = _p33._0;
+				return A2(predicate, key, value) ? {
+					ctor: '_Tuple2',
+					_0: A3(_elm_community$intdict$IntDict$insert, key, value, _p34),
+					_1: _p35
+				} : {
+					ctor: '_Tuple2',
+					_0: _p34,
+					_1: A3(_elm_community$intdict$IntDict$insert, key, value, _p35)
+				};
+			});
+		return A3(
+			_elm_community$intdict$IntDict$foldl,
+			add,
+			{ctor: '_Tuple2', _0: _elm_community$intdict$IntDict$empty, _1: _elm_community$intdict$IntDict$empty},
+			dict);
+	});
+var _elm_community$intdict$IntDict$fromList = function (pairs) {
+	return A3(
+		_elm_lang$core$List$foldl,
+		_elm_lang$core$Basics$uncurry(_elm_community$intdict$IntDict$insert),
+		_elm_community$intdict$IntDict$empty,
+		pairs);
+};
+var _elm_community$intdict$IntDict$Right = {ctor: 'Right'};
+var _elm_community$intdict$IntDict$Left = {ctor: 'Left'};
+var _elm_community$intdict$IntDict$Disjunct = F2(
+	function (a, b) {
+		return {ctor: 'Disjunct', _0: a, _1: b};
+	});
+var _elm_community$intdict$IntDict$Parent = F2(
+	function (a, b) {
+		return {ctor: 'Parent', _0: a, _1: b};
+	});
+var _elm_community$intdict$IntDict$SamePrefix = {ctor: 'SamePrefix'};
+var _elm_community$intdict$IntDict$determineBranchRelation = F2(
+	function (l, r) {
+		var childEdge = F2(
+			function (prefix, c) {
+				return A2(_elm_community$intdict$IntDict$isBranchingBitSet, prefix, c.prefix.prefixBits) ? _elm_community$intdict$IntDict$Right : _elm_community$intdict$IntDict$Left;
+			});
+		var rp = r.prefix;
+		var lp = l.prefix;
+		var mask = _elm_community$intdict$IntDict$highestBitSet(
+			A2(_elm_lang$core$Basics$max, lp.branchingBit, rp.branchingBit));
+		var modifiedRightPrefix = A3(_elm_community$intdict$IntDict$combineBits, rp.prefixBits, ~lp.prefixBits, mask);
+		var prefix = A2(_elm_community$intdict$IntDict$lcp, lp.prefixBits, modifiedRightPrefix);
+		return _elm_lang$core$Native_Utils.eq(lp, rp) ? _elm_community$intdict$IntDict$SamePrefix : (_elm_lang$core$Native_Utils.eq(prefix, lp) ? A2(
+			_elm_community$intdict$IntDict$Parent,
+			_elm_community$intdict$IntDict$Left,
+			A2(childEdge, l.prefix, r)) : (_elm_lang$core$Native_Utils.eq(prefix, rp) ? A2(
+			_elm_community$intdict$IntDict$Parent,
+			_elm_community$intdict$IntDict$Right,
+			A2(childEdge, r.prefix, l)) : A2(
+			_elm_community$intdict$IntDict$Disjunct,
+			prefix,
+			A2(childEdge, prefix, l))));
+	});
+var _elm_community$intdict$IntDict$uniteWith = F3(
+	function (merger, l, r) {
+		var mergeWith = F3(
+			function (key, left, right) {
+				var _p36 = {ctor: '_Tuple2', _0: left, _1: right};
+				if (_p36._0.ctor === 'Just') {
+					if (_p36._1.ctor === 'Just') {
+						return _elm_lang$core$Maybe$Just(
+							A3(merger, key, _p36._0._0, _p36._1._0));
+					} else {
+						return left;
+					}
+				} else {
+					if (_p36._1.ctor === 'Just') {
+						return right;
+					} else {
+						return _elm_lang$core$Native_Utils.crashCase(
+							'IntDict',
+							{
+								start: {line: 427, column: 7},
+								end: {line: 432, column: 144}
+							},
+							_p36)('IntDict.uniteWith: mergeWith was called with 2 Nothings. This is a bug in the implementation, please file a bug report!');
+					}
+				}
+			});
+		var _p38 = {ctor: '_Tuple2', _0: l, _1: r};
+		_v28_2:
+		do {
+			_v28_1:
+			do {
+				switch (_p38._0.ctor) {
+					case 'Empty':
+						return r;
+					case 'Leaf':
+						switch (_p38._1.ctor) {
+							case 'Empty':
+								break _v28_1;
+							case 'Leaf':
+								break _v28_2;
+							default:
+								break _v28_2;
+						}
+					default:
+						switch (_p38._1.ctor) {
+							case 'Empty':
+								break _v28_1;
+							case 'Leaf':
+								var _p40 = _p38._1._0;
+								return A3(
+									_elm_community$intdict$IntDict$update,
+									_p40.key,
+									function (l_) {
+										return A3(
+											mergeWith,
+											_p40.key,
+											l_,
+											_elm_lang$core$Maybe$Just(_p40.value));
+									},
+									l);
+							default:
+								var _p43 = _p38._1._0;
+								var _p42 = _p38._0._0;
+								var _p41 = A2(_elm_community$intdict$IntDict$determineBranchRelation, _p42, _p43);
+								switch (_p41.ctor) {
+									case 'SamePrefix':
+										return A3(
+											_elm_community$intdict$IntDict$inner,
+											_p42.prefix,
+											A3(_elm_community$intdict$IntDict$uniteWith, merger, _p42.left, _p43.left),
+											A3(_elm_community$intdict$IntDict$uniteWith, merger, _p42.right, _p43.right));
+									case 'Parent':
+										if (_p41._0.ctor === 'Left') {
+											if (_p41._1.ctor === 'Right') {
+												return A3(
+													_elm_community$intdict$IntDict$inner,
+													_p42.prefix,
+													_p42.left,
+													A3(_elm_community$intdict$IntDict$uniteWith, merger, _p42.right, r));
+											} else {
+												return A3(
+													_elm_community$intdict$IntDict$inner,
+													_p42.prefix,
+													A3(_elm_community$intdict$IntDict$uniteWith, merger, _p42.left, r),
+													_p42.right);
+											}
+										} else {
+											if (_p41._1.ctor === 'Right') {
+												return A3(
+													_elm_community$intdict$IntDict$inner,
+													_p43.prefix,
+													_p43.left,
+													A3(_elm_community$intdict$IntDict$uniteWith, merger, l, _p43.right));
+											} else {
+												return A3(
+													_elm_community$intdict$IntDict$inner,
+													_p43.prefix,
+													A3(_elm_community$intdict$IntDict$uniteWith, merger, l, _p43.left),
+													_p43.right);
+											}
+										}
+									default:
+										if (_p41._1.ctor === 'Left') {
+											return A3(_elm_community$intdict$IntDict$inner, _p41._0, l, r);
+										} else {
+											return A3(_elm_community$intdict$IntDict$inner, _p41._0, r, l);
+										}
+								}
+						}
+				}
+			} while(false);
+			return l;
+		} while(false);
+		var _p39 = _p38._0._0;
+		return A3(
+			_elm_community$intdict$IntDict$update,
+			_p39.key,
+			function (r_) {
+				return A3(
+					mergeWith,
+					_p39.key,
+					_elm_lang$core$Maybe$Just(_p39.value),
+					r_);
+			},
+			r);
+	});
+var _elm_community$intdict$IntDict$union = _elm_community$intdict$IntDict$uniteWith(
+	F3(
+		function (key, old, $new) {
+			return old;
+		}));
+var _elm_community$intdict$IntDict$intersect = F2(
+	function (l, r) {
+		intersect:
+		while (true) {
+			var _p44 = {ctor: '_Tuple2', _0: l, _1: r};
+			_v30_2:
+			do {
+				_v30_1:
+				do {
+					switch (_p44._0.ctor) {
+						case 'Empty':
+							return _elm_community$intdict$IntDict$Empty;
+						case 'Leaf':
+							switch (_p44._1.ctor) {
+								case 'Empty':
+									break _v30_1;
+								case 'Leaf':
+									break _v30_2;
+								default:
+									break _v30_2;
+							}
+						default:
+							switch (_p44._1.ctor) {
+								case 'Empty':
+									break _v30_1;
+								case 'Leaf':
+									var _p46 = _p44._1._0;
+									var _p45 = A2(_elm_community$intdict$IntDict$get, _p46.key, l);
+									if (_p45.ctor === 'Just') {
+										return A2(_elm_community$intdict$IntDict$leaf, _p46.key, _p45._0);
+									} else {
+										return _elm_community$intdict$IntDict$Empty;
+									}
+								default:
+									var _p49 = _p44._1._0;
+									var _p48 = _p44._0._0;
+									var _p47 = A2(_elm_community$intdict$IntDict$determineBranchRelation, _p48, _p49);
+									switch (_p47.ctor) {
+										case 'SamePrefix':
+											return A3(
+												_elm_community$intdict$IntDict$inner,
+												_p48.prefix,
+												A2(_elm_community$intdict$IntDict$intersect, _p48.left, _p49.left),
+												A2(_elm_community$intdict$IntDict$intersect, _p48.right, _p49.right));
+										case 'Parent':
+											if (_p47._0.ctor === 'Left') {
+												if (_p47._1.ctor === 'Right') {
+													var _v33 = _p48.right,
+														_v34 = r;
+													l = _v33;
+													r = _v34;
+													continue intersect;
+												} else {
+													var _v35 = _p48.left,
+														_v36 = r;
+													l = _v35;
+													r = _v36;
+													continue intersect;
+												}
+											} else {
+												if (_p47._1.ctor === 'Right') {
+													var _v37 = l,
+														_v38 = _p49.right;
+													l = _v37;
+													r = _v38;
+													continue intersect;
+												} else {
+													var _v39 = l,
+														_v40 = _p49.left;
+													l = _v39;
+													r = _v40;
+													continue intersect;
+												}
+											}
+										default:
+											return _elm_community$intdict$IntDict$Empty;
+									}
+							}
+					}
+				} while(false);
+				return _elm_community$intdict$IntDict$Empty;
+			} while(false);
+			return A2(_elm_community$intdict$IntDict$member, _p44._0._0.key, r) ? l : _elm_community$intdict$IntDict$Empty;
+		}
+	});
+var _elm_community$intdict$IntDict$diff = F2(
+	function (l, r) {
+		diff:
+		while (true) {
+			var _p50 = {ctor: '_Tuple2', _0: l, _1: r};
+			_v41_2:
+			do {
+				_v41_1:
+				do {
+					switch (_p50._0.ctor) {
+						case 'Empty':
+							return _elm_community$intdict$IntDict$Empty;
+						case 'Leaf':
+							switch (_p50._1.ctor) {
+								case 'Empty':
+									break _v41_1;
+								case 'Leaf':
+									break _v41_2;
+								default:
+									break _v41_2;
+							}
+						default:
+							switch (_p50._1.ctor) {
+								case 'Empty':
+									break _v41_1;
+								case 'Leaf':
+									return A2(_elm_community$intdict$IntDict$remove, _p50._1._0.key, l);
+								default:
+									var _p53 = _p50._1._0;
+									var _p52 = _p50._0._0;
+									var _p51 = A2(_elm_community$intdict$IntDict$determineBranchRelation, _p52, _p53);
+									switch (_p51.ctor) {
+										case 'SamePrefix':
+											return A3(
+												_elm_community$intdict$IntDict$inner,
+												_p52.prefix,
+												A2(_elm_community$intdict$IntDict$diff, _p52.left, _p53.left),
+												A2(_elm_community$intdict$IntDict$diff, _p52.right, _p53.right));
+										case 'Parent':
+											if (_p51._0.ctor === 'Left') {
+												if (_p51._1.ctor === 'Left') {
+													return A3(
+														_elm_community$intdict$IntDict$inner,
+														_p52.prefix,
+														A2(_elm_community$intdict$IntDict$diff, _p52.left, r),
+														_p52.right);
+												} else {
+													return A3(
+														_elm_community$intdict$IntDict$inner,
+														_p52.prefix,
+														_p52.left,
+														A2(_elm_community$intdict$IntDict$diff, _p52.right, r));
+												}
+											} else {
+												if (_p51._1.ctor === 'Left') {
+													var _v43 = l,
+														_v44 = _p53.left;
+													l = _v43;
+													r = _v44;
+													continue diff;
+												} else {
+													var _v45 = l,
+														_v46 = _p53.right;
+													l = _v45;
+													r = _v46;
+													continue diff;
+												}
+											}
+										default:
+											return l;
+									}
+							}
+					}
+				} while(false);
+				return l;
+			} while(false);
+			return A2(_elm_community$intdict$IntDict$member, _p50._0._0.key, r) ? _elm_community$intdict$IntDict$Empty : l;
+		}
+	});
+var _elm_community$intdict$IntDict$merge = F6(
+	function (left, both, right, l, r, acc) {
+		var m = A3(_elm_community$intdict$IntDict$merge, left, both, right);
+		var _p54 = {ctor: '_Tuple2', _0: l, _1: r};
+		_v47_2:
+		do {
+			_v47_1:
+			do {
+				switch (_p54._0.ctor) {
+					case 'Empty':
+						return A3(_elm_community$intdict$IntDict$foldl, right, acc, r);
+					case 'Leaf':
+						switch (_p54._1.ctor) {
+							case 'Empty':
+								break _v47_1;
+							case 'Leaf':
+								break _v47_2;
+							default:
+								break _v47_2;
+						}
+					default:
+						switch (_p54._1.ctor) {
+							case 'Empty':
+								break _v47_1;
+							case 'Leaf':
+								var _p58 = _p54._1._0;
+								var _p57 = A2(_elm_community$intdict$IntDict$get, _p58.key, l);
+								if (_p57.ctor === 'Nothing') {
+									return A3(
+										m,
+										l,
+										_elm_community$intdict$IntDict$Empty,
+										A3(right, _p58.key, _p58.value, acc));
+								} else {
+									return A3(
+										m,
+										A2(_elm_community$intdict$IntDict$remove, _p58.key, l),
+										_elm_community$intdict$IntDict$Empty,
+										A4(both, _p58.key, _p57._0, _p58.value, acc));
+								}
+							default:
+								var _p61 = _p54._1._0;
+								var _p60 = _p54._0._0;
+								var _p59 = A2(_elm_community$intdict$IntDict$determineBranchRelation, _p60, _p61);
+								switch (_p59.ctor) {
+									case 'SamePrefix':
+										return A3(
+											m,
+											_p60.right,
+											_p61.right,
+											A3(m, _p60.left, _p61.left, acc));
+									case 'Parent':
+										if (_p59._0.ctor === 'Left') {
+											if (_p59._1.ctor === 'Left') {
+												return A3(
+													m,
+													_p60.right,
+													_elm_community$intdict$IntDict$Empty,
+													A3(m, _p60.left, r, acc));
+											} else {
+												return A3(
+													m,
+													_p60.right,
+													r,
+													A3(m, _p60.left, _elm_community$intdict$IntDict$Empty, acc));
+											}
+										} else {
+											if (_p59._1.ctor === 'Left') {
+												return A3(
+													m,
+													_elm_community$intdict$IntDict$Empty,
+													_p61.right,
+													A3(m, l, _p61.left, acc));
+											} else {
+												return A3(
+													m,
+													l,
+													_p61.right,
+													A3(m, _elm_community$intdict$IntDict$Empty, _p61.left, acc));
+											}
+										}
+									default:
+										if (_p59._1.ctor === 'Left') {
+											return A3(
+												m,
+												_elm_community$intdict$IntDict$Empty,
+												r,
+												A3(m, l, _elm_community$intdict$IntDict$Empty, acc));
+										} else {
+											return A3(
+												m,
+												l,
+												_elm_community$intdict$IntDict$Empty,
+												A3(m, _elm_community$intdict$IntDict$Empty, r, acc));
+										}
+								}
+						}
+				}
+			} while(false);
+			return A3(_elm_community$intdict$IntDict$foldl, left, acc, l);
+		} while(false);
+		var _p56 = _p54._0._0;
+		var _p55 = A2(_elm_community$intdict$IntDict$get, _p56.key, r);
+		if (_p55.ctor === 'Nothing') {
+			return A3(
+				m,
+				_elm_community$intdict$IntDict$Empty,
+				r,
+				A3(left, _p56.key, _p56.value, acc));
+		} else {
+			return A3(
+				m,
+				_elm_community$intdict$IntDict$Empty,
+				A2(_elm_community$intdict$IntDict$remove, _p56.key, r),
+				A4(both, _p56.key, _p56.value, _p55._0, acc));
+		}
+	});
+
+var _elm_community$graph$Graph$ignorePath = F4(
+	function (visit, path, _p0, acc) {
+		var _p1 = path;
+		if (_p1.ctor === '[]') {
+			return _elm_lang$core$Native_Utils.crashCase(
+				'Graph',
+				{
+					start: {line: 880, column: 3},
+					end: {line: 884, column: 20}
+				},
+				_p1)('Graph.ignorePath: No algorithm should ever pass an empty path into this BfsNodeVisitor.');
+		} else {
+			return A2(visit, _p1._0, acc);
+		}
+	});
+var _elm_community$graph$Graph$onFinish = F3(
+	function (visitor, ctx, acc) {
+		return {
+			ctor: '_Tuple2',
+			_0: acc,
+			_1: visitor(ctx)
+		};
+	});
+var _elm_community$graph$Graph$onDiscovery = F3(
+	function (visitor, ctx, acc) {
+		return {
+			ctor: '_Tuple2',
+			_0: A2(visitor, ctx, acc),
+			_1: _elm_lang$core$Basics$identity
+		};
+	});
+var _elm_community$graph$Graph$alongIncomingEdges = function (ctx) {
+	return _elm_community$intdict$IntDict$keys(ctx.incoming);
+};
+var _elm_community$graph$Graph$alongOutgoingEdges = function (ctx) {
+	return _elm_community$intdict$IntDict$keys(ctx.outgoing);
+};
+var _elm_community$graph$Graph$applyEdgeDiff = F3(
+	function (nodeId, diff, graphRep) {
+		var updateOutgoingEdge = F2(
+			function (upd, node) {
+				return _elm_lang$core$Native_Utils.update(
+					node,
+					{
+						outgoing: A3(_elm_community$intdict$IntDict$update, nodeId, upd, node.outgoing)
+					});
+			});
+		var updateIncomingEdge = F2(
+			function (upd, node) {
+				return _elm_lang$core$Native_Utils.update(
+					node,
+					{
+						incoming: A3(_elm_community$intdict$IntDict$update, nodeId, upd, node.incoming)
+					});
+			});
+		var edgeUpdateToMaybe = function (edgeUpdate) {
+			var _p3 = edgeUpdate;
+			if (_p3.ctor === 'Insert') {
+				return _elm_lang$core$Maybe$Just(_p3._0);
+			} else {
+				return _elm_lang$core$Maybe$Nothing;
+			}
+		};
+		var updateAdjacency = F3(
+			function (updateEdge, updatedId, edgeUpdate) {
+				var updateLbl = updateEdge(
+					_elm_lang$core$Basics$always(
+						edgeUpdateToMaybe(edgeUpdate)));
+				return A2(
+					_elm_community$intdict$IntDict$update,
+					updatedId,
+					_elm_lang$core$Maybe$map(updateLbl));
+			});
+		var flippedFoldl = F3(
+			function (f, dict, acc) {
+				return A3(_elm_community$intdict$IntDict$foldl, f, acc, dict);
+			});
+		return A3(
+			flippedFoldl,
+			updateAdjacency(updateOutgoingEdge),
+			diff.outgoing,
+			A3(
+				flippedFoldl,
+				updateAdjacency(updateIncomingEdge),
+				diff.incoming,
+				graphRep));
+	});
+var _elm_community$graph$Graph$emptyDiff = {incoming: _elm_community$intdict$IntDict$empty, outgoing: _elm_community$intdict$IntDict$empty};
+var _elm_community$graph$Graph$unGraph = function (graph) {
+	var _p4 = graph;
+	return _p4._0;
+};
+var _elm_community$graph$Graph$size = function (_p5) {
+	return _elm_community$intdict$IntDict$size(
+		_elm_community$graph$Graph$unGraph(_p5));
+};
+var _elm_community$graph$Graph$member = function (nodeId) {
+	return function (_p6) {
+		return A2(
+			_elm_community$intdict$IntDict$member,
+			nodeId,
+			_elm_community$graph$Graph$unGraph(_p6));
+	};
+};
+var _elm_community$graph$Graph$get = function (nodeId) {
+	return function (_p7) {
+		return A2(
+			_elm_community$intdict$IntDict$get,
+			nodeId,
+			_elm_community$graph$Graph$unGraph(_p7));
+	};
+};
+var _elm_community$graph$Graph$nodeIdRange = function (graph) {
+	return A2(
+		_elm_lang$core$Maybe$andThen,
+		function (_p8) {
+			var _p9 = _p8;
+			return A2(
+				_elm_lang$core$Maybe$andThen,
+				function (_p10) {
+					var _p11 = _p10;
+					return _elm_lang$core$Maybe$Just(
+						{ctor: '_Tuple2', _0: _p9._0, _1: _p11._0});
+				},
+				_elm_community$intdict$IntDict$findMax(
+					_elm_community$graph$Graph$unGraph(graph)));
+		},
+		_elm_community$intdict$IntDict$findMin(
+			_elm_community$graph$Graph$unGraph(graph)));
+};
+var _elm_community$graph$Graph$nodes = function (_p12) {
+	return A2(
+		_elm_lang$core$List$map,
+		function (_) {
+			return _.node;
+		},
+		_elm_community$intdict$IntDict$values(
+			_elm_community$graph$Graph$unGraph(_p12)));
+};
+var _elm_community$graph$Graph$nodeIds = function (_p13) {
+	return _elm_community$intdict$IntDict$keys(
+		_elm_community$graph$Graph$unGraph(_p13));
+};
+var _elm_community$graph$Graph$edges = function (graph) {
+	var flippedFoldl = F3(
+		function (f, dict, list) {
+			return A3(_elm_community$intdict$IntDict$foldl, f, list, dict);
+		});
+	var prependEdges = F2(
+		function (node1, ctx) {
+			return A2(
+				flippedFoldl,
+				F2(
+					function (node2, e) {
+						return F2(
+							function (x, y) {
+								return {ctor: '::', _0: x, _1: y};
+							})(
+							{to: node2, from: node1, label: e});
+					}),
+				ctx.outgoing);
+		});
+	return A3(
+		flippedFoldl,
+		prependEdges,
+		_elm_community$graph$Graph$unGraph(graph),
+		{ctor: '[]'});
+};
+var _elm_community$graph$Graph$toString = function (graph) {
+	var edgeList = _elm_community$graph$Graph$edges(graph);
+	var nodeList = _elm_community$graph$Graph$nodes(graph);
+	return A2(
+		_elm_lang$core$Basics_ops['++'],
+		'Graph.fromNodesAndEdges ',
+		A2(
+			_elm_lang$core$Basics_ops['++'],
+			_elm_lang$core$Basics$toString(nodeList),
+			A2(
+				_elm_lang$core$Basics_ops['++'],
+				' ',
+				_elm_lang$core$Basics$toString(edgeList))));
+};
+var _elm_community$graph$Graph$Node = F2(
+	function (a, b) {
+		return {id: a, label: b};
+	});
+var _elm_community$graph$Graph$Edge = F3(
+	function (a, b, c) {
+		return {from: a, to: b, label: c};
+	});
+var _elm_community$graph$Graph$NodeContext = F3(
+	function (a, b, c) {
+		return {node: a, incoming: b, outgoing: c};
+	});
+var _elm_community$graph$Graph$EdgeDiff = F2(
+	function (a, b) {
+		return {incoming: a, outgoing: b};
+	});
+var _elm_community$graph$Graph$Graph = function (a) {
+	return {ctor: 'Graph', _0: a};
+};
+var _elm_community$graph$Graph$empty = _elm_community$graph$Graph$Graph(_elm_community$intdict$IntDict$empty);
+var _elm_community$graph$Graph$isEmpty = function (graph) {
+	return _elm_lang$core$Native_Utils.eq(graph, _elm_community$graph$Graph$empty);
+};
+var _elm_community$graph$Graph$fromNodesAndEdges = F2(
+	function (nodes, edges) {
+		var addEdge = F2(
+			function (edge, rep) {
+				var updateIncoming = function (ctx) {
+					return _elm_lang$core$Native_Utils.update(
+						ctx,
+						{
+							incoming: A3(_elm_community$intdict$IntDict$insert, edge.from, edge.label, ctx.incoming)
+						});
+				};
+				var updateOutgoing = function (ctx) {
+					return _elm_lang$core$Native_Utils.update(
+						ctx,
+						{
+							outgoing: A3(_elm_community$intdict$IntDict$insert, edge.to, edge.label, ctx.outgoing)
+						});
+				};
+				return A3(
+					_elm_community$intdict$IntDict$update,
+					edge.to,
+					_elm_lang$core$Maybe$map(updateIncoming),
+					A3(
+						_elm_community$intdict$IntDict$update,
+						edge.from,
+						_elm_lang$core$Maybe$map(updateOutgoing),
+						rep));
+			});
+		var nodeRep = A3(
+			_elm_lang$core$List$foldl,
+			function (n) {
+				return A2(
+					_elm_community$intdict$IntDict$insert,
+					n.id,
+					A3(_elm_community$graph$Graph$NodeContext, n, _elm_community$intdict$IntDict$empty, _elm_community$intdict$IntDict$empty));
+			},
+			_elm_community$intdict$IntDict$empty,
+			nodes);
+		return _elm_community$graph$Graph$Graph(
+			A3(_elm_lang$core$List$foldl, addEdge, nodeRep, edges));
+	});
+var _elm_community$graph$Graph$fromNodeLabelsAndEdgePairs = F2(
+	function (labels, edgePairs) {
+		var edges = A2(
+			_elm_lang$core$List$map,
+			function (_p14) {
+				var _p15 = _p14;
+				return A3(
+					_elm_community$graph$Graph$Edge,
+					_p15._0,
+					_p15._1,
+					{ctor: '_Tuple0'});
+			},
+			edgePairs);
+		var nodes = _elm_lang$core$Tuple$second(
+			A3(
+				_elm_lang$core$List$foldl,
+				F2(
+					function (lbl, _p16) {
+						var _p17 = _p16;
+						var _p18 = _p17._0;
+						return {
+							ctor: '_Tuple2',
+							_0: _p18 + 1,
+							_1: {
+								ctor: '::',
+								_0: A2(_elm_community$graph$Graph$Node, _p18, lbl),
+								_1: _p17._1
+							}
+						};
+					}),
+				{
+					ctor: '_Tuple2',
+					_0: 0,
+					_1: {ctor: '[]'}
+				},
+				labels));
+		return A2(_elm_community$graph$Graph$fromNodesAndEdges, nodes, edges);
+	});
+var _elm_community$graph$Graph$symmetricClosure = function (edgeMerger) {
+	var orderedEdgeMerger = F4(
+		function (from, to, outgoing, incoming) {
+			return (_elm_lang$core$Native_Utils.cmp(from, to) < 1) ? A4(edgeMerger, from, to, outgoing, incoming) : A4(edgeMerger, to, from, incoming, outgoing);
+		});
+	var updateContext = F2(
+		function (nodeId, ctx) {
+			var edges = A3(
+				_elm_community$intdict$IntDict$uniteWith,
+				orderedEdgeMerger(nodeId),
+				ctx.outgoing,
+				ctx.incoming);
+			return _elm_lang$core$Native_Utils.update(
+				ctx,
+				{outgoing: edges, incoming: edges});
+		});
+	return function (_p19) {
+		return _elm_community$graph$Graph$Graph(
+			A2(
+				_elm_community$intdict$IntDict$map,
+				updateContext,
+				_elm_community$graph$Graph$unGraph(_p19)));
+	};
+};
+var _elm_community$graph$Graph$reverseEdges = function () {
+	var updateContext = F2(
+		function (nodeId, ctx) {
+			return _elm_lang$core$Native_Utils.update(
+				ctx,
+				{outgoing: ctx.incoming, incoming: ctx.outgoing});
+		});
+	return function (_p20) {
+		return _elm_community$graph$Graph$Graph(
+			A2(
+				_elm_community$intdict$IntDict$map,
+				updateContext,
+				_elm_community$graph$Graph$unGraph(_p20)));
+	};
+}();
+var _elm_community$graph$Graph$Remove = function (a) {
+	return {ctor: 'Remove', _0: a};
+};
+var _elm_community$graph$Graph$Insert = function (a) {
+	return {ctor: 'Insert', _0: a};
+};
+var _elm_community$graph$Graph$computeEdgeDiff = F2(
+	function (old, $new) {
+		var collectUpdates = F3(
+			function (edgeUpdate, updatedId, label) {
+				var replaceUpdate = function (old) {
+					var _p21 = {
+						ctor: '_Tuple2',
+						_0: old,
+						_1: edgeUpdate(label)
+					};
+					if (_p21._0.ctor === 'Just') {
+						if (_p21._0._0.ctor === 'Remove') {
+							if (_p21._1.ctor === 'Insert') {
+								var _p22 = _p21._1._0;
+								return _elm_lang$core$Native_Utils.eq(_p21._0._0._0, _p22) ? _elm_lang$core$Maybe$Nothing : _elm_lang$core$Maybe$Just(
+									_elm_community$graph$Graph$Insert(_p22));
+							} else {
+								return _elm_lang$core$Native_Utils.crashCase(
+									'Graph',
+									{
+										start: {line: 189, column: 11},
+										end: {line: 199, column: 22}
+									},
+									_p21)('Graph.computeEdgeDiff: Collected two removals for the same edge. This is an error in the implementation of Graph and you should file a bug report!');
+							}
+						} else {
+							return _elm_lang$core$Native_Utils.crashCase(
+								'Graph',
+								{
+									start: {line: 189, column: 11},
+									end: {line: 199, column: 22}
+								},
+								_p21)('Graph.computeEdgeDiff: Collected inserts before removals. This is an error in the implementation of Graph and you should file a bug report!');
+						}
+					} else {
+						return _elm_lang$core$Maybe$Just(_p21._1);
+					}
+				};
+				return A2(_elm_community$intdict$IntDict$update, updatedId, replaceUpdate);
+			});
+		var collect = F3(
+			function (edgeUpdate, adj, updates) {
+				return A3(
+					_elm_community$intdict$IntDict$foldl,
+					collectUpdates(edgeUpdate),
+					updates,
+					adj);
+			});
+		var _p25 = {ctor: '_Tuple2', _0: old, _1: $new};
+		if (_p25._0.ctor === 'Nothing') {
+			if (_p25._1.ctor === 'Nothing') {
+				return _elm_community$graph$Graph$emptyDiff;
+			} else {
+				var _p27 = _p25._1._0;
+				return {
+					outgoing: A3(collect, _elm_community$graph$Graph$Insert, _p27.incoming, _elm_community$intdict$IntDict$empty),
+					incoming: A3(collect, _elm_community$graph$Graph$Insert, _p27.outgoing, _elm_community$intdict$IntDict$empty)
+				};
+			}
+		} else {
+			if (_p25._1.ctor === 'Nothing') {
+				var _p26 = _p25._0._0;
+				return {
+					outgoing: A3(collect, _elm_community$graph$Graph$Remove, _p26.incoming, _elm_community$intdict$IntDict$empty),
+					incoming: A3(collect, _elm_community$graph$Graph$Remove, _p26.outgoing, _elm_community$intdict$IntDict$empty)
+				};
+			} else {
+				var _p29 = _p25._0._0;
+				var _p28 = _p25._1._0;
+				return _elm_lang$core$Native_Utils.eq(_p29, _p28) ? _elm_community$graph$Graph$emptyDiff : {
+					outgoing: A3(
+						collect,
+						_elm_community$graph$Graph$Insert,
+						_p28.incoming,
+						A3(collect, _elm_community$graph$Graph$Remove, _p29.incoming, _elm_community$intdict$IntDict$empty)),
+					incoming: A3(
+						collect,
+						_elm_community$graph$Graph$Insert,
+						_p28.outgoing,
+						A3(collect, _elm_community$graph$Graph$Remove, _p29.outgoing, _elm_community$intdict$IntDict$empty))
+				};
+			}
+		}
+	});
+var _elm_community$graph$Graph$update = F2(
+	function (nodeId, updater) {
+		var wrappedUpdater = function (rep) {
+			var filterInvalidEdges = function (ctx) {
+				return _elm_community$intdict$IntDict$filter(
+					F2(
+						function (id, _p30) {
+							return _elm_lang$core$Native_Utils.eq(id, ctx.node.id) || A2(_elm_community$intdict$IntDict$member, id, rep);
+						}));
+			};
+			var cleanUpEdges = function (ctx) {
+				return _elm_lang$core$Native_Utils.update(
+					ctx,
+					{
+						incoming: A2(filterInvalidEdges, ctx, ctx.incoming),
+						outgoing: A2(filterInvalidEdges, ctx, ctx.outgoing)
+					});
+			};
+			var old = A2(_elm_community$intdict$IntDict$get, nodeId, rep);
+			var $new = A2(
+				_elm_lang$core$Maybe$map,
+				cleanUpEdges,
+				updater(old));
+			var diff = A2(_elm_community$graph$Graph$computeEdgeDiff, old, $new);
+			return A3(
+				_elm_community$intdict$IntDict$update,
+				nodeId,
+				_elm_lang$core$Basics$always($new),
+				A3(_elm_community$graph$Graph$applyEdgeDiff, nodeId, diff, rep));
+		};
+		return function (_p31) {
+			return _elm_community$graph$Graph$Graph(
+				wrappedUpdater(
+					_elm_community$graph$Graph$unGraph(_p31)));
+		};
+	});
+var _elm_community$graph$Graph$insert = F2(
+	function (nodeContext, graph) {
+		return A3(
+			_elm_community$graph$Graph$update,
+			nodeContext.node.id,
+			_elm_lang$core$Basics$always(
+				_elm_lang$core$Maybe$Just(nodeContext)),
+			graph);
+	});
+var _elm_community$graph$Graph$inducedSubgraph = F2(
+	function (nodeIds, graph) {
+		var insertContextById = F2(
+			function (nodeId, acc) {
+				var _p32 = A2(_elm_community$graph$Graph$get, nodeId, graph);
+				if (_p32.ctor === 'Just') {
+					return A2(_elm_community$graph$Graph$insert, _p32._0, acc);
+				} else {
+					return acc;
+				}
+			});
+		return A3(_elm_lang$core$List$foldl, insertContextById, _elm_community$graph$Graph$empty, nodeIds);
+	});
+var _elm_community$graph$Graph$remove = F2(
+	function (nodeId, graph) {
+		return A3(
+			_elm_community$graph$Graph$update,
+			nodeId,
+			_elm_lang$core$Basics$always(_elm_lang$core$Maybe$Nothing),
+			graph);
+	});
+var _elm_community$graph$Graph$fold = F3(
+	function (f, acc, graph) {
+		var go = F2(
+			function (acc, graph1) {
+				go:
+				while (true) {
+					var maybeContext = A2(
+						_elm_lang$core$Maybe$andThen,
+						function (id) {
+							return A2(_elm_community$graph$Graph$get, id, graph);
+						},
+						A2(
+							_elm_lang$core$Maybe$map,
+							_elm_lang$core$Tuple$first,
+							_elm_community$graph$Graph$nodeIdRange(graph1)));
+					var _p33 = maybeContext;
+					if (_p33.ctor === 'Just') {
+						var _p34 = _p33._0;
+						var _v11 = A2(f, _p34, acc),
+							_v12 = A2(_elm_community$graph$Graph$remove, _p34.node.id, graph1);
+						acc = _v11;
+						graph1 = _v12;
+						continue go;
+					} else {
+						return acc;
+					}
+				}
+			});
+		return A2(go, acc, graph);
+	});
+var _elm_community$graph$Graph$mapContexts = function (f) {
+	return A2(
+		_elm_community$graph$Graph$fold,
+		function (ctx) {
+			return _elm_community$graph$Graph$insert(
+				f(ctx));
+		},
+		_elm_community$graph$Graph$empty);
+};
+var _elm_community$graph$Graph$mapNodes = function (f) {
+	return A2(
+		_elm_community$graph$Graph$fold,
+		function (ctx) {
+			return _elm_community$graph$Graph$insert(
+				_elm_lang$core$Native_Utils.update(
+					ctx,
+					{
+						node: {
+							id: ctx.node.id,
+							label: f(ctx.node.label)
+						}
+					}));
+		},
+		_elm_community$graph$Graph$empty);
+};
+var _elm_community$graph$Graph$mapEdges = function (f) {
+	return A2(
+		_elm_community$graph$Graph$fold,
+		function (ctx) {
+			return _elm_community$graph$Graph$insert(
+				_elm_lang$core$Native_Utils.update(
+					ctx,
+					{
+						outgoing: A2(
+							_elm_community$intdict$IntDict$map,
+							F2(
+								function (n, e) {
+									return f(e);
+								}),
+							ctx.outgoing),
+						incoming: A2(
+							_elm_community$intdict$IntDict$map,
+							F2(
+								function (n, e) {
+									return f(e);
+								}),
+							ctx.incoming)
+					}));
+		},
+		_elm_community$graph$Graph$empty);
+};
+var _elm_community$graph$Graph$guidedDfs = F5(
+	function (selectNeighbors, visitNode, seeds, acc, graph) {
+		var go = F3(
+			function (seeds, acc, graph) {
+				go:
+				while (true) {
+					var _p35 = seeds;
+					if (_p35.ctor === '[]') {
+						return {ctor: '_Tuple2', _0: acc, _1: graph};
+					} else {
+						var _p41 = _p35._1;
+						var _p40 = _p35._0;
+						var _p36 = A2(_elm_community$graph$Graph$get, _p40, graph);
+						if (_p36.ctor === 'Nothing') {
+							var _v15 = _p41,
+								_v16 = acc,
+								_v17 = graph;
+							seeds = _v15;
+							acc = _v16;
+							graph = _v17;
+							continue go;
+						} else {
+							var _p39 = _p36._0;
+							var _p37 = A2(visitNode, _p39, acc);
+							var accAfterDiscovery = _p37._0;
+							var finishNode = _p37._1;
+							var _p38 = A3(
+								go,
+								selectNeighbors(_p39),
+								accAfterDiscovery,
+								A2(_elm_community$graph$Graph$remove, _p40, graph));
+							var accBeforeFinish = _p38._0;
+							var graph1 = _p38._1;
+							var accAfterFinish = finishNode(accBeforeFinish);
+							var _v18 = _p41,
+								_v19 = accAfterFinish,
+								_v20 = graph1;
+							seeds = _v18;
+							acc = _v19;
+							graph = _v20;
+							continue go;
+						}
+					}
+				}
+			});
+		return A3(go, seeds, acc, graph);
+	});
+var _elm_community$graph$Graph$dfs = F3(
+	function (visitNode, acc, graph) {
+		return _elm_lang$core$Tuple$first(
+			A5(
+				_elm_community$graph$Graph$guidedDfs,
+				_elm_community$graph$Graph$alongOutgoingEdges,
+				visitNode,
+				_elm_community$graph$Graph$nodeIds(graph),
+				acc,
+				graph));
+	});
+var _elm_community$graph$Graph$dfsForest = F2(
+	function (seeds, graph) {
+		var visitNode = F2(
+			function (ctx, trees) {
+				return {
+					ctor: '_Tuple2',
+					_0: {ctor: '[]'},
+					_1: function (children) {
+						return {
+							ctor: '::',
+							_0: A2(_elm_community$graph$Graph_Tree$inner, ctx, children),
+							_1: trees
+						};
+					}
+				};
+			});
+		return _elm_lang$core$List$reverse(
+			_elm_lang$core$Tuple$first(
+				A5(
+					_elm_community$graph$Graph$guidedDfs,
+					_elm_community$graph$Graph$alongOutgoingEdges,
+					visitNode,
+					seeds,
+					{ctor: '[]'},
+					graph)));
+	});
+var _elm_community$graph$Graph$dfsTree = F2(
+	function (seed, graph) {
+		var _p42 = A2(
+			_elm_community$graph$Graph$dfsForest,
+			{
+				ctor: '::',
+				_0: seed,
+				_1: {ctor: '[]'}
+			},
+			graph);
+		if (_p42.ctor === '[]') {
+			return _elm_community$graph$Graph_Tree$empty;
+		} else {
+			if (_p42._1.ctor === '[]') {
+				return _p42._0;
+			} else {
+				return _elm_lang$core$Native_Utils.crashCase(
+					'Graph',
+					{
+						start: {line: 822, column: 3},
+						end: {line: 828, column: 120}
+					},
+					_p42)('dfsTree: There can\'t be more than one DFS tree. This invariant is violated, please report this bug.');
+			}
+		}
+	});
+var _elm_community$graph$Graph$stronglyConnectedComponents = function (graph) {
+	var timestamps = A3(
+		_elm_community$graph$Graph$dfs,
+		_elm_community$graph$Graph$onFinish(
+			function (_p44) {
+				return F2(
+					function (x, y) {
+						return {ctor: '::', _0: x, _1: y};
+					})(
+					function (_) {
+						return _.id;
+					}(
+						function (_) {
+							return _.node;
+						}(_p44)));
+			}),
+		{ctor: '[]'},
+		graph);
+	var forest = A2(
+		_elm_community$graph$Graph$dfsForest,
+		timestamps,
+		_elm_community$graph$Graph$reverseEdges(graph));
+	var components = A2(
+		_elm_lang$core$List$map,
+		function (_p45) {
+			return _elm_community$graph$Graph$reverseEdges(
+				A3(
+					_elm_lang$core$List$foldr,
+					_elm_community$graph$Graph$insert,
+					_elm_community$graph$Graph$empty,
+					_elm_community$graph$Graph_Tree$preOrderList(_p45)));
+		},
+		forest);
+	return components;
+};
+var _elm_community$graph$Graph$topologicalSort = function (graph) {
+	var unwrapSingleNodeGraph = function (g) {
+		var _p46 = _elm_community$graph$Graph$nodeIdRange(g);
+		if (_p46.ctor === 'Nothing') {
+			return _elm_lang$core$Native_Utils.crashCase(
+				'Graph',
+				{
+					start: {line: 1041, column: 7},
+					end: {line: 1049, column: 18}
+				},
+				_p46)('Invariant hurt in Graph.topologicalSort: No strongly connected component should be empty');
+		} else {
+			var _p48 = A2(_elm_community$graph$Graph$get, _p46._0._0, g);
+			if (_p48.ctor === 'Nothing') {
+				return _elm_lang$core$Native_Utils.crashCase(
+					'Graph',
+					{
+						start: {line: 1045, column: 11},
+						end: {line: 1049, column: 18}
+					},
+					_p48)('Invariant hurt in Graph.topologicalSort: nodeId in nodeIdRange of the strongly connected component should be present in the original graph');
+			} else {
+				return _p48._0;
+			}
+		}
+	};
+	var scc = _elm_community$graph$Graph$stronglyConnectedComponents(graph);
+	return _elm_lang$core$Native_Utils.eq(
+		_elm_lang$core$List$length(scc),
+		_elm_community$graph$Graph$size(graph)) ? _elm_lang$core$Result$Ok(
+		A2(_elm_lang$core$List$map, unwrapSingleNodeGraph, scc)) : _elm_lang$core$Result$Err(scc);
+};
+var _elm_community$graph$Graph$guidedBfs = F5(
+	function (selectNeighbors, visitNode, seeds, acc, graph) {
+		var enqueueMany = F4(
+			function (distance, parentPath, nodeIds, queue) {
+				return A3(
+					_elm_lang$core$List$foldl,
+					_avh4$elm_fifo$Fifo$insert,
+					queue,
+					A2(
+						_elm_lang$core$List$map,
+						function (id) {
+							return {ctor: '_Tuple3', _0: id, _1: parentPath, _2: distance};
+						},
+						nodeIds));
+			});
+		var go = F3(
+			function (seeds, acc, graph) {
+				go:
+				while (true) {
+					var _p50 = _avh4$elm_fifo$Fifo$remove(seeds);
+					if (_p50._0.ctor === 'Nothing') {
+						return {ctor: '_Tuple2', _0: acc, _1: graph};
+					} else {
+						var _p55 = _p50._1;
+						var _p54 = _p50._0._0._0;
+						var _p53 = _p50._0._0._2;
+						var _p51 = A2(_elm_community$graph$Graph$get, _p54, graph);
+						if (_p51.ctor === 'Nothing') {
+							var _v26 = _p55,
+								_v27 = acc,
+								_v28 = graph;
+							seeds = _v26;
+							acc = _v27;
+							graph = _v28;
+							continue go;
+						} else {
+							var _p52 = _p51._0;
+							var path = {ctor: '::', _0: _p52, _1: _p50._0._0._1};
+							var accAfterVisit = A3(visitNode, path, _p53, acc);
+							var seeds2 = A4(
+								enqueueMany,
+								_p53 + 1,
+								path,
+								selectNeighbors(_p52),
+								_p55);
+							var _v29 = seeds2,
+								_v30 = accAfterVisit,
+								_v31 = A2(_elm_community$graph$Graph$remove, _p54, graph);
+							seeds = _v29;
+							acc = _v30;
+							graph = _v31;
+							continue go;
+						}
+					}
+				}
+			});
+		return A3(
+			go,
+			A4(
+				enqueueMany,
+				0,
+				{ctor: '[]'},
+				seeds,
+				_avh4$elm_fifo$Fifo$empty),
+			acc,
+			graph);
+	});
+var _elm_community$graph$Graph$bfs = F3(
+	function (visitNode, acc, graph) {
+		bfs:
+		while (true) {
+			var _p56 = _elm_community$graph$Graph$nodeIdRange(graph);
+			if (_p56.ctor === 'Nothing') {
+				return acc;
+			} else {
+				var _p57 = A5(
+					_elm_community$graph$Graph$guidedBfs,
+					_elm_community$graph$Graph$alongOutgoingEdges,
+					visitNode,
+					{
+						ctor: '::',
+						_0: _p56._0._0,
+						_1: {ctor: '[]'}
+					},
+					acc,
+					graph);
+				var finalAcc = _p57._0;
+				var restgraph1 = _p57._1;
+				var _v33 = visitNode,
+					_v34 = finalAcc,
+					_v35 = restgraph1;
+				visitNode = _v33;
+				acc = _v34;
+				graph = _v35;
+				continue bfs;
+			}
+		}
+	});
+var _elm_community$graph$Graph$heightLevels = function (graph) {
+	var subtract = F2(
+		function (a, b) {
+			return b - a;
+		});
+	var decrementAndNoteSources = F3(
+		function (id, _p59, _p58) {
+			var _p60 = _p58;
+			var _p64 = _p60._0;
+			var indegreesDec = A3(
+				_elm_community$intdict$IntDict$update,
+				id,
+				_elm_lang$core$Maybe$map(
+					subtract(1)),
+				_p60._1);
+			var _p61 = A2(_elm_community$intdict$IntDict$get, id, indegreesDec);
+			if ((_p61.ctor === 'Just') && (_p61._0 === 0)) {
+				var _p62 = A2(_elm_community$graph$Graph$get, id, graph);
+				if (_p62.ctor === 'Just') {
+					return {
+						ctor: '_Tuple2',
+						_0: {ctor: '::', _0: _p62._0, _1: _p64},
+						_1: indegreesDec
+					};
+				} else {
+					return _elm_lang$core$Native_Utils.crashCase(
+						'Graph',
+						{
+							start: {line: 1001, column: 13},
+							end: {line: 1003, column: 154}
+						},
+						_p62)('Graph.heightLevels: Could not get a node of a graph which should be there by invariants. Please file a bug report!');
+				}
+			} else {
+				return {ctor: '_Tuple2', _0: _p64, _1: indegreesDec};
+			}
+		});
+	var decrementIndegrees = F3(
+		function (source, nextLevel, indegrees) {
+			return A3(
+				_elm_community$intdict$IntDict$foldl,
+				decrementAndNoteSources,
+				{ctor: '_Tuple2', _0: nextLevel, _1: indegrees},
+				source.outgoing);
+		});
+	var go = F4(
+		function (currentLevel, nextLevel, indegrees, graph) {
+			var _p65 = {ctor: '_Tuple2', _0: currentLevel, _1: nextLevel};
+			if (_p65._0.ctor === '[]') {
+				if (_p65._1.ctor === '[]') {
+					return {
+						ctor: '::',
+						_0: {ctor: '[]'},
+						_1: {ctor: '[]'}
+					};
+				} else {
+					return {
+						ctor: '::',
+						_0: {ctor: '[]'},
+						_1: A4(
+							go,
+							nextLevel,
+							{ctor: '[]'},
+							indegrees,
+							graph)
+					};
+				}
+			} else {
+				var _p69 = _p65._0._0;
+				var _p66 = A3(decrementIndegrees, _p69, nextLevel, indegrees);
+				var nextLevel1 = _p66._0;
+				var indegrees1 = _p66._1;
+				var _p67 = A4(
+					go,
+					_p65._0._1,
+					nextLevel1,
+					indegrees1,
+					A2(_elm_community$graph$Graph$remove, _p69.node.id, graph));
+				if (_p67.ctor === '[]') {
+					return _elm_lang$core$Native_Utils.crashCase(
+						'Graph',
+						{
+							start: {line: 1020, column: 13},
+							end: {line: 1024, column: 44}
+						},
+						_p67)('Graph.heightLevels: Reached a branch which is impossible by invariants. Please file a bug report!');
+				} else {
+					return {
+						ctor: '::',
+						_0: {ctor: '::', _0: _p69, _1: _p67._0},
+						_1: _p67._1
+					};
+				}
+			}
+		});
+	var countIndegrees = A2(
+		_elm_community$graph$Graph$fold,
+		function (ctx) {
+			return A2(
+				_elm_community$intdict$IntDict$insert,
+				ctx.node.id,
+				_elm_community$intdict$IntDict$size(ctx.incoming));
+		},
+		_elm_community$intdict$IntDict$empty);
+	var sources = A3(
+		_elm_community$graph$Graph$fold,
+		F2(
+			function (ctx, acc) {
+				return _elm_community$intdict$IntDict$isEmpty(ctx.incoming) ? {ctor: '::', _0: ctx, _1: acc} : acc;
+			}),
+		{ctor: '[]'},
+		graph);
+	return A4(
+		go,
+		sources,
+		{ctor: '[]'},
+		countIndegrees(graph),
+		graph);
+};
+
 //import Native.List //
 
 var _elm_lang$core$Native_Array = function() {
@@ -1102,1524 +6203,6 @@ return {
 };
 
 }();
-//import Native.Utils //
-
-var _elm_lang$core$Native_Basics = function() {
-
-function div(a, b)
-{
-	return (a / b) | 0;
-}
-function rem(a, b)
-{
-	return a % b;
-}
-function mod(a, b)
-{
-	if (b === 0)
-	{
-		throw new Error('Cannot perform mod 0. Division by zero error.');
-	}
-	var r = a % b;
-	var m = a === 0 ? 0 : (b > 0 ? (a >= 0 ? r : r + b) : -mod(-a, -b));
-
-	return m === b ? 0 : m;
-}
-function logBase(base, n)
-{
-	return Math.log(n) / Math.log(base);
-}
-function negate(n)
-{
-	return -n;
-}
-function abs(n)
-{
-	return n < 0 ? -n : n;
-}
-
-function min(a, b)
-{
-	return _elm_lang$core$Native_Utils.cmp(a, b) < 0 ? a : b;
-}
-function max(a, b)
-{
-	return _elm_lang$core$Native_Utils.cmp(a, b) > 0 ? a : b;
-}
-function clamp(lo, hi, n)
-{
-	return _elm_lang$core$Native_Utils.cmp(n, lo) < 0
-		? lo
-		: _elm_lang$core$Native_Utils.cmp(n, hi) > 0
-			? hi
-			: n;
-}
-
-var ord = ['LT', 'EQ', 'GT'];
-
-function compare(x, y)
-{
-	return { ctor: ord[_elm_lang$core$Native_Utils.cmp(x, y) + 1] };
-}
-
-function xor(a, b)
-{
-	return a !== b;
-}
-function not(b)
-{
-	return !b;
-}
-function isInfinite(n)
-{
-	return n === Infinity || n === -Infinity;
-}
-
-function truncate(n)
-{
-	return n | 0;
-}
-
-function degrees(d)
-{
-	return d * Math.PI / 180;
-}
-function turns(t)
-{
-	return 2 * Math.PI * t;
-}
-function fromPolar(point)
-{
-	var r = point._0;
-	var t = point._1;
-	return _elm_lang$core$Native_Utils.Tuple2(r * Math.cos(t), r * Math.sin(t));
-}
-function toPolar(point)
-{
-	var x = point._0;
-	var y = point._1;
-	return _elm_lang$core$Native_Utils.Tuple2(Math.sqrt(x * x + y * y), Math.atan2(y, x));
-}
-
-return {
-	div: F2(div),
-	rem: F2(rem),
-	mod: F2(mod),
-
-	pi: Math.PI,
-	e: Math.E,
-	cos: Math.cos,
-	sin: Math.sin,
-	tan: Math.tan,
-	acos: Math.acos,
-	asin: Math.asin,
-	atan: Math.atan,
-	atan2: F2(Math.atan2),
-
-	degrees: degrees,
-	turns: turns,
-	fromPolar: fromPolar,
-	toPolar: toPolar,
-
-	sqrt: Math.sqrt,
-	logBase: F2(logBase),
-	negate: negate,
-	abs: abs,
-	min: F2(min),
-	max: F2(max),
-	clamp: F3(clamp),
-	compare: F2(compare),
-
-	xor: F2(xor),
-	not: not,
-
-	truncate: truncate,
-	ceiling: Math.ceil,
-	floor: Math.floor,
-	round: Math.round,
-	toFloat: function(x) { return x; },
-	isNaN: isNaN,
-	isInfinite: isInfinite
-};
-
-}();
-//import //
-
-var _elm_lang$core$Native_Utils = function() {
-
-// COMPARISONS
-
-function eq(x, y)
-{
-	var stack = [];
-	var isEqual = eqHelp(x, y, 0, stack);
-	var pair;
-	while (isEqual && (pair = stack.pop()))
-	{
-		isEqual = eqHelp(pair.x, pair.y, 0, stack);
-	}
-	return isEqual;
-}
-
-
-function eqHelp(x, y, depth, stack)
-{
-	if (depth > 100)
-	{
-		stack.push({ x: x, y: y });
-		return true;
-	}
-
-	if (x === y)
-	{
-		return true;
-	}
-
-	if (typeof x !== 'object')
-	{
-		if (typeof x === 'function')
-		{
-			throw new Error(
-				'Trying to use `(==)` on functions. There is no way to know if functions are "the same" in the Elm sense.'
-				+ ' Read more about this at http://package.elm-lang.org/packages/elm-lang/core/latest/Basics#=='
-				+ ' which describes why it is this way and what the better version will look like.'
-			);
-		}
-		return false;
-	}
-
-	if (x === null || y === null)
-	{
-		return false
-	}
-
-	if (x instanceof Date)
-	{
-		return x.getTime() === y.getTime();
-	}
-
-	if (!('ctor' in x))
-	{
-		for (var key in x)
-		{
-			if (!eqHelp(x[key], y[key], depth + 1, stack))
-			{
-				return false;
-			}
-		}
-		return true;
-	}
-
-	// convert Dicts and Sets to lists
-	if (x.ctor === 'RBNode_elm_builtin' || x.ctor === 'RBEmpty_elm_builtin')
-	{
-		x = _elm_lang$core$Dict$toList(x);
-		y = _elm_lang$core$Dict$toList(y);
-	}
-	if (x.ctor === 'Set_elm_builtin')
-	{
-		x = _elm_lang$core$Set$toList(x);
-		y = _elm_lang$core$Set$toList(y);
-	}
-
-	// check if lists are equal without recursion
-	if (x.ctor === '::')
-	{
-		var a = x;
-		var b = y;
-		while (a.ctor === '::' && b.ctor === '::')
-		{
-			if (!eqHelp(a._0, b._0, depth + 1, stack))
-			{
-				return false;
-			}
-			a = a._1;
-			b = b._1;
-		}
-		return a.ctor === b.ctor;
-	}
-
-	// check if Arrays are equal
-	if (x.ctor === '_Array')
-	{
-		var xs = _elm_lang$core$Native_Array.toJSArray(x);
-		var ys = _elm_lang$core$Native_Array.toJSArray(y);
-		if (xs.length !== ys.length)
-		{
-			return false;
-		}
-		for (var i = 0; i < xs.length; i++)
-		{
-			if (!eqHelp(xs[i], ys[i], depth + 1, stack))
-			{
-				return false;
-			}
-		}
-		return true;
-	}
-
-	if (!eqHelp(x.ctor, y.ctor, depth + 1, stack))
-	{
-		return false;
-	}
-
-	for (var key in x)
-	{
-		if (!eqHelp(x[key], y[key], depth + 1, stack))
-		{
-			return false;
-		}
-	}
-	return true;
-}
-
-// Code in Generate/JavaScript.hs, Basics.js, and List.js depends on
-// the particular integer values assigned to LT, EQ, and GT.
-
-var LT = -1, EQ = 0, GT = 1;
-
-function cmp(x, y)
-{
-	if (typeof x !== 'object')
-	{
-		return x === y ? EQ : x < y ? LT : GT;
-	}
-
-	if (x instanceof String)
-	{
-		var a = x.valueOf();
-		var b = y.valueOf();
-		return a === b ? EQ : a < b ? LT : GT;
-	}
-
-	if (x.ctor === '::' || x.ctor === '[]')
-	{
-		while (x.ctor === '::' && y.ctor === '::')
-		{
-			var ord = cmp(x._0, y._0);
-			if (ord !== EQ)
-			{
-				return ord;
-			}
-			x = x._1;
-			y = y._1;
-		}
-		return x.ctor === y.ctor ? EQ : x.ctor === '[]' ? LT : GT;
-	}
-
-	if (x.ctor.slice(0, 6) === '_Tuple')
-	{
-		var ord;
-		var n = x.ctor.slice(6) - 0;
-		var err = 'cannot compare tuples with more than 6 elements.';
-		if (n === 0) return EQ;
-		if (n >= 1) { ord = cmp(x._0, y._0); if (ord !== EQ) return ord;
-		if (n >= 2) { ord = cmp(x._1, y._1); if (ord !== EQ) return ord;
-		if (n >= 3) { ord = cmp(x._2, y._2); if (ord !== EQ) return ord;
-		if (n >= 4) { ord = cmp(x._3, y._3); if (ord !== EQ) return ord;
-		if (n >= 5) { ord = cmp(x._4, y._4); if (ord !== EQ) return ord;
-		if (n >= 6) { ord = cmp(x._5, y._5); if (ord !== EQ) return ord;
-		if (n >= 7) throw new Error('Comparison error: ' + err); } } } } } }
-		return EQ;
-	}
-
-	throw new Error(
-		'Comparison error: comparison is only defined on ints, '
-		+ 'floats, times, chars, strings, lists of comparable values, '
-		+ 'and tuples of comparable values.'
-	);
-}
-
-
-// COMMON VALUES
-
-var Tuple0 = {
-	ctor: '_Tuple0'
-};
-
-function Tuple2(x, y)
-{
-	return {
-		ctor: '_Tuple2',
-		_0: x,
-		_1: y
-	};
-}
-
-function chr(c)
-{
-	return new String(c);
-}
-
-
-// GUID
-
-var count = 0;
-function guid(_)
-{
-	return count++;
-}
-
-
-// RECORDS
-
-function update(oldRecord, updatedFields)
-{
-	var newRecord = {};
-
-	for (var key in oldRecord)
-	{
-		newRecord[key] = oldRecord[key];
-	}
-
-	for (var key in updatedFields)
-	{
-		newRecord[key] = updatedFields[key];
-	}
-
-	return newRecord;
-}
-
-
-//// LIST STUFF ////
-
-var Nil = { ctor: '[]' };
-
-function Cons(hd, tl)
-{
-	return {
-		ctor: '::',
-		_0: hd,
-		_1: tl
-	};
-}
-
-function append(xs, ys)
-{
-	// append Strings
-	if (typeof xs === 'string')
-	{
-		return xs + ys;
-	}
-
-	// append Lists
-	if (xs.ctor === '[]')
-	{
-		return ys;
-	}
-	var root = Cons(xs._0, Nil);
-	var curr = root;
-	xs = xs._1;
-	while (xs.ctor !== '[]')
-	{
-		curr._1 = Cons(xs._0, Nil);
-		xs = xs._1;
-		curr = curr._1;
-	}
-	curr._1 = ys;
-	return root;
-}
-
-
-// CRASHES
-
-function crash(moduleName, region)
-{
-	return function(message) {
-		throw new Error(
-			'Ran into a `Debug.crash` in module `' + moduleName + '` ' + regionToString(region) + '\n'
-			+ 'The message provided by the code author is:\n\n    '
-			+ message
-		);
-	};
-}
-
-function crashCase(moduleName, region, value)
-{
-	return function(message) {
-		throw new Error(
-			'Ran into a `Debug.crash` in module `' + moduleName + '`\n\n'
-			+ 'This was caused by the `case` expression ' + regionToString(region) + '.\n'
-			+ 'One of the branches ended with a crash and the following value got through:\n\n    ' + toString(value) + '\n\n'
-			+ 'The message provided by the code author is:\n\n    '
-			+ message
-		);
-	};
-}
-
-function regionToString(region)
-{
-	if (region.start.line == region.end.line)
-	{
-		return 'on line ' + region.start.line;
-	}
-	return 'between lines ' + region.start.line + ' and ' + region.end.line;
-}
-
-
-// TO STRING
-
-function toString(v)
-{
-	var type = typeof v;
-	if (type === 'function')
-	{
-		return '<function>';
-	}
-
-	if (type === 'boolean')
-	{
-		return v ? 'True' : 'False';
-	}
-
-	if (type === 'number')
-	{
-		return v + '';
-	}
-
-	if (v instanceof String)
-	{
-		return '\'' + addSlashes(v, true) + '\'';
-	}
-
-	if (type === 'string')
-	{
-		return '"' + addSlashes(v, false) + '"';
-	}
-
-	if (v === null)
-	{
-		return 'null';
-	}
-
-	if (type === 'object' && 'ctor' in v)
-	{
-		var ctorStarter = v.ctor.substring(0, 5);
-
-		if (ctorStarter === '_Tupl')
-		{
-			var output = [];
-			for (var k in v)
-			{
-				if (k === 'ctor') continue;
-				output.push(toString(v[k]));
-			}
-			return '(' + output.join(',') + ')';
-		}
-
-		if (ctorStarter === '_Task')
-		{
-			return '<task>'
-		}
-
-		if (v.ctor === '_Array')
-		{
-			var list = _elm_lang$core$Array$toList(v);
-			return 'Array.fromList ' + toString(list);
-		}
-
-		if (v.ctor === '<decoder>')
-		{
-			return '<decoder>';
-		}
-
-		if (v.ctor === '_Process')
-		{
-			return '<process:' + v.id + '>';
-		}
-
-		if (v.ctor === '::')
-		{
-			var output = '[' + toString(v._0);
-			v = v._1;
-			while (v.ctor === '::')
-			{
-				output += ',' + toString(v._0);
-				v = v._1;
-			}
-			return output + ']';
-		}
-
-		if (v.ctor === '[]')
-		{
-			return '[]';
-		}
-
-		if (v.ctor === 'Set_elm_builtin')
-		{
-			return 'Set.fromList ' + toString(_elm_lang$core$Set$toList(v));
-		}
-
-		if (v.ctor === 'RBNode_elm_builtin' || v.ctor === 'RBEmpty_elm_builtin')
-		{
-			return 'Dict.fromList ' + toString(_elm_lang$core$Dict$toList(v));
-		}
-
-		var output = '';
-		for (var i in v)
-		{
-			if (i === 'ctor') continue;
-			var str = toString(v[i]);
-			var c0 = str[0];
-			var parenless = c0 === '{' || c0 === '(' || c0 === '<' || c0 === '"' || str.indexOf(' ') < 0;
-			output += ' ' + (parenless ? str : '(' + str + ')');
-		}
-		return v.ctor + output;
-	}
-
-	if (type === 'object')
-	{
-		if (v instanceof Date)
-		{
-			return '<' + v.toString() + '>';
-		}
-
-		if (v.elm_web_socket)
-		{
-			return '<websocket>';
-		}
-
-		var output = [];
-		for (var k in v)
-		{
-			output.push(k + ' = ' + toString(v[k]));
-		}
-		if (output.length === 0)
-		{
-			return '{}';
-		}
-		return '{ ' + output.join(', ') + ' }';
-	}
-
-	return '<internal structure>';
-}
-
-function addSlashes(str, isChar)
-{
-	var s = str.replace(/\\/g, '\\\\')
-			  .replace(/\n/g, '\\n')
-			  .replace(/\t/g, '\\t')
-			  .replace(/\r/g, '\\r')
-			  .replace(/\v/g, '\\v')
-			  .replace(/\0/g, '\\0');
-	if (isChar)
-	{
-		return s.replace(/\'/g, '\\\'');
-	}
-	else
-	{
-		return s.replace(/\"/g, '\\"');
-	}
-}
-
-
-return {
-	eq: eq,
-	cmp: cmp,
-	Tuple0: Tuple0,
-	Tuple2: Tuple2,
-	chr: chr,
-	update: update,
-	guid: guid,
-
-	append: F2(append),
-
-	crash: crash,
-	crashCase: crashCase,
-
-	toString: toString
-};
-
-}();
-var _elm_lang$core$Basics$never = function (_p0) {
-	never:
-	while (true) {
-		var _p1 = _p0;
-		var _v1 = _p1._0;
-		_p0 = _v1;
-		continue never;
-	}
-};
-var _elm_lang$core$Basics$uncurry = F2(
-	function (f, _p2) {
-		var _p3 = _p2;
-		return A2(f, _p3._0, _p3._1);
-	});
-var _elm_lang$core$Basics$curry = F3(
-	function (f, a, b) {
-		return f(
-			{ctor: '_Tuple2', _0: a, _1: b});
-	});
-var _elm_lang$core$Basics$flip = F3(
-	function (f, b, a) {
-		return A2(f, a, b);
-	});
-var _elm_lang$core$Basics$always = F2(
-	function (a, _p4) {
-		return a;
-	});
-var _elm_lang$core$Basics$identity = function (x) {
-	return x;
-};
-var _elm_lang$core$Basics_ops = _elm_lang$core$Basics_ops || {};
-_elm_lang$core$Basics_ops['<|'] = F2(
-	function (f, x) {
-		return f(x);
-	});
-var _elm_lang$core$Basics_ops = _elm_lang$core$Basics_ops || {};
-_elm_lang$core$Basics_ops['|>'] = F2(
-	function (x, f) {
-		return f(x);
-	});
-var _elm_lang$core$Basics_ops = _elm_lang$core$Basics_ops || {};
-_elm_lang$core$Basics_ops['>>'] = F3(
-	function (f, g, x) {
-		return g(
-			f(x));
-	});
-var _elm_lang$core$Basics_ops = _elm_lang$core$Basics_ops || {};
-_elm_lang$core$Basics_ops['<<'] = F3(
-	function (g, f, x) {
-		return g(
-			f(x));
-	});
-var _elm_lang$core$Basics_ops = _elm_lang$core$Basics_ops || {};
-_elm_lang$core$Basics_ops['++'] = _elm_lang$core$Native_Utils.append;
-var _elm_lang$core$Basics$toString = _elm_lang$core$Native_Utils.toString;
-var _elm_lang$core$Basics$isInfinite = _elm_lang$core$Native_Basics.isInfinite;
-var _elm_lang$core$Basics$isNaN = _elm_lang$core$Native_Basics.isNaN;
-var _elm_lang$core$Basics$toFloat = _elm_lang$core$Native_Basics.toFloat;
-var _elm_lang$core$Basics$ceiling = _elm_lang$core$Native_Basics.ceiling;
-var _elm_lang$core$Basics$floor = _elm_lang$core$Native_Basics.floor;
-var _elm_lang$core$Basics$truncate = _elm_lang$core$Native_Basics.truncate;
-var _elm_lang$core$Basics$round = _elm_lang$core$Native_Basics.round;
-var _elm_lang$core$Basics$not = _elm_lang$core$Native_Basics.not;
-var _elm_lang$core$Basics$xor = _elm_lang$core$Native_Basics.xor;
-var _elm_lang$core$Basics_ops = _elm_lang$core$Basics_ops || {};
-_elm_lang$core$Basics_ops['||'] = _elm_lang$core$Native_Basics.or;
-var _elm_lang$core$Basics_ops = _elm_lang$core$Basics_ops || {};
-_elm_lang$core$Basics_ops['&&'] = _elm_lang$core$Native_Basics.and;
-var _elm_lang$core$Basics$max = _elm_lang$core$Native_Basics.max;
-var _elm_lang$core$Basics$min = _elm_lang$core$Native_Basics.min;
-var _elm_lang$core$Basics$compare = _elm_lang$core$Native_Basics.compare;
-var _elm_lang$core$Basics_ops = _elm_lang$core$Basics_ops || {};
-_elm_lang$core$Basics_ops['>='] = _elm_lang$core$Native_Basics.ge;
-var _elm_lang$core$Basics_ops = _elm_lang$core$Basics_ops || {};
-_elm_lang$core$Basics_ops['<='] = _elm_lang$core$Native_Basics.le;
-var _elm_lang$core$Basics_ops = _elm_lang$core$Basics_ops || {};
-_elm_lang$core$Basics_ops['>'] = _elm_lang$core$Native_Basics.gt;
-var _elm_lang$core$Basics_ops = _elm_lang$core$Basics_ops || {};
-_elm_lang$core$Basics_ops['<'] = _elm_lang$core$Native_Basics.lt;
-var _elm_lang$core$Basics_ops = _elm_lang$core$Basics_ops || {};
-_elm_lang$core$Basics_ops['/='] = _elm_lang$core$Native_Basics.neq;
-var _elm_lang$core$Basics_ops = _elm_lang$core$Basics_ops || {};
-_elm_lang$core$Basics_ops['=='] = _elm_lang$core$Native_Basics.eq;
-var _elm_lang$core$Basics$e = _elm_lang$core$Native_Basics.e;
-var _elm_lang$core$Basics$pi = _elm_lang$core$Native_Basics.pi;
-var _elm_lang$core$Basics$clamp = _elm_lang$core$Native_Basics.clamp;
-var _elm_lang$core$Basics$logBase = _elm_lang$core$Native_Basics.logBase;
-var _elm_lang$core$Basics$abs = _elm_lang$core$Native_Basics.abs;
-var _elm_lang$core$Basics$negate = _elm_lang$core$Native_Basics.negate;
-var _elm_lang$core$Basics$sqrt = _elm_lang$core$Native_Basics.sqrt;
-var _elm_lang$core$Basics$atan2 = _elm_lang$core$Native_Basics.atan2;
-var _elm_lang$core$Basics$atan = _elm_lang$core$Native_Basics.atan;
-var _elm_lang$core$Basics$asin = _elm_lang$core$Native_Basics.asin;
-var _elm_lang$core$Basics$acos = _elm_lang$core$Native_Basics.acos;
-var _elm_lang$core$Basics$tan = _elm_lang$core$Native_Basics.tan;
-var _elm_lang$core$Basics$sin = _elm_lang$core$Native_Basics.sin;
-var _elm_lang$core$Basics$cos = _elm_lang$core$Native_Basics.cos;
-var _elm_lang$core$Basics_ops = _elm_lang$core$Basics_ops || {};
-_elm_lang$core$Basics_ops['^'] = _elm_lang$core$Native_Basics.exp;
-var _elm_lang$core$Basics_ops = _elm_lang$core$Basics_ops || {};
-_elm_lang$core$Basics_ops['%'] = _elm_lang$core$Native_Basics.mod;
-var _elm_lang$core$Basics$rem = _elm_lang$core$Native_Basics.rem;
-var _elm_lang$core$Basics_ops = _elm_lang$core$Basics_ops || {};
-_elm_lang$core$Basics_ops['//'] = _elm_lang$core$Native_Basics.div;
-var _elm_lang$core$Basics_ops = _elm_lang$core$Basics_ops || {};
-_elm_lang$core$Basics_ops['/'] = _elm_lang$core$Native_Basics.floatDiv;
-var _elm_lang$core$Basics_ops = _elm_lang$core$Basics_ops || {};
-_elm_lang$core$Basics_ops['*'] = _elm_lang$core$Native_Basics.mul;
-var _elm_lang$core$Basics_ops = _elm_lang$core$Basics_ops || {};
-_elm_lang$core$Basics_ops['-'] = _elm_lang$core$Native_Basics.sub;
-var _elm_lang$core$Basics_ops = _elm_lang$core$Basics_ops || {};
-_elm_lang$core$Basics_ops['+'] = _elm_lang$core$Native_Basics.add;
-var _elm_lang$core$Basics$toPolar = _elm_lang$core$Native_Basics.toPolar;
-var _elm_lang$core$Basics$fromPolar = _elm_lang$core$Native_Basics.fromPolar;
-var _elm_lang$core$Basics$turns = _elm_lang$core$Native_Basics.turns;
-var _elm_lang$core$Basics$degrees = _elm_lang$core$Native_Basics.degrees;
-var _elm_lang$core$Basics$radians = function (t) {
-	return t;
-};
-var _elm_lang$core$Basics$GT = {ctor: 'GT'};
-var _elm_lang$core$Basics$EQ = {ctor: 'EQ'};
-var _elm_lang$core$Basics$LT = {ctor: 'LT'};
-var _elm_lang$core$Basics$JustOneMore = function (a) {
-	return {ctor: 'JustOneMore', _0: a};
-};
-
-var _elm_lang$core$Maybe$withDefault = F2(
-	function ($default, maybe) {
-		var _p0 = maybe;
-		if (_p0.ctor === 'Just') {
-			return _p0._0;
-		} else {
-			return $default;
-		}
-	});
-var _elm_lang$core$Maybe$Nothing = {ctor: 'Nothing'};
-var _elm_lang$core$Maybe$andThen = F2(
-	function (callback, maybeValue) {
-		var _p1 = maybeValue;
-		if (_p1.ctor === 'Just') {
-			return callback(_p1._0);
-		} else {
-			return _elm_lang$core$Maybe$Nothing;
-		}
-	});
-var _elm_lang$core$Maybe$Just = function (a) {
-	return {ctor: 'Just', _0: a};
-};
-var _elm_lang$core$Maybe$map = F2(
-	function (f, maybe) {
-		var _p2 = maybe;
-		if (_p2.ctor === 'Just') {
-			return _elm_lang$core$Maybe$Just(
-				f(_p2._0));
-		} else {
-			return _elm_lang$core$Maybe$Nothing;
-		}
-	});
-var _elm_lang$core$Maybe$map2 = F3(
-	function (func, ma, mb) {
-		var _p3 = {ctor: '_Tuple2', _0: ma, _1: mb};
-		if (((_p3.ctor === '_Tuple2') && (_p3._0.ctor === 'Just')) && (_p3._1.ctor === 'Just')) {
-			return _elm_lang$core$Maybe$Just(
-				A2(func, _p3._0._0, _p3._1._0));
-		} else {
-			return _elm_lang$core$Maybe$Nothing;
-		}
-	});
-var _elm_lang$core$Maybe$map3 = F4(
-	function (func, ma, mb, mc) {
-		var _p4 = {ctor: '_Tuple3', _0: ma, _1: mb, _2: mc};
-		if ((((_p4.ctor === '_Tuple3') && (_p4._0.ctor === 'Just')) && (_p4._1.ctor === 'Just')) && (_p4._2.ctor === 'Just')) {
-			return _elm_lang$core$Maybe$Just(
-				A3(func, _p4._0._0, _p4._1._0, _p4._2._0));
-		} else {
-			return _elm_lang$core$Maybe$Nothing;
-		}
-	});
-var _elm_lang$core$Maybe$map4 = F5(
-	function (func, ma, mb, mc, md) {
-		var _p5 = {ctor: '_Tuple4', _0: ma, _1: mb, _2: mc, _3: md};
-		if (((((_p5.ctor === '_Tuple4') && (_p5._0.ctor === 'Just')) && (_p5._1.ctor === 'Just')) && (_p5._2.ctor === 'Just')) && (_p5._3.ctor === 'Just')) {
-			return _elm_lang$core$Maybe$Just(
-				A4(func, _p5._0._0, _p5._1._0, _p5._2._0, _p5._3._0));
-		} else {
-			return _elm_lang$core$Maybe$Nothing;
-		}
-	});
-var _elm_lang$core$Maybe$map5 = F6(
-	function (func, ma, mb, mc, md, me) {
-		var _p6 = {ctor: '_Tuple5', _0: ma, _1: mb, _2: mc, _3: md, _4: me};
-		if ((((((_p6.ctor === '_Tuple5') && (_p6._0.ctor === 'Just')) && (_p6._1.ctor === 'Just')) && (_p6._2.ctor === 'Just')) && (_p6._3.ctor === 'Just')) && (_p6._4.ctor === 'Just')) {
-			return _elm_lang$core$Maybe$Just(
-				A5(func, _p6._0._0, _p6._1._0, _p6._2._0, _p6._3._0, _p6._4._0));
-		} else {
-			return _elm_lang$core$Maybe$Nothing;
-		}
-	});
-
-//import Native.Utils //
-
-var _elm_lang$core$Native_List = function() {
-
-var Nil = { ctor: '[]' };
-
-function Cons(hd, tl)
-{
-	return { ctor: '::', _0: hd, _1: tl };
-}
-
-function fromArray(arr)
-{
-	var out = Nil;
-	for (var i = arr.length; i--; )
-	{
-		out = Cons(arr[i], out);
-	}
-	return out;
-}
-
-function toArray(xs)
-{
-	var out = [];
-	while (xs.ctor !== '[]')
-	{
-		out.push(xs._0);
-		xs = xs._1;
-	}
-	return out;
-}
-
-function foldr(f, b, xs)
-{
-	var arr = toArray(xs);
-	var acc = b;
-	for (var i = arr.length; i--; )
-	{
-		acc = A2(f, arr[i], acc);
-	}
-	return acc;
-}
-
-function map2(f, xs, ys)
-{
-	var arr = [];
-	while (xs.ctor !== '[]' && ys.ctor !== '[]')
-	{
-		arr.push(A2(f, xs._0, ys._0));
-		xs = xs._1;
-		ys = ys._1;
-	}
-	return fromArray(arr);
-}
-
-function map3(f, xs, ys, zs)
-{
-	var arr = [];
-	while (xs.ctor !== '[]' && ys.ctor !== '[]' && zs.ctor !== '[]')
-	{
-		arr.push(A3(f, xs._0, ys._0, zs._0));
-		xs = xs._1;
-		ys = ys._1;
-		zs = zs._1;
-	}
-	return fromArray(arr);
-}
-
-function map4(f, ws, xs, ys, zs)
-{
-	var arr = [];
-	while (   ws.ctor !== '[]'
-		   && xs.ctor !== '[]'
-		   && ys.ctor !== '[]'
-		   && zs.ctor !== '[]')
-	{
-		arr.push(A4(f, ws._0, xs._0, ys._0, zs._0));
-		ws = ws._1;
-		xs = xs._1;
-		ys = ys._1;
-		zs = zs._1;
-	}
-	return fromArray(arr);
-}
-
-function map5(f, vs, ws, xs, ys, zs)
-{
-	var arr = [];
-	while (   vs.ctor !== '[]'
-		   && ws.ctor !== '[]'
-		   && xs.ctor !== '[]'
-		   && ys.ctor !== '[]'
-		   && zs.ctor !== '[]')
-	{
-		arr.push(A5(f, vs._0, ws._0, xs._0, ys._0, zs._0));
-		vs = vs._1;
-		ws = ws._1;
-		xs = xs._1;
-		ys = ys._1;
-		zs = zs._1;
-	}
-	return fromArray(arr);
-}
-
-function sortBy(f, xs)
-{
-	return fromArray(toArray(xs).sort(function(a, b) {
-		return _elm_lang$core$Native_Utils.cmp(f(a), f(b));
-	}));
-}
-
-function sortWith(f, xs)
-{
-	return fromArray(toArray(xs).sort(function(a, b) {
-		var ord = f(a)(b).ctor;
-		return ord === 'EQ' ? 0 : ord === 'LT' ? -1 : 1;
-	}));
-}
-
-return {
-	Nil: Nil,
-	Cons: Cons,
-	cons: F2(Cons),
-	toArray: toArray,
-	fromArray: fromArray,
-
-	foldr: F3(foldr),
-
-	map2: F3(map2),
-	map3: F4(map3),
-	map4: F5(map4),
-	map5: F6(map5),
-	sortBy: F2(sortBy),
-	sortWith: F2(sortWith)
-};
-
-}();
-var _elm_lang$core$List$sortWith = _elm_lang$core$Native_List.sortWith;
-var _elm_lang$core$List$sortBy = _elm_lang$core$Native_List.sortBy;
-var _elm_lang$core$List$sort = function (xs) {
-	return A2(_elm_lang$core$List$sortBy, _elm_lang$core$Basics$identity, xs);
-};
-var _elm_lang$core$List$singleton = function (value) {
-	return {
-		ctor: '::',
-		_0: value,
-		_1: {ctor: '[]'}
-	};
-};
-var _elm_lang$core$List$drop = F2(
-	function (n, list) {
-		drop:
-		while (true) {
-			if (_elm_lang$core$Native_Utils.cmp(n, 0) < 1) {
-				return list;
-			} else {
-				var _p0 = list;
-				if (_p0.ctor === '[]') {
-					return list;
-				} else {
-					var _v1 = n - 1,
-						_v2 = _p0._1;
-					n = _v1;
-					list = _v2;
-					continue drop;
-				}
-			}
-		}
-	});
-var _elm_lang$core$List$map5 = _elm_lang$core$Native_List.map5;
-var _elm_lang$core$List$map4 = _elm_lang$core$Native_List.map4;
-var _elm_lang$core$List$map3 = _elm_lang$core$Native_List.map3;
-var _elm_lang$core$List$map2 = _elm_lang$core$Native_List.map2;
-var _elm_lang$core$List$any = F2(
-	function (isOkay, list) {
-		any:
-		while (true) {
-			var _p1 = list;
-			if (_p1.ctor === '[]') {
-				return false;
-			} else {
-				if (isOkay(_p1._0)) {
-					return true;
-				} else {
-					var _v4 = isOkay,
-						_v5 = _p1._1;
-					isOkay = _v4;
-					list = _v5;
-					continue any;
-				}
-			}
-		}
-	});
-var _elm_lang$core$List$all = F2(
-	function (isOkay, list) {
-		return !A2(
-			_elm_lang$core$List$any,
-			function (_p2) {
-				return !isOkay(_p2);
-			},
-			list);
-	});
-var _elm_lang$core$List$foldr = _elm_lang$core$Native_List.foldr;
-var _elm_lang$core$List$foldl = F3(
-	function (func, acc, list) {
-		foldl:
-		while (true) {
-			var _p3 = list;
-			if (_p3.ctor === '[]') {
-				return acc;
-			} else {
-				var _v7 = func,
-					_v8 = A2(func, _p3._0, acc),
-					_v9 = _p3._1;
-				func = _v7;
-				acc = _v8;
-				list = _v9;
-				continue foldl;
-			}
-		}
-	});
-var _elm_lang$core$List$length = function (xs) {
-	return A3(
-		_elm_lang$core$List$foldl,
-		F2(
-			function (_p4, i) {
-				return i + 1;
-			}),
-		0,
-		xs);
-};
-var _elm_lang$core$List$sum = function (numbers) {
-	return A3(
-		_elm_lang$core$List$foldl,
-		F2(
-			function (x, y) {
-				return x + y;
-			}),
-		0,
-		numbers);
-};
-var _elm_lang$core$List$product = function (numbers) {
-	return A3(
-		_elm_lang$core$List$foldl,
-		F2(
-			function (x, y) {
-				return x * y;
-			}),
-		1,
-		numbers);
-};
-var _elm_lang$core$List$maximum = function (list) {
-	var _p5 = list;
-	if (_p5.ctor === '::') {
-		return _elm_lang$core$Maybe$Just(
-			A3(_elm_lang$core$List$foldl, _elm_lang$core$Basics$max, _p5._0, _p5._1));
-	} else {
-		return _elm_lang$core$Maybe$Nothing;
-	}
-};
-var _elm_lang$core$List$minimum = function (list) {
-	var _p6 = list;
-	if (_p6.ctor === '::') {
-		return _elm_lang$core$Maybe$Just(
-			A3(_elm_lang$core$List$foldl, _elm_lang$core$Basics$min, _p6._0, _p6._1));
-	} else {
-		return _elm_lang$core$Maybe$Nothing;
-	}
-};
-var _elm_lang$core$List$member = F2(
-	function (x, xs) {
-		return A2(
-			_elm_lang$core$List$any,
-			function (a) {
-				return _elm_lang$core$Native_Utils.eq(a, x);
-			},
-			xs);
-	});
-var _elm_lang$core$List$isEmpty = function (xs) {
-	var _p7 = xs;
-	if (_p7.ctor === '[]') {
-		return true;
-	} else {
-		return false;
-	}
-};
-var _elm_lang$core$List$tail = function (list) {
-	var _p8 = list;
-	if (_p8.ctor === '::') {
-		return _elm_lang$core$Maybe$Just(_p8._1);
-	} else {
-		return _elm_lang$core$Maybe$Nothing;
-	}
-};
-var _elm_lang$core$List$head = function (list) {
-	var _p9 = list;
-	if (_p9.ctor === '::') {
-		return _elm_lang$core$Maybe$Just(_p9._0);
-	} else {
-		return _elm_lang$core$Maybe$Nothing;
-	}
-};
-var _elm_lang$core$List_ops = _elm_lang$core$List_ops || {};
-_elm_lang$core$List_ops['::'] = _elm_lang$core$Native_List.cons;
-var _elm_lang$core$List$map = F2(
-	function (f, xs) {
-		return A3(
-			_elm_lang$core$List$foldr,
-			F2(
-				function (x, acc) {
-					return {
-						ctor: '::',
-						_0: f(x),
-						_1: acc
-					};
-				}),
-			{ctor: '[]'},
-			xs);
-	});
-var _elm_lang$core$List$filter = F2(
-	function (pred, xs) {
-		var conditionalCons = F2(
-			function (front, back) {
-				return pred(front) ? {ctor: '::', _0: front, _1: back} : back;
-			});
-		return A3(
-			_elm_lang$core$List$foldr,
-			conditionalCons,
-			{ctor: '[]'},
-			xs);
-	});
-var _elm_lang$core$List$maybeCons = F3(
-	function (f, mx, xs) {
-		var _p10 = f(mx);
-		if (_p10.ctor === 'Just') {
-			return {ctor: '::', _0: _p10._0, _1: xs};
-		} else {
-			return xs;
-		}
-	});
-var _elm_lang$core$List$filterMap = F2(
-	function (f, xs) {
-		return A3(
-			_elm_lang$core$List$foldr,
-			_elm_lang$core$List$maybeCons(f),
-			{ctor: '[]'},
-			xs);
-	});
-var _elm_lang$core$List$reverse = function (list) {
-	return A3(
-		_elm_lang$core$List$foldl,
-		F2(
-			function (x, y) {
-				return {ctor: '::', _0: x, _1: y};
-			}),
-		{ctor: '[]'},
-		list);
-};
-var _elm_lang$core$List$scanl = F3(
-	function (f, b, xs) {
-		var scan1 = F2(
-			function (x, accAcc) {
-				var _p11 = accAcc;
-				if (_p11.ctor === '::') {
-					return {
-						ctor: '::',
-						_0: A2(f, x, _p11._0),
-						_1: accAcc
-					};
-				} else {
-					return {ctor: '[]'};
-				}
-			});
-		return _elm_lang$core$List$reverse(
-			A3(
-				_elm_lang$core$List$foldl,
-				scan1,
-				{
-					ctor: '::',
-					_0: b,
-					_1: {ctor: '[]'}
-				},
-				xs));
-	});
-var _elm_lang$core$List$append = F2(
-	function (xs, ys) {
-		var _p12 = ys;
-		if (_p12.ctor === '[]') {
-			return xs;
-		} else {
-			return A3(
-				_elm_lang$core$List$foldr,
-				F2(
-					function (x, y) {
-						return {ctor: '::', _0: x, _1: y};
-					}),
-				ys,
-				xs);
-		}
-	});
-var _elm_lang$core$List$concat = function (lists) {
-	return A3(
-		_elm_lang$core$List$foldr,
-		_elm_lang$core$List$append,
-		{ctor: '[]'},
-		lists);
-};
-var _elm_lang$core$List$concatMap = F2(
-	function (f, list) {
-		return _elm_lang$core$List$concat(
-			A2(_elm_lang$core$List$map, f, list));
-	});
-var _elm_lang$core$List$partition = F2(
-	function (pred, list) {
-		var step = F2(
-			function (x, _p13) {
-				var _p14 = _p13;
-				var _p16 = _p14._0;
-				var _p15 = _p14._1;
-				return pred(x) ? {
-					ctor: '_Tuple2',
-					_0: {ctor: '::', _0: x, _1: _p16},
-					_1: _p15
-				} : {
-					ctor: '_Tuple2',
-					_0: _p16,
-					_1: {ctor: '::', _0: x, _1: _p15}
-				};
-			});
-		return A3(
-			_elm_lang$core$List$foldr,
-			step,
-			{
-				ctor: '_Tuple2',
-				_0: {ctor: '[]'},
-				_1: {ctor: '[]'}
-			},
-			list);
-	});
-var _elm_lang$core$List$unzip = function (pairs) {
-	var step = F2(
-		function (_p18, _p17) {
-			var _p19 = _p18;
-			var _p20 = _p17;
-			return {
-				ctor: '_Tuple2',
-				_0: {ctor: '::', _0: _p19._0, _1: _p20._0},
-				_1: {ctor: '::', _0: _p19._1, _1: _p20._1}
-			};
-		});
-	return A3(
-		_elm_lang$core$List$foldr,
-		step,
-		{
-			ctor: '_Tuple2',
-			_0: {ctor: '[]'},
-			_1: {ctor: '[]'}
-		},
-		pairs);
-};
-var _elm_lang$core$List$intersperse = F2(
-	function (sep, xs) {
-		var _p21 = xs;
-		if (_p21.ctor === '[]') {
-			return {ctor: '[]'};
-		} else {
-			var step = F2(
-				function (x, rest) {
-					return {
-						ctor: '::',
-						_0: sep,
-						_1: {ctor: '::', _0: x, _1: rest}
-					};
-				});
-			var spersed = A3(
-				_elm_lang$core$List$foldr,
-				step,
-				{ctor: '[]'},
-				_p21._1);
-			return {ctor: '::', _0: _p21._0, _1: spersed};
-		}
-	});
-var _elm_lang$core$List$takeReverse = F3(
-	function (n, list, taken) {
-		takeReverse:
-		while (true) {
-			if (_elm_lang$core$Native_Utils.cmp(n, 0) < 1) {
-				return taken;
-			} else {
-				var _p22 = list;
-				if (_p22.ctor === '[]') {
-					return taken;
-				} else {
-					var _v23 = n - 1,
-						_v24 = _p22._1,
-						_v25 = {ctor: '::', _0: _p22._0, _1: taken};
-					n = _v23;
-					list = _v24;
-					taken = _v25;
-					continue takeReverse;
-				}
-			}
-		}
-	});
-var _elm_lang$core$List$takeTailRec = F2(
-	function (n, list) {
-		return _elm_lang$core$List$reverse(
-			A3(
-				_elm_lang$core$List$takeReverse,
-				n,
-				list,
-				{ctor: '[]'}));
-	});
-var _elm_lang$core$List$takeFast = F3(
-	function (ctr, n, list) {
-		if (_elm_lang$core$Native_Utils.cmp(n, 0) < 1) {
-			return {ctor: '[]'};
-		} else {
-			var _p23 = {ctor: '_Tuple2', _0: n, _1: list};
-			_v26_5:
-			do {
-				_v26_1:
-				do {
-					if (_p23.ctor === '_Tuple2') {
-						if (_p23._1.ctor === '[]') {
-							return list;
-						} else {
-							if (_p23._1._1.ctor === '::') {
-								switch (_p23._0) {
-									case 1:
-										break _v26_1;
-									case 2:
-										return {
-											ctor: '::',
-											_0: _p23._1._0,
-											_1: {
-												ctor: '::',
-												_0: _p23._1._1._0,
-												_1: {ctor: '[]'}
-											}
-										};
-									case 3:
-										if (_p23._1._1._1.ctor === '::') {
-											return {
-												ctor: '::',
-												_0: _p23._1._0,
-												_1: {
-													ctor: '::',
-													_0: _p23._1._1._0,
-													_1: {
-														ctor: '::',
-														_0: _p23._1._1._1._0,
-														_1: {ctor: '[]'}
-													}
-												}
-											};
-										} else {
-											break _v26_5;
-										}
-									default:
-										if ((_p23._1._1._1.ctor === '::') && (_p23._1._1._1._1.ctor === '::')) {
-											var _p28 = _p23._1._1._1._0;
-											var _p27 = _p23._1._1._0;
-											var _p26 = _p23._1._0;
-											var _p25 = _p23._1._1._1._1._0;
-											var _p24 = _p23._1._1._1._1._1;
-											return (_elm_lang$core$Native_Utils.cmp(ctr, 1000) > 0) ? {
-												ctor: '::',
-												_0: _p26,
-												_1: {
-													ctor: '::',
-													_0: _p27,
-													_1: {
-														ctor: '::',
-														_0: _p28,
-														_1: {
-															ctor: '::',
-															_0: _p25,
-															_1: A2(_elm_lang$core$List$takeTailRec, n - 4, _p24)
-														}
-													}
-												}
-											} : {
-												ctor: '::',
-												_0: _p26,
-												_1: {
-													ctor: '::',
-													_0: _p27,
-													_1: {
-														ctor: '::',
-														_0: _p28,
-														_1: {
-															ctor: '::',
-															_0: _p25,
-															_1: A3(_elm_lang$core$List$takeFast, ctr + 1, n - 4, _p24)
-														}
-													}
-												}
-											};
-										} else {
-											break _v26_5;
-										}
-								}
-							} else {
-								if (_p23._0 === 1) {
-									break _v26_1;
-								} else {
-									break _v26_5;
-								}
-							}
-						}
-					} else {
-						break _v26_5;
-					}
-				} while(false);
-				return {
-					ctor: '::',
-					_0: _p23._1._0,
-					_1: {ctor: '[]'}
-				};
-			} while(false);
-			return list;
-		}
-	});
-var _elm_lang$core$List$take = F2(
-	function (n, list) {
-		return A3(_elm_lang$core$List$takeFast, 0, n, list);
-	});
-var _elm_lang$core$List$repeatHelp = F3(
-	function (result, n, value) {
-		repeatHelp:
-		while (true) {
-			if (_elm_lang$core$Native_Utils.cmp(n, 0) < 1) {
-				return result;
-			} else {
-				var _v27 = {ctor: '::', _0: value, _1: result},
-					_v28 = n - 1,
-					_v29 = value;
-				result = _v27;
-				n = _v28;
-				value = _v29;
-				continue repeatHelp;
-			}
-		}
-	});
-var _elm_lang$core$List$repeat = F2(
-	function (n, value) {
-		return A3(
-			_elm_lang$core$List$repeatHelp,
-			{ctor: '[]'},
-			n,
-			value);
-	});
-var _elm_lang$core$List$rangeHelp = F3(
-	function (lo, hi, list) {
-		rangeHelp:
-		while (true) {
-			if (_elm_lang$core$Native_Utils.cmp(lo, hi) < 1) {
-				var _v30 = lo,
-					_v31 = hi - 1,
-					_v32 = {ctor: '::', _0: hi, _1: list};
-				lo = _v30;
-				hi = _v31;
-				list = _v32;
-				continue rangeHelp;
-			} else {
-				return list;
-			}
-		}
-	});
-var _elm_lang$core$List$range = F2(
-	function (lo, hi) {
-		return A3(
-			_elm_lang$core$List$rangeHelp,
-			lo,
-			hi,
-			{ctor: '[]'});
-	});
-var _elm_lang$core$List$indexedMap = F2(
-	function (f, xs) {
-		return A3(
-			_elm_lang$core$List$map2,
-			f,
-			A2(
-				_elm_lang$core$List$range,
-				0,
-				_elm_lang$core$List$length(xs) - 1),
-			xs);
-	});
-
 var _elm_lang$core$Array$append = _elm_lang$core$Native_Array.append;
 var _elm_lang$core$Array$length = _elm_lang$core$Native_Array.length;
 var _elm_lang$core$Array$isEmpty = function (array) {
@@ -2674,1077 +6257,6 @@ var _elm_lang$core$Array$repeat = F2(
 			_elm_lang$core$Basics$always(e));
 	});
 var _elm_lang$core$Array$Array = {ctor: 'Array'};
-
-//import Native.Utils //
-
-var _elm_lang$core$Native_Char = function() {
-
-return {
-	fromCode: function(c) { return _elm_lang$core$Native_Utils.chr(String.fromCharCode(c)); },
-	toCode: function(c) { return c.charCodeAt(0); },
-	toUpper: function(c) { return _elm_lang$core$Native_Utils.chr(c.toUpperCase()); },
-	toLower: function(c) { return _elm_lang$core$Native_Utils.chr(c.toLowerCase()); },
-	toLocaleUpper: function(c) { return _elm_lang$core$Native_Utils.chr(c.toLocaleUpperCase()); },
-	toLocaleLower: function(c) { return _elm_lang$core$Native_Utils.chr(c.toLocaleLowerCase()); }
-};
-
-}();
-var _elm_lang$core$Char$fromCode = _elm_lang$core$Native_Char.fromCode;
-var _elm_lang$core$Char$toCode = _elm_lang$core$Native_Char.toCode;
-var _elm_lang$core$Char$toLocaleLower = _elm_lang$core$Native_Char.toLocaleLower;
-var _elm_lang$core$Char$toLocaleUpper = _elm_lang$core$Native_Char.toLocaleUpper;
-var _elm_lang$core$Char$toLower = _elm_lang$core$Native_Char.toLower;
-var _elm_lang$core$Char$toUpper = _elm_lang$core$Native_Char.toUpper;
-var _elm_lang$core$Char$isBetween = F3(
-	function (low, high, $char) {
-		var code = _elm_lang$core$Char$toCode($char);
-		return (_elm_lang$core$Native_Utils.cmp(
-			code,
-			_elm_lang$core$Char$toCode(low)) > -1) && (_elm_lang$core$Native_Utils.cmp(
-			code,
-			_elm_lang$core$Char$toCode(high)) < 1);
-	});
-var _elm_lang$core$Char$isUpper = A2(
-	_elm_lang$core$Char$isBetween,
-	_elm_lang$core$Native_Utils.chr('A'),
-	_elm_lang$core$Native_Utils.chr('Z'));
-var _elm_lang$core$Char$isLower = A2(
-	_elm_lang$core$Char$isBetween,
-	_elm_lang$core$Native_Utils.chr('a'),
-	_elm_lang$core$Native_Utils.chr('z'));
-var _elm_lang$core$Char$isDigit = A2(
-	_elm_lang$core$Char$isBetween,
-	_elm_lang$core$Native_Utils.chr('0'),
-	_elm_lang$core$Native_Utils.chr('9'));
-var _elm_lang$core$Char$isOctDigit = A2(
-	_elm_lang$core$Char$isBetween,
-	_elm_lang$core$Native_Utils.chr('0'),
-	_elm_lang$core$Native_Utils.chr('7'));
-var _elm_lang$core$Char$isHexDigit = function ($char) {
-	return _elm_lang$core$Char$isDigit($char) || (A3(
-		_elm_lang$core$Char$isBetween,
-		_elm_lang$core$Native_Utils.chr('a'),
-		_elm_lang$core$Native_Utils.chr('f'),
-		$char) || A3(
-		_elm_lang$core$Char$isBetween,
-		_elm_lang$core$Native_Utils.chr('A'),
-		_elm_lang$core$Native_Utils.chr('F'),
-		$char));
-};
-
-//import Native.Utils //
-
-var _elm_lang$core$Native_Scheduler = function() {
-
-var MAX_STEPS = 10000;
-
-
-// TASKS
-
-function succeed(value)
-{
-	return {
-		ctor: '_Task_succeed',
-		value: value
-	};
-}
-
-function fail(error)
-{
-	return {
-		ctor: '_Task_fail',
-		value: error
-	};
-}
-
-function nativeBinding(callback)
-{
-	return {
-		ctor: '_Task_nativeBinding',
-		callback: callback,
-		cancel: null
-	};
-}
-
-function andThen(callback, task)
-{
-	return {
-		ctor: '_Task_andThen',
-		callback: callback,
-		task: task
-	};
-}
-
-function onError(callback, task)
-{
-	return {
-		ctor: '_Task_onError',
-		callback: callback,
-		task: task
-	};
-}
-
-function receive(callback)
-{
-	return {
-		ctor: '_Task_receive',
-		callback: callback
-	};
-}
-
-
-// PROCESSES
-
-function rawSpawn(task)
-{
-	var process = {
-		ctor: '_Process',
-		id: _elm_lang$core$Native_Utils.guid(),
-		root: task,
-		stack: null,
-		mailbox: []
-	};
-
-	enqueue(process);
-
-	return process;
-}
-
-function spawn(task)
-{
-	return nativeBinding(function(callback) {
-		var process = rawSpawn(task);
-		callback(succeed(process));
-	});
-}
-
-function rawSend(process, msg)
-{
-	process.mailbox.push(msg);
-	enqueue(process);
-}
-
-function send(process, msg)
-{
-	return nativeBinding(function(callback) {
-		rawSend(process, msg);
-		callback(succeed(_elm_lang$core$Native_Utils.Tuple0));
-	});
-}
-
-function kill(process)
-{
-	return nativeBinding(function(callback) {
-		var root = process.root;
-		if (root.ctor === '_Task_nativeBinding' && root.cancel)
-		{
-			root.cancel();
-		}
-
-		process.root = null;
-
-		callback(succeed(_elm_lang$core$Native_Utils.Tuple0));
-	});
-}
-
-function sleep(time)
-{
-	return nativeBinding(function(callback) {
-		var id = setTimeout(function() {
-			callback(succeed(_elm_lang$core$Native_Utils.Tuple0));
-		}, time);
-
-		return function() { clearTimeout(id); };
-	});
-}
-
-
-// STEP PROCESSES
-
-function step(numSteps, process)
-{
-	while (numSteps < MAX_STEPS)
-	{
-		var ctor = process.root.ctor;
-
-		if (ctor === '_Task_succeed')
-		{
-			while (process.stack && process.stack.ctor === '_Task_onError')
-			{
-				process.stack = process.stack.rest;
-			}
-			if (process.stack === null)
-			{
-				break;
-			}
-			process.root = process.stack.callback(process.root.value);
-			process.stack = process.stack.rest;
-			++numSteps;
-			continue;
-		}
-
-		if (ctor === '_Task_fail')
-		{
-			while (process.stack && process.stack.ctor === '_Task_andThen')
-			{
-				process.stack = process.stack.rest;
-			}
-			if (process.stack === null)
-			{
-				break;
-			}
-			process.root = process.stack.callback(process.root.value);
-			process.stack = process.stack.rest;
-			++numSteps;
-			continue;
-		}
-
-		if (ctor === '_Task_andThen')
-		{
-			process.stack = {
-				ctor: '_Task_andThen',
-				callback: process.root.callback,
-				rest: process.stack
-			};
-			process.root = process.root.task;
-			++numSteps;
-			continue;
-		}
-
-		if (ctor === '_Task_onError')
-		{
-			process.stack = {
-				ctor: '_Task_onError',
-				callback: process.root.callback,
-				rest: process.stack
-			};
-			process.root = process.root.task;
-			++numSteps;
-			continue;
-		}
-
-		if (ctor === '_Task_nativeBinding')
-		{
-			process.root.cancel = process.root.callback(function(newRoot) {
-				process.root = newRoot;
-				enqueue(process);
-			});
-
-			break;
-		}
-
-		if (ctor === '_Task_receive')
-		{
-			var mailbox = process.mailbox;
-			if (mailbox.length === 0)
-			{
-				break;
-			}
-
-			process.root = process.root.callback(mailbox.shift());
-			++numSteps;
-			continue;
-		}
-
-		throw new Error(ctor);
-	}
-
-	if (numSteps < MAX_STEPS)
-	{
-		return numSteps + 1;
-	}
-	enqueue(process);
-
-	return numSteps;
-}
-
-
-// WORK QUEUE
-
-var working = false;
-var workQueue = [];
-
-function enqueue(process)
-{
-	workQueue.push(process);
-
-	if (!working)
-	{
-		setTimeout(work, 0);
-		working = true;
-	}
-}
-
-function work()
-{
-	var numSteps = 0;
-	var process;
-	while (numSteps < MAX_STEPS && (process = workQueue.shift()))
-	{
-		if (process.root)
-		{
-			numSteps = step(numSteps, process);
-		}
-	}
-	if (!process)
-	{
-		working = false;
-		return;
-	}
-	setTimeout(work, 0);
-}
-
-
-return {
-	succeed: succeed,
-	fail: fail,
-	nativeBinding: nativeBinding,
-	andThen: F2(andThen),
-	onError: F2(onError),
-	receive: receive,
-
-	spawn: spawn,
-	kill: kill,
-	sleep: sleep,
-	send: F2(send),
-
-	rawSpawn: rawSpawn,
-	rawSend: rawSend
-};
-
-}();
-//import //
-
-var _elm_lang$core$Native_Platform = function() {
-
-
-// PROGRAMS
-
-function program(impl)
-{
-	return function(flagDecoder)
-	{
-		return function(object, moduleName)
-		{
-			object['worker'] = function worker(flags)
-			{
-				if (typeof flags !== 'undefined')
-				{
-					throw new Error(
-						'The `' + moduleName + '` module does not need flags.\n'
-						+ 'Call ' + moduleName + '.worker() with no arguments and you should be all set!'
-					);
-				}
-
-				return initialize(
-					impl.init,
-					impl.update,
-					impl.subscriptions,
-					renderer
-				);
-			};
-		};
-	};
-}
-
-function programWithFlags(impl)
-{
-	return function(flagDecoder)
-	{
-		return function(object, moduleName)
-		{
-			object['worker'] = function worker(flags)
-			{
-				if (typeof flagDecoder === 'undefined')
-				{
-					throw new Error(
-						'Are you trying to sneak a Never value into Elm? Trickster!\n'
-						+ 'It looks like ' + moduleName + '.main is defined with `programWithFlags` but has type `Program Never`.\n'
-						+ 'Use `program` instead if you do not want flags.'
-					);
-				}
-
-				var result = A2(_elm_lang$core$Native_Json.run, flagDecoder, flags);
-				if (result.ctor === 'Err')
-				{
-					throw new Error(
-						moduleName + '.worker(...) was called with an unexpected argument.\n'
-						+ 'I tried to convert it to an Elm value, but ran into this problem:\n\n'
-						+ result._0
-					);
-				}
-
-				return initialize(
-					impl.init(result._0),
-					impl.update,
-					impl.subscriptions,
-					renderer
-				);
-			};
-		};
-	};
-}
-
-function renderer(enqueue, _)
-{
-	return function(_) {};
-}
-
-
-// HTML TO PROGRAM
-
-function htmlToProgram(vnode)
-{
-	var emptyBag = batch(_elm_lang$core$Native_List.Nil);
-	var noChange = _elm_lang$core$Native_Utils.Tuple2(
-		_elm_lang$core$Native_Utils.Tuple0,
-		emptyBag
-	);
-
-	return _elm_lang$virtual_dom$VirtualDom$program({
-		init: noChange,
-		view: function(model) { return main; },
-		update: F2(function(msg, model) { return noChange; }),
-		subscriptions: function (model) { return emptyBag; }
-	});
-}
-
-
-// INITIALIZE A PROGRAM
-
-function initialize(init, update, subscriptions, renderer)
-{
-	// ambient state
-	var managers = {};
-	var updateView;
-
-	// init and update state in main process
-	var initApp = _elm_lang$core$Native_Scheduler.nativeBinding(function(callback) {
-		var model = init._0;
-		updateView = renderer(enqueue, model);
-		var cmds = init._1;
-		var subs = subscriptions(model);
-		dispatchEffects(managers, cmds, subs);
-		callback(_elm_lang$core$Native_Scheduler.succeed(model));
-	});
-
-	function onMessage(msg, model)
-	{
-		return _elm_lang$core$Native_Scheduler.nativeBinding(function(callback) {
-			var results = A2(update, msg, model);
-			model = results._0;
-			updateView(model);
-			var cmds = results._1;
-			var subs = subscriptions(model);
-			dispatchEffects(managers, cmds, subs);
-			callback(_elm_lang$core$Native_Scheduler.succeed(model));
-		});
-	}
-
-	var mainProcess = spawnLoop(initApp, onMessage);
-
-	function enqueue(msg)
-	{
-		_elm_lang$core$Native_Scheduler.rawSend(mainProcess, msg);
-	}
-
-	var ports = setupEffects(managers, enqueue);
-
-	return ports ? { ports: ports } : {};
-}
-
-
-// EFFECT MANAGERS
-
-var effectManagers = {};
-
-function setupEffects(managers, callback)
-{
-	var ports;
-
-	// setup all necessary effect managers
-	for (var key in effectManagers)
-	{
-		var manager = effectManagers[key];
-
-		if (manager.isForeign)
-		{
-			ports = ports || {};
-			ports[key] = manager.tag === 'cmd'
-				? setupOutgoingPort(key)
-				: setupIncomingPort(key, callback);
-		}
-
-		managers[key] = makeManager(manager, callback);
-	}
-
-	return ports;
-}
-
-function makeManager(info, callback)
-{
-	var router = {
-		main: callback,
-		self: undefined
-	};
-
-	var tag = info.tag;
-	var onEffects = info.onEffects;
-	var onSelfMsg = info.onSelfMsg;
-
-	function onMessage(msg, state)
-	{
-		if (msg.ctor === 'self')
-		{
-			return A3(onSelfMsg, router, msg._0, state);
-		}
-
-		var fx = msg._0;
-		switch (tag)
-		{
-			case 'cmd':
-				return A3(onEffects, router, fx.cmds, state);
-
-			case 'sub':
-				return A3(onEffects, router, fx.subs, state);
-
-			case 'fx':
-				return A4(onEffects, router, fx.cmds, fx.subs, state);
-		}
-	}
-
-	var process = spawnLoop(info.init, onMessage);
-	router.self = process;
-	return process;
-}
-
-function sendToApp(router, msg)
-{
-	return _elm_lang$core$Native_Scheduler.nativeBinding(function(callback)
-	{
-		router.main(msg);
-		callback(_elm_lang$core$Native_Scheduler.succeed(_elm_lang$core$Native_Utils.Tuple0));
-	});
-}
-
-function sendToSelf(router, msg)
-{
-	return A2(_elm_lang$core$Native_Scheduler.send, router.self, {
-		ctor: 'self',
-		_0: msg
-	});
-}
-
-
-// HELPER for STATEFUL LOOPS
-
-function spawnLoop(init, onMessage)
-{
-	var andThen = _elm_lang$core$Native_Scheduler.andThen;
-
-	function loop(state)
-	{
-		var handleMsg = _elm_lang$core$Native_Scheduler.receive(function(msg) {
-			return onMessage(msg, state);
-		});
-		return A2(andThen, loop, handleMsg);
-	}
-
-	var task = A2(andThen, loop, init);
-
-	return _elm_lang$core$Native_Scheduler.rawSpawn(task);
-}
-
-
-// BAGS
-
-function leaf(home)
-{
-	return function(value)
-	{
-		return {
-			type: 'leaf',
-			home: home,
-			value: value
-		};
-	};
-}
-
-function batch(list)
-{
-	return {
-		type: 'node',
-		branches: list
-	};
-}
-
-function map(tagger, bag)
-{
-	return {
-		type: 'map',
-		tagger: tagger,
-		tree: bag
-	}
-}
-
-
-// PIPE BAGS INTO EFFECT MANAGERS
-
-function dispatchEffects(managers, cmdBag, subBag)
-{
-	var effectsDict = {};
-	gatherEffects(true, cmdBag, effectsDict, null);
-	gatherEffects(false, subBag, effectsDict, null);
-
-	for (var home in managers)
-	{
-		var fx = home in effectsDict
-			? effectsDict[home]
-			: {
-				cmds: _elm_lang$core$Native_List.Nil,
-				subs: _elm_lang$core$Native_List.Nil
-			};
-
-		_elm_lang$core$Native_Scheduler.rawSend(managers[home], { ctor: 'fx', _0: fx });
-	}
-}
-
-function gatherEffects(isCmd, bag, effectsDict, taggers)
-{
-	switch (bag.type)
-	{
-		case 'leaf':
-			var home = bag.home;
-			var effect = toEffect(isCmd, home, taggers, bag.value);
-			effectsDict[home] = insert(isCmd, effect, effectsDict[home]);
-			return;
-
-		case 'node':
-			var list = bag.branches;
-			while (list.ctor !== '[]')
-			{
-				gatherEffects(isCmd, list._0, effectsDict, taggers);
-				list = list._1;
-			}
-			return;
-
-		case 'map':
-			gatherEffects(isCmd, bag.tree, effectsDict, {
-				tagger: bag.tagger,
-				rest: taggers
-			});
-			return;
-	}
-}
-
-function toEffect(isCmd, home, taggers, value)
-{
-	function applyTaggers(x)
-	{
-		var temp = taggers;
-		while (temp)
-		{
-			x = temp.tagger(x);
-			temp = temp.rest;
-		}
-		return x;
-	}
-
-	var map = isCmd
-		? effectManagers[home].cmdMap
-		: effectManagers[home].subMap;
-
-	return A2(map, applyTaggers, value)
-}
-
-function insert(isCmd, newEffect, effects)
-{
-	effects = effects || {
-		cmds: _elm_lang$core$Native_List.Nil,
-		subs: _elm_lang$core$Native_List.Nil
-	};
-	if (isCmd)
-	{
-		effects.cmds = _elm_lang$core$Native_List.Cons(newEffect, effects.cmds);
-		return effects;
-	}
-	effects.subs = _elm_lang$core$Native_List.Cons(newEffect, effects.subs);
-	return effects;
-}
-
-
-// PORTS
-
-function checkPortName(name)
-{
-	if (name in effectManagers)
-	{
-		throw new Error('There can only be one port named `' + name + '`, but your program has multiple.');
-	}
-}
-
-
-// OUTGOING PORTS
-
-function outgoingPort(name, converter)
-{
-	checkPortName(name);
-	effectManagers[name] = {
-		tag: 'cmd',
-		cmdMap: outgoingPortMap,
-		converter: converter,
-		isForeign: true
-	};
-	return leaf(name);
-}
-
-var outgoingPortMap = F2(function cmdMap(tagger, value) {
-	return value;
-});
-
-function setupOutgoingPort(name)
-{
-	var subs = [];
-	var converter = effectManagers[name].converter;
-
-	// CREATE MANAGER
-
-	var init = _elm_lang$core$Native_Scheduler.succeed(null);
-
-	function onEffects(router, cmdList, state)
-	{
-		while (cmdList.ctor !== '[]')
-		{
-			// grab a separate reference to subs in case unsubscribe is called
-			var currentSubs = subs;
-			var value = converter(cmdList._0);
-			for (var i = 0; i < currentSubs.length; i++)
-			{
-				currentSubs[i](value);
-			}
-			cmdList = cmdList._1;
-		}
-		return init;
-	}
-
-	effectManagers[name].init = init;
-	effectManagers[name].onEffects = F3(onEffects);
-
-	// PUBLIC API
-
-	function subscribe(callback)
-	{
-		subs.push(callback);
-	}
-
-	function unsubscribe(callback)
-	{
-		// copy subs into a new array in case unsubscribe is called within a
-		// subscribed callback
-		subs = subs.slice();
-		var index = subs.indexOf(callback);
-		if (index >= 0)
-		{
-			subs.splice(index, 1);
-		}
-	}
-
-	return {
-		subscribe: subscribe,
-		unsubscribe: unsubscribe
-	};
-}
-
-
-// INCOMING PORTS
-
-function incomingPort(name, converter)
-{
-	checkPortName(name);
-	effectManagers[name] = {
-		tag: 'sub',
-		subMap: incomingPortMap,
-		converter: converter,
-		isForeign: true
-	};
-	return leaf(name);
-}
-
-var incomingPortMap = F2(function subMap(tagger, finalTagger)
-{
-	return function(value)
-	{
-		return tagger(finalTagger(value));
-	};
-});
-
-function setupIncomingPort(name, callback)
-{
-	var sentBeforeInit = [];
-	var subs = _elm_lang$core$Native_List.Nil;
-	var converter = effectManagers[name].converter;
-	var currentOnEffects = preInitOnEffects;
-	var currentSend = preInitSend;
-
-	// CREATE MANAGER
-
-	var init = _elm_lang$core$Native_Scheduler.succeed(null);
-
-	function preInitOnEffects(router, subList, state)
-	{
-		var postInitResult = postInitOnEffects(router, subList, state);
-
-		for(var i = 0; i < sentBeforeInit.length; i++)
-		{
-			postInitSend(sentBeforeInit[i]);
-		}
-
-		sentBeforeInit = null; // to release objects held in queue
-		currentSend = postInitSend;
-		currentOnEffects = postInitOnEffects;
-		return postInitResult;
-	}
-
-	function postInitOnEffects(router, subList, state)
-	{
-		subs = subList;
-		return init;
-	}
-
-	function onEffects(router, subList, state)
-	{
-		return currentOnEffects(router, subList, state);
-	}
-
-	effectManagers[name].init = init;
-	effectManagers[name].onEffects = F3(onEffects);
-
-	// PUBLIC API
-
-	function preInitSend(value)
-	{
-		sentBeforeInit.push(value);
-	}
-
-	function postInitSend(value)
-	{
-		var temp = subs;
-		while (temp.ctor !== '[]')
-		{
-			callback(temp._0(value));
-			temp = temp._1;
-		}
-	}
-
-	function send(incomingValue)
-	{
-		var result = A2(_elm_lang$core$Json_Decode$decodeValue, converter, incomingValue);
-		if (result.ctor === 'Err')
-		{
-			throw new Error('Trying to send an unexpected type of value through port `' + name + '`:\n' + result._0);
-		}
-
-		currentSend(result._0);
-	}
-
-	return { send: send };
-}
-
-return {
-	// routers
-	sendToApp: F2(sendToApp),
-	sendToSelf: F2(sendToSelf),
-
-	// global setup
-	effectManagers: effectManagers,
-	outgoingPort: outgoingPort,
-	incomingPort: incomingPort,
-
-	htmlToProgram: htmlToProgram,
-	program: program,
-	programWithFlags: programWithFlags,
-	initialize: initialize,
-
-	// effect bags
-	leaf: leaf,
-	batch: batch,
-	map: F2(map)
-};
-
-}();
-
-var _elm_lang$core$Platform_Cmd$batch = _elm_lang$core$Native_Platform.batch;
-var _elm_lang$core$Platform_Cmd$none = _elm_lang$core$Platform_Cmd$batch(
-	{ctor: '[]'});
-var _elm_lang$core$Platform_Cmd_ops = _elm_lang$core$Platform_Cmd_ops || {};
-_elm_lang$core$Platform_Cmd_ops['!'] = F2(
-	function (model, commands) {
-		return {
-			ctor: '_Tuple2',
-			_0: model,
-			_1: _elm_lang$core$Platform_Cmd$batch(commands)
-		};
-	});
-var _elm_lang$core$Platform_Cmd$map = _elm_lang$core$Native_Platform.map;
-var _elm_lang$core$Platform_Cmd$Cmd = {ctor: 'Cmd'};
-
-var _elm_lang$core$Platform_Sub$batch = _elm_lang$core$Native_Platform.batch;
-var _elm_lang$core$Platform_Sub$none = _elm_lang$core$Platform_Sub$batch(
-	{ctor: '[]'});
-var _elm_lang$core$Platform_Sub$map = _elm_lang$core$Native_Platform.map;
-var _elm_lang$core$Platform_Sub$Sub = {ctor: 'Sub'};
-
-var _elm_lang$core$Platform$hack = _elm_lang$core$Native_Scheduler.succeed;
-var _elm_lang$core$Platform$sendToSelf = _elm_lang$core$Native_Platform.sendToSelf;
-var _elm_lang$core$Platform$sendToApp = _elm_lang$core$Native_Platform.sendToApp;
-var _elm_lang$core$Platform$programWithFlags = _elm_lang$core$Native_Platform.programWithFlags;
-var _elm_lang$core$Platform$program = _elm_lang$core$Native_Platform.program;
-var _elm_lang$core$Platform$Program = {ctor: 'Program'};
-var _elm_lang$core$Platform$Task = {ctor: 'Task'};
-var _elm_lang$core$Platform$ProcessId = {ctor: 'ProcessId'};
-var _elm_lang$core$Platform$Router = {ctor: 'Router'};
-
-var _elm_lang$core$Result$toMaybe = function (result) {
-	var _p0 = result;
-	if (_p0.ctor === 'Ok') {
-		return _elm_lang$core$Maybe$Just(_p0._0);
-	} else {
-		return _elm_lang$core$Maybe$Nothing;
-	}
-};
-var _elm_lang$core$Result$withDefault = F2(
-	function (def, result) {
-		var _p1 = result;
-		if (_p1.ctor === 'Ok') {
-			return _p1._0;
-		} else {
-			return def;
-		}
-	});
-var _elm_lang$core$Result$Err = function (a) {
-	return {ctor: 'Err', _0: a};
-};
-var _elm_lang$core$Result$andThen = F2(
-	function (callback, result) {
-		var _p2 = result;
-		if (_p2.ctor === 'Ok') {
-			return callback(_p2._0);
-		} else {
-			return _elm_lang$core$Result$Err(_p2._0);
-		}
-	});
-var _elm_lang$core$Result$Ok = function (a) {
-	return {ctor: 'Ok', _0: a};
-};
-var _elm_lang$core$Result$map = F2(
-	function (func, ra) {
-		var _p3 = ra;
-		if (_p3.ctor === 'Ok') {
-			return _elm_lang$core$Result$Ok(
-				func(_p3._0));
-		} else {
-			return _elm_lang$core$Result$Err(_p3._0);
-		}
-	});
-var _elm_lang$core$Result$map2 = F3(
-	function (func, ra, rb) {
-		var _p4 = {ctor: '_Tuple2', _0: ra, _1: rb};
-		if (_p4._0.ctor === 'Ok') {
-			if (_p4._1.ctor === 'Ok') {
-				return _elm_lang$core$Result$Ok(
-					A2(func, _p4._0._0, _p4._1._0));
-			} else {
-				return _elm_lang$core$Result$Err(_p4._1._0);
-			}
-		} else {
-			return _elm_lang$core$Result$Err(_p4._0._0);
-		}
-	});
-var _elm_lang$core$Result$map3 = F4(
-	function (func, ra, rb, rc) {
-		var _p5 = {ctor: '_Tuple3', _0: ra, _1: rb, _2: rc};
-		if (_p5._0.ctor === 'Ok') {
-			if (_p5._1.ctor === 'Ok') {
-				if (_p5._2.ctor === 'Ok') {
-					return _elm_lang$core$Result$Ok(
-						A3(func, _p5._0._0, _p5._1._0, _p5._2._0));
-				} else {
-					return _elm_lang$core$Result$Err(_p5._2._0);
-				}
-			} else {
-				return _elm_lang$core$Result$Err(_p5._1._0);
-			}
-		} else {
-			return _elm_lang$core$Result$Err(_p5._0._0);
-		}
-	});
-var _elm_lang$core$Result$map4 = F5(
-	function (func, ra, rb, rc, rd) {
-		var _p6 = {ctor: '_Tuple4', _0: ra, _1: rb, _2: rc, _3: rd};
-		if (_p6._0.ctor === 'Ok') {
-			if (_p6._1.ctor === 'Ok') {
-				if (_p6._2.ctor === 'Ok') {
-					if (_p6._3.ctor === 'Ok') {
-						return _elm_lang$core$Result$Ok(
-							A4(func, _p6._0._0, _p6._1._0, _p6._2._0, _p6._3._0));
-					} else {
-						return _elm_lang$core$Result$Err(_p6._3._0);
-					}
-				} else {
-					return _elm_lang$core$Result$Err(_p6._2._0);
-				}
-			} else {
-				return _elm_lang$core$Result$Err(_p6._1._0);
-			}
-		} else {
-			return _elm_lang$core$Result$Err(_p6._0._0);
-		}
-	});
-var _elm_lang$core$Result$map5 = F6(
-	function (func, ra, rb, rc, rd, re) {
-		var _p7 = {ctor: '_Tuple5', _0: ra, _1: rb, _2: rc, _3: rd, _4: re};
-		if (_p7._0.ctor === 'Ok') {
-			if (_p7._1.ctor === 'Ok') {
-				if (_p7._2.ctor === 'Ok') {
-					if (_p7._3.ctor === 'Ok') {
-						if (_p7._4.ctor === 'Ok') {
-							return _elm_lang$core$Result$Ok(
-								A5(func, _p7._0._0, _p7._1._0, _p7._2._0, _p7._3._0, _p7._4._0));
-						} else {
-							return _elm_lang$core$Result$Err(_p7._4._0);
-						}
-					} else {
-						return _elm_lang$core$Result$Err(_p7._3._0);
-					}
-				} else {
-					return _elm_lang$core$Result$Err(_p7._2._0);
-				}
-			} else {
-				return _elm_lang$core$Result$Err(_p7._1._0);
-			}
-		} else {
-			return _elm_lang$core$Result$Err(_p7._0._0);
-		}
-	});
-var _elm_lang$core$Result$mapError = F2(
-	function (f, result) {
-		var _p8 = result;
-		if (_p8.ctor === 'Ok') {
-			return _elm_lang$core$Result$Ok(_p8._0);
-		} else {
-			return _elm_lang$core$Result$Err(
-				f(_p8._0));
-		}
-	});
-var _elm_lang$core$Result$fromMaybe = F2(
-	function (err, maybe) {
-		var _p9 = maybe;
-		if (_p9.ctor === 'Just') {
-			return _elm_lang$core$Result$Ok(_p9._0);
-		} else {
-			return _elm_lang$core$Result$Err(err);
-		}
-	});
 
 var _elm_lang$core$Task$onError = _elm_lang$core$Native_Scheduler.onError;
 var _elm_lang$core$Task$andThen = _elm_lang$core$Native_Scheduler.andThen;
@@ -3942,420 +6454,6 @@ var _elm_lang$core$Task$cmdMap = F2(
 			A2(_elm_lang$core$Task$map, tagger, _p11._0));
 	});
 _elm_lang$core$Native_Platform.effectManagers['Task'] = {pkg: 'elm-lang/core', init: _elm_lang$core$Task$init, onEffects: _elm_lang$core$Task$onEffects, onSelfMsg: _elm_lang$core$Task$onSelfMsg, tag: 'cmd', cmdMap: _elm_lang$core$Task$cmdMap};
-
-//import Native.Utils //
-
-var _elm_lang$core$Native_Debug = function() {
-
-function log(tag, value)
-{
-	var msg = tag + ': ' + _elm_lang$core$Native_Utils.toString(value);
-	var process = process || {};
-	if (process.stdout)
-	{
-		process.stdout.write(msg);
-	}
-	else
-	{
-		console.log(msg);
-	}
-	return value;
-}
-
-function crash(message)
-{
-	throw new Error(message);
-}
-
-return {
-	crash: crash,
-	log: F2(log)
-};
-
-}();
-//import Maybe, Native.List, Native.Utils, Result //
-
-var _elm_lang$core$Native_String = function() {
-
-function isEmpty(str)
-{
-	return str.length === 0;
-}
-function cons(chr, str)
-{
-	return chr + str;
-}
-function uncons(str)
-{
-	var hd = str[0];
-	if (hd)
-	{
-		return _elm_lang$core$Maybe$Just(_elm_lang$core$Native_Utils.Tuple2(_elm_lang$core$Native_Utils.chr(hd), str.slice(1)));
-	}
-	return _elm_lang$core$Maybe$Nothing;
-}
-function append(a, b)
-{
-	return a + b;
-}
-function concat(strs)
-{
-	return _elm_lang$core$Native_List.toArray(strs).join('');
-}
-function length(str)
-{
-	return str.length;
-}
-function map(f, str)
-{
-	var out = str.split('');
-	for (var i = out.length; i--; )
-	{
-		out[i] = f(_elm_lang$core$Native_Utils.chr(out[i]));
-	}
-	return out.join('');
-}
-function filter(pred, str)
-{
-	return str.split('').map(_elm_lang$core$Native_Utils.chr).filter(pred).join('');
-}
-function reverse(str)
-{
-	return str.split('').reverse().join('');
-}
-function foldl(f, b, str)
-{
-	var len = str.length;
-	for (var i = 0; i < len; ++i)
-	{
-		b = A2(f, _elm_lang$core$Native_Utils.chr(str[i]), b);
-	}
-	return b;
-}
-function foldr(f, b, str)
-{
-	for (var i = str.length; i--; )
-	{
-		b = A2(f, _elm_lang$core$Native_Utils.chr(str[i]), b);
-	}
-	return b;
-}
-function split(sep, str)
-{
-	return _elm_lang$core$Native_List.fromArray(str.split(sep));
-}
-function join(sep, strs)
-{
-	return _elm_lang$core$Native_List.toArray(strs).join(sep);
-}
-function repeat(n, str)
-{
-	var result = '';
-	while (n > 0)
-	{
-		if (n & 1)
-		{
-			result += str;
-		}
-		n >>= 1, str += str;
-	}
-	return result;
-}
-function slice(start, end, str)
-{
-	return str.slice(start, end);
-}
-function left(n, str)
-{
-	return n < 1 ? '' : str.slice(0, n);
-}
-function right(n, str)
-{
-	return n < 1 ? '' : str.slice(-n);
-}
-function dropLeft(n, str)
-{
-	return n < 1 ? str : str.slice(n);
-}
-function dropRight(n, str)
-{
-	return n < 1 ? str : str.slice(0, -n);
-}
-function pad(n, chr, str)
-{
-	var half = (n - str.length) / 2;
-	return repeat(Math.ceil(half), chr) + str + repeat(half | 0, chr);
-}
-function padRight(n, chr, str)
-{
-	return str + repeat(n - str.length, chr);
-}
-function padLeft(n, chr, str)
-{
-	return repeat(n - str.length, chr) + str;
-}
-
-function trim(str)
-{
-	return str.trim();
-}
-function trimLeft(str)
-{
-	return str.replace(/^\s+/, '');
-}
-function trimRight(str)
-{
-	return str.replace(/\s+$/, '');
-}
-
-function words(str)
-{
-	return _elm_lang$core$Native_List.fromArray(str.trim().split(/\s+/g));
-}
-function lines(str)
-{
-	return _elm_lang$core$Native_List.fromArray(str.split(/\r\n|\r|\n/g));
-}
-
-function toUpper(str)
-{
-	return str.toUpperCase();
-}
-function toLower(str)
-{
-	return str.toLowerCase();
-}
-
-function any(pred, str)
-{
-	for (var i = str.length; i--; )
-	{
-		if (pred(_elm_lang$core$Native_Utils.chr(str[i])))
-		{
-			return true;
-		}
-	}
-	return false;
-}
-function all(pred, str)
-{
-	for (var i = str.length; i--; )
-	{
-		if (!pred(_elm_lang$core$Native_Utils.chr(str[i])))
-		{
-			return false;
-		}
-	}
-	return true;
-}
-
-function contains(sub, str)
-{
-	return str.indexOf(sub) > -1;
-}
-function startsWith(sub, str)
-{
-	return str.indexOf(sub) === 0;
-}
-function endsWith(sub, str)
-{
-	return str.length >= sub.length &&
-		str.lastIndexOf(sub) === str.length - sub.length;
-}
-function indexes(sub, str)
-{
-	var subLen = sub.length;
-
-	if (subLen < 1)
-	{
-		return _elm_lang$core$Native_List.Nil;
-	}
-
-	var i = 0;
-	var is = [];
-
-	while ((i = str.indexOf(sub, i)) > -1)
-	{
-		is.push(i);
-		i = i + subLen;
-	}
-
-	return _elm_lang$core$Native_List.fromArray(is);
-}
-
-
-function toInt(s)
-{
-	var len = s.length;
-
-	// if empty
-	if (len === 0)
-	{
-		return intErr(s);
-	}
-
-	// if hex
-	var c = s[0];
-	if (c === '0' && s[1] === 'x')
-	{
-		for (var i = 2; i < len; ++i)
-		{
-			var c = s[i];
-			if (('0' <= c && c <= '9') || ('A' <= c && c <= 'F') || ('a' <= c && c <= 'f'))
-			{
-				continue;
-			}
-			return intErr(s);
-		}
-		return _elm_lang$core$Result$Ok(parseInt(s, 16));
-	}
-
-	// is decimal
-	if (c > '9' || (c < '0' && c !== '-' && c !== '+'))
-	{
-		return intErr(s);
-	}
-	for (var i = 1; i < len; ++i)
-	{
-		var c = s[i];
-		if (c < '0' || '9' < c)
-		{
-			return intErr(s);
-		}
-	}
-
-	return _elm_lang$core$Result$Ok(parseInt(s, 10));
-}
-
-function intErr(s)
-{
-	return _elm_lang$core$Result$Err("could not convert string '" + s + "' to an Int");
-}
-
-
-function toFloat(s)
-{
-	// check if it is a hex, octal, or binary number
-	if (s.length === 0 || /[\sxbo]/.test(s))
-	{
-		return floatErr(s);
-	}
-	var n = +s;
-	// faster isNaN check
-	return n === n ? _elm_lang$core$Result$Ok(n) : floatErr(s);
-}
-
-function floatErr(s)
-{
-	return _elm_lang$core$Result$Err("could not convert string '" + s + "' to a Float");
-}
-
-
-function toList(str)
-{
-	return _elm_lang$core$Native_List.fromArray(str.split('').map(_elm_lang$core$Native_Utils.chr));
-}
-function fromList(chars)
-{
-	return _elm_lang$core$Native_List.toArray(chars).join('');
-}
-
-return {
-	isEmpty: isEmpty,
-	cons: F2(cons),
-	uncons: uncons,
-	append: F2(append),
-	concat: concat,
-	length: length,
-	map: F2(map),
-	filter: F2(filter),
-	reverse: reverse,
-	foldl: F3(foldl),
-	foldr: F3(foldr),
-
-	split: F2(split),
-	join: F2(join),
-	repeat: F2(repeat),
-
-	slice: F3(slice),
-	left: F2(left),
-	right: F2(right),
-	dropLeft: F2(dropLeft),
-	dropRight: F2(dropRight),
-
-	pad: F3(pad),
-	padLeft: F3(padLeft),
-	padRight: F3(padRight),
-
-	trim: trim,
-	trimLeft: trimLeft,
-	trimRight: trimRight,
-
-	words: words,
-	lines: lines,
-
-	toUpper: toUpper,
-	toLower: toLower,
-
-	any: F2(any),
-	all: F2(all),
-
-	contains: F2(contains),
-	startsWith: F2(startsWith),
-	endsWith: F2(endsWith),
-	indexes: F2(indexes),
-
-	toInt: toInt,
-	toFloat: toFloat,
-	toList: toList,
-	fromList: fromList
-};
-
-}();
-
-var _elm_lang$core$String$fromList = _elm_lang$core$Native_String.fromList;
-var _elm_lang$core$String$toList = _elm_lang$core$Native_String.toList;
-var _elm_lang$core$String$toFloat = _elm_lang$core$Native_String.toFloat;
-var _elm_lang$core$String$toInt = _elm_lang$core$Native_String.toInt;
-var _elm_lang$core$String$indices = _elm_lang$core$Native_String.indexes;
-var _elm_lang$core$String$indexes = _elm_lang$core$Native_String.indexes;
-var _elm_lang$core$String$endsWith = _elm_lang$core$Native_String.endsWith;
-var _elm_lang$core$String$startsWith = _elm_lang$core$Native_String.startsWith;
-var _elm_lang$core$String$contains = _elm_lang$core$Native_String.contains;
-var _elm_lang$core$String$all = _elm_lang$core$Native_String.all;
-var _elm_lang$core$String$any = _elm_lang$core$Native_String.any;
-var _elm_lang$core$String$toLower = _elm_lang$core$Native_String.toLower;
-var _elm_lang$core$String$toUpper = _elm_lang$core$Native_String.toUpper;
-var _elm_lang$core$String$lines = _elm_lang$core$Native_String.lines;
-var _elm_lang$core$String$words = _elm_lang$core$Native_String.words;
-var _elm_lang$core$String$trimRight = _elm_lang$core$Native_String.trimRight;
-var _elm_lang$core$String$trimLeft = _elm_lang$core$Native_String.trimLeft;
-var _elm_lang$core$String$trim = _elm_lang$core$Native_String.trim;
-var _elm_lang$core$String$padRight = _elm_lang$core$Native_String.padRight;
-var _elm_lang$core$String$padLeft = _elm_lang$core$Native_String.padLeft;
-var _elm_lang$core$String$pad = _elm_lang$core$Native_String.pad;
-var _elm_lang$core$String$dropRight = _elm_lang$core$Native_String.dropRight;
-var _elm_lang$core$String$dropLeft = _elm_lang$core$Native_String.dropLeft;
-var _elm_lang$core$String$right = _elm_lang$core$Native_String.right;
-var _elm_lang$core$String$left = _elm_lang$core$Native_String.left;
-var _elm_lang$core$String$slice = _elm_lang$core$Native_String.slice;
-var _elm_lang$core$String$repeat = _elm_lang$core$Native_String.repeat;
-var _elm_lang$core$String$join = _elm_lang$core$Native_String.join;
-var _elm_lang$core$String$split = _elm_lang$core$Native_String.split;
-var _elm_lang$core$String$foldr = _elm_lang$core$Native_String.foldr;
-var _elm_lang$core$String$foldl = _elm_lang$core$Native_String.foldl;
-var _elm_lang$core$String$reverse = _elm_lang$core$Native_String.reverse;
-var _elm_lang$core$String$filter = _elm_lang$core$Native_String.filter;
-var _elm_lang$core$String$map = _elm_lang$core$Native_String.map;
-var _elm_lang$core$String$length = _elm_lang$core$Native_String.length;
-var _elm_lang$core$String$concat = _elm_lang$core$Native_String.concat;
-var _elm_lang$core$String$append = _elm_lang$core$Native_String.append;
-var _elm_lang$core$String$uncons = _elm_lang$core$Native_String.uncons;
-var _elm_lang$core$String$cons = _elm_lang$core$Native_String.cons;
-var _elm_lang$core$String$fromChar = function ($char) {
-	return A2(_elm_lang$core$String$cons, $char, '');
-};
-var _elm_lang$core$String$isEmpty = _elm_lang$core$Native_String.isEmpty;
 
 var _elm_lang$core$Dict$foldr = F3(
 	function (f, acc, t) {
@@ -5489,9 +7587,6 @@ var _elm_lang$core$Time$subMap = F2(
 	});
 _elm_lang$core$Native_Platform.effectManagers['Time'] = {pkg: 'elm-lang/core', init: _elm_lang$core$Time$init, onEffects: _elm_lang$core$Time$onEffects, onSelfMsg: _elm_lang$core$Time$onSelfMsg, tag: 'sub', subMap: _elm_lang$core$Time$subMap};
 
-var _elm_lang$core$Debug$crash = _elm_lang$core$Native_Debug.crash;
-var _elm_lang$core$Debug$log = _elm_lang$core$Native_Debug.log;
-
 //import Maybe, Native.Array, Native.List, Native.Utils, Result //
 
 var _elm_lang$core$Native_Json = function() {
@@ -6141,33 +8236,6 @@ var _elm_lang$core$Json_Decode$int = _elm_lang$core$Native_Json.decodePrimitive(
 var _elm_lang$core$Json_Decode$bool = _elm_lang$core$Native_Json.decodePrimitive('bool');
 var _elm_lang$core$Json_Decode$string = _elm_lang$core$Native_Json.decodePrimitive('string');
 var _elm_lang$core$Json_Decode$Decoder = {ctor: 'Decoder'};
-
-var _elm_lang$core$Tuple$mapSecond = F2(
-	function (func, _p0) {
-		var _p1 = _p0;
-		return {
-			ctor: '_Tuple2',
-			_0: _p1._0,
-			_1: func(_p1._1)
-		};
-	});
-var _elm_lang$core$Tuple$mapFirst = F2(
-	function (func, _p2) {
-		var _p3 = _p2;
-		return {
-			ctor: '_Tuple2',
-			_0: func(_p3._0),
-			_1: _p3._1
-		};
-	});
-var _elm_lang$core$Tuple$second = function (_p4) {
-	var _p5 = _p4;
-	return _p5._1;
-};
-var _elm_lang$core$Tuple$first = function (_p6) {
-	var _p7 = _p6;
-	return _p7._0;
-};
 
 var _elm_lang$core$Random$onSelfMsg = F3(
 	function (_p1, _p0, seed) {
@@ -9725,165 +11793,377 @@ var _strelka_2017$phi$Simulation$view = function (model) {
 			_1: {ctor: '[]'}
 		});
 };
+var _strelka_2017$phi$Simulation$initEdges = {
+	ctor: '::',
+	_0: A3(_elm_community$graph$Graph$Edge, 1, 2, ''),
+	_1: {
+		ctor: '::',
+		_0: A3(_elm_community$graph$Graph$Edge, 3, 5, ''),
+		_1: {
+			ctor: '::',
+			_0: A3(_elm_community$graph$Graph$Edge, 3, 10, ''),
+			_1: {
+				ctor: '::',
+				_0: A3(_elm_community$graph$Graph$Edge, 4, 8, ''),
+				_1: {
+					ctor: '::',
+					_0: A3(_elm_community$graph$Graph$Edge, 5, 8, ''),
+					_1: {
+						ctor: '::',
+						_0: A3(_elm_community$graph$Graph$Edge, 9, 8, ''),
+						_1: {
+							ctor: '::',
+							_0: A3(_elm_community$graph$Graph$Edge, 9, 5, ''),
+							_1: {
+								ctor: '::',
+								_0: A3(_elm_community$graph$Graph$Edge, 2, 5, ''),
+								_1: {ctor: '[]'}
+							}
+						}
+					}
+				}
+			}
+		}
+	}
+};
+var _strelka_2017$phi$Simulation$toNode = function (nodeLabel) {
+	var _p0 = nodeLabel;
+	switch (_p0.ctor) {
+		case 'PVNode':
+			return A2(_elm_community$graph$Graph$Node, _p0._0.uid, nodeLabel);
+		case 'WTNode':
+			return A2(_elm_community$graph$Graph$Node, _p0._0.uid, nodeLabel);
+		case 'ResNode':
+			return A2(_elm_community$graph$Graph$Node, _p0._0.uid, nodeLabel);
+		default:
+			return A2(_elm_community$graph$Graph$Node, _p0._0.uid, nodeLabel);
+	}
+};
+var _strelka_2017$phi$Simulation$getPos = function (nodeLabel) {
+	var _p1 = nodeLabel;
+	switch (_p1.ctor) {
+		case 'PVNode':
+			return _p1._0.pos;
+		case 'WTNode':
+			return _p1._0.pos;
+		case 'BatNode':
+			return _p1._0.pos;
+		default:
+			return _p1._0.pos;
+	}
+};
 var _strelka_2017$phi$Simulation$renderNetwork = _elm_lang$core$Native_Platform.outgoingPort(
 	'renderNetwork',
 	function (v) {
-		return {
-			pvPanels: _elm_lang$core$Native_List.toArray(v.pvPanels).map(
+		return [
+			{
+			pvPanels: _elm_lang$core$Native_List.toArray(v._0.pvPanels).map(
 				function (v) {
-					return {uid: v.uid, maxGeneration: v.maxGeneration, generatedEnergy: v.generatedEnergy, y: v.y, x: v.x};
+					return {
+						uid: v.uid,
+						maxGeneration: v.maxGeneration,
+						generatedEnergy: v.generatedEnergy,
+						pos: {x: v.pos.x, y: v.pos.y}
+					};
 				}),
-			windTurbines: _elm_lang$core$Native_List.toArray(v.windTurbines).map(
+			windTurbines: _elm_lang$core$Native_List.toArray(v._0.windTurbines).map(
 				function (v) {
-					return {uid: v.uid, maxGeneration: v.maxGeneration, generatedEnergy: v.generatedEnergy, y: v.y, x: v.x};
+					return {
+						uid: v.uid,
+						maxGeneration: v.maxGeneration,
+						generatedEnergy: v.generatedEnergy,
+						pos: {x: v.pos.x, y: v.pos.y}
+					};
 				}),
-			batteries: _elm_lang$core$Native_List.toArray(v.batteries).map(
+			batteries: _elm_lang$core$Native_List.toArray(v._0.batteries).map(
 				function (v) {
-					return {uid: v.uid, capacity: v.capacity, storage: v.storage, y: v.y, x: v.x};
+					return {
+						uid: v.uid,
+						capacity: v.capacity,
+						storage: v.storage,
+						pos: {x: v.pos.x, y: v.pos.y}
+					};
 				}),
-			residences: _elm_lang$core$Native_List.toArray(v.residences).map(
+			residences: _elm_lang$core$Native_List.toArray(v._0.residences).map(
 				function (v) {
-					return {uid: v.uid, dailyConsumption: v.dailyConsumption, y: v.y, x: v.x};
+					return {
+						uid: v.uid,
+						dailyConsumption: v.dailyConsumption,
+						pos: {x: v.pos.x, y: v.pos.y}
+					};
 				}),
-			maxId: v.maxId
-		};
-	});
-var _strelka_2017$phi$Simulation$update = F2(
-	function (msg, model) {
-		var _p0 = msg;
-		switch (_p0.ctor) {
-			case 'AddPVPanel':
-				var nodeWithId = _elm_lang$core$Native_Utils.update(
-					_p0._0,
-					{uid: model.maxId + 1});
-				var newModel = _elm_lang$core$Native_Utils.update(
-					model,
-					{
-						pvPanels: {ctor: '::', _0: nodeWithId, _1: model.pvPanels},
-						maxId: model.maxId + 1
-					});
+			transmissionLines: _elm_lang$core$Native_List.toArray(v._0.transmissionLines).map(
+				function (v) {
+					return {from: v.from, to: v.to, label: v.label};
+				}),
+			maxId: v._0.maxId
+		},
+			_elm_lang$core$Native_List.toArray(v._1).map(
+			function (v) {
 				return {
-					ctor: '_Tuple2',
-					_0: newModel,
-					_1: _strelka_2017$phi$Simulation$renderNetwork(newModel)
+					transmissionLine: {from: v.transmissionLine.from, to: v.transmissionLine.to, label: v.transmissionLine.label},
+					pos: {
+						from: {x: v.pos.from.x, y: v.pos.from.y},
+						to: {x: v.pos.to.x, y: v.pos.to.y}
+					}
 				};
-			case 'AddWindTurbine':
-				var nodeWithId = _elm_lang$core$Native_Utils.update(
-					_p0._0,
-					{uid: model.maxId + 1});
-				var newModel = _elm_lang$core$Native_Utils.update(
-					model,
-					{
-						windTurbines: {ctor: '::', _0: nodeWithId, _1: model.windTurbines},
-						maxId: model.maxId + 1
-					});
-				return {
-					ctor: '_Tuple2',
-					_0: newModel,
-					_1: _strelka_2017$phi$Simulation$renderNetwork(newModel)
-				};
-			case 'AddResidence':
-				var nodeWithId = _elm_lang$core$Native_Utils.update(
-					_p0._0,
-					{uid: model.maxId + 1});
-				var newModel = _elm_lang$core$Native_Utils.update(
-					model,
-					{
-						residences: {ctor: '::', _0: nodeWithId, _1: model.residences},
-						maxId: model.maxId + 1
-					});
-				return {
-					ctor: '_Tuple2',
-					_0: newModel,
-					_1: _strelka_2017$phi$Simulation$renderNetwork(newModel)
-				};
-			default:
-				return {
-					ctor: '_Tuple2',
-					_0: model,
-					_1: _strelka_2017$phi$Simulation$renderNetwork(model)
-				};
-		}
+			})
+		];
 	});
-var _strelka_2017$phi$Simulation$Model = F5(
-	function (a, b, c, d, e) {
-		return {pvPanels: a, windTurbines: b, batteries: c, residences: d, maxId: e};
+var _strelka_2017$phi$Simulation$Model = F6(
+	function (a, b, c, d, e, f) {
+		return {pvPanels: a, windTurbines: b, batteries: c, residences: d, transmissionLines: e, maxId: f};
 	});
-var _strelka_2017$phi$Simulation$PVPanel = F5(
-	function (a, b, c, d, e) {
-		return {uid: a, maxGeneration: b, generatedEnergy: c, y: d, x: e};
-	});
-var _strelka_2017$phi$Simulation$WindTurbine = F5(
-	function (a, b, c, d, e) {
-		return {uid: a, maxGeneration: b, generatedEnergy: c, y: d, x: e};
-	});
-var _strelka_2017$phi$Simulation$Battery = F5(
-	function (a, b, c, d, e) {
-		return {uid: a, capacity: b, storage: c, y: d, x: e};
-	});
-var _strelka_2017$phi$Simulation$Residence = F4(
+var _strelka_2017$phi$Simulation$PVPanel = F4(
 	function (a, b, c, d) {
-		return {uid: a, dailyConsumption: b, y: c, x: d};
+		return {uid: a, maxGeneration: b, generatedEnergy: c, pos: d};
 	});
-var _strelka_2017$phi$Simulation$TransmissionLine = F2(
+var _strelka_2017$phi$Simulation$WindTurbine = F4(
+	function (a, b, c, d) {
+		return {uid: a, maxGeneration: b, generatedEnergy: c, pos: d};
+	});
+var _strelka_2017$phi$Simulation$Battery = F4(
+	function (a, b, c, d) {
+		return {uid: a, capacity: b, storage: c, pos: d};
+	});
+var _strelka_2017$phi$Simulation$Residence = F3(
+	function (a, b, c) {
+		return {uid: a, dailyConsumption: b, pos: c};
+	});
+var _strelka_2017$phi$Simulation$PortableGraph = F2(
 	function (a, b) {
-		return {nodeA: a, nodeB: b};
+		return {nodes: a, edges: b};
 	});
-var _strelka_2017$phi$Simulation$NodeB = function (a) {
-	return {ctor: 'NodeB', _0: a};
+var _strelka_2017$phi$Simulation$NetworkEdge = F2(
+	function (a, b) {
+		return {transmissionLine: a, pos: b};
+	});
+var _strelka_2017$phi$Simulation$Coords = F2(
+	function (a, b) {
+		return {x: a, y: b};
+	});
+var _strelka_2017$phi$Simulation$coordsGenerator = A3(
+	_elm_lang$core$Random$map2,
+	_strelka_2017$phi$Simulation$Coords,
+	A2(_elm_lang$core$Random$float, 30.5234 - 1.0e-2, 30.5234 + 1.0e-2),
+	A2(_elm_lang$core$Random$float, 50.4501 - 1.0e-2, 50.4501 + 1.0e-2));
+var _strelka_2017$phi$Simulation$Line = F2(
+	function (a, b) {
+		return {from: a, to: b};
+	});
+var _strelka_2017$phi$Simulation$edgeWithCoords = F2(
+	function (graph, tLine) {
+		var maybeTo = A2(
+			_elm_lang$core$Maybe$map,
+			function (_p2) {
+				return _strelka_2017$phi$Simulation$getPos(
+					function (_) {
+						return _.label;
+					}(
+						function (_) {
+							return _.node;
+						}(_p2)));
+			},
+			A2(_elm_community$graph$Graph$get, tLine.to, graph));
+		var maybeFrom = A2(
+			_elm_lang$core$Maybe$map,
+			function (_p3) {
+				return _strelka_2017$phi$Simulation$getPos(
+					function (_) {
+						return _.label;
+					}(
+						function (_) {
+							return _.node;
+						}(_p3)));
+			},
+			A2(_elm_community$graph$Graph$get, tLine.from, graph));
+		var maybeLine = A3(_elm_lang$core$Maybe$map2, _strelka_2017$phi$Simulation$Line, maybeFrom, maybeTo);
+		return A2(
+			_elm_lang$core$Maybe$map,
+			_strelka_2017$phi$Simulation$NetworkEdge(tLine),
+			maybeLine);
+	});
+var _strelka_2017$phi$Simulation$BatNode = function (a) {
+	return {ctor: 'BatNode', _0: a};
 };
-var _strelka_2017$phi$Simulation$NodeR = function (a) {
-	return {ctor: 'NodeR', _0: a};
+var _strelka_2017$phi$Simulation$ResNode = function (a) {
+	return {ctor: 'ResNode', _0: a};
 };
-var _strelka_2017$phi$Simulation$NodeWT = function (a) {
-	return {ctor: 'NodeWT', _0: a};
+var _strelka_2017$phi$Simulation$WTNode = function (a) {
+	return {ctor: 'WTNode', _0: a};
 };
-var _strelka_2017$phi$Simulation$NodePV = function (a) {
-	return {ctor: 'NodePV', _0: a};
+var _strelka_2017$phi$Simulation$PVNode = function (a) {
+	return {ctor: 'PVNode', _0: a};
+};
+var _strelka_2017$phi$Simulation$graph = function (model) {
+	return _elm_community$graph$Graph$fromNodesAndEdges(
+		A2(
+			_elm_lang$core$Basics_ops['++'],
+			A2(
+				_elm_lang$core$List$map,
+				function (_p4) {
+					return _strelka_2017$phi$Simulation$toNode(
+						_strelka_2017$phi$Simulation$PVNode(_p4));
+				},
+				model.pvPanels),
+			A2(
+				_elm_lang$core$Basics_ops['++'],
+				A2(
+					_elm_lang$core$List$map,
+					function (_p5) {
+						return _strelka_2017$phi$Simulation$toNode(
+							_strelka_2017$phi$Simulation$WTNode(_p5));
+					},
+					model.windTurbines),
+				A2(
+					_elm_lang$core$List$map,
+					function (_p6) {
+						return _strelka_2017$phi$Simulation$toNode(
+							_strelka_2017$phi$Simulation$ResNode(_p6));
+					},
+					model.residences))))(
+		{ctor: '[]'});
+};
+var _strelka_2017$phi$Simulation$modelAndEdgeCoords = function (model) {
+	var simGraph = _strelka_2017$phi$Simulation$graph(model);
+	var tLines = A2(
+		_elm_lang$core$List$filterMap,
+		_strelka_2017$phi$Simulation$edgeWithCoords(simGraph),
+		model.transmissionLines);
+	return {ctor: '_Tuple2', _0: model, _1: tLines};
 };
 var _strelka_2017$phi$Simulation$RenderNetwork = {ctor: 'RenderNetwork'};
+var _strelka_2017$phi$Simulation$update = F2(
+	function (msg, model) {
+		update:
+		while (true) {
+			var _p7 = msg;
+			switch (_p7.ctor) {
+				case 'AddPVPanel':
+					var nodeWithId = _elm_lang$core$Native_Utils.update(
+						_p7._0,
+						{uid: model.maxId + 1});
+					var newModel = _elm_lang$core$Native_Utils.update(
+						model,
+						{
+							pvPanels: {ctor: '::', _0: nodeWithId, _1: model.pvPanels},
+							maxId: model.maxId + 1
+						});
+					var _v3 = _strelka_2017$phi$Simulation$RenderNetwork,
+						_v4 = newModel;
+					msg = _v3;
+					model = _v4;
+					continue update;
+				case 'AddWindTurbine':
+					var nodeWithId = _elm_lang$core$Native_Utils.update(
+						_p7._0,
+						{uid: model.maxId + 1});
+					var newModel = _elm_lang$core$Native_Utils.update(
+						model,
+						{
+							windTurbines: {ctor: '::', _0: nodeWithId, _1: model.windTurbines},
+							maxId: model.maxId + 1
+						});
+					var _v5 = _strelka_2017$phi$Simulation$RenderNetwork,
+						_v6 = newModel;
+					msg = _v5;
+					model = _v6;
+					continue update;
+				case 'AddResidence':
+					var nodeWithId = _elm_lang$core$Native_Utils.update(
+						_p7._0,
+						{uid: model.maxId + 1});
+					var newModel = _elm_lang$core$Native_Utils.update(
+						model,
+						{
+							residences: {ctor: '::', _0: nodeWithId, _1: model.residences},
+							maxId: model.maxId + 1
+						});
+					var _v7 = _strelka_2017$phi$Simulation$RenderNetwork,
+						_v8 = newModel;
+					msg = _v7;
+					model = _v8;
+					continue update;
+				case 'AddEdge':
+					var _v9 = _strelka_2017$phi$Simulation$RenderNetwork,
+						_v10 = _elm_lang$core$Native_Utils.update(
+						model,
+						{
+							transmissionLines: {ctor: '::', _0: _p7._0, _1: model.transmissionLines}
+						});
+					msg = _v9;
+					model = _v10;
+					continue update;
+				default:
+					return {
+						ctor: '_Tuple2',
+						_0: model,
+						_1: _strelka_2017$phi$Simulation$renderNetwork(
+							_strelka_2017$phi$Simulation$modelAndEdgeCoords(model))
+					};
+			}
+		}
+	});
+var _strelka_2017$phi$Simulation$AddEdge = function (a) {
+	return {ctor: 'AddEdge', _0: a};
+};
+var _strelka_2017$phi$Simulation$randomEdge = A2(
+	_elm_lang$core$Random$generate,
+	function (_p8) {
+		return _strelka_2017$phi$Simulation$AddEdge(
+			A2(
+				F2(
+					function (x, y) {
+						return y(x);
+					}),
+				'',
+				_p8));
+	},
+	A3(
+		_elm_lang$core$Random$map2,
+		_elm_community$graph$Graph$Edge,
+		A2(_elm_lang$core$Random$int, 0, 45),
+		A2(_elm_lang$core$Random$int, 0, 45)));
 var _strelka_2017$phi$Simulation$AddResidence = function (a) {
 	return {ctor: 'AddResidence', _0: a};
 };
 var _strelka_2017$phi$Simulation$randomResidence = A2(
 	_elm_lang$core$Random$generate,
 	_strelka_2017$phi$Simulation$AddResidence,
-	A4(
-		_elm_lang$core$Random$map3,
+	A3(
+		_elm_lang$core$Random$map2,
 		_strelka_2017$phi$Simulation$Residence(-1),
 		A2(_elm_lang$core$Random$float, 7, 10),
-		A2(_elm_lang$core$Random$float, 50.4501 - 1.0e-2, 50.4501 + 1.0e-2),
-		A2(_elm_lang$core$Random$float, 30.5234 - 1.0e-2, 30.5234 + 1.0e-2)));
+		_strelka_2017$phi$Simulation$coordsGenerator));
 var _strelka_2017$phi$Simulation$AddWindTurbine = function (a) {
 	return {ctor: 'AddWindTurbine', _0: a};
 };
 var _strelka_2017$phi$Simulation$randomWindTurbine = A2(
 	_elm_lang$core$Random$generate,
 	_strelka_2017$phi$Simulation$AddWindTurbine,
-	A5(
-		_elm_lang$core$Random$map4,
+	A4(
+		_elm_lang$core$Random$map3,
 		_strelka_2017$phi$Simulation$WindTurbine(-1),
 		A2(_elm_lang$core$Random$float, 7, 10),
 		A2(_elm_lang$core$Random$float, 0, 1),
-		A2(_elm_lang$core$Random$float, 50.4501 - 1.0e-2, 50.4501 + 1.0e-2),
-		A2(_elm_lang$core$Random$float, 30.5234 - 1.0e-2, 30.5234 + 1.0e-2)));
+		_strelka_2017$phi$Simulation$coordsGenerator));
 var _strelka_2017$phi$Simulation$AddPVPanel = function (a) {
 	return {ctor: 'AddPVPanel', _0: a};
 };
 var _strelka_2017$phi$Simulation$randomPVPanel = A2(
 	_elm_lang$core$Random$generate,
 	_strelka_2017$phi$Simulation$AddPVPanel,
-	A5(
-		_elm_lang$core$Random$map4,
+	A4(
+		_elm_lang$core$Random$map3,
 		_strelka_2017$phi$Simulation$PVPanel(-1),
 		A2(_elm_lang$core$Random$float, 7, 10),
 		A2(_elm_lang$core$Random$float, 0, 1),
-		A2(_elm_lang$core$Random$float, 50.4501 - 1.0e-2, 50.4501 + 1.0e-2),
-		A2(_elm_lang$core$Random$float, 30.5234 - 1.0e-2, 30.5234 + 1.0e-2)));
+		_strelka_2017$phi$Simulation$coordsGenerator));
 var _strelka_2017$phi$Simulation$init = {
 	ctor: '_Tuple2',
-	_0: A5(
+	_0: A6(
 		_strelka_2017$phi$Simulation$Model,
+		{ctor: '[]'},
 		{ctor: '[]'},
 		{ctor: '[]'},
 		{ctor: '[]'},
@@ -9896,7 +12176,10 @@ var _strelka_2017$phi$Simulation$init = {
 			A2(
 				_elm_lang$core$Basics_ops['++'],
 				A2(_elm_lang$core$List$repeat, 10, _strelka_2017$phi$Simulation$randomPVPanel),
-				A2(_elm_lang$core$List$repeat, 10, _strelka_2017$phi$Simulation$randomWindTurbine))))
+				A2(
+					_elm_lang$core$Basics_ops['++'],
+					A2(_elm_lang$core$List$repeat, 30, _strelka_2017$phi$Simulation$randomWindTurbine),
+					A2(_elm_lang$core$List$repeat, 200, _strelka_2017$phi$Simulation$randomEdge)))))
 };
 var _strelka_2017$phi$Simulation$addNRandomPVPanels = function (n) {
 	return _elm_lang$core$Platform_Cmd$batch(
