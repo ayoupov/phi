@@ -12,40 +12,43 @@
   margin: 30px;
   width: calc(100% - 60px);
   height: 400px;
-  background: rgba(0,0,0,0.6);
+  background: rgb(0,0,0);
   border-radius: 20px;
   border: 2px solid #555;
   transition: all 0.3s linear;
+  opacity: 0.7;
 }
 
 .simulation svg:hover {
   margin: 30px;
   width: calc(100% - 60px);
   height: 400px;
-  background: rgba(0,0,0,0.63);
+  background: rgba(0,0,0);
   border-radius: 20px;
   border: 2px solid #555;
 }
 
 .pvPanel {
   fill:orange;
-  stroke:orange;
-  fill-opacity: 0.4;
+  fill-opacity: 1;
 }
 
 .windTurbine {
   fill: cyan;
-  stroke: cyan;
-  fill-opacity: 0.4;
+  fill-opacity: 1;
 }
 
 .residence {
   fill: green;
-  stroke: green;
-  fill-opacity: 0.4;
+  fill-opacity: 1;
+}
+
+.node {
+  stroke: black;
+  stroke-width: 2px;
 }
 
 line.link {
   stroke: #999;
-  stroke-opacity: 0.6;
+  stroke-opacity: 1;
 }

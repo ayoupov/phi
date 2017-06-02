@@ -1,11 +1,19 @@
 var simModel;
 var edges;
 
+var svg;
+
 document.addEventListener("DOMContentLoaded", function(event) {
   var app = Elm.Main.fullscreen();
 
   app.ports.renderNetwork.subscribe(function(model) {
-    var svg = d3.select("svg");
+
+    svg = d3.select("svg");
+    svg.append("g").attr("class", "links");
+    svg.append("g").attr("class", "nodes");
+
+
+    svg = d3.select("svg");
 
     simModel = model[0];
     edges = model[1];
@@ -29,14 +37,14 @@ document.addEventListener("DOMContentLoaded", function(event) {
     }
 
     function drawCircles(nodes, nodeClass) {
-      var nodes = svg.selectAll(".node")
+      var nodes = svg.select(".nodes").selectAll(".node")
                        .data(nodes, function(d) { return d.uid; });
 
       nodes.enter()
            .append("circle")
            .attr("cx", setX)
            .attr("cy", setY)
-           .attr("r", 7)
+           .attr("r", 10)
            .attr("class", "node " + nodeClass);
 
       nodes.attr("cx", setX)
@@ -50,7 +58,7 @@ document.addEventListener("DOMContentLoaded", function(event) {
                };
       });
 
-      var link = svg.selectAll(".link")
+      var link = svg.select(".links").selectAll(".link")
                     .data(links);
 
       link.enter()
@@ -60,11 +68,11 @@ document.addEventListener("DOMContentLoaded", function(event) {
            .attr("y1", function(d) { return yScale(d.pos.from.y) })
            .attr("x2", function(d) { return xScale(d.pos.to.x) })
            .attr("y2", function(d) { return yScale(d.pos.to.y) });
-           //.attr("x1", function(d) { return d.source.x; })
-           //.attr("y1", function(d) { return d.source.y; })
-           //.attr("x2", function(d) { return d.target.x; })
-           //.attr("y2", function(d) { return d.target.y; });
 
+      link.attr("x1", function(d) { return xScale(d.pos.from.x) })
+          .attr("y1", function(d) { return yScale(d.pos.from.y) })
+          .attr("x2", function(d) { return xScale(d.pos.to.x) })
+          .attr("y2", function(d) { return yScale(d.pos.to.y) });
 
     }
 

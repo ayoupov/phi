@@ -123,25 +123,13 @@ modelAndEdgeCoords model =
   in
       (model, tLines)
 
-initEdges : List TransmissionLine
-initEdges =
-  [ Edge 1 2 ""
-  , Edge 3 5 ""
-  , Edge 3 10 ""
-  , Edge 4 8 ""
-  , Edge 5 8 ""
-  , Edge 9 8 ""
-  , Edge 9 5 ""
-  , Edge 2 5 ""
-  ]
-
 init : (Model, Cmd Msg)
 init =
   ( Model [] [] [] [] [] 0
-  , (List.repeat 5 randomResidence)
+  , (List.repeat 30 randomResidence)
     ++ (List.repeat 10 randomPVPanel)
-    ++ (List.repeat 30 randomWindTurbine)
-    ++ (List.repeat 200 randomEdge)
+    ++ (List.repeat 10 randomWindTurbine)
+    ++ (List.repeat 20 randomEdge)
     |> Cmd.batch
   )
 
@@ -162,8 +150,8 @@ randomPVPanel =
 randomEdge : Cmd Msg
 randomEdge =
   Random.map2 Edge
-    (Random.int 0 45)
-    (Random.int 0 45)
+    (Random.int 0 49)
+    (Random.int 0 49)
   |> Random.generate (AddEdge << ((|>) ""))
 
 

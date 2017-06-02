@@ -11793,39 +11793,6 @@ var _strelka_2017$phi$Simulation$view = function (model) {
 			_1: {ctor: '[]'}
 		});
 };
-var _strelka_2017$phi$Simulation$initEdges = {
-	ctor: '::',
-	_0: A3(_elm_community$graph$Graph$Edge, 1, 2, ''),
-	_1: {
-		ctor: '::',
-		_0: A3(_elm_community$graph$Graph$Edge, 3, 5, ''),
-		_1: {
-			ctor: '::',
-			_0: A3(_elm_community$graph$Graph$Edge, 3, 10, ''),
-			_1: {
-				ctor: '::',
-				_0: A3(_elm_community$graph$Graph$Edge, 4, 8, ''),
-				_1: {
-					ctor: '::',
-					_0: A3(_elm_community$graph$Graph$Edge, 5, 8, ''),
-					_1: {
-						ctor: '::',
-						_0: A3(_elm_community$graph$Graph$Edge, 9, 8, ''),
-						_1: {
-							ctor: '::',
-							_0: A3(_elm_community$graph$Graph$Edge, 9, 5, ''),
-							_1: {
-								ctor: '::',
-								_0: A3(_elm_community$graph$Graph$Edge, 2, 5, ''),
-								_1: {ctor: '[]'}
-							}
-						}
-					}
-				}
-			}
-		}
-	}
-};
 var _strelka_2017$phi$Simulation$toNode = function (nodeLabel) {
 	var _p0 = nodeLabel;
 	switch (_p0.ctor) {
@@ -12122,8 +12089,8 @@ var _strelka_2017$phi$Simulation$randomEdge = A2(
 	A3(
 		_elm_lang$core$Random$map2,
 		_elm_community$graph$Graph$Edge,
-		A2(_elm_lang$core$Random$int, 0, 45),
-		A2(_elm_lang$core$Random$int, 0, 45)));
+		A2(_elm_lang$core$Random$int, 0, 49),
+		A2(_elm_lang$core$Random$int, 0, 49)));
 var _strelka_2017$phi$Simulation$AddResidence = function (a) {
 	return {ctor: 'AddResidence', _0: a};
 };
@@ -12172,14 +12139,14 @@ var _strelka_2017$phi$Simulation$init = {
 	_1: _elm_lang$core$Platform_Cmd$batch(
 		A2(
 			_elm_lang$core$Basics_ops['++'],
-			A2(_elm_lang$core$List$repeat, 5, _strelka_2017$phi$Simulation$randomResidence),
+			A2(_elm_lang$core$List$repeat, 30, _strelka_2017$phi$Simulation$randomResidence),
 			A2(
 				_elm_lang$core$Basics_ops['++'],
 				A2(_elm_lang$core$List$repeat, 10, _strelka_2017$phi$Simulation$randomPVPanel),
 				A2(
 					_elm_lang$core$Basics_ops['++'],
-					A2(_elm_lang$core$List$repeat, 30, _strelka_2017$phi$Simulation$randomWindTurbine),
-					A2(_elm_lang$core$List$repeat, 200, _strelka_2017$phi$Simulation$randomEdge)))))
+					A2(_elm_lang$core$List$repeat, 10, _strelka_2017$phi$Simulation$randomWindTurbine),
+					A2(_elm_lang$core$List$repeat, 20, _strelka_2017$phi$Simulation$randomEdge)))))
 };
 var _strelka_2017$phi$Simulation$addNRandomPVPanels = function (n) {
 	return _elm_lang$core$Platform_Cmd$batch(
