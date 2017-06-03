@@ -6,7 +6,7 @@ import Html.Events exposing (..)
 import Http
 import Json.Decode as Json
 import Json.Encode exposing (string)
-import Simulation
+import Simulation.Simulation as Simulation
 
 import Dom.Scroll as Scroll
 

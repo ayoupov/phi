@@ -24,23 +24,25 @@ document.addEventListener("DOMContentLoaded", function(event) {
                          .range([0,400]);
 
     function setX(node) {
-      return xScale(node.pos.x);
+      return xScale(node.label.pos.x);
     }
 
     function setY(node) {
-      return yScale(node.pos.y);
+      return yScale(node.label.pos.y);
     }
 
-    function drawCircles(nodes, nodeClass) {
+    function drawCircles(nodes) {
       var nodes = svg.select(".nodes").selectAll(".node")
-                       .data(nodes, function(d) { return d.uid; });
+                       .data(nodes, function(d) { return d.id; });
 
       nodes.enter()
            .append("circle")
            .attr("cx", setX)
            .attr("cy", setY)
            .attr("r", 10)
-           .attr("class", "node " + nodeClass);
+           .attr("class", function(d) {
+             return "node " + d.label.nodeType;
+           });
 
       nodes.attr("cx", setX)
            .attr("cy", setY);
@@ -71,9 +73,7 @@ document.addEventListener("DOMContentLoaded", function(event) {
 
     }
 
-    drawCircles(simModel.pvPanels, "pvPanel");
-    drawCircles(simModel.windTurbines, "windTurbine");
-    drawCircles(simModel.residences, "residence");
+    drawCircles(simModel);
     drawLinks(edges);
 
   });
