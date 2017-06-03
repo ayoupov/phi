@@ -5,6 +5,7 @@ import Html.Attributes exposing (..)
 import Random exposing (..)
 import List exposing (repeat)
 import Svg exposing (..)
+import Svg.Attributes as SVG
 import Graph exposing (..)
 
 -- TODO: move the model to be
@@ -19,6 +20,13 @@ type alias Model =
   , residences: List Residence
   , transmissionLines: List TransmissionLine
   , maxId: Int
+  }
+
+type alias SimModel =
+  { pvPanels: List PVPanel
+  , windTurbines: List WindTurbine
+  , batteries: List Battery
+  , residences: List Residence
   }
 
 type alias KWHour = Float
@@ -101,6 +109,27 @@ graph model =
   ++ ( List.map (toNode << ResNode) model.residences   )
   |> Graph.fromNodesAndEdges ) <| []
 
+graphToSimModel : Graph NodeLabel String -> SimModel
+graphToSimModel graph =
+  let
+      nodeList = List.map .label <| Graph.nodes graph
+      listToSimNodes simModel nodeList =
+        case nodeList of
+          [] ->
+            simModel
+          (node::ns) ->
+            case node of
+              PVNode pv ->
+                listToSimNodes { simModel | pvPanels = (pv :: simModel.pvPanels) } ns
+              WTNode wt ->
+                listToSimNodes { simModel | windTurbines = (wt :: simModel.windTurbines) } ns
+              ResNode res ->
+                listToSimNodes { simModel | residences = (res :: simModel.residences) } ns
+              BatNode bat ->
+                listToSimNodes { simModel | batteries = (bat :: simModel.batteries) } ns
+  in
+      listToSimNodes (SimModel [] [] [] []) nodeList
+
 type alias Line =
   { from: Coords
   , to: Coords
@@ -115,13 +144,14 @@ edgeWithCoords graph tLine =
   in
       Maybe.map (NetworkEdge tLine) maybeLine
 
-modelAndEdgeCoords : Model -> (Model, List NetworkEdge)
+modelAndEdgeCoords : Model -> (SimModel, List NetworkEdge)
 modelAndEdgeCoords model =
   let
       simGraph = graph model
+      simModel = graphToSimModel simGraph
       tLines = List.filterMap (edgeWithCoords simGraph) model.transmissionLines
   in
-      (model, tLines)
+      (simModel, tLines)
 
 init : (Model, Cmd Msg)
 init =
@@ -217,11 +247,15 @@ update msg model =
 
 -- PORTS
 
-
-
-port renderNetwork : (Model, List NetworkEdge) -> Cmd msg
+port renderNetwork : (SimModel, List NetworkEdge) -> Cmd msg
 
 -- VIEW
 
 view : Model -> Html Msg
-view model = div [class "simulation"] [svg [] []]
+view model =
+  div [class "simulation"]
+    [ svg []
+        [ g [SVG.class "links"] []
+        , g [SVG.class "nodes"] []
+        ]
+    ]

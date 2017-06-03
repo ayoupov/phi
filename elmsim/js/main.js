@@ -9,11 +9,6 @@ document.addEventListener("DOMContentLoaded", function(event) {
   app.ports.renderNetwork.subscribe(function(model) {
 
     svg = d3.select("svg");
-    svg.append("g").attr("class", "links");
-    svg.append("g").attr("class", "nodes");
-
-
-    svg = d3.select("svg");
 
     simModel = model[0];
     edges = model[1];
