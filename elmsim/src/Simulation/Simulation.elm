@@ -14,12 +14,16 @@ import Json.Encode as Json
 
 
 type alias Model =
-  { graph: Graph NodeLabel String }
+  { network: Graph NodeLabel String
+  , weather: Weather
+  }
 
+initWeather : Weather
+initWeather = Weather 0.8 0.4
 
 init : (Model, Cmd Msg)
 init =
-  ( Model Graph.empty
+  ( Model Graph.empty initWeather
   , (List.repeat 20 randomEdge)
     ++ (List.repeat 30 randomResidence)
     ++ (List.repeat 10 randomPVPanel)
@@ -47,7 +51,6 @@ randomEdge =
     (Random.int 0 49)
     (Random.int 0 49)
   |> Random.generate (AddEdge << ((|>) ""))
-
 
 randomWindTurbine : Cmd Msg
 randomWindTurbine =
@@ -81,29 +84,29 @@ update : Msg -> Model -> (Model, Cmd Msg)
 update msg model =
   case msg of
     AddPVPanel node ->
-      update RenderNetwork { model | graph = addNode (PVNode node) model.graph }
+      update RenderNetwork { model | network = addNode (PVNode node) model.network }
     AddWindTurbine node ->
-      update RenderNetwork { model | graph = addNode (WTNode node) model.graph }
+      update RenderNetwork { model | network = addNode (WTNode node) model.network }
     AddResidence node ->
-      update RenderNetwork { model | graph = addNode (ResNode node) model.graph }
+      update RenderNetwork { model | network = addNode (ResNode node) model.network }
     AddEdge edge ->
-      update RenderNetwork { model | graph = addEdge edge model.graph }
+      update RenderNetwork { model | network = addEdge edge model.network }
     RenderNetwork ->
-      (model, renderNetwork <| encodeGraph model.graph )
+      (model, renderNetwork <| encodeGraph model.network )
 
 addNode : NodeLabel -> Graph NodeLabel e -> Graph NodeLabel e
-addNode nodeLabel graph =
+addNode nodeLabel network =
   let
     nodeId =
       Maybe.withDefault 0
-      <| Maybe.map ((+) 1 << Tuple.second) (Graph.nodeIdRange graph)
+      <| Maybe.map ((+) 1 << Tuple.second) (Graph.nodeIdRange network)
     node = Node nodeId nodeLabel
   in
-    Graph.insert (NodeContext node IntDict.empty IntDict.empty) graph
+    Graph.insert (NodeContext node IntDict.empty IntDict.empty) network
 
 addEdge : TransmissionLine -> Graph n String -> Graph n String
-addEdge edge graph =
-    Graph.fromNodesAndEdges (Graph.nodes graph) (edge :: (Graph.edges graph))
+addEdge edge network =
+    Graph.fromNodesAndEdges (Graph.nodes network) (edge :: (Graph.edges network))
 
 -- PORTS
 

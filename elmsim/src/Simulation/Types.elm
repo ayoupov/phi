@@ -2,16 +2,38 @@ module Simulation.Types exposing (..)
 
 import Graph exposing (Graph, Edge, Node)
 
+-- GEOMETRY
+type alias Coords = { x: Longitude, y: Latitude }
+
+type alias Line =
+  { from: Coords
+  , to: Coords
+  }
+
+-- VARIABLES
+type alias KWHour = Float
+type alias Latitude = Float
+type alias Longitude = Float
+type alias Negawatts = Float
+type alias SeedRating = Float
+type alias Phicoin = Float
+
+
+-- NODES
+
 type NodeLabel = PVNode PVPanel
                | WTNode WindTurbine
                | ResNode Residence
                | BatNode Battery
 
-type alias Coords = { x: Longitude, y: Latitude }
-
-type alias KWHour = Float
-type alias Latitude = Float
-type alias Longitude = Float
+type alias NetworkNode =
+  { joules: KWHour
+  , negawatts: Negawatts
+  , seedRating: SeedRating
+  , phicoin: Phicoin
+  , pos: Coords
+  , nodeType: NodeLabel
+  }
 
 type alias PVPanel =
   { maxGeneration: KWHour
@@ -36,14 +58,20 @@ type alias Residence =
   , pos: Coords
   }
 
+-- EDGES
+
+type alias TransmissionLine = Edge String
+
 type alias EncodedEdge =
   { transmissionLine: TransmissionLine
   , pos: Line
   }
 
-type alias TransmissionLine = Edge String
 
-type alias Line =
-  { from: Coords
-  , to: Coords
+-- WEATHER
+
+type alias Weather =
+  { sun: Float
+  , wind: Float
   }
+

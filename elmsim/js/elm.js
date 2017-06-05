@@ -12034,6 +12034,14 @@ var _strelka_2017$phi$Simulation_Types$Coords = F2(
 	function (a, b) {
 		return {x: a, y: b};
 	});
+var _strelka_2017$phi$Simulation_Types$Line = F2(
+	function (a, b) {
+		return {from: a, to: b};
+	});
+var _strelka_2017$phi$Simulation_Types$NetworkNode = F6(
+	function (a, b, c, d, e, f) {
+		return {joules: a, negawatts: b, seedRating: c, phicoin: d, pos: e, nodeType: f};
+	});
 var _strelka_2017$phi$Simulation_Types$PVPanel = F3(
 	function (a, b, c) {
 		return {maxGeneration: a, generatedEnergy: b, pos: c};
@@ -12054,9 +12062,9 @@ var _strelka_2017$phi$Simulation_Types$EncodedEdge = F2(
 	function (a, b) {
 		return {transmissionLine: a, pos: b};
 	});
-var _strelka_2017$phi$Simulation_Types$Line = F2(
+var _strelka_2017$phi$Simulation_Types$Weather = F2(
 	function (a, b) {
-		return {from: a, to: b};
+		return {sun: a, wind: b};
 	});
 var _strelka_2017$phi$Simulation_Types$BatNode = function (a) {
 	return {ctor: 'BatNode', _0: a};
@@ -12336,18 +12344,18 @@ var _strelka_2017$phi$Simulation_Simulation$view = function (model) {
 		});
 };
 var _strelka_2017$phi$Simulation_Simulation$addEdge = F2(
-	function (edge, graph) {
+	function (edge, network) {
 		return A2(
 			_elm_community$graph$Graph$fromNodesAndEdges,
-			_elm_community$graph$Graph$nodes(graph),
+			_elm_community$graph$Graph$nodes(network),
 			{
 				ctor: '::',
 				_0: edge,
-				_1: _elm_community$graph$Graph$edges(graph)
+				_1: _elm_community$graph$Graph$edges(network)
 			});
 	});
 var _strelka_2017$phi$Simulation_Simulation$addNode = F2(
-	function (nodeLabel, graph) {
+	function (nodeLabel, network) {
 		var nodeId = A2(
 			_elm_lang$core$Maybe$withDefault,
 			0,
@@ -12362,18 +12370,19 @@ var _strelka_2017$phi$Simulation_Simulation$addNode = F2(
 						1,
 						_elm_lang$core$Tuple$second(_p0));
 				},
-				_elm_community$graph$Graph$nodeIdRange(graph)));
+				_elm_community$graph$Graph$nodeIdRange(network)));
 		var node = A2(_elm_community$graph$Graph$Node, nodeId, nodeLabel);
 		return A2(
 			_elm_community$graph$Graph$insert,
 			A3(_elm_community$graph$Graph$NodeContext, node, _elm_community$intdict$IntDict$empty, _elm_community$intdict$IntDict$empty),
-			graph);
+			network);
 	});
 var _strelka_2017$phi$Simulation_Simulation$coordsGenerator = A3(
 	_elm_lang$core$Random$map2,
 	_strelka_2017$phi$Simulation_Types$Coords,
 	A2(_elm_lang$core$Random$float, 30.5234 - 1.0e-2, 30.5234 + 1.0e-2),
 	A2(_elm_lang$core$Random$float, 50.4501 - 1.0e-2, 50.4501 + 1.0e-2));
+var _strelka_2017$phi$Simulation_Simulation$initWeather = A2(_strelka_2017$phi$Simulation_Types$Weather, 0.8, 0.4);
 var _strelka_2017$phi$Simulation_Simulation$renderNetwork = _elm_lang$core$Native_Platform.outgoingPort(
 	'renderNetwork',
 	function (v) {
@@ -12394,9 +12403,10 @@ var _strelka_2017$phi$Simulation_Simulation$renderNetwork = _elm_lang$core$Nativ
 			})
 		];
 	});
-var _strelka_2017$phi$Simulation_Simulation$Model = function (a) {
-	return {graph: a};
-};
+var _strelka_2017$phi$Simulation_Simulation$Model = F2(
+	function (a, b) {
+		return {network: a, weather: b};
+	});
 var _strelka_2017$phi$Simulation_Simulation$RenderNetwork = {ctor: 'RenderNetwork'};
 var _strelka_2017$phi$Simulation_Simulation$update = F2(
 	function (msg, model) {
@@ -12409,10 +12419,10 @@ var _strelka_2017$phi$Simulation_Simulation$update = F2(
 						_v2 = _elm_lang$core$Native_Utils.update(
 						model,
 						{
-							graph: A2(
+							network: A2(
 								_strelka_2017$phi$Simulation_Simulation$addNode,
 								_strelka_2017$phi$Simulation_Types$PVNode(_p1._0),
-								model.graph)
+								model.network)
 						});
 					msg = _v1;
 					model = _v2;
@@ -12422,10 +12432,10 @@ var _strelka_2017$phi$Simulation_Simulation$update = F2(
 						_v4 = _elm_lang$core$Native_Utils.update(
 						model,
 						{
-							graph: A2(
+							network: A2(
 								_strelka_2017$phi$Simulation_Simulation$addNode,
 								_strelka_2017$phi$Simulation_Types$WTNode(_p1._0),
-								model.graph)
+								model.network)
 						});
 					msg = _v3;
 					model = _v4;
@@ -12435,10 +12445,10 @@ var _strelka_2017$phi$Simulation_Simulation$update = F2(
 						_v6 = _elm_lang$core$Native_Utils.update(
 						model,
 						{
-							graph: A2(
+							network: A2(
 								_strelka_2017$phi$Simulation_Simulation$addNode,
 								_strelka_2017$phi$Simulation_Types$ResNode(_p1._0),
-								model.graph)
+								model.network)
 						});
 					msg = _v5;
 					model = _v6;
@@ -12448,7 +12458,7 @@ var _strelka_2017$phi$Simulation_Simulation$update = F2(
 						_v8 = _elm_lang$core$Native_Utils.update(
 						model,
 						{
-							graph: A2(_strelka_2017$phi$Simulation_Simulation$addEdge, _p1._0, model.graph)
+							network: A2(_strelka_2017$phi$Simulation_Simulation$addEdge, _p1._0, model.network)
 						});
 					msg = _v7;
 					model = _v8;
@@ -12458,7 +12468,7 @@ var _strelka_2017$phi$Simulation_Simulation$update = F2(
 						ctor: '_Tuple2',
 						_0: model,
 						_1: _strelka_2017$phi$Simulation_Simulation$renderNetwork(
-							_strelka_2017$phi$Simulation_Encoder$encodeGraph(model.graph))
+							_strelka_2017$phi$Simulation_Encoder$encodeGraph(model.network))
 					};
 			}
 		}
@@ -12520,7 +12530,7 @@ var _strelka_2017$phi$Simulation_Simulation$randomPVPanel = A2(
 		_strelka_2017$phi$Simulation_Simulation$coordsGenerator));
 var _strelka_2017$phi$Simulation_Simulation$init = {
 	ctor: '_Tuple2',
-	_0: _strelka_2017$phi$Simulation_Simulation$Model(_elm_community$graph$Graph$empty),
+	_0: A2(_strelka_2017$phi$Simulation_Simulation$Model, _elm_community$graph$Graph$empty, _strelka_2017$phi$Simulation_Simulation$initWeather),
 	_1: _elm_lang$core$Platform_Cmd$batch(
 		A2(
 			_elm_lang$core$Basics_ops['++'],
@@ -12603,6 +12613,7 @@ var _strelka_2017$phi$Main$ChatMsg = F2(
 var _strelka_2017$phi$Main$Bot = {ctor: 'Bot'};
 var _strelka_2017$phi$Main$initMsg = A2(_strelka_2017$phi$Main$ChatMsg, _strelka_2017$phi$Main$Bot, 'Welcome to Φ Chat, home of the Φ Chat.. can i take your order?');
 var _strelka_2017$phi$Main$User = {ctor: 'User'};
+var _strelka_2017$phi$Main$CheckWeather = {ctor: 'CheckWeather'};
 var _strelka_2017$phi$Main$SimMsg = function (a) {
 	return {ctor: 'SimMsg', _0: a};
 };
@@ -12625,72 +12636,13 @@ var _strelka_2017$phi$Main$initModel = function () {
 	};
 }();
 var _strelka_2017$phi$Main$NoOp = {ctor: 'NoOp'};
-var _strelka_2017$phi$Main$update = F2(
-	function (msg, model) {
-		var scrollDown = A2(
-			_elm_lang$core$Task$attempt,
-			_elm_lang$core$Basics$always(_strelka_2017$phi$Main$NoOp),
-			_elm_lang$dom$Dom_Scroll$toBottom('toScroll'));
-		var noOp = {ctor: '_Tuple2', _0: model, _1: _elm_lang$core$Platform_Cmd$none};
-		var _p2 = msg;
-		switch (_p2.ctor) {
-			case 'NoOp':
-				return noOp;
-			case 'Input':
-				return {
-					ctor: '_Tuple2',
-					_0: _elm_lang$core$Native_Utils.update(
-						model,
-						{input: _p2._0}),
-					_1: _elm_lang$core$Platform_Cmd$none
-				};
-			case 'SendUserChatMsg':
-				if (_elm_lang$core$String$isEmpty(model.input)) {
-					return noOp;
-				} else {
-					var chatMsg = A2(_strelka_2017$phi$Main$ChatMsg, _strelka_2017$phi$Main$User, model.input);
-					return {
-						ctor: '_Tuple2',
-						_0: _elm_lang$core$Native_Utils.update(
-							model,
-							{
-								input: '',
-								messages: {ctor: '::', _0: chatMsg, _1: model.messages}
-							}),
-						_1: scrollDown
-					};
-				}
-			case 'SendBotChatMsg':
-				return {
-					ctor: '_Tuple2',
-					_0: _elm_lang$core$Native_Utils.update(
-						model,
-						{
-							messages: {
-								ctor: '::',
-								_0: A2(_strelka_2017$phi$Main$ChatMsg, _strelka_2017$phi$Main$Bot, _p2._0),
-								_1: model.messages
-							}
-						}),
-					_1: scrollDown
-				};
-			default:
-				var _p3 = A2(_strelka_2017$phi$Simulation_Simulation$update, _p2._0, model.simModel);
-				var simModel = _p3._0;
-				var cmd = _p3._1;
-				return {
-					ctor: '_Tuple2',
-					_0: _elm_lang$core$Native_Utils.update(
-						model,
-						{simModel: simModel}),
-					_1: A2(_elm_lang$core$Platform_Cmd$map, _strelka_2017$phi$Main$SimMsg, cmd)
-				};
-		}
-	});
+var _strelka_2017$phi$Main$parseUserMessage = function (input) {
+	return _elm_lang$core$Native_Utils.eq(input, '/weather') ? _strelka_2017$phi$Main$CheckWeather : _strelka_2017$phi$Main$NoOp;
+};
 var _strelka_2017$phi$Main$onEnter = function (msg) {
 	var isEnter = function (num) {
-		var _p4 = num;
-		if (_p4 === 13) {
+		var _p2 = num;
+		if (_p2 === 13) {
 			return msg;
 		} else {
 			return _strelka_2017$phi$Main$NoOp;
@@ -12704,6 +12656,95 @@ var _strelka_2017$phi$Main$onEnter = function (msg) {
 var _strelka_2017$phi$Main$SendBotChatMsg = function (a) {
 	return {ctor: 'SendBotChatMsg', _0: a};
 };
+var _strelka_2017$phi$Main$update = F2(
+	function (msg, model) {
+		update:
+		while (true) {
+			var scrollDown = A2(
+				_elm_lang$core$Task$attempt,
+				_elm_lang$core$Basics$always(_strelka_2017$phi$Main$NoOp),
+				_elm_lang$dom$Dom_Scroll$toBottom('toScroll'));
+			var noOp = {ctor: '_Tuple2', _0: model, _1: _elm_lang$core$Platform_Cmd$none};
+			var _p3 = msg;
+			switch (_p3.ctor) {
+				case 'NoOp':
+					return noOp;
+				case 'Input':
+					return {
+						ctor: '_Tuple2',
+						_0: _elm_lang$core$Native_Utils.update(
+							model,
+							{input: _p3._0}),
+						_1: _elm_lang$core$Platform_Cmd$none
+					};
+				case 'SendUserChatMsg':
+					if (_elm_lang$core$String$isEmpty(model.input)) {
+						return noOp;
+					} else {
+						var chatMsg = A2(_strelka_2017$phi$Main$ChatMsg, _strelka_2017$phi$Main$User, model.input);
+						var newModel = _elm_lang$core$Native_Utils.update(
+							model,
+							{
+								input: '',
+								messages: {ctor: '::', _0: chatMsg, _1: model.messages}
+							});
+						var _p4 = A2(
+							_strelka_2017$phi$Main$update,
+							_strelka_2017$phi$Main$parseUserMessage(model.input),
+							newModel);
+						var finalModel = _p4._0;
+						var cmd = _p4._1;
+						return {ctor: '_Tuple2', _0: finalModel, _1: scrollDown};
+					}
+				case 'SendBotChatMsg':
+					return {
+						ctor: '_Tuple2',
+						_0: _elm_lang$core$Native_Utils.update(
+							model,
+							{
+								messages: {
+									ctor: '::',
+									_0: A2(_strelka_2017$phi$Main$ChatMsg, _strelka_2017$phi$Main$Bot, _p3._0),
+									_1: model.messages
+								}
+							}),
+						_1: scrollDown
+					};
+				case 'CheckWeather':
+					var windy = _elm_lang$core$Basics$toString(model.simModel.weather.wind);
+					var sunny = _elm_lang$core$Basics$toString(model.simModel.weather.sun);
+					var txt = A2(
+						_elm_lang$core$Basics_ops['++'],
+						'There\'s ',
+						A2(
+							_elm_lang$core$Basics_ops['++'],
+							sunny,
+							A2(
+								_elm_lang$core$Basics_ops['++'],
+								' amount of sun, ',
+								A2(
+									_elm_lang$core$Basics_ops['++'],
+									'and ',
+									A2(_elm_lang$core$Basics_ops['++'], windy, ' amount of wind')))));
+					var _v3 = _strelka_2017$phi$Main$SendBotChatMsg(txt),
+						_v4 = model;
+					msg = _v3;
+					model = _v4;
+					continue update;
+				default:
+					var _p5 = A2(_strelka_2017$phi$Simulation_Simulation$update, _p3._0, model.simModel);
+					var simModel = _p5._0;
+					var cmd = _p5._1;
+					return {
+						ctor: '_Tuple2',
+						_0: _elm_lang$core$Native_Utils.update(
+							model,
+							{simModel: simModel}),
+						_1: A2(_elm_lang$core$Platform_Cmd$map, _strelka_2017$phi$Main$SimMsg, cmd)
+					};
+			}
+		}
+	});
 var _strelka_2017$phi$Main$SendUserChatMsg = {ctor: 'SendUserChatMsg'};
 var _strelka_2017$phi$Main$Input = function (a) {
 	return {ctor: 'Input', _0: a};

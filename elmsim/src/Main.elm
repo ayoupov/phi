@@ -54,6 +54,12 @@ type Msg
   | SendBotChatMsg String
   | NoOp
   | SimMsg Simulation.Msg
+  | CheckWeather
+
+
+parseUserMessage : String -> Msg
+parseUserMessage input =
+  if input == "/weather" then CheckWeather else NoOp
 
 update : Msg -> Model -> (Model, Cmd Msg)
 update msg model =
@@ -74,16 +80,25 @@ update msg model =
         else
           let
             chatMsg = ChatMsg User model.input
-          in
-            ( { model | input    = ""
+            newModel =
+              { model | input    = ""
                       , messages = (chatMsg :: model.messages)
               }
-            , scrollDown
-            )
+            (finalModel, cmd) = update (parseUserMessage model.input) newModel
+          in
+            (finalModel, scrollDown)
       SendBotChatMsg msgText ->
         ( { model | messages = ((ChatMsg Bot msgText) :: model.messages) }
         , scrollDown
         )
+      CheckWeather ->
+        let
+          sunny = toString model.simModel.weather.sun
+          windy = toString model.simModel.weather.wind
+          txt = "There's " ++ sunny ++ " amount of sun, " ++
+            "and " ++ windy ++ " amount of wind"
+        in
+          update (SendBotChatMsg txt) model
       SimMsg msg ->
         let
             (simModel, cmd) = Simulation.update msg model.simModel
