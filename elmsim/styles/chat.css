@@ -1,25 +1,43 @@
 * {
-  box-sizing: border-box;
+ box-sizing: border-box;
 }
 
+/*
+@font-face {
+  font-family: 'Rather';
+  font-style: normal;
+  src: 
+  url('../assets/fonts/Rather-Regular.woff') format('woff'),
+  url('../assets/fonts/Rather-Regular.woff2') format('woff2');
+}
+
+@font-face {
+  font-family: 'Rather-SemiBold';
+  font-style: bold;
+  src: 
+  url('../assets/fonts/Rather-SemiBold.woff') format('woff'),
+  url('../assets/fonts/Rather-SemiBold.woff2') format('woff2');
+}
+*/
+
 body {
-  background-image: url("../assets/background.jpg");
   background-size: cover;
   font-family: "Monaco", monospace;
-  color: white;
+  background-color: black;
+ -- overflow: hidden;
 }
 
 .chat_window {
   opacity: 0.9;
   position: absolute;
   width: calc(100% - 20px);
-  max-width: 50%;
+  max-width: 25%;
   height: 100%;
   background-color: rgba(255,255,255,0.0);
   left: 0px;
   top: 0px;
   transform: translateX(0) translateY(0);
-  box-shadow: 0 10px 20px rgba(0, 0, 0, 0.15);
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.15);
   overflow: hidden;
 }
 
@@ -51,42 +69,44 @@ body {
 }
 
 .messages .message.bot-sent .text_wrapper {
-  background: linear-gradient(rgba(0,0,0,0.2), rgba(255,105,180,0.8));
+  background: linear-gradient(rgba(0,0,0,0.1), rgba(255,255,0,0));
   margin-left: 10px;
 }
 
 .messages .message.user-sent .text_wrapper {
-  background: linear-gradient(rgba(0,0,0,0.2), rgba(0,255,255,0.8));
+  background: linear-gradient(rgba(0,0,0,0.1), rgba(0,255,255,0));
   margin-right: 10px;
   float: right;
+  text-align: right;
 }
 
 .messages .message.appeared {
-  -webkit-animation: message-fade 1s ease-out 1;
-  animation: message-fade 1s ease-out 1;
+  -webkit-animation: message-fade .5s ease-out .5;
+  animation: message-fade .5s ease-out .5;
   opacity: 1;
 }
 
 .messages .message .text_wrapper {
   display: inline-block;
   padding: 20px;
-  border-radius: 15px;
-  border: 1px solid rgba(255,255,255,0.7);
+ border-radius: 15px;
+ border: 1px solid rgba(255,255,255,0.5);
   width: calc(100% - 85px);
   min-width: 100px;
   position: relative;
+  scroll-behavior: auto;
 }
 
 .messages .message .text_wrapper .text {
-  font-size: 15px;
-  text-shadow: 2px 2px 8px #000000;
+  font-size: 12.5px;
+ text-shadow: 1px 1px 4px #000;
   color: #fff;
 }
 
 .bottom_wrapper {
   position: relative;
   width: 100%;
-  background-color: rgba(0,0,0,0.4);
+  background-color: rgba(0,0,0,0.05);
   padding: 20px 20px;
   position: absolute;
   bottom: 0;
@@ -96,7 +116,7 @@ body {
   display: inline-block;
   height: 50px;
   border-radius: 25px;
-  border: 1px solid #bcbdc0;
+ border: 1px solid #bcbdc0;
   width: calc(100% - 160px);
   position: relative;
   padding: 0 20px;
@@ -106,7 +126,7 @@ body {
   border: none;
   height: 100%;
   box-sizing: border-box;
-  width: calc(100% - 40px);
+  width: calc(100% - 50px);
   position: absolute;
   outline-width: 0;
   background-color: rgba(0,0,0,0);
@@ -117,9 +137,9 @@ body {
   width: 140px;
   height: 50px;
   display: inline-block;
-  border-radius: 50px;
-  background-color: rbga(0,0,0,1);
-  border: 2px solid #a3a0a3;
+ border-radius: 50px;
+ background-color: rbga(0,0,0,1);
+  border: 1px solid #a3a0a3;
   color: #fff;
   cursor: pointer;
   transition: all 0.2s linear;
@@ -129,16 +149,16 @@ body {
 
 .bottom_wrapper .send_message:hover {
   color: #a3a0a3;
-  background-color: rgba(0,0,0,0.3);
+ -- background-color: rgba(0,0,0,0.3);
 }
 
 .bottom_wrapper .send_message .text {
-  font-size: 18px;
+  font-size: 14px;
   display: inline-block;
   line-height: 48px;
 }
 
 .message_input {
   font-family: "Monaco", monospace;
-  font-size: 15px;
+  font-size: 14px;
 }

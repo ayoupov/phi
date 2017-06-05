@@ -1,54 +1,55 @@
 .simulation {
   position: absolute;
-  padding: 10px;
-  width: 50%;
+   padding: 10px;
+  width: 100%;
   height: 100%;
   top: 0px;
-  left: 50%;
-  overflow: scroll;
+ --left: 2;
+-- overflow: scroll;
 }
 
 .simulation svg {
-  margin: 30px;
-  width: calc(100% - 60px);
-  height: 400px;
-  background: rgb(0,0,0);
-  border-radius: 20px;
-  border: 2px solid #555;
+--  margin: 30px;
+  width: 100%;
+  height: 100%;
+  -- background: rgb(0,0,0);
+ -- border-radius: 20px;
+ -- border: 2px solid #555;
   transition: all 0.3s linear;
   opacity: 0.7;
+
 }
 
 .simulation svg:hover {
-  margin: 30px;
-  width: calc(100% - 60px);
-  height: 400px;
+ -- margin: 30px;
+ width: 100%;
+  height: 100%;
   background: rgba(0,0,0);
-  border-radius: 20px;
-  border: 2px solid #555;
+ -- border-radius: 20px;
+ -- border: 2px solid #555;
 }
 
 .pvPanel {
-  fill:orange;
+  fill:white;
   fill-opacity: 1;
 }
 
 .windTurbine {
-  fill: cyan;
+  fill: white;
   fill-opacity: 1;
 }
 
 .residence {
-  fill: green;
+  fill: white;
   fill-opacity: 1;
 }
 
 .node {
-  stroke: black;
+  stroke: white;
   stroke-width: 2px;
 }
 
 line.link {
-  stroke: #999;
+  stroke: white;
   stroke-opacity: 1;
 }

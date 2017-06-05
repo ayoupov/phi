@@ -17,11 +17,11 @@ document.addEventListener("DOMContentLoaded", function(event) {
 
     var xScale = d3.scaleLinear()
                          .domain([30.5234 - 0.01, 30.5234 + 0.01])
-                         .range([0,600]);
+                         .range([0,1625]);
 
     var yScale = d3.scaleLinear()
                          .domain([50.4501 - 0.01, 50.4501 + 0.01])
-                         .range([0,400]);
+                         .range([0,825]);
 
     function setX(node) {
       return xScale(node.label.pos.x);
@@ -39,7 +39,7 @@ document.addEventListener("DOMContentLoaded", function(event) {
            .append("circle")
            .attr("cx", setX)
            .attr("cy", setY)
-           .attr("r", 10)
+           .attr("r", 1)
            .attr("class", function(d) {
              return "node " + d.label.nodeType;
            });
