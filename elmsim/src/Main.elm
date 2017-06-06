@@ -1,12 +1,14 @@
 module Main exposing (..)
-
 import Html exposing (..)
 import Html.Attributes exposing (..)
 import Html.Events exposing (..)
 import Http
 import Json.Decode as Json
-import Json.Encode exposing (string)
+import Json.Encode exposing (string, encode)
 import Simulation.Simulation as Simulation
+import Simulation.Encoder exposing (encodeNodeLabel)
+import Graph
+import Update.Extra exposing (..)
 
 import Dom.Scroll as Scroll
 
@@ -55,16 +57,36 @@ type Msg
   | NoOp
   | SimMsg Simulation.Msg
   | CheckWeather
+  | NextDay
+  | DescribeNode Int
 
+parseUserMessage : ChatMsg -> Msg
+parseUserMessage chatMsg =
+  if not (String.startsWith "/" chatMsg.text) then
+    SendBotChatMsg
+    """Sorry, I only respond to commands! Current available ones are:
 
-parseUserMessage : String -> Msg
-parseUserMessage input =
-  if input == "/weather" then CheckWeather else NoOp
+/weather (i tell you abt the weather today)
+/turn (i move to the next day)
+/describe [nodeId] (i tell you some info about a specific node)
+"""
+  else if chatMsg.text == "/weather" then
+    CheckWeather
+  else if chatMsg.text == "/turn" then
+    NextDay
+  else if String.startsWith "/describe" chatMsg.text then
+    String.split " " chatMsg.text
+    |> (List.head << List.drop 1)
+    |> Maybe.andThen (Result.toMaybe << String.toInt)
+    |> Maybe.map DescribeNode
+    |> Maybe.withDefault (SendBotChatMsg "I can't find that node!")
+  else
+    NoOp
 
 update : Msg -> Model -> (Model, Cmd Msg)
 update msg model =
   let
-      noOp = (model, Cmd.none)
+      noOp = model ! []
       scrollDown = Task.attempt (always NoOp) <| Scroll.toBottom "toScroll"
   in
     case msg of
@@ -84,13 +106,20 @@ update msg model =
               { model | input    = ""
                       , messages = (chatMsg :: model.messages)
               }
-            (finalModel, cmd) = update (parseUserMessage model.input) newModel
           in
-            (finalModel, scrollDown)
+            (newModel, scrollDown)
+            |> andThen update (parseUserMessage chatMsg)
       SendBotChatMsg msgText ->
         ( { model | messages = ((ChatMsg Bot msgText) :: model.messages) }
         , scrollDown
         )
+      SimMsg msg ->
+        let
+            (simModel, cmd) = Simulation.update msg model.simModel
+        in
+            ( { model | simModel = simModel }
+            , Cmd.map SimMsg cmd
+            )
       CheckWeather ->
         let
           sunny = toString model.simModel.weather.sun
@@ -99,13 +128,26 @@ update msg model =
             "and " ++ windy ++ " amount of wind"
         in
           update (SendBotChatMsg txt) model
-      SimMsg msg ->
+      NextDay ->
         let
-            (simModel, cmd) = Simulation.update msg model.simModel
+          simModel = model.simModel
+          newNetwork =
+            simModel.network
+            |> Simulation.joulesToGenerators simModel.weather
+            |> Simulation.distributeGeneratedJoules
+          newSimModel = { simModel | network = newNetwork }
         in
-            ( { model | simModel = simModel }
-            , Cmd.map SimMsg cmd
-            )
+          { model | simModel = newSimModel } ! []
+      DescribeNode n ->
+        model
+        |>
+        ( Graph.get n model.simModel.network
+          |> Maybe.map (.node >> .label >> encodeNodeLabel)
+          |> Maybe.withDefault (string "Node not found :(")
+          |> encode 4
+          |> SendBotChatMsg
+          |> update
+        )
 
 
 -- VIEW
@@ -135,15 +177,15 @@ inputFooter model =
           ]
     ]
 
-sender_class : Sender -> String
-sender_class sender =
+senderClass : Sender -> String
+senderClass sender =
   case sender of
     User -> "user-sent"
     Bot -> "bot-sent"
 
 viewChatMsg : ChatMsg -> Html msg
 viewChatMsg msg =
-  li [ class <| "message " ++ (sender_class msg.sender) ++ " appeared" ]
+  li [ class <| "message " ++ (senderClass msg.sender) ++ " appeared" ]
       [ div [ class "text_wrapper" ]
             [ div [ class "text" ] [text msg.text] ]
       ]

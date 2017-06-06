@@ -14,7 +14,7 @@ import Json.Encode as Json
 
 
 type alias Model =
-  { network: Graph NodeLabel String
+  { network: PhiNetwork
   , weather: Weather
   }
 
@@ -25,7 +25,7 @@ init : (Model, Cmd Msg)
 init =
   ( Model Graph.empty initWeather
   , (List.repeat 20 randomEdge)
-    ++ (List.repeat 30 randomResidence)
+    ++ (List.repeat 30 randomPeer)
     ++ (List.repeat 10 randomPVPanel)
     ++ (List.repeat 10 randomWindTurbine)
     |> Cmd.batch
@@ -39,9 +39,8 @@ coordsGenerator =
 
 randomPVPanel : Cmd Msg
 randomPVPanel =
-  Random.map3 PVPanel
+  Random.map2 (PVPanel [])
     (Random.float 7 10) -- maxGeneration
-    (Random.float 0 1) -- percent generated
     coordsGenerator
   |> Random.generate AddPVPanel
 
@@ -54,47 +53,42 @@ randomEdge =
 
 randomWindTurbine : Cmd Msg
 randomWindTurbine =
-  Random.map3 WindTurbine
+  Random.map2 (WindTurbine [])
     (Random.float 7 10) -- capacity
-    (Random.float 0 1) -- current storage
     coordsGenerator
   |> Random.generate AddWindTurbine
 
-randomResidence : Cmd Msg
-randomResidence =
-  Random.map2 Residence
+randomPeer : Cmd Msg
+randomPeer =
+  Random.map3 (Peer [])
     (Random.float 7 10) -- daily consumption
+    (Random.map List.singleton (Random.float 0 0))
     coordsGenerator
-  |> Random.generate AddResidence
-
-addNRandomPVPanels : Int -> Cmd Msg
-addNRandomPVPanels n =
-  List.repeat n randomPVPanel
-  |> Cmd.batch
+  |> Random.generate AddPeer
 
 
 -- UPDATE
 type Msg = AddPVPanel PVPanel
          | AddWindTurbine WindTurbine
-         | AddResidence Residence
+         | AddPeer Peer
          | AddEdge TransmissionLine
-         | RenderNetwork
+         | RenderPhiNetwork
 
 update : Msg -> Model -> (Model, Cmd Msg)
 update msg model =
   case msg of
     AddPVPanel node ->
-      update RenderNetwork { model | network = addNode (PVNode node) model.network }
+      update RenderPhiNetwork { model | network = addNode (PVNode node) model.network }
     AddWindTurbine node ->
-      update RenderNetwork { model | network = addNode (WTNode node) model.network }
-    AddResidence node ->
-      update RenderNetwork { model | network = addNode (ResNode node) model.network }
+      update RenderPhiNetwork { model | network = addNode (WTNode node) model.network }
+    AddPeer node ->
+      update RenderPhiNetwork { model | network = addNode (PeerNode node) model.network }
     AddEdge edge ->
-      update RenderNetwork { model | network = addEdge edge model.network }
-    RenderNetwork ->
-      (model, renderNetwork <| encodeGraph model.network )
+      update RenderPhiNetwork { model | network = addEdge edge model.network }
+    RenderPhiNetwork ->
+      (model, renderPhiNetwork <| encodeGraph model.network )
 
-addNode : NodeLabel -> Graph NodeLabel e -> Graph NodeLabel e
+addNode : NodeLabel -> PhiNetwork -> PhiNetwork
 addNode nodeLabel network =
   let
     nodeId =
@@ -104,13 +98,68 @@ addNode nodeLabel network =
   in
     Graph.insert (NodeContext node IntDict.empty IntDict.empty) network
 
-addEdge : TransmissionLine -> Graph n String -> Graph n String
+addEdge : TransmissionLine -> PhiNetwork -> PhiNetwork
 addEdge edge network =
     Graph.fromNodesAndEdges (Graph.nodes network) (edge :: (Graph.edges network))
 
+joulesToGenerators : Weather -> PhiNetwork -> PhiNetwork
+joulesToGenerators weather network =
+  let
+    sun = weather.sun
+    wind = weather.wind
+    updateNode node =
+      case node of
+        PVNode node ->
+          PVNode { node | joules = ( node.maxGeneration*sun :: node.joules ) }
+        WTNode node ->
+          WTNode { node | joules = ( node.maxGeneration*wind :: node.joules ) }
+        _ -> node
+  in
+    Graph.mapNodes updateNode network
+
+toPeer : Node NodeLabel -> Maybe Peer
+toPeer {label,id} =
+  case label of
+    PeerNode peer -> Just peer
+    _ -> Nothing
+
+
+distributeGeneratedJoules : PhiNetwork -> PhiNetwork
+distributeGeneratedJoules network =
+  let
+    nodeGeneratedEnergy {label, id} =
+      case label of
+        PVNode node -> List.head node.joules
+        WTNode node -> List.head node.joules
+        _ -> Nothing
+    networkGeneratedEnergy =
+      Graph.nodes network
+      |> List.filterMap nodeGeneratedEnergy
+      |> List.sum
+    networkDesiredEnergy =
+      Graph.nodes network
+      |> List.filterMap ( toPeer >> (Maybe.map .desiredConsumption) )
+      |> List.sum
+    updateNode node =
+      case node of
+        PeerNode n ->
+          PeerNode
+            { n | dailyConsumption =
+              (n.desiredConsumption*networkGeneratedEnergy/networkDesiredEnergy :: n.dailyConsumption)
+            }
+        _ -> node
+  in
+    Graph.mapNodes updateNode network
+--generatedEnergy : Model -> KWHour
+--generatedEnergy model =
+--  let
+--      List.filterMap
+--  List.map Graph.nodes model.graph
+
+
 -- PORTS
 
-port renderNetwork : (List (Node Json.Value), List EncodedEdge) -> Cmd msg
+port renderPhiNetwork : (List (Node Json.Value), List EncodedEdge) -> Cmd msg
 
 -- VIEW
 
@@ -122,3 +171,5 @@ view model =
         , g [SVG.class "nodes"] []
         ]
     ]
+
+

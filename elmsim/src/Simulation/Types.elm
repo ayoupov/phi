@@ -18,15 +18,25 @@ type alias Negawatts = Float
 type alias SeedRating = Float
 type alias Phicoin = Float
 
+-- Graph
 
--- NODES
+type alias PhiNetwork = Graph NodeLabel String
+
+type alias TransmissionLine = Edge String
+
+type alias EncodedEdge =
+  { transmissionLine: TransmissionLine
+  , pos: Line
+  }
+
 
 type NodeLabel = PVNode PVPanel
                | WTNode WindTurbine
-               | ResNode Residence
+               | PeerNode Peer
                | BatNode Battery
+-- NODES
 
-type alias NetworkNode =
+type alias PhiNode =
   { joules: KWHour
   , negawatts: Negawatts
   , seedRating: SeedRating
@@ -36,14 +46,14 @@ type alias NetworkNode =
   }
 
 type alias PVPanel =
-  { maxGeneration: KWHour
-  , generatedEnergy: KWHour
+  { joules: List KWHour
+  , maxGeneration: KWHour
   , pos: Coords
   }
 
 type alias WindTurbine =
-  { maxGeneration: KWHour
-  , generatedEnergy: KWHour
+  { joules: List KWHour
+  , maxGeneration: KWHour
   , pos: Coords
   }
 
@@ -53,18 +63,11 @@ type alias Battery =
   , pos: Coords
   }
 
-type alias Residence =
-  { dailyConsumption: KWHour
+type alias Peer =
+  { joules: List KWHour
+  , desiredConsumption: KWHour
+  , dailyConsumption: List KWHour
   , pos: Coords
-  }
-
--- EDGES
-
-type alias TransmissionLine = Edge String
-
-type alias EncodedEdge =
-  { transmissionLine: TransmissionLine
-  , pos: Line
   }
 
 

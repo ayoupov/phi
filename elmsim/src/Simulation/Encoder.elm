@@ -10,22 +10,24 @@ encodeNodeLabel nodeLabel =
     PVNode label ->
       Json.object
         [ ("maxGeneration", Json.float label.maxGeneration)
-        , ("generatedEnergy", Json.float label.generatedEnergy)
         , ("pos", encodeCoords label.pos)
         , ("nodeType", Json.string "pvPanel")
         ]
     WTNode label ->
       Json.object
         [ ("maxGeneration", Json.float label.maxGeneration)
-        , ("generatedEnergy", Json.float label.generatedEnergy)
         , ("pos", encodeCoords label.pos)
         , ("nodeType", Json.string "windTurbine")
         ]
-    ResNode label ->
+    PeerNode label ->
       Json.object
-        [ ("dailyConsumption", Json.float label.dailyConsumption)
+        [ ("dailyConsumption",
+           label.dailyConsumption
+           |> List.map Json.float
+           |> Json.list
+          )
         , ("pos", encodeCoords label.pos)
-        , ("nodeType", Json.string "residence")
+        , ("nodeType", Json.string "peer")
         ]
     BatNode label ->
       Json.object
@@ -51,9 +53,9 @@ pos nodeLabel =
     PVNode  n -> n.pos
     WTNode  n -> n.pos
     BatNode n -> n.pos
-    ResNode n -> n.pos
+    PeerNode n -> n.pos
 
-encodeEdge: Graph NodeLabel String -> TransmissionLine -> Maybe EncodedEdge
+encodeEdge: PhiNetwork -> TransmissionLine -> Maybe EncodedEdge
 encodeEdge graph tLine =
   let
       maybeFrom = Maybe.map (pos << .label << .node) (Graph.get tLine.from graph)
@@ -63,7 +65,7 @@ encodeEdge graph tLine =
       Maybe.map (EncodedEdge tLine) maybeLine
 
 
-encodeGraph : Graph NodeLabel String -> (List (Node Json.Value), List EncodedEdge)
+encodeGraph : PhiNetwork -> (List (Node Json.Value), List EncodedEdge)
 encodeGraph graph =
   let
       encodedNodes = List.map encodeNode <| Graph.nodes graph

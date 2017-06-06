@@ -6,7 +6,7 @@ var svg;
 document.addEventListener("DOMContentLoaded", function(event) {
   var app = Elm.Main.fullscreen();
 
-  app.ports.renderNetwork.subscribe(function(model) {
+  app.ports.renderPhiNetwork.subscribe(function(model) {
 
     svg = d3.select("svg");
 
