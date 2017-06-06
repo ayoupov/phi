@@ -12754,7 +12754,7 @@ var _strelka_2017$phi$Main$ChatMsg = F2(
 		return {sender: a, text: b};
 	});
 var _strelka_2017$phi$Main$Bot = {ctor: 'Bot'};
-var _strelka_2017$phi$Main$initMsg = A2(_strelka_2017$phi$Main$ChatMsg, _strelka_2017$phi$Main$Bot, 'Welcome to Φ Chat, home of the Φ Chat.. can i take your order?');
+var _strelka_2017$phi$Main$initMsg = A2(_strelka_2017$phi$Main$ChatMsg, _strelka_2017$phi$Main$Bot, 'Welcome to Φ Chat! I only respond to commands for now.\nCurrent available commands are:\n\n/weather (i tell you abt the weather today)\n/turn (i move to the next day)\n/describe [nodeId] (i tell you some info about a specific node)\n');
 var _strelka_2017$phi$Main$User = {ctor: 'User'};
 var _strelka_2017$phi$Main$DescribeNode = function (a) {
 	return {ctor: 'DescribeNode', _0: a};
