@@ -46,13 +46,13 @@ type alias PhiNode =
   }
 
 type alias PVPanel =
-  { joules: List KWHour
+  { dailyGeneration: List KWHour
   , maxGeneration: KWHour
   , pos: Coords
   }
 
 type alias WindTurbine =
-  { joules: List KWHour
+  { dailyGeneration: List KWHour
   , maxGeneration: KWHour
   , pos: Coords
   }
@@ -65,8 +65,8 @@ type alias Battery =
 
 type alias Peer =
   { joules: List KWHour
-  , desiredConsumption: KWHour
   , dailyConsumption: List KWHour
+  , desiredConsumption: KWHour
   , pos: Coords
   }
 

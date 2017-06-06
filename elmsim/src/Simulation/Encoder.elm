@@ -4,28 +4,31 @@ import Json.Encode as Json
 import Graph exposing (Graph, Node)
 import Simulation.Types exposing (..)
 
+encodeList : (a -> Json.Value) -> List a -> Json.Value
+encodeList encoder list = Json.list <| List.map encoder list
+
 encodeNodeLabel : NodeLabel -> Json.Value
 encodeNodeLabel nodeLabel =
   case nodeLabel of
     PVNode label ->
       Json.object
         [ ("maxGeneration", Json.float label.maxGeneration)
+        , ("dailyGeneration", encodeList Json.float label.dailyGeneration)
         , ("pos", encodeCoords label.pos)
         , ("nodeType", Json.string "pvPanel")
         ]
     WTNode label ->
       Json.object
         [ ("maxGeneration", Json.float label.maxGeneration)
+        , ("dailyGeneration", encodeList Json.float label.dailyGeneration)
         , ("pos", encodeCoords label.pos)
         , ("nodeType", Json.string "windTurbine")
         ]
     PeerNode label ->
       Json.object
-        [ ("dailyConsumption",
-           label.dailyConsumption
-           |> List.map Json.float
-           |> Json.list
-          )
+        [ ("dailyConsumption", encodeList Json.float label.dailyConsumption)
+        , ("joules", encodeList Json.float label.joules)
+        , ("desiredConsumption", Json.float label.desiredConsumption)
         , ("pos", encodeCoords label.pos)
         , ("nodeType", Json.string "peer")
         ]

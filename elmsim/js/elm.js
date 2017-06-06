@@ -12121,11 +12121,11 @@ var _strelka_2017$phi$Simulation_Types$PhiNode = F6(
 	});
 var _strelka_2017$phi$Simulation_Types$PVPanel = F3(
 	function (a, b, c) {
-		return {joules: a, maxGeneration: b, pos: c};
+		return {dailyGeneration: a, maxGeneration: b, pos: c};
 	});
 var _strelka_2017$phi$Simulation_Types$WindTurbine = F3(
 	function (a, b, c) {
-		return {joules: a, maxGeneration: b, pos: c};
+		return {dailyGeneration: a, maxGeneration: b, pos: c};
 	});
 var _strelka_2017$phi$Simulation_Types$Battery = F3(
 	function (a, b, c) {
@@ -12133,7 +12133,7 @@ var _strelka_2017$phi$Simulation_Types$Battery = F3(
 	});
 var _strelka_2017$phi$Simulation_Types$Peer = F4(
 	function (a, b, c, d) {
-		return {joules: a, desiredConsumption: b, dailyConsumption: c, pos: d};
+		return {joules: a, dailyConsumption: b, desiredConsumption: c, pos: d};
 	});
 var _strelka_2017$phi$Simulation_Types$Weather = F2(
 	function (a, b) {
@@ -12217,6 +12217,11 @@ var _strelka_2017$phi$Simulation_Encoder$encodeCoords = function (pos) {
 			}
 		});
 };
+var _strelka_2017$phi$Simulation_Encoder$encodeList = F2(
+	function (encoder, list) {
+		return _elm_lang$core$Json_Encode$list(
+			A2(_elm_lang$core$List$map, encoder, list));
+	});
 var _strelka_2017$phi$Simulation_Encoder$encodeNodeLabel = function (nodeLabel) {
 	var _p3 = nodeLabel;
 	switch (_p3.ctor) {
@@ -12234,17 +12239,25 @@ var _strelka_2017$phi$Simulation_Encoder$encodeNodeLabel = function (nodeLabel) 
 						ctor: '::',
 						_0: {
 							ctor: '_Tuple2',
-							_0: 'pos',
-							_1: _strelka_2017$phi$Simulation_Encoder$encodeCoords(_p4.pos)
+							_0: 'dailyGeneration',
+							_1: A2(_strelka_2017$phi$Simulation_Encoder$encodeList, _elm_lang$core$Json_Encode$float, _p4.dailyGeneration)
 						},
 						_1: {
 							ctor: '::',
 							_0: {
 								ctor: '_Tuple2',
-								_0: 'nodeType',
-								_1: _elm_lang$core$Json_Encode$string('pvPanel')
+								_0: 'pos',
+								_1: _strelka_2017$phi$Simulation_Encoder$encodeCoords(_p4.pos)
 							},
-							_1: {ctor: '[]'}
+							_1: {
+								ctor: '::',
+								_0: {
+									ctor: '_Tuple2',
+									_0: 'nodeType',
+									_1: _elm_lang$core$Json_Encode$string('pvPanel')
+								},
+								_1: {ctor: '[]'}
+							}
 						}
 					}
 				});
@@ -12262,17 +12275,25 @@ var _strelka_2017$phi$Simulation_Encoder$encodeNodeLabel = function (nodeLabel) 
 						ctor: '::',
 						_0: {
 							ctor: '_Tuple2',
-							_0: 'pos',
-							_1: _strelka_2017$phi$Simulation_Encoder$encodeCoords(_p5.pos)
+							_0: 'dailyGeneration',
+							_1: A2(_strelka_2017$phi$Simulation_Encoder$encodeList, _elm_lang$core$Json_Encode$float, _p5.dailyGeneration)
 						},
 						_1: {
 							ctor: '::',
 							_0: {
 								ctor: '_Tuple2',
-								_0: 'nodeType',
-								_1: _elm_lang$core$Json_Encode$string('windTurbine')
+								_0: 'pos',
+								_1: _strelka_2017$phi$Simulation_Encoder$encodeCoords(_p5.pos)
 							},
-							_1: {ctor: '[]'}
+							_1: {
+								ctor: '::',
+								_0: {
+									ctor: '_Tuple2',
+									_0: 'nodeType',
+									_1: _elm_lang$core$Json_Encode$string('windTurbine')
+								},
+								_1: {ctor: '[]'}
+							}
 						}
 					}
 				});
@@ -12284,24 +12305,39 @@ var _strelka_2017$phi$Simulation_Encoder$encodeNodeLabel = function (nodeLabel) 
 					_0: {
 						ctor: '_Tuple2',
 						_0: 'dailyConsumption',
-						_1: _elm_lang$core$Json_Encode$list(
-							A2(_elm_lang$core$List$map, _elm_lang$core$Json_Encode$float, _p6.dailyConsumption))
+						_1: A2(_strelka_2017$phi$Simulation_Encoder$encodeList, _elm_lang$core$Json_Encode$float, _p6.dailyConsumption)
 					},
 					_1: {
 						ctor: '::',
 						_0: {
 							ctor: '_Tuple2',
-							_0: 'pos',
-							_1: _strelka_2017$phi$Simulation_Encoder$encodeCoords(_p6.pos)
+							_0: 'joules',
+							_1: A2(_strelka_2017$phi$Simulation_Encoder$encodeList, _elm_lang$core$Json_Encode$float, _p6.joules)
 						},
 						_1: {
 							ctor: '::',
 							_0: {
 								ctor: '_Tuple2',
-								_0: 'nodeType',
-								_1: _elm_lang$core$Json_Encode$string('peer')
+								_0: 'desiredConsumption',
+								_1: _elm_lang$core$Json_Encode$float(_p6.desiredConsumption)
 							},
-							_1: {ctor: '[]'}
+							_1: {
+								ctor: '::',
+								_0: {
+									ctor: '_Tuple2',
+									_0: 'pos',
+									_1: _strelka_2017$phi$Simulation_Encoder$encodeCoords(_p6.pos)
+								},
+								_1: {
+									ctor: '::',
+									_0: {
+										ctor: '_Tuple2',
+										_0: 'nodeType',
+										_1: _elm_lang$core$Json_Encode$string('peer')
+									},
+									_1: {ctor: '[]'}
+								}
+							}
 						}
 					}
 				});
@@ -12428,9 +12464,9 @@ var _strelka_2017$phi$Simulation_Simulation$distributeGeneratedJoules = function
 		var _p6 = _p5.label;
 		switch (_p6.ctor) {
 			case 'PVNode':
-				return _elm_lang$core$List$head(_p6._0.joules);
+				return _elm_lang$core$List$head(_p6._0.dailyGeneration);
 			case 'WTNode':
-				return _elm_lang$core$List$head(_p6._0.joules);
+				return _elm_lang$core$List$head(_p6._0.dailyGeneration);
 			default:
 				return _elm_lang$core$Maybe$Nothing;
 		}
@@ -12440,6 +12476,9 @@ var _strelka_2017$phi$Simulation_Simulation$distributeGeneratedJoules = function
 			_elm_lang$core$List$filterMap,
 			nodeGeneratedEnergy,
 			_elm_community$graph$Graph$nodes(network)));
+	var newConsumption = function (node) {
+		return {ctor: '::', _0: (node.desiredConsumption * networkGeneratedEnergy) / networkDesiredEnergy, _1: node.dailyConsumption};
+	};
 	var updateNode = function (node) {
 		var _p7 = node;
 		if (_p7.ctor === 'PeerNode') {
@@ -12448,7 +12487,7 @@ var _strelka_2017$phi$Simulation_Simulation$distributeGeneratedJoules = function
 				_elm_lang$core$Native_Utils.update(
 					_p8,
 					{
-						dailyConsumption: {ctor: '::', _0: (_p8.desiredConsumption * networkGeneratedEnergy) / networkDesiredEnergy, _1: _p8.dailyConsumption}
+						dailyConsumption: newConsumption(_p8)
 					}));
 		} else {
 			return node;
@@ -12458,6 +12497,10 @@ var _strelka_2017$phi$Simulation_Simulation$distributeGeneratedJoules = function
 };
 var _strelka_2017$phi$Simulation_Simulation$joulesToGenerators = F2(
 	function (weather, network) {
+		var newDailyGeneration = F2(
+			function (node, weatherFactor) {
+				return {ctor: '::', _0: node.maxGeneration * weatherFactor, _1: node.dailyGeneration};
+			});
 		var wind = weather.wind;
 		var sun = weather.sun;
 		var updateNode = function (node) {
@@ -12469,7 +12512,7 @@ var _strelka_2017$phi$Simulation_Simulation$joulesToGenerators = F2(
 						_elm_lang$core$Native_Utils.update(
 							_p10,
 							{
-								joules: {ctor: '::', _0: _p10.maxGeneration * sun, _1: _p10.joules}
+								dailyGeneration: A2(newDailyGeneration, _p10, sun)
 							}));
 				case 'WTNode':
 					var _p11 = _p9._0;
@@ -12477,7 +12520,7 @@ var _strelka_2017$phi$Simulation_Simulation$joulesToGenerators = F2(
 						_elm_lang$core$Native_Utils.update(
 							_p11,
 							{
-								joules: {ctor: '::', _0: _p11.maxGeneration * wind, _1: _p11.joules}
+								dailyGeneration: A2(newDailyGeneration, _p11, wind)
 							}));
 				default:
 					return node;
@@ -12641,15 +12684,13 @@ var _strelka_2017$phi$Simulation_Simulation$AddPeer = function (a) {
 var _strelka_2017$phi$Simulation_Simulation$randomPeer = A2(
 	_elm_lang$core$Random$generate,
 	_strelka_2017$phi$Simulation_Simulation$AddPeer,
-	A4(
-		_elm_lang$core$Random$map3,
-		_strelka_2017$phi$Simulation_Types$Peer(
+	A3(
+		_elm_lang$core$Random$map2,
+		A2(
+			_strelka_2017$phi$Simulation_Types$Peer,
+			{ctor: '[]'},
 			{ctor: '[]'}),
 		A2(_elm_lang$core$Random$float, 7, 10),
-		A2(
-			_elm_lang$core$Random$map,
-			_elm_lang$core$List$singleton,
-			A2(_elm_lang$core$Random$float, 0, 0)),
 		_strelka_2017$phi$Simulation_Simulation$coordsGenerator));
 var _strelka_2017$phi$Simulation_Simulation$AddWindTurbine = function (a) {
 	return {ctor: 'AddWindTurbine', _0: a};

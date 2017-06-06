@@ -60,9 +60,8 @@ randomWindTurbine =
 
 randomPeer : Cmd Msg
 randomPeer =
-  Random.map3 (Peer [])
-    (Random.float 7 10) -- daily consumption
-    (Random.map List.singleton (Random.float 0 0))
+  Random.map2 (Peer [] [])
+    (Random.float 7 10) -- consumptionDesire
     coordsGenerator
   |> Random.generate AddPeer
 
@@ -107,12 +106,16 @@ joulesToGenerators weather network =
   let
     sun = weather.sun
     wind = weather.wind
+    newDailyGeneration node weatherFactor =
+      ( node.maxGeneration
+        * weatherFactor
+      ) :: node.dailyGeneration
     updateNode node =
       case node of
         PVNode node ->
-          PVNode { node | joules = ( node.maxGeneration*sun :: node.joules ) }
+          PVNode { node | dailyGeneration = newDailyGeneration node sun }
         WTNode node ->
-          WTNode { node | joules = ( node.maxGeneration*wind :: node.joules ) }
+          WTNode { node | dailyGeneration = newDailyGeneration node wind }
         _ -> node
   in
     Graph.mapNodes updateNode network
@@ -129,8 +132,8 @@ distributeGeneratedJoules network =
   let
     nodeGeneratedEnergy {label, id} =
       case label of
-        PVNode node -> List.head node.joules
-        WTNode node -> List.head node.joules
+        PVNode node -> List.head node.dailyGeneration
+        WTNode node -> List.head node.dailyGeneration
         _ -> Nothing
     networkGeneratedEnergy =
       Graph.nodes network
@@ -140,13 +143,15 @@ distributeGeneratedJoules network =
       Graph.nodes network
       |> List.filterMap ( toPeer >> (Maybe.map .desiredConsumption) )
       |> List.sum
+    newConsumption node =
+      ( node.desiredConsumption
+        * networkGeneratedEnergy
+        / networkDesiredEnergy
+      ) :: node.dailyConsumption
     updateNode node =
       case node of
         PeerNode n ->
-          PeerNode
-            { n | dailyConsumption =
-              (n.desiredConsumption*networkGeneratedEnergy/networkDesiredEnergy :: n.dailyConsumption)
-            }
+          PeerNode { n | dailyConsumption = newConsumption n }
         _ -> node
   in
     Graph.mapNodes updateNode network
