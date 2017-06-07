@@ -25,9 +25,9 @@ init : (Model, Cmd Msg)
 init =
   ( Model Graph.empty initWeather
   , (List.repeat 20 randomEdge)
-    ++ (List.repeat 30 randomPeer)
-    ++ (List.repeat 10 randomPVPanel)
-    ++ (List.repeat 10 randomWindTurbine)
+    ++ (List.repeat 10 randomPeer)
+    ++ (List.repeat 7 randomPVPanel)
+    ++ (List.repeat 3 randomWindTurbine)
     |> Cmd.batch
   )
 
@@ -40,21 +40,21 @@ coordsGenerator =
 randomPVPanel : Cmd Msg
 randomPVPanel =
   Random.map2 (PVPanel [])
-    (Random.float 7 10) -- maxGeneration
+    (Random.float 0 10) -- maxGeneration
     coordsGenerator
   |> Random.generate AddPVPanel
 
 randomEdge : Cmd Msg
 randomEdge =
   Random.map2 Edge
-    (Random.int 0 49)
-    (Random.int 0 49)
+    (Random.int 0 19)
+    (Random.int 0 19)
   |> Random.generate (AddEdge << ((|>) ""))
 
 randomWindTurbine : Cmd Msg
 randomWindTurbine =
   Random.map2 (WindTurbine [])
-    (Random.float 7 10) -- capacity
+    (Random.float 0 10) -- capacity
     coordsGenerator
   |> Random.generate AddWindTurbine
 
@@ -126,7 +126,6 @@ toPeer {label,id} =
     PeerNode peer -> Just peer
     _ -> Nothing
 
-
 distributeGeneratedJoules : PhiNetwork -> PhiNetwork
 distributeGeneratedJoules network =
   let
@@ -155,11 +154,6 @@ distributeGeneratedJoules network =
         _ -> node
   in
     Graph.mapNodes updateNode network
---generatedEnergy : Model -> KWHour
---generatedEnergy model =
---  let
---      List.filterMap
---  List.map Graph.nodes model.graph
 
 
 -- PORTS

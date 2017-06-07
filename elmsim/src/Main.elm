@@ -160,11 +160,11 @@ update msg model =
 view : Model -> Html Msg
 view model =
   div []
-    [ div [ class "chat_window" ]
+    [ Html.map SimMsg <| Simulation.view model.simModel
+    , div [ class "chat_window" ]
       [ ul [ id "toScroll", class "messages" ]
         (List.map viewChatMsg (List.reverse model.messages))
       ]
-    , Html.map SimMsg <| Simulation.view model.simModel
     , inputFooter model
     ]
 

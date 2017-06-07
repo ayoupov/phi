@@ -12115,6 +12115,10 @@ var _strelka_2017$phi$Simulation_Types$EncodedEdge = F2(
 	function (a, b) {
 		return {transmissionLine: a, pos: b};
 	});
+var _strelka_2017$phi$Simulation_Types$EncodedNodes = F3(
+	function (a, b, c) {
+		return {pvPanels: a, windTurbines: b, peers: c};
+	});
 var _strelka_2017$phi$Simulation_Types$PhiNode = F6(
 	function (a, b, c, d, e, f) {
 		return {joules: a, negawatts: b, seedRating: c, phicoin: d, pos: e, nodeType: f};
@@ -12217,37 +12221,73 @@ var _strelka_2017$phi$Simulation_Encoder$encodeCoords = function (pos) {
 			}
 		});
 };
+var _strelka_2017$phi$Simulation_Encoder$encodeNodes = function (nodes) {
+	var isWTNode = function (_p3) {
+		var _p4 = _p3;
+		var _p5 = _p4.label;
+		if (_p5.ctor === 'WTNode') {
+			return _elm_lang$core$Maybe$Just(
+				A2(_elm_community$graph$Graph$Node, _p4.id, _p5._0));
+		} else {
+			return _elm_lang$core$Maybe$Nothing;
+		}
+	};
+	var wtNodes = A2(_elm_lang$core$List$filterMap, isWTNode, nodes);
+	var isPVNode = function (_p6) {
+		var _p7 = _p6;
+		var _p8 = _p7.label;
+		if (_p8.ctor === 'PVNode') {
+			return _elm_lang$core$Maybe$Just(
+				A2(_elm_community$graph$Graph$Node, _p7.id, _p8._0));
+		} else {
+			return _elm_lang$core$Maybe$Nothing;
+		}
+	};
+	var pvNodes = A2(_elm_lang$core$List$filterMap, isPVNode, nodes);
+	var isPeerNode = function (_p9) {
+		var _p10 = _p9;
+		var _p11 = _p10.label;
+		if (_p11.ctor === 'PeerNode') {
+			return _elm_lang$core$Maybe$Just(
+				A2(_elm_community$graph$Graph$Node, _p10.id, _p11._0));
+		} else {
+			return _elm_lang$core$Maybe$Nothing;
+		}
+	};
+	var peerNodes = A2(_elm_lang$core$List$filterMap, isPeerNode, nodes);
+	return A3(_strelka_2017$phi$Simulation_Types$EncodedNodes, pvNodes, wtNodes, peerNodes);
+};
 var _strelka_2017$phi$Simulation_Encoder$encodeList = F2(
 	function (encoder, list) {
 		return _elm_lang$core$Json_Encode$list(
 			A2(_elm_lang$core$List$map, encoder, list));
 	});
 var _strelka_2017$phi$Simulation_Encoder$encodeNodeLabel = function (nodeLabel) {
-	var _p3 = nodeLabel;
-	switch (_p3.ctor) {
+	var _p12 = nodeLabel;
+	switch (_p12.ctor) {
 		case 'PVNode':
-			var _p4 = _p3._0;
+			var _p13 = _p12._0;
 			return _elm_lang$core$Json_Encode$object(
 				{
 					ctor: '::',
 					_0: {
 						ctor: '_Tuple2',
 						_0: 'maxGeneration',
-						_1: _elm_lang$core$Json_Encode$float(_p4.maxGeneration)
+						_1: _elm_lang$core$Json_Encode$float(_p13.maxGeneration)
 					},
 					_1: {
 						ctor: '::',
 						_0: {
 							ctor: '_Tuple2',
 							_0: 'dailyGeneration',
-							_1: A2(_strelka_2017$phi$Simulation_Encoder$encodeList, _elm_lang$core$Json_Encode$float, _p4.dailyGeneration)
+							_1: A2(_strelka_2017$phi$Simulation_Encoder$encodeList, _elm_lang$core$Json_Encode$float, _p13.dailyGeneration)
 						},
 						_1: {
 							ctor: '::',
 							_0: {
 								ctor: '_Tuple2',
 								_0: 'pos',
-								_1: _strelka_2017$phi$Simulation_Encoder$encodeCoords(_p4.pos)
+								_1: _strelka_2017$phi$Simulation_Encoder$encodeCoords(_p13.pos)
 							},
 							_1: {
 								ctor: '::',
@@ -12262,28 +12302,28 @@ var _strelka_2017$phi$Simulation_Encoder$encodeNodeLabel = function (nodeLabel) 
 					}
 				});
 		case 'WTNode':
-			var _p5 = _p3._0;
+			var _p14 = _p12._0;
 			return _elm_lang$core$Json_Encode$object(
 				{
 					ctor: '::',
 					_0: {
 						ctor: '_Tuple2',
 						_0: 'maxGeneration',
-						_1: _elm_lang$core$Json_Encode$float(_p5.maxGeneration)
+						_1: _elm_lang$core$Json_Encode$float(_p14.maxGeneration)
 					},
 					_1: {
 						ctor: '::',
 						_0: {
 							ctor: '_Tuple2',
 							_0: 'dailyGeneration',
-							_1: A2(_strelka_2017$phi$Simulation_Encoder$encodeList, _elm_lang$core$Json_Encode$float, _p5.dailyGeneration)
+							_1: A2(_strelka_2017$phi$Simulation_Encoder$encodeList, _elm_lang$core$Json_Encode$float, _p14.dailyGeneration)
 						},
 						_1: {
 							ctor: '::',
 							_0: {
 								ctor: '_Tuple2',
 								_0: 'pos',
-								_1: _strelka_2017$phi$Simulation_Encoder$encodeCoords(_p5.pos)
+								_1: _strelka_2017$phi$Simulation_Encoder$encodeCoords(_p14.pos)
 							},
 							_1: {
 								ctor: '::',
@@ -12298,35 +12338,35 @@ var _strelka_2017$phi$Simulation_Encoder$encodeNodeLabel = function (nodeLabel) 
 					}
 				});
 		case 'PeerNode':
-			var _p6 = _p3._0;
+			var _p15 = _p12._0;
 			return _elm_lang$core$Json_Encode$object(
 				{
 					ctor: '::',
 					_0: {
 						ctor: '_Tuple2',
 						_0: 'dailyConsumption',
-						_1: A2(_strelka_2017$phi$Simulation_Encoder$encodeList, _elm_lang$core$Json_Encode$float, _p6.dailyConsumption)
+						_1: A2(_strelka_2017$phi$Simulation_Encoder$encodeList, _elm_lang$core$Json_Encode$float, _p15.dailyConsumption)
 					},
 					_1: {
 						ctor: '::',
 						_0: {
 							ctor: '_Tuple2',
 							_0: 'joules',
-							_1: A2(_strelka_2017$phi$Simulation_Encoder$encodeList, _elm_lang$core$Json_Encode$float, _p6.joules)
+							_1: A2(_strelka_2017$phi$Simulation_Encoder$encodeList, _elm_lang$core$Json_Encode$float, _p15.joules)
 						},
 						_1: {
 							ctor: '::',
 							_0: {
 								ctor: '_Tuple2',
 								_0: 'desiredConsumption',
-								_1: _elm_lang$core$Json_Encode$float(_p6.desiredConsumption)
+								_1: _elm_lang$core$Json_Encode$float(_p15.desiredConsumption)
 							},
 							_1: {
 								ctor: '::',
 								_0: {
 									ctor: '_Tuple2',
 									_0: 'pos',
-									_1: _strelka_2017$phi$Simulation_Encoder$encodeCoords(_p6.pos)
+									_1: _strelka_2017$phi$Simulation_Encoder$encodeCoords(_p15.pos)
 								},
 								_1: {
 									ctor: '::',
@@ -12342,28 +12382,28 @@ var _strelka_2017$phi$Simulation_Encoder$encodeNodeLabel = function (nodeLabel) 
 					}
 				});
 		default:
-			var _p7 = _p3._0;
+			var _p16 = _p12._0;
 			return _elm_lang$core$Json_Encode$object(
 				{
 					ctor: '::',
 					_0: {
 						ctor: '_Tuple2',
 						_0: 'capacity',
-						_1: _elm_lang$core$Json_Encode$float(_p7.capacity)
+						_1: _elm_lang$core$Json_Encode$float(_p16.capacity)
 					},
 					_1: {
 						ctor: '::',
 						_0: {
 							ctor: '_Tuple2',
 							_0: 'storage',
-							_1: _elm_lang$core$Json_Encode$float(_p7.storage)
+							_1: _elm_lang$core$Json_Encode$float(_p16.storage)
 						},
 						_1: {
 							ctor: '::',
 							_0: {
 								ctor: '_Tuple2',
 								_0: 'pos',
-								_1: _strelka_2017$phi$Simulation_Encoder$encodeCoords(_p7.pos)
+								_1: _strelka_2017$phi$Simulation_Encoder$encodeCoords(_p16.pos)
 							},
 							_1: {
 								ctor: '::',
@@ -12379,12 +12419,12 @@ var _strelka_2017$phi$Simulation_Encoder$encodeNodeLabel = function (nodeLabel) 
 				});
 	}
 };
-var _strelka_2017$phi$Simulation_Encoder$encodeNode = function (_p8) {
-	var _p9 = _p8;
+var _strelka_2017$phi$Simulation_Encoder$encodeNode = function (_p17) {
+	var _p18 = _p17;
 	return A2(
 		_elm_community$graph$Graph$Node,
-		_p9.id,
-		_strelka_2017$phi$Simulation_Encoder$encodeNodeLabel(_p9.label));
+		_p18.id,
+		_strelka_2017$phi$Simulation_Encoder$encodeNodeLabel(_p18.label));
 };
 var _strelka_2017$phi$Simulation_Encoder$encodeGraph = function (graph) {
 	var tLines = A2(
@@ -12676,8 +12716,8 @@ var _strelka_2017$phi$Simulation_Simulation$randomEdge = A2(
 	A3(
 		_elm_lang$core$Random$map2,
 		_elm_community$graph$Graph$Edge,
-		A2(_elm_lang$core$Random$int, 0, 49),
-		A2(_elm_lang$core$Random$int, 0, 49)));
+		A2(_elm_lang$core$Random$int, 0, 19),
+		A2(_elm_lang$core$Random$int, 0, 19)));
 var _strelka_2017$phi$Simulation_Simulation$AddPeer = function (a) {
 	return {ctor: 'AddPeer', _0: a};
 };
@@ -12702,7 +12742,7 @@ var _strelka_2017$phi$Simulation_Simulation$randomWindTurbine = A2(
 		_elm_lang$core$Random$map2,
 		_strelka_2017$phi$Simulation_Types$WindTurbine(
 			{ctor: '[]'}),
-		A2(_elm_lang$core$Random$float, 7, 10),
+		A2(_elm_lang$core$Random$float, 0, 10),
 		_strelka_2017$phi$Simulation_Simulation$coordsGenerator));
 var _strelka_2017$phi$Simulation_Simulation$AddPVPanel = function (a) {
 	return {ctor: 'AddPVPanel', _0: a};
@@ -12714,7 +12754,7 @@ var _strelka_2017$phi$Simulation_Simulation$randomPVPanel = A2(
 		_elm_lang$core$Random$map2,
 		_strelka_2017$phi$Simulation_Types$PVPanel(
 			{ctor: '[]'}),
-		A2(_elm_lang$core$Random$float, 7, 10),
+		A2(_elm_lang$core$Random$float, 0, 10),
 		_strelka_2017$phi$Simulation_Simulation$coordsGenerator));
 var _strelka_2017$phi$Simulation_Simulation$init = {
 	ctor: '_Tuple2',
@@ -12725,11 +12765,11 @@ var _strelka_2017$phi$Simulation_Simulation$init = {
 			A2(_elm_lang$core$List$repeat, 20, _strelka_2017$phi$Simulation_Simulation$randomEdge),
 			A2(
 				_elm_lang$core$Basics_ops['++'],
-				A2(_elm_lang$core$List$repeat, 30, _strelka_2017$phi$Simulation_Simulation$randomPeer),
+				A2(_elm_lang$core$List$repeat, 10, _strelka_2017$phi$Simulation_Simulation$randomPeer),
 				A2(
 					_elm_lang$core$Basics_ops['++'],
-					A2(_elm_lang$core$List$repeat, 10, _strelka_2017$phi$Simulation_Simulation$randomPVPanel),
-					A2(_elm_lang$core$List$repeat, 10, _strelka_2017$phi$Simulation_Simulation$randomWindTurbine)))))
+					A2(_elm_lang$core$List$repeat, 7, _strelka_2017$phi$Simulation_Simulation$randomPVPanel),
+					A2(_elm_lang$core$List$repeat, 3, _strelka_2017$phi$Simulation_Simulation$randomWindTurbine)))))
 };
 
 var _strelka_2017$phi$Main$subscriptions = function (model) {
@@ -13080,37 +13120,37 @@ var _strelka_2017$phi$Main$view = function (model) {
 		{
 			ctor: '::',
 			_0: A2(
-				_elm_lang$html$Html$div,
-				{
-					ctor: '::',
-					_0: _elm_lang$html$Html_Attributes$class('chat_window'),
-					_1: {ctor: '[]'}
-				},
-				{
-					ctor: '::',
-					_0: A2(
-						_elm_lang$html$Html$ul,
-						{
-							ctor: '::',
-							_0: _elm_lang$html$Html_Attributes$id('toScroll'),
-							_1: {
-								ctor: '::',
-								_0: _elm_lang$html$Html_Attributes$class('messages'),
-								_1: {ctor: '[]'}
-							}
-						},
-						A2(
-							_elm_lang$core$List$map,
-							_strelka_2017$phi$Main$viewChatMsg,
-							_elm_lang$core$List$reverse(model.messages))),
-					_1: {ctor: '[]'}
-				}),
+				_elm_lang$html$Html$map,
+				_strelka_2017$phi$Main$SimMsg,
+				_strelka_2017$phi$Simulation_Simulation$view(model.simModel)),
 			_1: {
 				ctor: '::',
 				_0: A2(
-					_elm_lang$html$Html$map,
-					_strelka_2017$phi$Main$SimMsg,
-					_strelka_2017$phi$Simulation_Simulation$view(model.simModel)),
+					_elm_lang$html$Html$div,
+					{
+						ctor: '::',
+						_0: _elm_lang$html$Html_Attributes$class('chat_window'),
+						_1: {ctor: '[]'}
+					},
+					{
+						ctor: '::',
+						_0: A2(
+							_elm_lang$html$Html$ul,
+							{
+								ctor: '::',
+								_0: _elm_lang$html$Html_Attributes$id('toScroll'),
+								_1: {
+									ctor: '::',
+									_0: _elm_lang$html$Html_Attributes$class('messages'),
+									_1: {ctor: '[]'}
+								}
+							},
+							A2(
+								_elm_lang$core$List$map,
+								_strelka_2017$phi$Main$viewChatMsg,
+								_elm_lang$core$List$reverse(model.messages))),
+						_1: {ctor: '[]'}
+					}),
 				_1: {
 					ctor: '::',
 					_0: _strelka_2017$phi$Main$inputFooter(model),

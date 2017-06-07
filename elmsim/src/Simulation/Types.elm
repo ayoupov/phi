@@ -29,12 +29,17 @@ type alias EncodedEdge =
   , pos: Line
   }
 
-
 type NodeLabel = PVNode PVPanel
                | WTNode WindTurbine
                | PeerNode Peer
                | BatNode Battery
 -- NODES
+
+type alias EncodedNodes =
+  { pvPanels: List (Node PVPanel)
+  , windTurbines: List (Node WindTurbine)
+  , peers: List (Node Peer)
+  }
 
 type alias PhiNode =
   { joules: KWHour

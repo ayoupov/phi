@@ -43,6 +43,26 @@ encodeNodeLabel nodeLabel =
 encodeNode : Node NodeLabel -> Node Json.Value
 encodeNode {id, label} = Node id (encodeNodeLabel label)
 
+encodeNodes : List (Node NodeLabel) -> EncodedNodes
+encodeNodes nodes =
+  let
+    isPeerNode {id, label} =
+      case label of
+        PeerNode node -> Just (Node id node)
+        _ -> Nothing
+    isPVNode {id, label} =
+      case label of
+        PVNode node -> Just (Node id node)
+        _ -> Nothing
+    isWTNode {id, label} =
+      case label of
+        WTNode node -> Just (Node id node)
+        _ -> Nothing
+    peerNodes = List.filterMap isPeerNode nodes
+    pvNodes = List.filterMap isPVNode nodes
+    wtNodes = List.filterMap isWTNode nodes
+  in
+    EncodedNodes pvNodes wtNodes peerNodes
 
 encodeCoords : Coords -> Json.Value
 encodeCoords pos =
