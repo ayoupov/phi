@@ -6,6 +6,7 @@ document.addEventListener("DOMContentLoaded", function(event) {
   var app = Elm.Main.fullscreen();
 
   app.ports.renderPhiNetwork.subscribe(function(model) {
+    var t = d3.transition().duration(1500);
 
     svg = d3.select("svg");
 
@@ -31,38 +32,35 @@ document.addEventListener("DOMContentLoaded", function(event) {
       return yScale(node.label.pos.y);
     }
 
+    function nodeShape(d) {
+      switch(d.label.nodeType) {
+        case "peer":
+          return d3.symbolCircle;
+        case "pvPanel":
+          return d3.symbolSquare;
+        case "windTurbine":
+          return d3.symbolTriangle;
+        default:
+          return d3.symbolCircle;
+      }
+    }
+
     function addBaseNode() {
       return d3.symbol()
         .size(500)
-        .type(function(d) {
-          if (d.label.nodeType == "peer") {
-            return d3.symbolCircle;
-          } else if (d.label.nodeType == "pvPanel") {
-            return d3.symbolSquare;
-          } else if (d.label.nodeType == "windTurbine") {
-            return d3.symbolTriangle;
-          }
-        });
+        .type(nodeShape);
     }
 
     function transactionShadow() {
       return d3.symbol()
         .size(function(d) {
-          if (d.label.nodeType == "pvPanel" || d.label.nodeType == "windTurbine") {
-            return 500 + 100*d.label.maxGeneration;
+          if (["pvPanel", "windTurbine"].includes(d.label.nodeType)) {
+            return 500 + 500*(d.label.dailyGeneration[0] || 0);
           } else {
             return 0;
           }
         })
-        .type(function(d) {
-          if (d.label.nodeType == "peer") {
-            return d3.symbolCircle;
-          } else if (d.label.nodeType == "pvPanel") {
-            return d3.symbolSquare;
-          } else if (d.label.nodeType == "windTurbine") {
-            return d3.symbolTriangle;
-          }
-        });
+        .type(nodeShape);
     }
 
     function drawNodes(nodes) {
@@ -88,8 +86,12 @@ document.addEventListener("DOMContentLoaded", function(event) {
                })
                .attr("class", "energyIndicator");
 
-      //nodes.attr("cx", setX)
-      //     .attr("cy", setY);
+      nodes.select(".energyIndicator")
+           .transition(t)
+           .attr("d", transactionShadow())
+           .attr('transform',function(d){
+             return "translate("+(setX(d))+","+(setY(d))+")";
+           })
     }
 
     function drawLinks(links) {
@@ -100,7 +102,7 @@ document.addEventListener("DOMContentLoaded", function(event) {
       });
 
       var link = svg.select(".links").selectAll(".link")
-                    .data(links);
+                    .data(links, function(d) { return d.transmissionLine.label; });
 
       link.enter()
            .append("line")

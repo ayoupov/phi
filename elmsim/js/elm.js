@@ -7660,6 +7660,685 @@ var _elm_lang$core$Time$subMap = F2(
 	});
 _elm_lang$core$Native_Platform.effectManagers['Time'] = {pkg: 'elm-lang/core', init: _elm_lang$core$Time$init, onEffects: _elm_lang$core$Time$onEffects, onSelfMsg: _elm_lang$core$Time$onSelfMsg, tag: 'sub', subMap: _elm_lang$core$Time$subMap};
 
+var _elm_lang$core$Random$onSelfMsg = F3(
+	function (_p1, _p0, seed) {
+		return _elm_lang$core$Task$succeed(seed);
+	});
+var _elm_lang$core$Random$magicNum8 = 2147483562;
+var _elm_lang$core$Random$range = function (_p2) {
+	return {ctor: '_Tuple2', _0: 0, _1: _elm_lang$core$Random$magicNum8};
+};
+var _elm_lang$core$Random$magicNum7 = 2147483399;
+var _elm_lang$core$Random$magicNum6 = 2147483563;
+var _elm_lang$core$Random$magicNum5 = 3791;
+var _elm_lang$core$Random$magicNum4 = 40692;
+var _elm_lang$core$Random$magicNum3 = 52774;
+var _elm_lang$core$Random$magicNum2 = 12211;
+var _elm_lang$core$Random$magicNum1 = 53668;
+var _elm_lang$core$Random$magicNum0 = 40014;
+var _elm_lang$core$Random$step = F2(
+	function (_p3, seed) {
+		var _p4 = _p3;
+		return _p4._0(seed);
+	});
+var _elm_lang$core$Random$onEffects = F3(
+	function (router, commands, seed) {
+		var _p5 = commands;
+		if (_p5.ctor === '[]') {
+			return _elm_lang$core$Task$succeed(seed);
+		} else {
+			var _p6 = A2(_elm_lang$core$Random$step, _p5._0._0, seed);
+			var value = _p6._0;
+			var newSeed = _p6._1;
+			return A2(
+				_elm_lang$core$Task$andThen,
+				function (_p7) {
+					return A3(_elm_lang$core$Random$onEffects, router, _p5._1, newSeed);
+				},
+				A2(_elm_lang$core$Platform$sendToApp, router, value));
+		}
+	});
+var _elm_lang$core$Random$listHelp = F4(
+	function (list, n, generate, seed) {
+		listHelp:
+		while (true) {
+			if (_elm_lang$core$Native_Utils.cmp(n, 1) < 0) {
+				return {
+					ctor: '_Tuple2',
+					_0: _elm_lang$core$List$reverse(list),
+					_1: seed
+				};
+			} else {
+				var _p8 = generate(seed);
+				var value = _p8._0;
+				var newSeed = _p8._1;
+				var _v2 = {ctor: '::', _0: value, _1: list},
+					_v3 = n - 1,
+					_v4 = generate,
+					_v5 = newSeed;
+				list = _v2;
+				n = _v3;
+				generate = _v4;
+				seed = _v5;
+				continue listHelp;
+			}
+		}
+	});
+var _elm_lang$core$Random$minInt = -2147483648;
+var _elm_lang$core$Random$maxInt = 2147483647;
+var _elm_lang$core$Random$iLogBase = F2(
+	function (b, i) {
+		return (_elm_lang$core$Native_Utils.cmp(i, b) < 0) ? 1 : (1 + A2(_elm_lang$core$Random$iLogBase, b, (i / b) | 0));
+	});
+var _elm_lang$core$Random$command = _elm_lang$core$Native_Platform.leaf('Random');
+var _elm_lang$core$Random$Generator = function (a) {
+	return {ctor: 'Generator', _0: a};
+};
+var _elm_lang$core$Random$list = F2(
+	function (n, _p9) {
+		var _p10 = _p9;
+		return _elm_lang$core$Random$Generator(
+			function (seed) {
+				return A4(
+					_elm_lang$core$Random$listHelp,
+					{ctor: '[]'},
+					n,
+					_p10._0,
+					seed);
+			});
+	});
+var _elm_lang$core$Random$map = F2(
+	function (func, _p11) {
+		var _p12 = _p11;
+		return _elm_lang$core$Random$Generator(
+			function (seed0) {
+				var _p13 = _p12._0(seed0);
+				var a = _p13._0;
+				var seed1 = _p13._1;
+				return {
+					ctor: '_Tuple2',
+					_0: func(a),
+					_1: seed1
+				};
+			});
+	});
+var _elm_lang$core$Random$map2 = F3(
+	function (func, _p15, _p14) {
+		var _p16 = _p15;
+		var _p17 = _p14;
+		return _elm_lang$core$Random$Generator(
+			function (seed0) {
+				var _p18 = _p16._0(seed0);
+				var a = _p18._0;
+				var seed1 = _p18._1;
+				var _p19 = _p17._0(seed1);
+				var b = _p19._0;
+				var seed2 = _p19._1;
+				return {
+					ctor: '_Tuple2',
+					_0: A2(func, a, b),
+					_1: seed2
+				};
+			});
+	});
+var _elm_lang$core$Random$pair = F2(
+	function (genA, genB) {
+		return A3(
+			_elm_lang$core$Random$map2,
+			F2(
+				function (v0, v1) {
+					return {ctor: '_Tuple2', _0: v0, _1: v1};
+				}),
+			genA,
+			genB);
+	});
+var _elm_lang$core$Random$map3 = F4(
+	function (func, _p22, _p21, _p20) {
+		var _p23 = _p22;
+		var _p24 = _p21;
+		var _p25 = _p20;
+		return _elm_lang$core$Random$Generator(
+			function (seed0) {
+				var _p26 = _p23._0(seed0);
+				var a = _p26._0;
+				var seed1 = _p26._1;
+				var _p27 = _p24._0(seed1);
+				var b = _p27._0;
+				var seed2 = _p27._1;
+				var _p28 = _p25._0(seed2);
+				var c = _p28._0;
+				var seed3 = _p28._1;
+				return {
+					ctor: '_Tuple2',
+					_0: A3(func, a, b, c),
+					_1: seed3
+				};
+			});
+	});
+var _elm_lang$core$Random$map4 = F5(
+	function (func, _p32, _p31, _p30, _p29) {
+		var _p33 = _p32;
+		var _p34 = _p31;
+		var _p35 = _p30;
+		var _p36 = _p29;
+		return _elm_lang$core$Random$Generator(
+			function (seed0) {
+				var _p37 = _p33._0(seed0);
+				var a = _p37._0;
+				var seed1 = _p37._1;
+				var _p38 = _p34._0(seed1);
+				var b = _p38._0;
+				var seed2 = _p38._1;
+				var _p39 = _p35._0(seed2);
+				var c = _p39._0;
+				var seed3 = _p39._1;
+				var _p40 = _p36._0(seed3);
+				var d = _p40._0;
+				var seed4 = _p40._1;
+				return {
+					ctor: '_Tuple2',
+					_0: A4(func, a, b, c, d),
+					_1: seed4
+				};
+			});
+	});
+var _elm_lang$core$Random$map5 = F6(
+	function (func, _p45, _p44, _p43, _p42, _p41) {
+		var _p46 = _p45;
+		var _p47 = _p44;
+		var _p48 = _p43;
+		var _p49 = _p42;
+		var _p50 = _p41;
+		return _elm_lang$core$Random$Generator(
+			function (seed0) {
+				var _p51 = _p46._0(seed0);
+				var a = _p51._0;
+				var seed1 = _p51._1;
+				var _p52 = _p47._0(seed1);
+				var b = _p52._0;
+				var seed2 = _p52._1;
+				var _p53 = _p48._0(seed2);
+				var c = _p53._0;
+				var seed3 = _p53._1;
+				var _p54 = _p49._0(seed3);
+				var d = _p54._0;
+				var seed4 = _p54._1;
+				var _p55 = _p50._0(seed4);
+				var e = _p55._0;
+				var seed5 = _p55._1;
+				return {
+					ctor: '_Tuple2',
+					_0: A5(func, a, b, c, d, e),
+					_1: seed5
+				};
+			});
+	});
+var _elm_lang$core$Random$andThen = F2(
+	function (callback, _p56) {
+		var _p57 = _p56;
+		return _elm_lang$core$Random$Generator(
+			function (seed) {
+				var _p58 = _p57._0(seed);
+				var result = _p58._0;
+				var newSeed = _p58._1;
+				var _p59 = callback(result);
+				var genB = _p59._0;
+				return genB(newSeed);
+			});
+	});
+var _elm_lang$core$Random$State = F2(
+	function (a, b) {
+		return {ctor: 'State', _0: a, _1: b};
+	});
+var _elm_lang$core$Random$initState = function (seed) {
+	var s = A2(_elm_lang$core$Basics$max, seed, 0 - seed);
+	var q = (s / (_elm_lang$core$Random$magicNum6 - 1)) | 0;
+	var s2 = A2(_elm_lang$core$Basics_ops['%'], q, _elm_lang$core$Random$magicNum7 - 1);
+	var s1 = A2(_elm_lang$core$Basics_ops['%'], s, _elm_lang$core$Random$magicNum6 - 1);
+	return A2(_elm_lang$core$Random$State, s1 + 1, s2 + 1);
+};
+var _elm_lang$core$Random$next = function (_p60) {
+	var _p61 = _p60;
+	var _p63 = _p61._1;
+	var _p62 = _p61._0;
+	var k2 = (_p63 / _elm_lang$core$Random$magicNum3) | 0;
+	var rawState2 = (_elm_lang$core$Random$magicNum4 * (_p63 - (k2 * _elm_lang$core$Random$magicNum3))) - (k2 * _elm_lang$core$Random$magicNum5);
+	var newState2 = (_elm_lang$core$Native_Utils.cmp(rawState2, 0) < 0) ? (rawState2 + _elm_lang$core$Random$magicNum7) : rawState2;
+	var k1 = (_p62 / _elm_lang$core$Random$magicNum1) | 0;
+	var rawState1 = (_elm_lang$core$Random$magicNum0 * (_p62 - (k1 * _elm_lang$core$Random$magicNum1))) - (k1 * _elm_lang$core$Random$magicNum2);
+	var newState1 = (_elm_lang$core$Native_Utils.cmp(rawState1, 0) < 0) ? (rawState1 + _elm_lang$core$Random$magicNum6) : rawState1;
+	var z = newState1 - newState2;
+	var newZ = (_elm_lang$core$Native_Utils.cmp(z, 1) < 0) ? (z + _elm_lang$core$Random$magicNum8) : z;
+	return {
+		ctor: '_Tuple2',
+		_0: newZ,
+		_1: A2(_elm_lang$core$Random$State, newState1, newState2)
+	};
+};
+var _elm_lang$core$Random$split = function (_p64) {
+	var _p65 = _p64;
+	var _p68 = _p65._1;
+	var _p67 = _p65._0;
+	var _p66 = _elm_lang$core$Tuple$second(
+		_elm_lang$core$Random$next(_p65));
+	var t1 = _p66._0;
+	var t2 = _p66._1;
+	var new_s2 = _elm_lang$core$Native_Utils.eq(_p68, 1) ? (_elm_lang$core$Random$magicNum7 - 1) : (_p68 - 1);
+	var new_s1 = _elm_lang$core$Native_Utils.eq(_p67, _elm_lang$core$Random$magicNum6 - 1) ? 1 : (_p67 + 1);
+	return {
+		ctor: '_Tuple2',
+		_0: A2(_elm_lang$core$Random$State, new_s1, t2),
+		_1: A2(_elm_lang$core$Random$State, t1, new_s2)
+	};
+};
+var _elm_lang$core$Random$Seed = function (a) {
+	return {ctor: 'Seed', _0: a};
+};
+var _elm_lang$core$Random$int = F2(
+	function (a, b) {
+		return _elm_lang$core$Random$Generator(
+			function (_p69) {
+				var _p70 = _p69;
+				var _p75 = _p70._0;
+				var base = 2147483561;
+				var f = F3(
+					function (n, acc, state) {
+						f:
+						while (true) {
+							var _p71 = n;
+							if (_p71 === 0) {
+								return {ctor: '_Tuple2', _0: acc, _1: state};
+							} else {
+								var _p72 = _p75.next(state);
+								var x = _p72._0;
+								var nextState = _p72._1;
+								var _v27 = n - 1,
+									_v28 = x + (acc * base),
+									_v29 = nextState;
+								n = _v27;
+								acc = _v28;
+								state = _v29;
+								continue f;
+							}
+						}
+					});
+				var _p73 = (_elm_lang$core$Native_Utils.cmp(a, b) < 0) ? {ctor: '_Tuple2', _0: a, _1: b} : {ctor: '_Tuple2', _0: b, _1: a};
+				var lo = _p73._0;
+				var hi = _p73._1;
+				var k = (hi - lo) + 1;
+				var n = A2(_elm_lang$core$Random$iLogBase, base, k);
+				var _p74 = A3(f, n, 1, _p75.state);
+				var v = _p74._0;
+				var nextState = _p74._1;
+				return {
+					ctor: '_Tuple2',
+					_0: lo + A2(_elm_lang$core$Basics_ops['%'], v, k),
+					_1: _elm_lang$core$Random$Seed(
+						_elm_lang$core$Native_Utils.update(
+							_p75,
+							{state: nextState}))
+				};
+			});
+	});
+var _elm_lang$core$Random$bool = A2(
+	_elm_lang$core$Random$map,
+	F2(
+		function (x, y) {
+			return _elm_lang$core$Native_Utils.eq(x, y);
+		})(1),
+	A2(_elm_lang$core$Random$int, 0, 1));
+var _elm_lang$core$Random$float = F2(
+	function (a, b) {
+		return _elm_lang$core$Random$Generator(
+			function (seed) {
+				var _p76 = A2(
+					_elm_lang$core$Random$step,
+					A2(_elm_lang$core$Random$int, _elm_lang$core$Random$minInt, _elm_lang$core$Random$maxInt),
+					seed);
+				var number = _p76._0;
+				var newSeed = _p76._1;
+				var negativeOneToOne = _elm_lang$core$Basics$toFloat(number) / _elm_lang$core$Basics$toFloat(_elm_lang$core$Random$maxInt - _elm_lang$core$Random$minInt);
+				var _p77 = (_elm_lang$core$Native_Utils.cmp(a, b) < 0) ? {ctor: '_Tuple2', _0: a, _1: b} : {ctor: '_Tuple2', _0: b, _1: a};
+				var lo = _p77._0;
+				var hi = _p77._1;
+				var scaled = ((lo + hi) / 2) + ((hi - lo) * negativeOneToOne);
+				return {ctor: '_Tuple2', _0: scaled, _1: newSeed};
+			});
+	});
+var _elm_lang$core$Random$initialSeed = function (n) {
+	return _elm_lang$core$Random$Seed(
+		{
+			state: _elm_lang$core$Random$initState(n),
+			next: _elm_lang$core$Random$next,
+			split: _elm_lang$core$Random$split,
+			range: _elm_lang$core$Random$range
+		});
+};
+var _elm_lang$core$Random$init = A2(
+	_elm_lang$core$Task$andThen,
+	function (t) {
+		return _elm_lang$core$Task$succeed(
+			_elm_lang$core$Random$initialSeed(
+				_elm_lang$core$Basics$round(t)));
+	},
+	_elm_lang$core$Time$now);
+var _elm_lang$core$Random$Generate = function (a) {
+	return {ctor: 'Generate', _0: a};
+};
+var _elm_lang$core$Random$generate = F2(
+	function (tagger, generator) {
+		return _elm_lang$core$Random$command(
+			_elm_lang$core$Random$Generate(
+				A2(_elm_lang$core$Random$map, tagger, generator)));
+	});
+var _elm_lang$core$Random$cmdMap = F2(
+	function (func, _p78) {
+		var _p79 = _p78;
+		return _elm_lang$core$Random$Generate(
+			A2(_elm_lang$core$Random$map, func, _p79._0));
+	});
+_elm_lang$core$Native_Platform.effectManagers['Random'] = {pkg: 'elm-lang/core', init: _elm_lang$core$Random$init, onEffects: _elm_lang$core$Random$onEffects, onSelfMsg: _elm_lang$core$Random$onSelfMsg, tag: 'cmd', cmdMap: _elm_lang$core$Random$cmdMap};
+
+var _elm_community$random_extra$Random_Extra$andThen6 = F7(
+	function (constructor, generatorA, generatorB, generatorC, generatorD, generatorE, generatorF) {
+		return A2(
+			_elm_lang$core$Random$andThen,
+			function (a) {
+				return A2(
+					_elm_lang$core$Random$andThen,
+					function (b) {
+						return A2(
+							_elm_lang$core$Random$andThen,
+							function (c) {
+								return A2(
+									_elm_lang$core$Random$andThen,
+									function (d) {
+										return A2(
+											_elm_lang$core$Random$andThen,
+											function (e) {
+												return A2(
+													_elm_lang$core$Random$andThen,
+													function (f) {
+														return A6(constructor, a, b, c, d, e, f);
+													},
+													generatorF);
+											},
+											generatorE);
+									},
+									generatorD);
+							},
+							generatorC);
+					},
+					generatorB);
+			},
+			generatorA);
+	});
+var _elm_community$random_extra$Random_Extra$andThen5 = F6(
+	function (constructor, generatorA, generatorB, generatorC, generatorD, generatorE) {
+		return A2(
+			_elm_lang$core$Random$andThen,
+			function (a) {
+				return A2(
+					_elm_lang$core$Random$andThen,
+					function (b) {
+						return A2(
+							_elm_lang$core$Random$andThen,
+							function (c) {
+								return A2(
+									_elm_lang$core$Random$andThen,
+									function (d) {
+										return A2(
+											_elm_lang$core$Random$andThen,
+											function (e) {
+												return A5(constructor, a, b, c, d, e);
+											},
+											generatorE);
+									},
+									generatorD);
+							},
+							generatorC);
+					},
+					generatorB);
+			},
+			generatorA);
+	});
+var _elm_community$random_extra$Random_Extra$andThen4 = F5(
+	function (constructor, generatorA, generatorB, generatorC, generatorD) {
+		return A2(
+			_elm_lang$core$Random$andThen,
+			function (a) {
+				return A2(
+					_elm_lang$core$Random$andThen,
+					function (b) {
+						return A2(
+							_elm_lang$core$Random$andThen,
+							function (c) {
+								return A2(
+									_elm_lang$core$Random$andThen,
+									function (d) {
+										return A4(constructor, a, b, c, d);
+									},
+									generatorD);
+							},
+							generatorC);
+					},
+					generatorB);
+			},
+			generatorA);
+	});
+var _elm_community$random_extra$Random_Extra$andThen3 = F4(
+	function (constructor, generatorA, generatorB, generatorC) {
+		return A2(
+			_elm_lang$core$Random$andThen,
+			function (a) {
+				return A2(
+					_elm_lang$core$Random$andThen,
+					function (b) {
+						return A2(
+							_elm_lang$core$Random$andThen,
+							function (c) {
+								return A3(constructor, a, b, c);
+							},
+							generatorC);
+					},
+					generatorB);
+			},
+			generatorA);
+	});
+var _elm_community$random_extra$Random_Extra$andThen2 = F3(
+	function (constructor, generatorA, generatorB) {
+		return A2(
+			_elm_lang$core$Random$andThen,
+			function (a) {
+				return A2(
+					_elm_lang$core$Random$andThen,
+					function (b) {
+						return A2(constructor, a, b);
+					},
+					generatorB);
+			},
+			generatorA);
+	});
+var _elm_community$random_extra$Random_Extra$rangeLengthList = F3(
+	function (minLength, maxLength, generator) {
+		return A2(
+			_elm_lang$core$Random$andThen,
+			function (len) {
+				return A2(_elm_lang$core$Random$list, len, generator);
+			},
+			A2(_elm_lang$core$Random$int, minLength, maxLength));
+	});
+var _elm_community$random_extra$Random_Extra$result = F3(
+	function (genBool, genErr, genVal) {
+		return A2(
+			_elm_lang$core$Random$andThen,
+			function (b) {
+				return b ? A2(_elm_lang$core$Random$map, _elm_lang$core$Result$Ok, genVal) : A2(_elm_lang$core$Random$map, _elm_lang$core$Result$Err, genErr);
+			},
+			genBool);
+	});
+var _elm_community$random_extra$Random_Extra$sample = function () {
+	var find = F2(
+		function (k, ys) {
+			find:
+			while (true) {
+				var _p0 = ys;
+				if (_p0.ctor === '[]') {
+					return _elm_lang$core$Maybe$Nothing;
+				} else {
+					if (_elm_lang$core$Native_Utils.eq(k, 0)) {
+						return _elm_lang$core$Maybe$Just(_p0._0);
+					} else {
+						var _v1 = k - 1,
+							_v2 = _p0._1;
+						k = _v1;
+						ys = _v2;
+						continue find;
+					}
+				}
+			}
+		});
+	return function (xs) {
+		return A2(
+			_elm_lang$core$Random$map,
+			function (i) {
+				return A2(find, i, xs);
+			},
+			A2(
+				_elm_lang$core$Random$int,
+				0,
+				_elm_lang$core$List$length(xs) - 1));
+	};
+}();
+var _elm_community$random_extra$Random_Extra$frequency = function (pairs) {
+	var pick = F2(
+		function (choices, n) {
+			pick:
+			while (true) {
+				var _p1 = choices;
+				if ((_p1.ctor === '::') && (_p1._0.ctor === '_Tuple2')) {
+					var _p2 = _p1._0._0;
+					if (_elm_lang$core$Native_Utils.cmp(n, _p2) < 1) {
+						return _p1._0._1;
+					} else {
+						var _v4 = _p1._1,
+							_v5 = n - _p2;
+						choices = _v4;
+						n = _v5;
+						continue pick;
+					}
+				} else {
+					return _elm_lang$core$Native_Utils.crashCase(
+						'Random.Extra',
+						{
+							start: {line: 154, column: 13},
+							end: {line: 162, column: 79}
+						},
+						_p1)('Empty list passed to Random.Extra.frequency!');
+				}
+			}
+		});
+	var total = _elm_lang$core$List$sum(
+		A2(
+			_elm_lang$core$List$map,
+			function (_p4) {
+				return _elm_lang$core$Basics$abs(
+					_elm_lang$core$Tuple$first(_p4));
+			},
+			pairs));
+	return A2(
+		_elm_lang$core$Random$andThen,
+		pick(pairs),
+		A2(_elm_lang$core$Random$float, 0, total));
+};
+var _elm_community$random_extra$Random_Extra$choices = function (gens) {
+	return _elm_community$random_extra$Random_Extra$frequency(
+		A2(
+			_elm_lang$core$List$map,
+			function (g) {
+				return {ctor: '_Tuple2', _0: 1, _1: g};
+			},
+			gens));
+};
+var _elm_community$random_extra$Random_Extra$choice = F2(
+	function (x, y) {
+		return A2(
+			_elm_lang$core$Random$map,
+			function (b) {
+				return b ? x : y;
+			},
+			_elm_lang$core$Random$bool);
+	});
+var _elm_community$random_extra$Random_Extra$oneIn = function (n) {
+	return A2(
+		_elm_lang$core$Random$map,
+		F2(
+			function (x, y) {
+				return _elm_lang$core$Native_Utils.eq(x, y);
+			})(1),
+		A2(_elm_lang$core$Random$int, 1, n));
+};
+var _elm_community$random_extra$Random_Extra$andMap = F2(
+	function (generator, funcGenerator) {
+		return A3(
+			_elm_lang$core$Random$map2,
+			F2(
+				function (x, y) {
+					return x(y);
+				}),
+			funcGenerator,
+			generator);
+	});
+var _elm_community$random_extra$Random_Extra$map6 = F7(
+	function (f, generatorA, generatorB, generatorC, generatorD, generatorE, generatorF) {
+		return A2(
+			_elm_community$random_extra$Random_Extra$andMap,
+			generatorF,
+			A6(_elm_lang$core$Random$map5, f, generatorA, generatorB, generatorC, generatorD, generatorE));
+	});
+var _elm_community$random_extra$Random_Extra$constant = function (value) {
+	return A2(
+		_elm_lang$core$Random$map,
+		function (_p5) {
+			return value;
+		},
+		_elm_lang$core$Random$bool);
+};
+var _elm_community$random_extra$Random_Extra$filter = F2(
+	function (predicate, generator) {
+		return A2(
+			_elm_lang$core$Random$andThen,
+			function (a) {
+				return predicate(a) ? _elm_community$random_extra$Random_Extra$constant(a) : A2(_elm_community$random_extra$Random_Extra$filter, predicate, generator);
+			},
+			generator);
+	});
+var _elm_community$random_extra$Random_Extra$combine = function (generators) {
+	var _p6 = generators;
+	if (_p6.ctor === '[]') {
+		return _elm_community$random_extra$Random_Extra$constant(
+			{ctor: '[]'});
+	} else {
+		return A3(
+			_elm_lang$core$Random$map2,
+			F2(
+				function (x, y) {
+					return {ctor: '::', _0: x, _1: y};
+				}),
+			_p6._0,
+			_elm_community$random_extra$Random_Extra$combine(_p6._1));
+	}
+};
+var _elm_community$random_extra$Random_Extra$maybe = F2(
+	function (genBool, genA) {
+		return A2(
+			_elm_lang$core$Random$andThen,
+			function (b) {
+				return b ? A2(_elm_lang$core$Random$map, _elm_lang$core$Maybe$Just, genA) : _elm_community$random_extra$Random_Extra$constant(_elm_lang$core$Maybe$Nothing);
+			},
+			genBool);
+	});
+
 //import Maybe, Native.Array, Native.List, Native.Utils, Result //
 
 var _elm_lang$core$Native_Json = function() {
@@ -8309,385 +8988,6 @@ var _elm_lang$core$Json_Decode$int = _elm_lang$core$Native_Json.decodePrimitive(
 var _elm_lang$core$Json_Decode$bool = _elm_lang$core$Native_Json.decodePrimitive('bool');
 var _elm_lang$core$Json_Decode$string = _elm_lang$core$Native_Json.decodePrimitive('string');
 var _elm_lang$core$Json_Decode$Decoder = {ctor: 'Decoder'};
-
-var _elm_lang$core$Random$onSelfMsg = F3(
-	function (_p1, _p0, seed) {
-		return _elm_lang$core$Task$succeed(seed);
-	});
-var _elm_lang$core$Random$magicNum8 = 2147483562;
-var _elm_lang$core$Random$range = function (_p2) {
-	return {ctor: '_Tuple2', _0: 0, _1: _elm_lang$core$Random$magicNum8};
-};
-var _elm_lang$core$Random$magicNum7 = 2147483399;
-var _elm_lang$core$Random$magicNum6 = 2147483563;
-var _elm_lang$core$Random$magicNum5 = 3791;
-var _elm_lang$core$Random$magicNum4 = 40692;
-var _elm_lang$core$Random$magicNum3 = 52774;
-var _elm_lang$core$Random$magicNum2 = 12211;
-var _elm_lang$core$Random$magicNum1 = 53668;
-var _elm_lang$core$Random$magicNum0 = 40014;
-var _elm_lang$core$Random$step = F2(
-	function (_p3, seed) {
-		var _p4 = _p3;
-		return _p4._0(seed);
-	});
-var _elm_lang$core$Random$onEffects = F3(
-	function (router, commands, seed) {
-		var _p5 = commands;
-		if (_p5.ctor === '[]') {
-			return _elm_lang$core$Task$succeed(seed);
-		} else {
-			var _p6 = A2(_elm_lang$core$Random$step, _p5._0._0, seed);
-			var value = _p6._0;
-			var newSeed = _p6._1;
-			return A2(
-				_elm_lang$core$Task$andThen,
-				function (_p7) {
-					return A3(_elm_lang$core$Random$onEffects, router, _p5._1, newSeed);
-				},
-				A2(_elm_lang$core$Platform$sendToApp, router, value));
-		}
-	});
-var _elm_lang$core$Random$listHelp = F4(
-	function (list, n, generate, seed) {
-		listHelp:
-		while (true) {
-			if (_elm_lang$core$Native_Utils.cmp(n, 1) < 0) {
-				return {
-					ctor: '_Tuple2',
-					_0: _elm_lang$core$List$reverse(list),
-					_1: seed
-				};
-			} else {
-				var _p8 = generate(seed);
-				var value = _p8._0;
-				var newSeed = _p8._1;
-				var _v2 = {ctor: '::', _0: value, _1: list},
-					_v3 = n - 1,
-					_v4 = generate,
-					_v5 = newSeed;
-				list = _v2;
-				n = _v3;
-				generate = _v4;
-				seed = _v5;
-				continue listHelp;
-			}
-		}
-	});
-var _elm_lang$core$Random$minInt = -2147483648;
-var _elm_lang$core$Random$maxInt = 2147483647;
-var _elm_lang$core$Random$iLogBase = F2(
-	function (b, i) {
-		return (_elm_lang$core$Native_Utils.cmp(i, b) < 0) ? 1 : (1 + A2(_elm_lang$core$Random$iLogBase, b, (i / b) | 0));
-	});
-var _elm_lang$core$Random$command = _elm_lang$core$Native_Platform.leaf('Random');
-var _elm_lang$core$Random$Generator = function (a) {
-	return {ctor: 'Generator', _0: a};
-};
-var _elm_lang$core$Random$list = F2(
-	function (n, _p9) {
-		var _p10 = _p9;
-		return _elm_lang$core$Random$Generator(
-			function (seed) {
-				return A4(
-					_elm_lang$core$Random$listHelp,
-					{ctor: '[]'},
-					n,
-					_p10._0,
-					seed);
-			});
-	});
-var _elm_lang$core$Random$map = F2(
-	function (func, _p11) {
-		var _p12 = _p11;
-		return _elm_lang$core$Random$Generator(
-			function (seed0) {
-				var _p13 = _p12._0(seed0);
-				var a = _p13._0;
-				var seed1 = _p13._1;
-				return {
-					ctor: '_Tuple2',
-					_0: func(a),
-					_1: seed1
-				};
-			});
-	});
-var _elm_lang$core$Random$map2 = F3(
-	function (func, _p15, _p14) {
-		var _p16 = _p15;
-		var _p17 = _p14;
-		return _elm_lang$core$Random$Generator(
-			function (seed0) {
-				var _p18 = _p16._0(seed0);
-				var a = _p18._0;
-				var seed1 = _p18._1;
-				var _p19 = _p17._0(seed1);
-				var b = _p19._0;
-				var seed2 = _p19._1;
-				return {
-					ctor: '_Tuple2',
-					_0: A2(func, a, b),
-					_1: seed2
-				};
-			});
-	});
-var _elm_lang$core$Random$pair = F2(
-	function (genA, genB) {
-		return A3(
-			_elm_lang$core$Random$map2,
-			F2(
-				function (v0, v1) {
-					return {ctor: '_Tuple2', _0: v0, _1: v1};
-				}),
-			genA,
-			genB);
-	});
-var _elm_lang$core$Random$map3 = F4(
-	function (func, _p22, _p21, _p20) {
-		var _p23 = _p22;
-		var _p24 = _p21;
-		var _p25 = _p20;
-		return _elm_lang$core$Random$Generator(
-			function (seed0) {
-				var _p26 = _p23._0(seed0);
-				var a = _p26._0;
-				var seed1 = _p26._1;
-				var _p27 = _p24._0(seed1);
-				var b = _p27._0;
-				var seed2 = _p27._1;
-				var _p28 = _p25._0(seed2);
-				var c = _p28._0;
-				var seed3 = _p28._1;
-				return {
-					ctor: '_Tuple2',
-					_0: A3(func, a, b, c),
-					_1: seed3
-				};
-			});
-	});
-var _elm_lang$core$Random$map4 = F5(
-	function (func, _p32, _p31, _p30, _p29) {
-		var _p33 = _p32;
-		var _p34 = _p31;
-		var _p35 = _p30;
-		var _p36 = _p29;
-		return _elm_lang$core$Random$Generator(
-			function (seed0) {
-				var _p37 = _p33._0(seed0);
-				var a = _p37._0;
-				var seed1 = _p37._1;
-				var _p38 = _p34._0(seed1);
-				var b = _p38._0;
-				var seed2 = _p38._1;
-				var _p39 = _p35._0(seed2);
-				var c = _p39._0;
-				var seed3 = _p39._1;
-				var _p40 = _p36._0(seed3);
-				var d = _p40._0;
-				var seed4 = _p40._1;
-				return {
-					ctor: '_Tuple2',
-					_0: A4(func, a, b, c, d),
-					_1: seed4
-				};
-			});
-	});
-var _elm_lang$core$Random$map5 = F6(
-	function (func, _p45, _p44, _p43, _p42, _p41) {
-		var _p46 = _p45;
-		var _p47 = _p44;
-		var _p48 = _p43;
-		var _p49 = _p42;
-		var _p50 = _p41;
-		return _elm_lang$core$Random$Generator(
-			function (seed0) {
-				var _p51 = _p46._0(seed0);
-				var a = _p51._0;
-				var seed1 = _p51._1;
-				var _p52 = _p47._0(seed1);
-				var b = _p52._0;
-				var seed2 = _p52._1;
-				var _p53 = _p48._0(seed2);
-				var c = _p53._0;
-				var seed3 = _p53._1;
-				var _p54 = _p49._0(seed3);
-				var d = _p54._0;
-				var seed4 = _p54._1;
-				var _p55 = _p50._0(seed4);
-				var e = _p55._0;
-				var seed5 = _p55._1;
-				return {
-					ctor: '_Tuple2',
-					_0: A5(func, a, b, c, d, e),
-					_1: seed5
-				};
-			});
-	});
-var _elm_lang$core$Random$andThen = F2(
-	function (callback, _p56) {
-		var _p57 = _p56;
-		return _elm_lang$core$Random$Generator(
-			function (seed) {
-				var _p58 = _p57._0(seed);
-				var result = _p58._0;
-				var newSeed = _p58._1;
-				var _p59 = callback(result);
-				var genB = _p59._0;
-				return genB(newSeed);
-			});
-	});
-var _elm_lang$core$Random$State = F2(
-	function (a, b) {
-		return {ctor: 'State', _0: a, _1: b};
-	});
-var _elm_lang$core$Random$initState = function (seed) {
-	var s = A2(_elm_lang$core$Basics$max, seed, 0 - seed);
-	var q = (s / (_elm_lang$core$Random$magicNum6 - 1)) | 0;
-	var s2 = A2(_elm_lang$core$Basics_ops['%'], q, _elm_lang$core$Random$magicNum7 - 1);
-	var s1 = A2(_elm_lang$core$Basics_ops['%'], s, _elm_lang$core$Random$magicNum6 - 1);
-	return A2(_elm_lang$core$Random$State, s1 + 1, s2 + 1);
-};
-var _elm_lang$core$Random$next = function (_p60) {
-	var _p61 = _p60;
-	var _p63 = _p61._1;
-	var _p62 = _p61._0;
-	var k2 = (_p63 / _elm_lang$core$Random$magicNum3) | 0;
-	var rawState2 = (_elm_lang$core$Random$magicNum4 * (_p63 - (k2 * _elm_lang$core$Random$magicNum3))) - (k2 * _elm_lang$core$Random$magicNum5);
-	var newState2 = (_elm_lang$core$Native_Utils.cmp(rawState2, 0) < 0) ? (rawState2 + _elm_lang$core$Random$magicNum7) : rawState2;
-	var k1 = (_p62 / _elm_lang$core$Random$magicNum1) | 0;
-	var rawState1 = (_elm_lang$core$Random$magicNum0 * (_p62 - (k1 * _elm_lang$core$Random$magicNum1))) - (k1 * _elm_lang$core$Random$magicNum2);
-	var newState1 = (_elm_lang$core$Native_Utils.cmp(rawState1, 0) < 0) ? (rawState1 + _elm_lang$core$Random$magicNum6) : rawState1;
-	var z = newState1 - newState2;
-	var newZ = (_elm_lang$core$Native_Utils.cmp(z, 1) < 0) ? (z + _elm_lang$core$Random$magicNum8) : z;
-	return {
-		ctor: '_Tuple2',
-		_0: newZ,
-		_1: A2(_elm_lang$core$Random$State, newState1, newState2)
-	};
-};
-var _elm_lang$core$Random$split = function (_p64) {
-	var _p65 = _p64;
-	var _p68 = _p65._1;
-	var _p67 = _p65._0;
-	var _p66 = _elm_lang$core$Tuple$second(
-		_elm_lang$core$Random$next(_p65));
-	var t1 = _p66._0;
-	var t2 = _p66._1;
-	var new_s2 = _elm_lang$core$Native_Utils.eq(_p68, 1) ? (_elm_lang$core$Random$magicNum7 - 1) : (_p68 - 1);
-	var new_s1 = _elm_lang$core$Native_Utils.eq(_p67, _elm_lang$core$Random$magicNum6 - 1) ? 1 : (_p67 + 1);
-	return {
-		ctor: '_Tuple2',
-		_0: A2(_elm_lang$core$Random$State, new_s1, t2),
-		_1: A2(_elm_lang$core$Random$State, t1, new_s2)
-	};
-};
-var _elm_lang$core$Random$Seed = function (a) {
-	return {ctor: 'Seed', _0: a};
-};
-var _elm_lang$core$Random$int = F2(
-	function (a, b) {
-		return _elm_lang$core$Random$Generator(
-			function (_p69) {
-				var _p70 = _p69;
-				var _p75 = _p70._0;
-				var base = 2147483561;
-				var f = F3(
-					function (n, acc, state) {
-						f:
-						while (true) {
-							var _p71 = n;
-							if (_p71 === 0) {
-								return {ctor: '_Tuple2', _0: acc, _1: state};
-							} else {
-								var _p72 = _p75.next(state);
-								var x = _p72._0;
-								var nextState = _p72._1;
-								var _v27 = n - 1,
-									_v28 = x + (acc * base),
-									_v29 = nextState;
-								n = _v27;
-								acc = _v28;
-								state = _v29;
-								continue f;
-							}
-						}
-					});
-				var _p73 = (_elm_lang$core$Native_Utils.cmp(a, b) < 0) ? {ctor: '_Tuple2', _0: a, _1: b} : {ctor: '_Tuple2', _0: b, _1: a};
-				var lo = _p73._0;
-				var hi = _p73._1;
-				var k = (hi - lo) + 1;
-				var n = A2(_elm_lang$core$Random$iLogBase, base, k);
-				var _p74 = A3(f, n, 1, _p75.state);
-				var v = _p74._0;
-				var nextState = _p74._1;
-				return {
-					ctor: '_Tuple2',
-					_0: lo + A2(_elm_lang$core$Basics_ops['%'], v, k),
-					_1: _elm_lang$core$Random$Seed(
-						_elm_lang$core$Native_Utils.update(
-							_p75,
-							{state: nextState}))
-				};
-			});
-	});
-var _elm_lang$core$Random$bool = A2(
-	_elm_lang$core$Random$map,
-	F2(
-		function (x, y) {
-			return _elm_lang$core$Native_Utils.eq(x, y);
-		})(1),
-	A2(_elm_lang$core$Random$int, 0, 1));
-var _elm_lang$core$Random$float = F2(
-	function (a, b) {
-		return _elm_lang$core$Random$Generator(
-			function (seed) {
-				var _p76 = A2(
-					_elm_lang$core$Random$step,
-					A2(_elm_lang$core$Random$int, _elm_lang$core$Random$minInt, _elm_lang$core$Random$maxInt),
-					seed);
-				var number = _p76._0;
-				var newSeed = _p76._1;
-				var negativeOneToOne = _elm_lang$core$Basics$toFloat(number) / _elm_lang$core$Basics$toFloat(_elm_lang$core$Random$maxInt - _elm_lang$core$Random$minInt);
-				var _p77 = (_elm_lang$core$Native_Utils.cmp(a, b) < 0) ? {ctor: '_Tuple2', _0: a, _1: b} : {ctor: '_Tuple2', _0: b, _1: a};
-				var lo = _p77._0;
-				var hi = _p77._1;
-				var scaled = ((lo + hi) / 2) + ((hi - lo) * negativeOneToOne);
-				return {ctor: '_Tuple2', _0: scaled, _1: newSeed};
-			});
-	});
-var _elm_lang$core$Random$initialSeed = function (n) {
-	return _elm_lang$core$Random$Seed(
-		{
-			state: _elm_lang$core$Random$initState(n),
-			next: _elm_lang$core$Random$next,
-			split: _elm_lang$core$Random$split,
-			range: _elm_lang$core$Random$range
-		});
-};
-var _elm_lang$core$Random$init = A2(
-	_elm_lang$core$Task$andThen,
-	function (t) {
-		return _elm_lang$core$Task$succeed(
-			_elm_lang$core$Random$initialSeed(
-				_elm_lang$core$Basics$round(t)));
-	},
-	_elm_lang$core$Time$now);
-var _elm_lang$core$Random$Generate = function (a) {
-	return {ctor: 'Generate', _0: a};
-};
-var _elm_lang$core$Random$generate = F2(
-	function (tagger, generator) {
-		return _elm_lang$core$Random$command(
-			_elm_lang$core$Random$Generate(
-				A2(_elm_lang$core$Random$map, tagger, generator)));
-	});
-var _elm_lang$core$Random$cmdMap = F2(
-	function (func, _p78) {
-		var _p79 = _p78;
-		return _elm_lang$core$Random$Generate(
-			A2(_elm_lang$core$Random$map, func, _p79._0));
-	});
-_elm_lang$core$Native_Platform.effectManagers['Random'] = {pkg: 'elm-lang/core', init: _elm_lang$core$Random$init, onEffects: _elm_lang$core$Random$onEffects, onSelfMsg: _elm_lang$core$Random$onSelfMsg, tag: 'cmd', cmdMap: _elm_lang$core$Random$cmdMap};
 
 var _elm_lang$dom$Native_Dom = function() {
 
@@ -11401,367 +11701,6 @@ var _elm_lang$html$Html_Events$Options = F2(
 		return {stopPropagation: a, preventDefault: b};
 	});
 
-var _elm_lang$http$Native_Http = function() {
-
-
-// ENCODING AND DECODING
-
-function encodeUri(string)
-{
-	return encodeURIComponent(string);
-}
-
-function decodeUri(string)
-{
-	try
-	{
-		return _elm_lang$core$Maybe$Just(decodeURIComponent(string));
-	}
-	catch(e)
-	{
-		return _elm_lang$core$Maybe$Nothing;
-	}
-}
-
-
-// SEND REQUEST
-
-function toTask(request, maybeProgress)
-{
-	return _elm_lang$core$Native_Scheduler.nativeBinding(function(callback)
-	{
-		var xhr = new XMLHttpRequest();
-
-		configureProgress(xhr, maybeProgress);
-
-		xhr.addEventListener('error', function() {
-			callback(_elm_lang$core$Native_Scheduler.fail({ ctor: 'NetworkError' }));
-		});
-		xhr.addEventListener('timeout', function() {
-			callback(_elm_lang$core$Native_Scheduler.fail({ ctor: 'Timeout' }));
-		});
-		xhr.addEventListener('load', function() {
-			callback(handleResponse(xhr, request.expect.responseToResult));
-		});
-
-		try
-		{
-			xhr.open(request.method, request.url, true);
-		}
-		catch (e)
-		{
-			return callback(_elm_lang$core$Native_Scheduler.fail({ ctor: 'BadUrl', _0: request.url }));
-		}
-
-		configureRequest(xhr, request);
-		send(xhr, request.body);
-
-		return function() { xhr.abort(); };
-	});
-}
-
-function configureProgress(xhr, maybeProgress)
-{
-	if (maybeProgress.ctor === 'Nothing')
-	{
-		return;
-	}
-
-	xhr.addEventListener('progress', function(event) {
-		if (!event.lengthComputable)
-		{
-			return;
-		}
-		_elm_lang$core$Native_Scheduler.rawSpawn(maybeProgress._0({
-			bytes: event.loaded,
-			bytesExpected: event.total
-		}));
-	});
-}
-
-function configureRequest(xhr, request)
-{
-	function setHeader(pair)
-	{
-		xhr.setRequestHeader(pair._0, pair._1);
-	}
-
-	A2(_elm_lang$core$List$map, setHeader, request.headers);
-	xhr.responseType = request.expect.responseType;
-	xhr.withCredentials = request.withCredentials;
-
-	if (request.timeout.ctor === 'Just')
-	{
-		xhr.timeout = request.timeout._0;
-	}
-}
-
-function send(xhr, body)
-{
-	switch (body.ctor)
-	{
-		case 'EmptyBody':
-			xhr.send();
-			return;
-
-		case 'StringBody':
-			xhr.setRequestHeader('Content-Type', body._0);
-			xhr.send(body._1);
-			return;
-
-		case 'FormDataBody':
-			xhr.send(body._0);
-			return;
-	}
-}
-
-
-// RESPONSES
-
-function handleResponse(xhr, responseToResult)
-{
-	var response = toResponse(xhr);
-
-	if (xhr.status < 200 || 300 <= xhr.status)
-	{
-		response.body = xhr.responseText;
-		return _elm_lang$core$Native_Scheduler.fail({
-			ctor: 'BadStatus',
-			_0: response
-		});
-	}
-
-	var result = responseToResult(response);
-
-	if (result.ctor === 'Ok')
-	{
-		return _elm_lang$core$Native_Scheduler.succeed(result._0);
-	}
-	else
-	{
-		response.body = xhr.responseText;
-		return _elm_lang$core$Native_Scheduler.fail({
-			ctor: 'BadPayload',
-			_0: result._0,
-			_1: response
-		});
-	}
-}
-
-function toResponse(xhr)
-{
-	return {
-		status: { code: xhr.status, message: xhr.statusText },
-		headers: parseHeaders(xhr.getAllResponseHeaders()),
-		url: xhr.responseURL,
-		body: xhr.response
-	};
-}
-
-function parseHeaders(rawHeaders)
-{
-	var headers = _elm_lang$core$Dict$empty;
-
-	if (!rawHeaders)
-	{
-		return headers;
-	}
-
-	var headerPairs = rawHeaders.split('\u000d\u000a');
-	for (var i = headerPairs.length; i--; )
-	{
-		var headerPair = headerPairs[i];
-		var index = headerPair.indexOf('\u003a\u0020');
-		if (index > 0)
-		{
-			var key = headerPair.substring(0, index);
-			var value = headerPair.substring(index + 2);
-
-			headers = A3(_elm_lang$core$Dict$update, key, function(oldValue) {
-				if (oldValue.ctor === 'Just')
-				{
-					return _elm_lang$core$Maybe$Just(value + ', ' + oldValue._0);
-				}
-				return _elm_lang$core$Maybe$Just(value);
-			}, headers);
-		}
-	}
-
-	return headers;
-}
-
-
-// EXPECTORS
-
-function expectStringResponse(responseToResult)
-{
-	return {
-		responseType: 'text',
-		responseToResult: responseToResult
-	};
-}
-
-function mapExpect(func, expect)
-{
-	return {
-		responseType: expect.responseType,
-		responseToResult: function(response) {
-			var convertedResponse = expect.responseToResult(response);
-			return A2(_elm_lang$core$Result$map, func, convertedResponse);
-		}
-	};
-}
-
-
-// BODY
-
-function multipart(parts)
-{
-	var formData = new FormData();
-
-	while (parts.ctor !== '[]')
-	{
-		var part = parts._0;
-		formData.append(part._0, part._1);
-		parts = parts._1;
-	}
-
-	return { ctor: 'FormDataBody', _0: formData };
-}
-
-return {
-	toTask: F2(toTask),
-	expectStringResponse: expectStringResponse,
-	mapExpect: F2(mapExpect),
-	multipart: multipart,
-	encodeUri: encodeUri,
-	decodeUri: decodeUri
-};
-
-}();
-
-var _elm_lang$http$Http_Internal$map = F2(
-	function (func, request) {
-		return _elm_lang$core$Native_Utils.update(
-			request,
-			{
-				expect: A2(_elm_lang$http$Native_Http.mapExpect, func, request.expect)
-			});
-	});
-var _elm_lang$http$Http_Internal$RawRequest = F7(
-	function (a, b, c, d, e, f, g) {
-		return {method: a, headers: b, url: c, body: d, expect: e, timeout: f, withCredentials: g};
-	});
-var _elm_lang$http$Http_Internal$Request = function (a) {
-	return {ctor: 'Request', _0: a};
-};
-var _elm_lang$http$Http_Internal$Expect = {ctor: 'Expect'};
-var _elm_lang$http$Http_Internal$FormDataBody = {ctor: 'FormDataBody'};
-var _elm_lang$http$Http_Internal$StringBody = F2(
-	function (a, b) {
-		return {ctor: 'StringBody', _0: a, _1: b};
-	});
-var _elm_lang$http$Http_Internal$EmptyBody = {ctor: 'EmptyBody'};
-var _elm_lang$http$Http_Internal$Header = F2(
-	function (a, b) {
-		return {ctor: 'Header', _0: a, _1: b};
-	});
-
-var _elm_lang$http$Http$decodeUri = _elm_lang$http$Native_Http.decodeUri;
-var _elm_lang$http$Http$encodeUri = _elm_lang$http$Native_Http.encodeUri;
-var _elm_lang$http$Http$expectStringResponse = _elm_lang$http$Native_Http.expectStringResponse;
-var _elm_lang$http$Http$expectJson = function (decoder) {
-	return _elm_lang$http$Http$expectStringResponse(
-		function (response) {
-			return A2(_elm_lang$core$Json_Decode$decodeString, decoder, response.body);
-		});
-};
-var _elm_lang$http$Http$expectString = _elm_lang$http$Http$expectStringResponse(
-	function (response) {
-		return _elm_lang$core$Result$Ok(response.body);
-	});
-var _elm_lang$http$Http$multipartBody = _elm_lang$http$Native_Http.multipart;
-var _elm_lang$http$Http$stringBody = _elm_lang$http$Http_Internal$StringBody;
-var _elm_lang$http$Http$jsonBody = function (value) {
-	return A2(
-		_elm_lang$http$Http_Internal$StringBody,
-		'application/json',
-		A2(_elm_lang$core$Json_Encode$encode, 0, value));
-};
-var _elm_lang$http$Http$emptyBody = _elm_lang$http$Http_Internal$EmptyBody;
-var _elm_lang$http$Http$header = _elm_lang$http$Http_Internal$Header;
-var _elm_lang$http$Http$request = _elm_lang$http$Http_Internal$Request;
-var _elm_lang$http$Http$post = F3(
-	function (url, body, decoder) {
-		return _elm_lang$http$Http$request(
-			{
-				method: 'POST',
-				headers: {ctor: '[]'},
-				url: url,
-				body: body,
-				expect: _elm_lang$http$Http$expectJson(decoder),
-				timeout: _elm_lang$core$Maybe$Nothing,
-				withCredentials: false
-			});
-	});
-var _elm_lang$http$Http$get = F2(
-	function (url, decoder) {
-		return _elm_lang$http$Http$request(
-			{
-				method: 'GET',
-				headers: {ctor: '[]'},
-				url: url,
-				body: _elm_lang$http$Http$emptyBody,
-				expect: _elm_lang$http$Http$expectJson(decoder),
-				timeout: _elm_lang$core$Maybe$Nothing,
-				withCredentials: false
-			});
-	});
-var _elm_lang$http$Http$getString = function (url) {
-	return _elm_lang$http$Http$request(
-		{
-			method: 'GET',
-			headers: {ctor: '[]'},
-			url: url,
-			body: _elm_lang$http$Http$emptyBody,
-			expect: _elm_lang$http$Http$expectString,
-			timeout: _elm_lang$core$Maybe$Nothing,
-			withCredentials: false
-		});
-};
-var _elm_lang$http$Http$toTask = function (_p0) {
-	var _p1 = _p0;
-	return A2(_elm_lang$http$Native_Http.toTask, _p1._0, _elm_lang$core$Maybe$Nothing);
-};
-var _elm_lang$http$Http$send = F2(
-	function (resultToMessage, request) {
-		return A2(
-			_elm_lang$core$Task$attempt,
-			resultToMessage,
-			_elm_lang$http$Http$toTask(request));
-	});
-var _elm_lang$http$Http$Response = F4(
-	function (a, b, c, d) {
-		return {url: a, status: b, headers: c, body: d};
-	});
-var _elm_lang$http$Http$BadPayload = F2(
-	function (a, b) {
-		return {ctor: 'BadPayload', _0: a, _1: b};
-	});
-var _elm_lang$http$Http$BadStatus = function (a) {
-	return {ctor: 'BadStatus', _0: a};
-};
-var _elm_lang$http$Http$NetworkError = {ctor: 'NetworkError'};
-var _elm_lang$http$Http$Timeout = {ctor: 'Timeout'};
-var _elm_lang$http$Http$BadUrl = function (a) {
-	return {ctor: 'BadUrl', _0: a};
-};
-var _elm_lang$http$Http$StringPart = F2(
-	function (a, b) {
-		return {ctor: 'StringPart', _0: a, _1: b};
-	});
-var _elm_lang$http$Http$stringPart = _elm_lang$http$Http$StringPart;
-
 var _elm_lang$svg$Svg$map = _elm_lang$virtual_dom$VirtualDom$map;
 var _elm_lang$svg$Svg$text = _elm_lang$virtual_dom$VirtualDom$text;
 var _elm_lang$svg$Svg$svgNamespace = A2(
@@ -12103,60 +12042,7 @@ var _elm_lang$svg$Svg_Attributes$accumulate = _elm_lang$virtual_dom$VirtualDom$a
 var _elm_lang$svg$Svg_Attributes$accelerate = _elm_lang$virtual_dom$VirtualDom$attribute('accelerate');
 var _elm_lang$svg$Svg_Attributes$accentHeight = _elm_lang$virtual_dom$VirtualDom$attribute('accent-height');
 
-var _strelka_2017$phi$Simulation_Types$Coords = F2(
-	function (a, b) {
-		return {x: a, y: b};
-	});
-var _strelka_2017$phi$Simulation_Types$Line = F2(
-	function (a, b) {
-		return {from: a, to: b};
-	});
-var _strelka_2017$phi$Simulation_Types$EncodedEdge = F2(
-	function (a, b) {
-		return {transmissionLine: a, pos: b};
-	});
-var _strelka_2017$phi$Simulation_Types$EncodedNodes = F3(
-	function (a, b, c) {
-		return {pvPanels: a, windTurbines: b, peers: c};
-	});
-var _strelka_2017$phi$Simulation_Types$PhiNode = F6(
-	function (a, b, c, d, e, f) {
-		return {joules: a, negawatts: b, seedRating: c, phicoin: d, pos: e, nodeType: f};
-	});
-var _strelka_2017$phi$Simulation_Types$PVPanel = F3(
-	function (a, b, c) {
-		return {dailyGeneration: a, maxGeneration: b, pos: c};
-	});
-var _strelka_2017$phi$Simulation_Types$WindTurbine = F3(
-	function (a, b, c) {
-		return {dailyGeneration: a, maxGeneration: b, pos: c};
-	});
-var _strelka_2017$phi$Simulation_Types$Battery = F3(
-	function (a, b, c) {
-		return {capacity: a, storage: b, pos: c};
-	});
-var _strelka_2017$phi$Simulation_Types$Peer = F4(
-	function (a, b, c, d) {
-		return {joules: a, dailyConsumption: b, desiredConsumption: c, pos: d};
-	});
-var _strelka_2017$phi$Simulation_Types$Weather = F2(
-	function (a, b) {
-		return {sun: a, wind: b};
-	});
-var _strelka_2017$phi$Simulation_Types$BatNode = function (a) {
-	return {ctor: 'BatNode', _0: a};
-};
-var _strelka_2017$phi$Simulation_Types$PeerNode = function (a) {
-	return {ctor: 'PeerNode', _0: a};
-};
-var _strelka_2017$phi$Simulation_Types$WTNode = function (a) {
-	return {ctor: 'WTNode', _0: a};
-};
-var _strelka_2017$phi$Simulation_Types$PVNode = function (a) {
-	return {ctor: 'PVNode', _0: a};
-};
-
-var _strelka_2017$phi$Simulation_Encoder$pos = function (nodeLabel) {
+var _strelka_2017$phi$Simulation_Model$pos = function (nodeLabel) {
 	var _p0 = nodeLabel;
 	switch (_p0.ctor) {
 		case 'PVNode':
@@ -12169,39 +12055,7 @@ var _strelka_2017$phi$Simulation_Encoder$pos = function (nodeLabel) {
 			return _p0._0.pos;
 	}
 };
-var _strelka_2017$phi$Simulation_Encoder$encodeEdge = F2(
-	function (graph, tLine) {
-		var maybeTo = A2(
-			_elm_lang$core$Maybe$map,
-			function (_p1) {
-				return _strelka_2017$phi$Simulation_Encoder$pos(
-					function (_) {
-						return _.label;
-					}(
-						function (_) {
-							return _.node;
-						}(_p1)));
-			},
-			A2(_elm_community$graph$Graph$get, tLine.to, graph));
-		var maybeFrom = A2(
-			_elm_lang$core$Maybe$map,
-			function (_p2) {
-				return _strelka_2017$phi$Simulation_Encoder$pos(
-					function (_) {
-						return _.label;
-					}(
-						function (_) {
-							return _.node;
-						}(_p2)));
-			},
-			A2(_elm_community$graph$Graph$get, tLine.from, graph));
-		var maybeLine = A3(_elm_lang$core$Maybe$map2, _strelka_2017$phi$Simulation_Types$Line, maybeFrom, maybeTo);
-		return A2(
-			_elm_lang$core$Maybe$map,
-			_strelka_2017$phi$Simulation_Types$EncodedEdge(tLine),
-			maybeLine);
-	});
-var _strelka_2017$phi$Simulation_Encoder$encodeCoords = function (pos) {
+var _strelka_2017$phi$Simulation_Model$encodeCoords = function (pos) {
 	return _elm_lang$core$Json_Encode$object(
 		{
 			ctor: '::',
@@ -12221,73 +12075,37 @@ var _strelka_2017$phi$Simulation_Encoder$encodeCoords = function (pos) {
 			}
 		});
 };
-var _strelka_2017$phi$Simulation_Encoder$encodeNodes = function (nodes) {
-	var isWTNode = function (_p3) {
-		var _p4 = _p3;
-		var _p5 = _p4.label;
-		if (_p5.ctor === 'WTNode') {
-			return _elm_lang$core$Maybe$Just(
-				A2(_elm_community$graph$Graph$Node, _p4.id, _p5._0));
-		} else {
-			return _elm_lang$core$Maybe$Nothing;
-		}
-	};
-	var wtNodes = A2(_elm_lang$core$List$filterMap, isWTNode, nodes);
-	var isPVNode = function (_p6) {
-		var _p7 = _p6;
-		var _p8 = _p7.label;
-		if (_p8.ctor === 'PVNode') {
-			return _elm_lang$core$Maybe$Just(
-				A2(_elm_community$graph$Graph$Node, _p7.id, _p8._0));
-		} else {
-			return _elm_lang$core$Maybe$Nothing;
-		}
-	};
-	var pvNodes = A2(_elm_lang$core$List$filterMap, isPVNode, nodes);
-	var isPeerNode = function (_p9) {
-		var _p10 = _p9;
-		var _p11 = _p10.label;
-		if (_p11.ctor === 'PeerNode') {
-			return _elm_lang$core$Maybe$Just(
-				A2(_elm_community$graph$Graph$Node, _p10.id, _p11._0));
-		} else {
-			return _elm_lang$core$Maybe$Nothing;
-		}
-	};
-	var peerNodes = A2(_elm_lang$core$List$filterMap, isPeerNode, nodes);
-	return A3(_strelka_2017$phi$Simulation_Types$EncodedNodes, pvNodes, wtNodes, peerNodes);
-};
-var _strelka_2017$phi$Simulation_Encoder$encodeList = F2(
+var _strelka_2017$phi$Simulation_Model$encodeList = F2(
 	function (encoder, list) {
 		return _elm_lang$core$Json_Encode$list(
 			A2(_elm_lang$core$List$map, encoder, list));
 	});
-var _strelka_2017$phi$Simulation_Encoder$encodeNodeLabel = function (nodeLabel) {
-	var _p12 = nodeLabel;
-	switch (_p12.ctor) {
+var _strelka_2017$phi$Simulation_Model$encodeNodeLabel = function (nodeLabel) {
+	var _p1 = nodeLabel;
+	switch (_p1.ctor) {
 		case 'PVNode':
-			var _p13 = _p12._0;
+			var _p2 = _p1._0;
 			return _elm_lang$core$Json_Encode$object(
 				{
 					ctor: '::',
 					_0: {
 						ctor: '_Tuple2',
 						_0: 'maxGeneration',
-						_1: _elm_lang$core$Json_Encode$float(_p13.maxGeneration)
+						_1: _elm_lang$core$Json_Encode$float(_p2.maxGeneration)
 					},
 					_1: {
 						ctor: '::',
 						_0: {
 							ctor: '_Tuple2',
 							_0: 'dailyGeneration',
-							_1: A2(_strelka_2017$phi$Simulation_Encoder$encodeList, _elm_lang$core$Json_Encode$float, _p13.dailyGeneration)
+							_1: A2(_strelka_2017$phi$Simulation_Model$encodeList, _elm_lang$core$Json_Encode$float, _p2.dailyGeneration)
 						},
 						_1: {
 							ctor: '::',
 							_0: {
 								ctor: '_Tuple2',
 								_0: 'pos',
-								_1: _strelka_2017$phi$Simulation_Encoder$encodeCoords(_p13.pos)
+								_1: _strelka_2017$phi$Simulation_Model$encodeCoords(_p2.pos)
 							},
 							_1: {
 								ctor: '::',
@@ -12302,28 +12120,28 @@ var _strelka_2017$phi$Simulation_Encoder$encodeNodeLabel = function (nodeLabel) 
 					}
 				});
 		case 'WTNode':
-			var _p14 = _p12._0;
+			var _p3 = _p1._0;
 			return _elm_lang$core$Json_Encode$object(
 				{
 					ctor: '::',
 					_0: {
 						ctor: '_Tuple2',
 						_0: 'maxGeneration',
-						_1: _elm_lang$core$Json_Encode$float(_p14.maxGeneration)
+						_1: _elm_lang$core$Json_Encode$float(_p3.maxGeneration)
 					},
 					_1: {
 						ctor: '::',
 						_0: {
 							ctor: '_Tuple2',
 							_0: 'dailyGeneration',
-							_1: A2(_strelka_2017$phi$Simulation_Encoder$encodeList, _elm_lang$core$Json_Encode$float, _p14.dailyGeneration)
+							_1: A2(_strelka_2017$phi$Simulation_Model$encodeList, _elm_lang$core$Json_Encode$float, _p3.dailyGeneration)
 						},
 						_1: {
 							ctor: '::',
 							_0: {
 								ctor: '_Tuple2',
 								_0: 'pos',
-								_1: _strelka_2017$phi$Simulation_Encoder$encodeCoords(_p14.pos)
+								_1: _strelka_2017$phi$Simulation_Model$encodeCoords(_p3.pos)
 							},
 							_1: {
 								ctor: '::',
@@ -12338,35 +12156,35 @@ var _strelka_2017$phi$Simulation_Encoder$encodeNodeLabel = function (nodeLabel) 
 					}
 				});
 		case 'PeerNode':
-			var _p15 = _p12._0;
+			var _p4 = _p1._0;
 			return _elm_lang$core$Json_Encode$object(
 				{
 					ctor: '::',
 					_0: {
 						ctor: '_Tuple2',
 						_0: 'dailyConsumption',
-						_1: A2(_strelka_2017$phi$Simulation_Encoder$encodeList, _elm_lang$core$Json_Encode$float, _p15.dailyConsumption)
+						_1: A2(_strelka_2017$phi$Simulation_Model$encodeList, _elm_lang$core$Json_Encode$float, _p4.dailyConsumption)
 					},
 					_1: {
 						ctor: '::',
 						_0: {
 							ctor: '_Tuple2',
 							_0: 'joules',
-							_1: A2(_strelka_2017$phi$Simulation_Encoder$encodeList, _elm_lang$core$Json_Encode$float, _p15.joules)
+							_1: A2(_strelka_2017$phi$Simulation_Model$encodeList, _elm_lang$core$Json_Encode$float, _p4.joules)
 						},
 						_1: {
 							ctor: '::',
 							_0: {
 								ctor: '_Tuple2',
 								_0: 'desiredConsumption',
-								_1: _elm_lang$core$Json_Encode$float(_p15.desiredConsumption)
+								_1: _elm_lang$core$Json_Encode$float(_p4.desiredConsumption)
 							},
 							_1: {
 								ctor: '::',
 								_0: {
 									ctor: '_Tuple2',
 									_0: 'pos',
-									_1: _strelka_2017$phi$Simulation_Encoder$encodeCoords(_p15.pos)
+									_1: _strelka_2017$phi$Simulation_Model$encodeCoords(_p4.pos)
 								},
 								_1: {
 									ctor: '::',
@@ -12382,28 +12200,28 @@ var _strelka_2017$phi$Simulation_Encoder$encodeNodeLabel = function (nodeLabel) 
 					}
 				});
 		default:
-			var _p16 = _p12._0;
+			var _p5 = _p1._0;
 			return _elm_lang$core$Json_Encode$object(
 				{
 					ctor: '::',
 					_0: {
 						ctor: '_Tuple2',
 						_0: 'capacity',
-						_1: _elm_lang$core$Json_Encode$float(_p16.capacity)
+						_1: _elm_lang$core$Json_Encode$float(_p5.capacity)
 					},
 					_1: {
 						ctor: '::',
 						_0: {
 							ctor: '_Tuple2',
 							_0: 'storage',
-							_1: _elm_lang$core$Json_Encode$float(_p16.storage)
+							_1: _elm_lang$core$Json_Encode$float(_p5.storage)
 						},
 						_1: {
 							ctor: '::',
 							_0: {
 								ctor: '_Tuple2',
 								_0: 'pos',
-								_1: _strelka_2017$phi$Simulation_Encoder$encodeCoords(_p16.pos)
+								_1: _strelka_2017$phi$Simulation_Model$encodeCoords(_p5.pos)
 							},
 							_1: {
 								ctor: '::',
@@ -12419,64 +12237,161 @@ var _strelka_2017$phi$Simulation_Encoder$encodeNodeLabel = function (nodeLabel) 
 				});
 	}
 };
-var _strelka_2017$phi$Simulation_Encoder$encodeNode = function (_p17) {
-	var _p18 = _p17;
+var _strelka_2017$phi$Simulation_Model$encodeNode = function (_p6) {
+	var _p7 = _p6;
 	return A2(
 		_elm_community$graph$Graph$Node,
-		_p18.id,
-		_strelka_2017$phi$Simulation_Encoder$encodeNodeLabel(_p18.label));
+		_p7.id,
+		_strelka_2017$phi$Simulation_Model$encodeNodeLabel(_p7.label));
 };
-var _strelka_2017$phi$Simulation_Encoder$encodeGraph = function (graph) {
+var _strelka_2017$phi$Simulation_Model$Coords = F2(
+	function (a, b) {
+		return {x: a, y: b};
+	});
+var _strelka_2017$phi$Simulation_Model$Line = F2(
+	function (a, b) {
+		return {from: a, to: b};
+	});
+var _strelka_2017$phi$Simulation_Model$EncodedEdge = F2(
+	function (a, b) {
+		return {transmissionLine: a, pos: b};
+	});
+var _strelka_2017$phi$Simulation_Model$encodeEdge = F2(
+	function (graph, tLine) {
+		var maybeTo = A2(
+			_elm_lang$core$Maybe$map,
+			function (_p8) {
+				return _strelka_2017$phi$Simulation_Model$pos(
+					function (_) {
+						return _.label;
+					}(
+						function (_) {
+							return _.node;
+						}(_p8)));
+			},
+			A2(_elm_community$graph$Graph$get, tLine.to, graph));
+		var maybeFrom = A2(
+			_elm_lang$core$Maybe$map,
+			function (_p9) {
+				return _strelka_2017$phi$Simulation_Model$pos(
+					function (_) {
+						return _.label;
+					}(
+						function (_) {
+							return _.node;
+						}(_p9)));
+			},
+			A2(_elm_community$graph$Graph$get, tLine.from, graph));
+		var maybeLine = A3(_elm_lang$core$Maybe$map2, _strelka_2017$phi$Simulation_Model$Line, maybeFrom, maybeTo);
+		return A2(
+			_elm_lang$core$Maybe$map,
+			_strelka_2017$phi$Simulation_Model$EncodedEdge(tLine),
+			maybeLine);
+	});
+var _strelka_2017$phi$Simulation_Model$encodeGraph = function (graph) {
 	var tLines = A2(
 		_elm_lang$core$List$filterMap,
-		_strelka_2017$phi$Simulation_Encoder$encodeEdge(graph),
+		_strelka_2017$phi$Simulation_Model$encodeEdge(graph),
 		_elm_community$graph$Graph$edges(graph));
 	var encodedNodes = A2(
 		_elm_lang$core$List$map,
-		_strelka_2017$phi$Simulation_Encoder$encodeNode,
+		_strelka_2017$phi$Simulation_Model$encodeNode,
 		_elm_community$graph$Graph$nodes(graph));
 	return {ctor: '_Tuple2', _0: encodedNodes, _1: tLines};
 };
-
-var _strelka_2017$phi$Simulation_Simulation$view = function (model) {
-	return A2(
-		_elm_lang$html$Html$div,
-		{
-			ctor: '::',
-			_0: _elm_lang$html$Html_Attributes$class('simulation'),
-			_1: {ctor: '[]'}
-		},
-		{
-			ctor: '::',
-			_0: A2(
-				_elm_lang$svg$Svg$svg,
-				{ctor: '[]'},
-				{
-					ctor: '::',
-					_0: A2(
-						_elm_lang$svg$Svg$g,
-						{
-							ctor: '::',
-							_0: _elm_lang$svg$Svg_Attributes$class('links'),
-							_1: {ctor: '[]'}
-						},
-						{ctor: '[]'}),
-					_1: {
-						ctor: '::',
-						_0: A2(
-							_elm_lang$svg$Svg$g,
-							{
-								ctor: '::',
-								_0: _elm_lang$svg$Svg_Attributes$class('nodes'),
-								_1: {ctor: '[]'}
-							},
-							{ctor: '[]'}),
-						_1: {ctor: '[]'}
-					}
-				}),
-			_1: {ctor: '[]'}
-		});
+var _strelka_2017$phi$Simulation_Model$PVPanel = F3(
+	function (a, b, c) {
+		return {dailyGeneration: a, maxGeneration: b, pos: c};
+	});
+var _strelka_2017$phi$Simulation_Model$WindTurbine = F3(
+	function (a, b, c) {
+		return {dailyGeneration: a, maxGeneration: b, pos: c};
+	});
+var _strelka_2017$phi$Simulation_Model$Battery = F3(
+	function (a, b, c) {
+		return {capacity: a, storage: b, pos: c};
+	});
+var _strelka_2017$phi$Simulation_Model$Peer = F4(
+	function (a, b, c, d) {
+		return {joules: a, dailyConsumption: b, desiredConsumption: c, pos: d};
+	});
+var _strelka_2017$phi$Simulation_Model$Weather = F2(
+	function (a, b) {
+		return {sun: a, wind: b};
+	});
+var _strelka_2017$phi$Simulation_Model$BatNode = function (a) {
+	return {ctor: 'BatNode', _0: a};
 };
+var _strelka_2017$phi$Simulation_Model$PeerNode = function (a) {
+	return {ctor: 'PeerNode', _0: a};
+};
+var _strelka_2017$phi$Simulation_Model$WTNode = function (a) {
+	return {ctor: 'WTNode', _0: a};
+};
+var _strelka_2017$phi$Simulation_Model$PVNode = function (a) {
+	return {ctor: 'PVNode', _0: a};
+};
+
+var _strelka_2017$phi$Action$Tick = function (a) {
+	return {ctor: 'Tick', _0: a};
+};
+var _strelka_2017$phi$Action$UpdateWeather = function (a) {
+	return {ctor: 'UpdateWeather', _0: a};
+};
+var _strelka_2017$phi$Action$RenderPhiNetwork = {ctor: 'RenderPhiNetwork'};
+var _strelka_2017$phi$Action$AddEdge = function (a) {
+	return {ctor: 'AddEdge', _0: a};
+};
+var _strelka_2017$phi$Action$AddPeer = function (a) {
+	return {ctor: 'AddPeer', _0: a};
+};
+var _strelka_2017$phi$Action$AddWindTurbine = function (a) {
+	return {ctor: 'AddWindTurbine', _0: a};
+};
+var _strelka_2017$phi$Action$AddPVPanel = function (a) {
+	return {ctor: 'AddPVPanel', _0: a};
+};
+var _strelka_2017$phi$Action$DescribeNode = function (a) {
+	return {ctor: 'DescribeNode', _0: a};
+};
+var _strelka_2017$phi$Action$NextDay = {ctor: 'NextDay'};
+var _strelka_2017$phi$Action$CheckWeather = {ctor: 'CheckWeather'};
+var _strelka_2017$phi$Action$NoOp = {ctor: 'NoOp'};
+var _strelka_2017$phi$Action$SendBotChatMsg = function (a) {
+	return {ctor: 'SendBotChatMsg', _0: a};
+};
+var _strelka_2017$phi$Action$SendUserChatMsg = {ctor: 'SendUserChatMsg'};
+var _strelka_2017$phi$Action$Input = function (a) {
+	return {ctor: 'Input', _0: a};
+};
+
+var _strelka_2017$phi$Chat$parseUserMessage = function (chatMsg) {
+	return (!A2(_elm_lang$core$String$startsWith, '/', chatMsg.text)) ? _strelka_2017$phi$Action$SendBotChatMsg('Sorry, I only respond to commands! Current available ones are:\n\n/weather (i tell you abt the weather today)\n/turn (i move to the next day)\n/describe [nodeId] (i tell you some info about a specific node)\n') : (_elm_lang$core$Native_Utils.eq(chatMsg.text, '/weather') ? _strelka_2017$phi$Action$CheckWeather : (_elm_lang$core$Native_Utils.eq(chatMsg.text, '/turn') ? _strelka_2017$phi$Action$NextDay : (A2(_elm_lang$core$String$startsWith, '/describe', chatMsg.text) ? A2(
+		_elm_lang$core$Maybe$withDefault,
+		_strelka_2017$phi$Action$SendBotChatMsg('I can\'t find that node!'),
+		A2(
+			_elm_lang$core$Maybe$map,
+			_strelka_2017$phi$Action$DescribeNode,
+			A2(
+				_elm_lang$core$Maybe$andThen,
+				function (_p0) {
+					return _elm_lang$core$Result$toMaybe(
+						_elm_lang$core$String$toInt(_p0));
+				},
+				function (_p1) {
+					return _elm_lang$core$List$head(
+						A2(_elm_lang$core$List$drop, 1, _p1));
+				}(
+					A2(_elm_lang$core$String$split, ' ', chatMsg.text))))) : _strelka_2017$phi$Action$NoOp)));
+};
+var _strelka_2017$phi$Chat$ChatMsg = F2(
+	function (a, b) {
+		return {sender: a, text: b};
+	});
+var _strelka_2017$phi$Chat$Bot = {ctor: 'Bot'};
+var _strelka_2017$phi$Chat$initChat = A2(_strelka_2017$phi$Chat$ChatMsg, _strelka_2017$phi$Chat$Bot, 'Welcome to Φ Chat! I only respond to commands for now.\nCurrent available commands are:\n\n/weather (i tell you abt the weather today)\n/turn (i move to the next day)\n/describe [nodeId] (i tell you some info about a specific node)\n');
+var _strelka_2017$phi$Chat$User = {ctor: 'User'};
+
 var _strelka_2017$phi$Simulation_Simulation$toPeer = function (_p0) {
 	var _p1 = _p0;
 	var _p2 = _p1.label;
@@ -12523,7 +12438,7 @@ var _strelka_2017$phi$Simulation_Simulation$distributeGeneratedJoules = function
 		var _p7 = node;
 		if (_p7.ctor === 'PeerNode') {
 			var _p8 = _p7._0;
-			return _strelka_2017$phi$Simulation_Types$PeerNode(
+			return _strelka_2017$phi$Simulation_Model$PeerNode(
 				_elm_lang$core$Native_Utils.update(
 					_p8,
 					{
@@ -12548,7 +12463,7 @@ var _strelka_2017$phi$Simulation_Simulation$joulesToGenerators = F2(
 			switch (_p9.ctor) {
 				case 'PVNode':
 					var _p10 = _p9._0;
-					return _strelka_2017$phi$Simulation_Types$PVNode(
+					return _strelka_2017$phi$Simulation_Model$PVNode(
 						_elm_lang$core$Native_Utils.update(
 							_p10,
 							{
@@ -12556,7 +12471,7 @@ var _strelka_2017$phi$Simulation_Simulation$joulesToGenerators = F2(
 							}));
 				case 'WTNode':
 					var _p11 = _p9._0;
-					return _strelka_2017$phi$Simulation_Types$WTNode(
+					return _strelka_2017$phi$Simulation_Model$WTNode(
 						_elm_lang$core$Native_Utils.update(
 							_p11,
 							{
@@ -12602,12 +12517,73 @@ var _strelka_2017$phi$Simulation_Simulation$addNode = F2(
 			A3(_elm_community$graph$Graph$NodeContext, node, _elm_community$intdict$IntDict$empty, _elm_community$intdict$IntDict$empty),
 			network);
 	});
+var _strelka_2017$phi$Simulation_Simulation$createEdge = F2(
+	function (a, b) {
+		return A3(
+			_elm_community$graph$Graph$Edge,
+			a,
+			b,
+			A2(
+				_elm_lang$core$Basics_ops['++'],
+				_elm_lang$core$Basics$toString(a),
+				A2(
+					_elm_lang$core$Basics_ops['++'],
+					'-',
+					_elm_lang$core$Basics$toString(b))));
+	});
+var _strelka_2017$phi$Simulation_Simulation$generateEdge = A2(
+	_elm_lang$core$Random$generate,
+	_strelka_2017$phi$Action$AddEdge,
+	A3(
+		_elm_lang$core$Random$map2,
+		_strelka_2017$phi$Simulation_Simulation$createEdge,
+		A2(_elm_lang$core$Random$int, 0, 19),
+		A2(_elm_lang$core$Random$int, 0, 19)));
+var _strelka_2017$phi$Simulation_Simulation$generateWeather = A2(
+	_elm_lang$core$Random$generate,
+	_strelka_2017$phi$Action$UpdateWeather,
+	A3(
+		_elm_lang$core$Random$map2,
+		_strelka_2017$phi$Simulation_Model$Weather,
+		A2(_elm_lang$core$Random$float, 0, 1),
+		A2(_elm_lang$core$Random$float, 0, 1)));
 var _strelka_2017$phi$Simulation_Simulation$coordsGenerator = A3(
 	_elm_lang$core$Random$map2,
-	_strelka_2017$phi$Simulation_Types$Coords,
+	_strelka_2017$phi$Simulation_Model$Coords,
 	A2(_elm_lang$core$Random$float, 30.5234 - 1.0e-2, 30.5234 + 1.0e-2),
 	A2(_elm_lang$core$Random$float, 50.4501 - 1.0e-2, 50.4501 + 1.0e-2));
-var _strelka_2017$phi$Simulation_Simulation$initWeather = A2(_strelka_2017$phi$Simulation_Types$Weather, 0.8, 0.4);
+var _strelka_2017$phi$Simulation_Simulation$generatePVPanel = A2(
+	_elm_lang$core$Random$generate,
+	_strelka_2017$phi$Action$AddPVPanel,
+	A4(
+		_elm_lang$core$Random$map3,
+		_strelka_2017$phi$Simulation_Model$PVPanel,
+		_elm_community$random_extra$Random_Extra$constant(
+			{ctor: '[]'}),
+		A2(_elm_lang$core$Random$float, 0, 10),
+		_strelka_2017$phi$Simulation_Simulation$coordsGenerator));
+var _strelka_2017$phi$Simulation_Simulation$generateWindTurbine = A2(
+	_elm_lang$core$Random$generate,
+	_strelka_2017$phi$Action$AddWindTurbine,
+	A4(
+		_elm_lang$core$Random$map3,
+		_strelka_2017$phi$Simulation_Model$WindTurbine,
+		_elm_community$random_extra$Random_Extra$constant(
+			{ctor: '[]'}),
+		A2(_elm_lang$core$Random$float, 0, 10),
+		_strelka_2017$phi$Simulation_Simulation$coordsGenerator));
+var _strelka_2017$phi$Simulation_Simulation$generatePeer = A2(
+	_elm_lang$core$Random$generate,
+	_strelka_2017$phi$Action$AddPeer,
+	A5(
+		_elm_lang$core$Random$map4,
+		_strelka_2017$phi$Simulation_Model$Peer,
+		_elm_community$random_extra$Random_Extra$constant(
+			{ctor: '[]'}),
+		_elm_community$random_extra$Random_Extra$constant(
+			{ctor: '[]'}),
+		A2(_elm_lang$core$Random$float, 7, 10),
+		_strelka_2017$phi$Simulation_Simulation$coordsGenerator));
 var _strelka_2017$phi$Simulation_Simulation$renderPhiNetwork = _elm_lang$core$Native_Platform.outgoingPort(
 	'renderPhiNetwork',
 	function (v) {
@@ -12628,162 +12604,307 @@ var _strelka_2017$phi$Simulation_Simulation$renderPhiNetwork = _elm_lang$core$Na
 			})
 		];
 	});
-var _strelka_2017$phi$Simulation_Simulation$Model = F2(
-	function (a, b) {
-		return {network: a, weather: b};
+
+var _strelka_2017$phi$Model$initGenerators = A2(
+	_elm_lang$core$Basics_ops['++'],
+	A2(_elm_lang$core$List$repeat, 20, _strelka_2017$phi$Simulation_Simulation$generateEdge),
+	A2(
+		_elm_lang$core$Basics_ops['++'],
+		A2(_elm_lang$core$List$repeat, 10, _strelka_2017$phi$Simulation_Simulation$generatePeer),
+		A2(
+			_elm_lang$core$Basics_ops['++'],
+			A2(_elm_lang$core$List$repeat, 7, _strelka_2017$phi$Simulation_Simulation$generatePVPanel),
+			A2(_elm_lang$core$List$repeat, 3, _strelka_2017$phi$Simulation_Simulation$generateWindTurbine))));
+var _strelka_2017$phi$Model$initWeather = A2(_strelka_2017$phi$Simulation_Model$Weather, 0.8, 0.4);
+var _strelka_2017$phi$Model$Model = F4(
+	function (a, b, c, d) {
+		return {input: a, messages: b, network: c, weather: d};
 	});
-var _strelka_2017$phi$Simulation_Simulation$RenderPhiNetwork = {ctor: 'RenderPhiNetwork'};
-var _strelka_2017$phi$Simulation_Simulation$update = F2(
+var _strelka_2017$phi$Model$initModel = A2(
+	_elm_lang$core$Platform_Cmd_ops['!'],
+	A4(
+		_strelka_2017$phi$Model$Model,
+		'',
+		{
+			ctor: '::',
+			_0: _strelka_2017$phi$Chat$initChat,
+			_1: {ctor: '[]'}
+		},
+		_elm_community$graph$Graph$empty,
+		_strelka_2017$phi$Model$initWeather),
+	_strelka_2017$phi$Model$initGenerators);
+
+var _strelka_2017$phi$Update$update = F2(
 	function (msg, model) {
 		update:
 		while (true) {
-			var _p13 = msg;
-			switch (_p13.ctor) {
+			var scrollDown = A2(
+				_elm_lang$core$Task$attempt,
+				_elm_lang$core$Basics$always(_strelka_2017$phi$Action$NoOp),
+				_elm_lang$dom$Dom_Scroll$toBottom('toScroll'));
+			var noOp = A2(
+				_elm_lang$core$Platform_Cmd_ops['!'],
+				model,
+				{ctor: '[]'});
+			var _p0 = msg;
+			switch (_p0.ctor) {
+				case 'NoOp':
+					return noOp;
+				case 'Input':
+					return {
+						ctor: '_Tuple2',
+						_0: _elm_lang$core$Native_Utils.update(
+							model,
+							{input: _p0._0}),
+						_1: _elm_lang$core$Platform_Cmd$none
+					};
+				case 'SendUserChatMsg':
+					if (_elm_lang$core$String$isEmpty(model.input)) {
+						return noOp;
+					} else {
+						var chatMsg = A2(_strelka_2017$phi$Chat$ChatMsg, _strelka_2017$phi$Chat$User, model.input);
+						var newModel = _elm_lang$core$Native_Utils.update(
+							model,
+							{
+								input: '',
+								messages: {ctor: '::', _0: chatMsg, _1: model.messages}
+							});
+						return A3(
+							_ccapndave$elm_update_extra$Update_Extra$andThen,
+							_strelka_2017$phi$Update$update,
+							_strelka_2017$phi$Chat$parseUserMessage(chatMsg),
+							{ctor: '_Tuple2', _0: newModel, _1: scrollDown});
+					}
+				case 'SendBotChatMsg':
+					return {
+						ctor: '_Tuple2',
+						_0: _elm_lang$core$Native_Utils.update(
+							model,
+							{
+								messages: {
+									ctor: '::',
+									_0: A2(_strelka_2017$phi$Chat$ChatMsg, _strelka_2017$phi$Chat$Bot, _p0._0),
+									_1: model.messages
+								}
+							}),
+						_1: scrollDown
+					};
+				case 'CheckWeather':
+					var windy = _elm_lang$core$Basics$toString(model.weather.wind);
+					var sunny = _elm_lang$core$Basics$toString(model.weather.sun);
+					var txt = A2(
+						_elm_lang$core$Basics_ops['++'],
+						'There\'s ',
+						A2(
+							_elm_lang$core$Basics_ops['++'],
+							sunny,
+							A2(
+								_elm_lang$core$Basics_ops['++'],
+								' amount of sun, ',
+								A2(
+									_elm_lang$core$Basics_ops['++'],
+									'and ',
+									A2(_elm_lang$core$Basics_ops['++'], windy, ' amount of wind')))));
+					var _v1 = _strelka_2017$phi$Action$SendBotChatMsg(txt),
+						_v2 = model;
+					msg = _v1;
+					model = _v2;
+					continue update;
+				case 'NextDay':
+					var _v3 = _strelka_2017$phi$Action$Tick(1),
+						_v4 = model;
+					msg = _v3;
+					model = _v4;
+					continue update;
+				case 'DescribeNode':
+					return _strelka_2017$phi$Update$update(
+						_strelka_2017$phi$Action$SendBotChatMsg(
+							A2(
+								_elm_lang$core$Maybe$withDefault,
+								'Node not found :(',
+								A2(
+									_elm_lang$core$Maybe$map,
+									function (_p1) {
+										return A2(
+											_elm_lang$core$Json_Encode$encode,
+											4,
+											_strelka_2017$phi$Simulation_Model$encodeNodeLabel(
+												function (_) {
+													return _.label;
+												}(
+													function (_) {
+														return _.node;
+													}(_p1))));
+									},
+									A2(_elm_community$graph$Graph$get, _p0._0, model.network)))))(model);
 				case 'AddPVPanel':
-					var _v7 = _strelka_2017$phi$Simulation_Simulation$RenderPhiNetwork,
+					var _v5 = _strelka_2017$phi$Action$RenderPhiNetwork,
+						_v6 = _elm_lang$core$Native_Utils.update(
+						model,
+						{
+							network: A2(
+								_strelka_2017$phi$Simulation_Simulation$addNode,
+								_strelka_2017$phi$Simulation_Model$PVNode(_p0._0),
+								model.network)
+						});
+					msg = _v5;
+					model = _v6;
+					continue update;
+				case 'AddWindTurbine':
+					var _v7 = _strelka_2017$phi$Action$RenderPhiNetwork,
 						_v8 = _elm_lang$core$Native_Utils.update(
 						model,
 						{
 							network: A2(
 								_strelka_2017$phi$Simulation_Simulation$addNode,
-								_strelka_2017$phi$Simulation_Types$PVNode(_p13._0),
+								_strelka_2017$phi$Simulation_Model$WTNode(_p0._0),
 								model.network)
 						});
 					msg = _v7;
 					model = _v8;
 					continue update;
-				case 'AddWindTurbine':
-					var _v9 = _strelka_2017$phi$Simulation_Simulation$RenderPhiNetwork,
+				case 'AddPeer':
+					var _v9 = _strelka_2017$phi$Action$RenderPhiNetwork,
 						_v10 = _elm_lang$core$Native_Utils.update(
 						model,
 						{
 							network: A2(
 								_strelka_2017$phi$Simulation_Simulation$addNode,
-								_strelka_2017$phi$Simulation_Types$WTNode(_p13._0),
+								_strelka_2017$phi$Simulation_Model$PeerNode(_p0._0),
 								model.network)
 						});
 					msg = _v9;
 					model = _v10;
 					continue update;
-				case 'AddPeer':
-					var _v11 = _strelka_2017$phi$Simulation_Simulation$RenderPhiNetwork,
+				case 'AddEdge':
+					var _v11 = _strelka_2017$phi$Action$RenderPhiNetwork,
 						_v12 = _elm_lang$core$Native_Utils.update(
 						model,
 						{
-							network: A2(
-								_strelka_2017$phi$Simulation_Simulation$addNode,
-								_strelka_2017$phi$Simulation_Types$PeerNode(_p13._0),
-								model.network)
+							network: A2(_strelka_2017$phi$Simulation_Simulation$addEdge, _p0._0, model.network)
 						});
 					msg = _v11;
 					model = _v12;
 					continue update;
-				case 'AddEdge':
-					var _v13 = _strelka_2017$phi$Simulation_Simulation$RenderPhiNetwork,
+				case 'UpdateWeather':
+					var _v13 = _strelka_2017$phi$Action$RenderPhiNetwork,
 						_v14 = _elm_lang$core$Native_Utils.update(
 						model,
-						{
-							network: A2(_strelka_2017$phi$Simulation_Simulation$addEdge, _p13._0, model.network)
-						});
+						{weather: _p0._0});
 					msg = _v13;
 					model = _v14;
 					continue update;
-				default:
+				case 'RenderPhiNetwork':
 					return {
 						ctor: '_Tuple2',
 						_0: model,
 						_1: _strelka_2017$phi$Simulation_Simulation$renderPhiNetwork(
-							_strelka_2017$phi$Simulation_Encoder$encodeGraph(model.network))
+							_strelka_2017$phi$Simulation_Model$encodeGraph(model.network))
 					};
+				default:
+					var _p3 = _p0._0;
+					var _p2 = _p3;
+					if (_p2 === 0) {
+						return A3(
+							_ccapndave$elm_update_extra$Update_Extra$andThen,
+							_strelka_2017$phi$Update$update,
+							_strelka_2017$phi$Action$RenderPhiNetwork,
+							A2(
+								_elm_lang$core$Platform_Cmd_ops['!'],
+								model,
+								{ctor: '[]'}));
+					} else {
+						return A3(
+							_ccapndave$elm_update_extra$Update_Extra$andThen,
+							_strelka_2017$phi$Update$update,
+							_strelka_2017$phi$Action$Tick(_p3 - 1),
+							_strelka_2017$phi$Update$nextDay(model));
+					}
 			}
 		}
 	});
-var _strelka_2017$phi$Simulation_Simulation$AddEdge = function (a) {
-	return {ctor: 'AddEdge', _0: a};
-};
-var _strelka_2017$phi$Simulation_Simulation$randomEdge = A2(
-	_elm_lang$core$Random$generate,
-	function (_p14) {
-		return _strelka_2017$phi$Simulation_Simulation$AddEdge(
-			A2(
-				F2(
-					function (x, y) {
-						return y(x);
-					}),
-				'',
-				_p14));
-	},
-	A3(
-		_elm_lang$core$Random$map2,
-		_elm_community$graph$Graph$Edge,
-		A2(_elm_lang$core$Random$int, 0, 19),
-		A2(_elm_lang$core$Random$int, 0, 19)));
-var _strelka_2017$phi$Simulation_Simulation$AddPeer = function (a) {
-	return {ctor: 'AddPeer', _0: a};
-};
-var _strelka_2017$phi$Simulation_Simulation$randomPeer = A2(
-	_elm_lang$core$Random$generate,
-	_strelka_2017$phi$Simulation_Simulation$AddPeer,
-	A3(
-		_elm_lang$core$Random$map2,
+var _strelka_2017$phi$Update$nextDay = function (model) {
+	var newNetwork = _strelka_2017$phi$Simulation_Simulation$distributeGeneratedJoules(
+		A2(_strelka_2017$phi$Simulation_Simulation$joulesToGenerators, model.weather, model.network));
+	var newModel = _elm_lang$core$Native_Utils.update(
+		model,
+		{network: newNetwork});
+	return A3(
+		_ccapndave$elm_update_extra$Update_Extra$andThen,
+		_strelka_2017$phi$Update$update,
+		_strelka_2017$phi$Action$RenderPhiNetwork,
 		A2(
-			_strelka_2017$phi$Simulation_Types$Peer,
-			{ctor: '[]'},
-			{ctor: '[]'}),
-		A2(_elm_lang$core$Random$float, 7, 10),
-		_strelka_2017$phi$Simulation_Simulation$coordsGenerator));
-var _strelka_2017$phi$Simulation_Simulation$AddWindTurbine = function (a) {
-	return {ctor: 'AddWindTurbine', _0: a};
-};
-var _strelka_2017$phi$Simulation_Simulation$randomWindTurbine = A2(
-	_elm_lang$core$Random$generate,
-	_strelka_2017$phi$Simulation_Simulation$AddWindTurbine,
-	A3(
-		_elm_lang$core$Random$map2,
-		_strelka_2017$phi$Simulation_Types$WindTurbine(
-			{ctor: '[]'}),
-		A2(_elm_lang$core$Random$float, 0, 10),
-		_strelka_2017$phi$Simulation_Simulation$coordsGenerator));
-var _strelka_2017$phi$Simulation_Simulation$AddPVPanel = function (a) {
-	return {ctor: 'AddPVPanel', _0: a};
-};
-var _strelka_2017$phi$Simulation_Simulation$randomPVPanel = A2(
-	_elm_lang$core$Random$generate,
-	_strelka_2017$phi$Simulation_Simulation$AddPVPanel,
-	A3(
-		_elm_lang$core$Random$map2,
-		_strelka_2017$phi$Simulation_Types$PVPanel(
-			{ctor: '[]'}),
-		A2(_elm_lang$core$Random$float, 0, 10),
-		_strelka_2017$phi$Simulation_Simulation$coordsGenerator));
-var _strelka_2017$phi$Simulation_Simulation$init = {
-	ctor: '_Tuple2',
-	_0: A2(_strelka_2017$phi$Simulation_Simulation$Model, _elm_community$graph$Graph$empty, _strelka_2017$phi$Simulation_Simulation$initWeather),
-	_1: _elm_lang$core$Platform_Cmd$batch(
-		A2(
-			_elm_lang$core$Basics_ops['++'],
-			A2(_elm_lang$core$List$repeat, 20, _strelka_2017$phi$Simulation_Simulation$randomEdge),
-			A2(
-				_elm_lang$core$Basics_ops['++'],
-				A2(_elm_lang$core$List$repeat, 10, _strelka_2017$phi$Simulation_Simulation$randomPeer),
-				A2(
-					_elm_lang$core$Basics_ops['++'],
-					A2(_elm_lang$core$List$repeat, 7, _strelka_2017$phi$Simulation_Simulation$randomPVPanel),
-					A2(_elm_lang$core$List$repeat, 3, _strelka_2017$phi$Simulation_Simulation$randomWindTurbine)))))
+			_elm_lang$core$Platform_Cmd_ops['!'],
+			newModel,
+			{
+				ctor: '::',
+				_0: _strelka_2017$phi$Simulation_Simulation$generateWeather,
+				_1: {ctor: '[]'}
+			}));
 };
 
-var _strelka_2017$phi$Main$subscriptions = function (model) {
-	return _elm_lang$core$Platform_Sub$none;
+var _strelka_2017$phi$View$onEnter = function (msg) {
+	var isEnter = function (num) {
+		var _p0 = num;
+		if (_p0 === 13) {
+			return msg;
+		} else {
+			return _strelka_2017$phi$Action$NoOp;
+		}
+	};
+	return A2(
+		_elm_lang$html$Html_Events$on,
+		'keyup',
+		A2(_elm_lang$core$Json_Decode$map, isEnter, _elm_lang$html$Html_Events$keyCode));
 };
-var _strelka_2017$phi$Main$senderClass = function (sender) {
-	var _p0 = sender;
-	if (_p0.ctor === 'User') {
+var _strelka_2017$phi$View$viewSimulation = function (model) {
+	return A2(
+		_elm_lang$html$Html$div,
+		{
+			ctor: '::',
+			_0: _elm_lang$html$Html_Attributes$class('simulation'),
+			_1: {ctor: '[]'}
+		},
+		{
+			ctor: '::',
+			_0: A2(
+				_elm_lang$svg$Svg$svg,
+				{ctor: '[]'},
+				{
+					ctor: '::',
+					_0: A2(
+						_elm_lang$svg$Svg$g,
+						{
+							ctor: '::',
+							_0: _elm_lang$svg$Svg_Attributes$class('links'),
+							_1: {ctor: '[]'}
+						},
+						{ctor: '[]'}),
+					_1: {
+						ctor: '::',
+						_0: A2(
+							_elm_lang$svg$Svg$g,
+							{
+								ctor: '::',
+								_0: _elm_lang$svg$Svg_Attributes$class('nodes'),
+								_1: {ctor: '[]'}
+							},
+							{ctor: '[]'}),
+						_1: {ctor: '[]'}
+					}
+				}),
+			_1: {ctor: '[]'}
+		});
+};
+var _strelka_2017$phi$View$senderClass = function (sender) {
+	var _p1 = sender;
+	if (_p1.ctor === 'User') {
 		return 'user-sent';
 	} else {
 		return 'bot-sent';
 	}
 };
-var _strelka_2017$phi$Main$viewChatMsg = function (msg) {
+var _strelka_2017$phi$View$viewChatMsg = function (msg) {
 	return A2(
 		_elm_lang$html$Html$li,
 		{
@@ -12794,7 +12915,7 @@ var _strelka_2017$phi$Main$viewChatMsg = function (msg) {
 					'message ',
 					A2(
 						_elm_lang$core$Basics_ops['++'],
-						_strelka_2017$phi$Main$senderClass(msg.sender),
+						_strelka_2017$phi$View$senderClass(msg.sender),
 						' appeared'))),
 			_1: {ctor: '[]'}
 		},
@@ -12826,209 +12947,7 @@ var _strelka_2017$phi$Main$viewChatMsg = function (msg) {
 			_1: {ctor: '[]'}
 		});
 };
-var _strelka_2017$phi$Main$Model = F3(
-	function (a, b, c) {
-		return {input: a, messages: b, simModel: c};
-	});
-var _strelka_2017$phi$Main$ChatMsg = F2(
-	function (a, b) {
-		return {sender: a, text: b};
-	});
-var _strelka_2017$phi$Main$Bot = {ctor: 'Bot'};
-var _strelka_2017$phi$Main$initMsg = A2(_strelka_2017$phi$Main$ChatMsg, _strelka_2017$phi$Main$Bot, 'Welcome to Φ Chat! I only respond to commands for now.\nCurrent available commands are:\n\n/weather (i tell you abt the weather today)\n/turn (i move to the next day)\n/describe [nodeId] (i tell you some info about a specific node)\n');
-var _strelka_2017$phi$Main$User = {ctor: 'User'};
-var _strelka_2017$phi$Main$DescribeNode = function (a) {
-	return {ctor: 'DescribeNode', _0: a};
-};
-var _strelka_2017$phi$Main$NextDay = {ctor: 'NextDay'};
-var _strelka_2017$phi$Main$CheckWeather = {ctor: 'CheckWeather'};
-var _strelka_2017$phi$Main$SimMsg = function (a) {
-	return {ctor: 'SimMsg', _0: a};
-};
-var _strelka_2017$phi$Main$initModel = function () {
-	var _p1 = _strelka_2017$phi$Simulation_Simulation$init;
-	var simModel = _p1._0;
-	var simCmd = _p1._1;
-	return {
-		ctor: '_Tuple2',
-		_0: A3(
-			_strelka_2017$phi$Main$Model,
-			'',
-			{
-				ctor: '::',
-				_0: _strelka_2017$phi$Main$initMsg,
-				_1: {ctor: '[]'}
-			},
-			simModel),
-		_1: A2(_elm_lang$core$Platform_Cmd$map, _strelka_2017$phi$Main$SimMsg, simCmd)
-	};
-}();
-var _strelka_2017$phi$Main$NoOp = {ctor: 'NoOp'};
-var _strelka_2017$phi$Main$onEnter = function (msg) {
-	var isEnter = function (num) {
-		var _p2 = num;
-		if (_p2 === 13) {
-			return msg;
-		} else {
-			return _strelka_2017$phi$Main$NoOp;
-		}
-	};
-	return A2(
-		_elm_lang$html$Html_Events$on,
-		'keyup',
-		A2(_elm_lang$core$Json_Decode$map, isEnter, _elm_lang$html$Html_Events$keyCode));
-};
-var _strelka_2017$phi$Main$SendBotChatMsg = function (a) {
-	return {ctor: 'SendBotChatMsg', _0: a};
-};
-var _strelka_2017$phi$Main$parseUserMessage = function (chatMsg) {
-	return (!A2(_elm_lang$core$String$startsWith, '/', chatMsg.text)) ? _strelka_2017$phi$Main$SendBotChatMsg('Sorry, I only respond to commands! Current available ones are:\n\n/weather (i tell you abt the weather today)\n/turn (i move to the next day)\n/describe [nodeId] (i tell you some info about a specific node)\n') : (_elm_lang$core$Native_Utils.eq(chatMsg.text, '/weather') ? _strelka_2017$phi$Main$CheckWeather : (_elm_lang$core$Native_Utils.eq(chatMsg.text, '/turn') ? _strelka_2017$phi$Main$NextDay : (A2(_elm_lang$core$String$startsWith, '/describe', chatMsg.text) ? A2(
-		_elm_lang$core$Maybe$withDefault,
-		_strelka_2017$phi$Main$SendBotChatMsg('I can\'t find that node!'),
-		A2(
-			_elm_lang$core$Maybe$map,
-			_strelka_2017$phi$Main$DescribeNode,
-			A2(
-				_elm_lang$core$Maybe$andThen,
-				function (_p3) {
-					return _elm_lang$core$Result$toMaybe(
-						_elm_lang$core$String$toInt(_p3));
-				},
-				function (_p4) {
-					return _elm_lang$core$List$head(
-						A2(_elm_lang$core$List$drop, 1, _p4));
-				}(
-					A2(_elm_lang$core$String$split, ' ', chatMsg.text))))) : _strelka_2017$phi$Main$NoOp)));
-};
-var _strelka_2017$phi$Main$update = F2(
-	function (msg, model) {
-		update:
-		while (true) {
-			var scrollDown = A2(
-				_elm_lang$core$Task$attempt,
-				_elm_lang$core$Basics$always(_strelka_2017$phi$Main$NoOp),
-				_elm_lang$dom$Dom_Scroll$toBottom('toScroll'));
-			var noOp = A2(
-				_elm_lang$core$Platform_Cmd_ops['!'],
-				model,
-				{ctor: '[]'});
-			var _p5 = msg;
-			switch (_p5.ctor) {
-				case 'NoOp':
-					return noOp;
-				case 'Input':
-					return {
-						ctor: '_Tuple2',
-						_0: _elm_lang$core$Native_Utils.update(
-							model,
-							{input: _p5._0}),
-						_1: _elm_lang$core$Platform_Cmd$none
-					};
-				case 'SendUserChatMsg':
-					if (_elm_lang$core$String$isEmpty(model.input)) {
-						return noOp;
-					} else {
-						var chatMsg = A2(_strelka_2017$phi$Main$ChatMsg, _strelka_2017$phi$Main$User, model.input);
-						var newModel = _elm_lang$core$Native_Utils.update(
-							model,
-							{
-								input: '',
-								messages: {ctor: '::', _0: chatMsg, _1: model.messages}
-							});
-						return A3(
-							_ccapndave$elm_update_extra$Update_Extra$andThen,
-							_strelka_2017$phi$Main$update,
-							_strelka_2017$phi$Main$parseUserMessage(chatMsg),
-							{ctor: '_Tuple2', _0: newModel, _1: scrollDown});
-					}
-				case 'SendBotChatMsg':
-					return {
-						ctor: '_Tuple2',
-						_0: _elm_lang$core$Native_Utils.update(
-							model,
-							{
-								messages: {
-									ctor: '::',
-									_0: A2(_strelka_2017$phi$Main$ChatMsg, _strelka_2017$phi$Main$Bot, _p5._0),
-									_1: model.messages
-								}
-							}),
-						_1: scrollDown
-					};
-				case 'SimMsg':
-					var _p6 = A2(_strelka_2017$phi$Simulation_Simulation$update, _p5._0, model.simModel);
-					var simModel = _p6._0;
-					var cmd = _p6._1;
-					return {
-						ctor: '_Tuple2',
-						_0: _elm_lang$core$Native_Utils.update(
-							model,
-							{simModel: simModel}),
-						_1: A2(_elm_lang$core$Platform_Cmd$map, _strelka_2017$phi$Main$SimMsg, cmd)
-					};
-				case 'CheckWeather':
-					var windy = _elm_lang$core$Basics$toString(model.simModel.weather.wind);
-					var sunny = _elm_lang$core$Basics$toString(model.simModel.weather.sun);
-					var txt = A2(
-						_elm_lang$core$Basics_ops['++'],
-						'There\'s ',
-						A2(
-							_elm_lang$core$Basics_ops['++'],
-							sunny,
-							A2(
-								_elm_lang$core$Basics_ops['++'],
-								' amount of sun, ',
-								A2(
-									_elm_lang$core$Basics_ops['++'],
-									'and ',
-									A2(_elm_lang$core$Basics_ops['++'], windy, ' amount of wind')))));
-					var _v3 = _strelka_2017$phi$Main$SendBotChatMsg(txt),
-						_v4 = model;
-					msg = _v3;
-					model = _v4;
-					continue update;
-				case 'NextDay':
-					var simModel = model.simModel;
-					var newNetwork = _strelka_2017$phi$Simulation_Simulation$distributeGeneratedJoules(
-						A2(_strelka_2017$phi$Simulation_Simulation$joulesToGenerators, simModel.weather, simModel.network));
-					var newSimModel = _elm_lang$core$Native_Utils.update(
-						simModel,
-						{network: newNetwork});
-					return A2(
-						_elm_lang$core$Platform_Cmd_ops['!'],
-						_elm_lang$core$Native_Utils.update(
-							model,
-							{simModel: newSimModel}),
-						{ctor: '[]'});
-				default:
-					return _strelka_2017$phi$Main$update(
-						_strelka_2017$phi$Main$SendBotChatMsg(
-							A2(
-								_elm_lang$core$Json_Encode$encode,
-								4,
-								A2(
-									_elm_lang$core$Maybe$withDefault,
-									_elm_lang$core$Json_Encode$string('Node not found :('),
-									A2(
-										_elm_lang$core$Maybe$map,
-										function (_p7) {
-											return _strelka_2017$phi$Simulation_Encoder$encodeNodeLabel(
-												function (_) {
-													return _.label;
-												}(
-													function (_) {
-														return _.node;
-													}(_p7)));
-										},
-										A2(_elm_community$graph$Graph$get, _p5._0, model.simModel.network))))))(model);
-			}
-		}
-	});
-var _strelka_2017$phi$Main$SendUserChatMsg = {ctor: 'SendUserChatMsg'};
-var _strelka_2017$phi$Main$Input = function (a) {
-	return {ctor: 'Input', _0: a};
-};
-var _strelka_2017$phi$Main$inputFooter = function (model) {
+var _strelka_2017$phi$View$inputFooter = function (model) {
 	return A2(
 		_elm_lang$html$Html$div,
 		{
@@ -13054,10 +12973,10 @@ var _strelka_2017$phi$Main$inputFooter = function (model) {
 							_0: _elm_lang$html$Html_Attributes$class('message_input'),
 							_1: {
 								ctor: '::',
-								_0: _strelka_2017$phi$Main$onEnter(_strelka_2017$phi$Main$SendUserChatMsg),
+								_0: _strelka_2017$phi$View$onEnter(_strelka_2017$phi$Action$SendUserChatMsg),
 								_1: {
 									ctor: '::',
-									_0: _elm_lang$html$Html_Events$onInput(_strelka_2017$phi$Main$Input),
+									_0: _elm_lang$html$Html_Events$onInput(_strelka_2017$phi$Action$Input),
 									_1: {
 										ctor: '::',
 										_0: _elm_lang$html$Html_Attributes$value(model.input),
@@ -13078,7 +12997,7 @@ var _strelka_2017$phi$Main$inputFooter = function (model) {
 						_0: _elm_lang$html$Html_Attributes$class('send_message'),
 						_1: {
 							ctor: '::',
-							_0: _elm_lang$html$Html_Events$onClick(_strelka_2017$phi$Main$SendUserChatMsg),
+							_0: _elm_lang$html$Html_Events$onClick(_strelka_2017$phi$Action$SendUserChatMsg),
 							_1: {ctor: '[]'}
 						}
 					},
@@ -13113,16 +13032,13 @@ var _strelka_2017$phi$Main$inputFooter = function (model) {
 			}
 		});
 };
-var _strelka_2017$phi$Main$view = function (model) {
+var _strelka_2017$phi$View$view = function (model) {
 	return A2(
 		_elm_lang$html$Html$div,
 		{ctor: '[]'},
 		{
 			ctor: '::',
-			_0: A2(
-				_elm_lang$html$Html$map,
-				_strelka_2017$phi$Main$SimMsg,
-				_strelka_2017$phi$Simulation_Simulation$view(model.simModel)),
+			_0: _strelka_2017$phi$View$viewSimulation(model),
 			_1: {
 				ctor: '::',
 				_0: A2(
@@ -13147,20 +13063,24 @@ var _strelka_2017$phi$Main$view = function (model) {
 							},
 							A2(
 								_elm_lang$core$List$map,
-								_strelka_2017$phi$Main$viewChatMsg,
+								_strelka_2017$phi$View$viewChatMsg,
 								_elm_lang$core$List$reverse(model.messages))),
 						_1: {ctor: '[]'}
 					}),
 				_1: {
 					ctor: '::',
-					_0: _strelka_2017$phi$Main$inputFooter(model),
+					_0: _strelka_2017$phi$View$inputFooter(model),
 					_1: {ctor: '[]'}
 				}
 			}
 		});
 };
+
+var _strelka_2017$phi$Main$subscriptions = function (model) {
+	return _elm_lang$core$Platform_Sub$none;
+};
 var _strelka_2017$phi$Main$main = _elm_lang$html$Html$program(
-	{init: _strelka_2017$phi$Main$initModel, view: _strelka_2017$phi$Main$view, update: _strelka_2017$phi$Main$update, subscriptions: _strelka_2017$phi$Main$subscriptions})();
+	{init: _strelka_2017$phi$Model$initModel, view: _strelka_2017$phi$View$view, update: _strelka_2017$phi$Update$update, subscriptions: _strelka_2017$phi$Main$subscriptions})();
 
 var Elm = {};
 Elm['Main'] = Elm['Main'] || {};
