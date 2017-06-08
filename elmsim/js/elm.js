@@ -12537,8 +12537,8 @@ var _strelka_2017$phi$Simulation_Simulation$generateEdge = A2(
 	A3(
 		_elm_lang$core$Random$map2,
 		_strelka_2017$phi$Simulation_Simulation$createEdge,
-		A2(_elm_lang$core$Random$int, 0, 19),
-		A2(_elm_lang$core$Random$int, 0, 19)));
+		A2(_elm_lang$core$Random$int, 0, 45),
+		A2(_elm_lang$core$Random$int, 0, 45)));
 var _strelka_2017$phi$Simulation_Simulation$generateWeather = A2(
 	_elm_lang$core$Random$generate,
 	_strelka_2017$phi$Action$UpdateWeather,
@@ -12613,8 +12613,8 @@ var _strelka_2017$phi$Model$initGenerators = A2(
 		A2(_elm_lang$core$List$repeat, 10, _strelka_2017$phi$Simulation_Simulation$generatePeer),
 		A2(
 			_elm_lang$core$Basics_ops['++'],
-			A2(_elm_lang$core$List$repeat, 7, _strelka_2017$phi$Simulation_Simulation$generatePVPanel),
-			A2(_elm_lang$core$List$repeat, 3, _strelka_2017$phi$Simulation_Simulation$generateWindTurbine))));
+			A2(_elm_lang$core$List$repeat, 30, _strelka_2017$phi$Simulation_Simulation$generatePVPanel),
+			A2(_elm_lang$core$List$repeat, 5, _strelka_2017$phi$Simulation_Simulation$generateWindTurbine))));
 var _strelka_2017$phi$Model$initWeather = A2(_strelka_2017$phi$Simulation_Model$Weather, 0.8, 0.4);
 var _strelka_2017$phi$Model$Model = F4(
 	function (a, b, c, d) {
@@ -12857,45 +12857,6 @@ var _strelka_2017$phi$View$onEnter = function (msg) {
 		'keyup',
 		A2(_elm_lang$core$Json_Decode$map, isEnter, _elm_lang$html$Html_Events$keyCode));
 };
-var _strelka_2017$phi$View$viewSimulation = function (model) {
-	return A2(
-		_elm_lang$html$Html$div,
-		{
-			ctor: '::',
-			_0: _elm_lang$html$Html_Attributes$class('simulation'),
-			_1: {ctor: '[]'}
-		},
-		{
-			ctor: '::',
-			_0: A2(
-				_elm_lang$svg$Svg$svg,
-				{ctor: '[]'},
-				{
-					ctor: '::',
-					_0: A2(
-						_elm_lang$svg$Svg$g,
-						{
-							ctor: '::',
-							_0: _elm_lang$svg$Svg_Attributes$class('links'),
-							_1: {ctor: '[]'}
-						},
-						{ctor: '[]'}),
-					_1: {
-						ctor: '::',
-						_0: A2(
-							_elm_lang$svg$Svg$g,
-							{
-								ctor: '::',
-								_0: _elm_lang$svg$Svg_Attributes$class('nodes'),
-								_1: {ctor: '[]'}
-							},
-							{ctor: '[]'}),
-						_1: {ctor: '[]'}
-					}
-				}),
-			_1: {ctor: '[]'}
-		});
-};
 var _strelka_2017$phi$View$senderClass = function (sender) {
 	var _p1 = sender;
 	if (_p1.ctor === 'User') {
@@ -13038,41 +12999,37 @@ var _strelka_2017$phi$View$view = function (model) {
 		{ctor: '[]'},
 		{
 			ctor: '::',
-			_0: _strelka_2017$phi$View$viewSimulation(model),
-			_1: {
-				ctor: '::',
-				_0: A2(
-					_elm_lang$html$Html$div,
-					{
-						ctor: '::',
-						_0: _elm_lang$html$Html_Attributes$class('chat_window'),
-						_1: {ctor: '[]'}
-					},
-					{
-						ctor: '::',
-						_0: A2(
-							_elm_lang$html$Html$ul,
-							{
-								ctor: '::',
-								_0: _elm_lang$html$Html_Attributes$id('toScroll'),
-								_1: {
-									ctor: '::',
-									_0: _elm_lang$html$Html_Attributes$class('messages'),
-									_1: {ctor: '[]'}
-								}
-							},
-							A2(
-								_elm_lang$core$List$map,
-								_strelka_2017$phi$View$viewChatMsg,
-								_elm_lang$core$List$reverse(model.messages))),
-						_1: {ctor: '[]'}
-					}),
-				_1: {
+			_0: A2(
+				_elm_lang$html$Html$div,
+				{
 					ctor: '::',
-					_0: _strelka_2017$phi$View$inputFooter(model),
+					_0: _elm_lang$html$Html_Attributes$class('chat_window'),
 					_1: {ctor: '[]'}
-				}
-			}
+				},
+				{
+					ctor: '::',
+					_0: A2(
+						_elm_lang$html$Html$ul,
+						{
+							ctor: '::',
+							_0: _elm_lang$html$Html_Attributes$id('toScroll'),
+							_1: {
+								ctor: '::',
+								_0: _elm_lang$html$Html_Attributes$class('messages'),
+								_1: {ctor: '[]'}
+							}
+						},
+						A2(
+							_elm_lang$core$List$map,
+							_strelka_2017$phi$View$viewChatMsg,
+							_elm_lang$core$List$reverse(model.messages))),
+					_1: {
+						ctor: '::',
+						_0: _strelka_2017$phi$View$inputFooter(model),
+						_1: {ctor: '[]'}
+					}
+				}),
+			_1: {ctor: '[]'}
 		});
 };
 

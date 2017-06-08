@@ -45,8 +45,8 @@ generatePVPanel =
 generateEdge : Cmd Msg
 generateEdge =
     Random.map2 createEdge
-        (Random.int 0 19)
-        (Random.int 0 19)
+        (Random.int 0 45)
+        (Random.int 0 45)
         |> Random.generate AddEdge
 
 
@@ -63,7 +63,6 @@ generateWindTurbine =
         -- capacity
         coordsGenerator
         |> Random.generate AddWindTurbine
-
 
 generatePeer : Cmd Msg
 generatePeer =

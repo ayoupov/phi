@@ -1,28 +1,63 @@
 var phiNetwork;
 
-var svg;
+var svg = d3.select("body")
+            .insert("div", ":first-child")
+            .attr("class", "simulation")
+            .append("svg");
+
+var svg = d3.select("svg");
+
+var zoom = d3.zoom()
+    .scaleExtent([1, 40])
+    .on("zoom", zoomed);
+
+var container = svg.append("g")
+                   .attr("class", "container");
+
+// Load SVG Map from file, append to container
+// and set container with graph elements
+d3.xml("assets/map.svg").get(function(error, documentFragment) {
+  if (error) throw error;
+  var svgNode = documentFragment.getElementsByTagName("svg")[0];
+
+  //container.append("g")
+  //         .attr("class", "map")
+  container.node().appendChild(svgNode);
+
+  container.append("g")
+           .attr("class", "links");
+
+  container.append("g")
+           .attr("class", "nodes");
+});
+
+
+
+function zoomed() {
+  var transform = d3.zoomTransform(this);
+  container.attr("transform", transform);
+}
 
 document.addEventListener("DOMContentLoaded", function(event) {
   var app = Elm.Main.fullscreen();
 
+  d3.select("svg").call(zoom);
+
   app.ports.renderPhiNetwork.subscribe(function(model) {
     var t = d3.transition().duration(1500);
 
-    svg = d3.select("svg");
 
     phiNetwork = model;
     var phiNodes = model[0];
     var phiEdges = model[1];
 
-    var svgBox = svg.node().getBBox();
-
     var xScale = d3.scaleLinear()
                          .domain([30.5234 - 0.01, 30.5234 + 0.01])
-                         .range([0,window.innerWidth-200]);
+                         .range([100,window.innerWidth-100]);
 
     var yScale = d3.scaleLinear()
                          .domain([50.4501 - 0.01, 50.4501 + 0.01])
-                         .range([0,window.innerHeight-200]);
+                         .range([100,window.innerHeight-100]);
 
     function setX(node) {
       return xScale(node.label.pos.x);
@@ -47,7 +82,7 @@ document.addEventListener("DOMContentLoaded", function(event) {
 
     function addBaseNode() {
       return d3.symbol()
-        .size(500)
+        .size(70)
         .type(nodeShape);
     }
 
@@ -55,7 +90,7 @@ document.addEventListener("DOMContentLoaded", function(event) {
       return d3.symbol()
         .size(function(d) {
           if (["pvPanel", "windTurbine"].includes(d.label.nodeType)) {
-            return 500 + 500*(d.label.dailyGeneration[0] || 0);
+            return 70 + 500*(d.label.dailyGeneration[0] || 0);
           } else {
             return 0;
           }

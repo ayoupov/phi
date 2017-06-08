@@ -30,5 +30,5 @@ initGenerators : List (Cmd Msg)
 initGenerators =
     List.repeat 20 Simulation.generateEdge
         ++ List.repeat 10 Simulation.generatePeer
-        ++ List.repeat 7 Simulation.generatePVPanel
-        ++ List.repeat 3 Simulation.generateWindTurbine
+        ++ List.repeat 30 Simulation.generatePVPanel
+        ++ List.repeat 5 Simulation.generateWindTurbine

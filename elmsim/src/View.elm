@@ -14,12 +14,11 @@ import Svg.Attributes as SVG
 view : Model -> Html Msg
 view model =
     div []
-        [ viewSimulation model
-        , div [ class "chat_window" ]
+        [ div [ class "chat_window" ]
             [ ul [ id "toScroll", class "messages" ]
                 (List.map viewChatMsg (List.reverse model.messages))
+            , inputFooter model
             ]
-        , inputFooter model
         ]
 
 
@@ -57,16 +56,6 @@ viewChatMsg msg =
     li [ class <| "message " ++ senderClass msg.sender ++ " appeared" ]
         [ div [ class "text_wrapper" ]
             [ div [ class "text" ] [ text msg.text ] ]
-        ]
-
-
-viewSimulation : Model -> Html Msg
-viewSimulation model =
-    div [ class "simulation" ]
-        [ svg []
-            [ g [ SVG.class "links" ] []
-            , g [ SVG.class "nodes" ] []
-            ]
         ]
 
 
