@@ -67,9 +67,17 @@ update msg model =
                         ++ " amount of wind"
             in
             update (SendBotChatMsg txt) model
+        DaySummary ->
+          let
+              txt =
+                "Last week we have generated a bunch of kWh in total, the community had consumed lots of energy, and some of has stored in the batteries. Do you want to know more before I go on?"
+          in
+          update (SendBotChatMsg txt) model
 
-        NextDay ->
+        CallTurn ->
             update (Tick 1) model
+            |> andThen update CheckWeather
+            |> andThen update DaySummary
 
         DescribeNode n ->
             model

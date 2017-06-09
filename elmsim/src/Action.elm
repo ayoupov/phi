@@ -9,7 +9,6 @@ type Msg
     | SendBotChatMsg String
     | NoOp
     | CheckWeather
-    | NextDay
     | DescribeNode Int
     | AddPVPanel PVPanel
     | AddWindTurbine WindTurbine
@@ -17,4 +16,6 @@ type Msg
     | AddEdge TransmissionLine
     | RenderPhiNetwork
     | UpdateWeather Weather
+    | CallTurn
     | Tick Int
+    | DaySummary

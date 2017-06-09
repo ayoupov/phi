@@ -5,14 +5,49 @@ var svg = d3.select("body")
             .attr("class", "simulation")
             .append("svg");
 
-var svg = d3.select("svg");
+var svg = d3.select("svg")
+            .attr("height", window.innerHeight)
+            .attr("width", window.innerWidth);
+
+var simHeight = Number(svg.attr("height"));
+var simWidth = Number(svg.attr("width"));
+
 
 var zoom = d3.zoom()
     .scaleExtent([1, 40])
     .on("zoom", zoomed);
 
+// All the axis goodies!
+var xGridScale = d3.scaleLinear()
+                   .domain( [0, 300] )
+                   .range( [0, simWidth-20] );
+
+var yGridScale = d3.scaleLinear()
+                   .domain( [0, 800] )
+                   .range( [0, simHeight-20] );
+
+var xGridlines = d3.axisTop()
+                   .tickFormat("")
+                   .tickSize(-simHeight)
+                   .scale(xGridScale);
+
+var yGridlines = d3.axisLeft()
+                   .tickFormat("")
+                   .tickSize(-simWidth)
+                   .scale(yGridScale);
+
+  svg.append("g")
+     .attr("class", "gridlines")
+     .call(xGridlines);
+
+  svg.append("g")
+     .attr("class", "gridlines")
+     .call(yGridlines);
+
+
 var container = svg.append("g")
                    .attr("class", "container");
+
 
 // Load SVG Map from file, append to container
 // and set container with graph elements
@@ -20,9 +55,10 @@ d3.xml("assets/map.svg").get(function(error, documentFragment) {
   if (error) throw error;
   var svgNode = documentFragment.getElementsByTagName("svg")[0];
 
-  //container.append("g")
-  //         .attr("class", "map")
   container.node().appendChild(svgNode);
+
+  container.select("svg")
+           .attr("class", "map");
 
   container.append("g")
            .attr("class", "links");

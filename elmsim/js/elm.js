@@ -12332,9 +12332,11 @@ var _strelka_2017$phi$Simulation_Model$PVNode = function (a) {
 	return {ctor: 'PVNode', _0: a};
 };
 
+var _strelka_2017$phi$Action$DaySummary = {ctor: 'DaySummary'};
 var _strelka_2017$phi$Action$Tick = function (a) {
 	return {ctor: 'Tick', _0: a};
 };
+var _strelka_2017$phi$Action$CallTurn = {ctor: 'CallTurn'};
 var _strelka_2017$phi$Action$UpdateWeather = function (a) {
 	return {ctor: 'UpdateWeather', _0: a};
 };
@@ -12354,7 +12356,6 @@ var _strelka_2017$phi$Action$AddPVPanel = function (a) {
 var _strelka_2017$phi$Action$DescribeNode = function (a) {
 	return {ctor: 'DescribeNode', _0: a};
 };
-var _strelka_2017$phi$Action$NextDay = {ctor: 'NextDay'};
 var _strelka_2017$phi$Action$CheckWeather = {ctor: 'CheckWeather'};
 var _strelka_2017$phi$Action$NoOp = {ctor: 'NoOp'};
 var _strelka_2017$phi$Action$SendBotChatMsg = function (a) {
@@ -12366,7 +12367,7 @@ var _strelka_2017$phi$Action$Input = function (a) {
 };
 
 var _strelka_2017$phi$Chat$parseUserMessage = function (chatMsg) {
-	return (!A2(_elm_lang$core$String$startsWith, '/', chatMsg.text)) ? _strelka_2017$phi$Action$SendBotChatMsg('Sorry, I only respond to commands! Current available ones are:\n\n/weather (i tell you abt the weather today)\n/turn (i move to the next day)\n/describe [nodeId] (i tell you some info about a specific node)\n') : (_elm_lang$core$Native_Utils.eq(chatMsg.text, '/weather') ? _strelka_2017$phi$Action$CheckWeather : (_elm_lang$core$Native_Utils.eq(chatMsg.text, '/turn') ? _strelka_2017$phi$Action$NextDay : (A2(_elm_lang$core$String$startsWith, '/describe', chatMsg.text) ? A2(
+	return (!A2(_elm_lang$core$String$startsWith, '/', chatMsg.text)) ? _strelka_2017$phi$Action$SendBotChatMsg('Sorry, I only respond to commands! Current available ones are:\n\n/weather (i tell you abt the weather today)\n/turn (i move to the next day)\n/describe [nodeId] (i tell you some info about a specific node)\n') : (_elm_lang$core$Native_Utils.eq(chatMsg.text, '/weather') ? _strelka_2017$phi$Action$CheckWeather : (_elm_lang$core$Native_Utils.eq(chatMsg.text, '/turn') ? _strelka_2017$phi$Action$CallTurn : (A2(_elm_lang$core$String$startsWith, '/describe', chatMsg.text) ? A2(
 		_elm_lang$core$Maybe$withDefault,
 		_strelka_2017$phi$Action$SendBotChatMsg('I can\'t find that node!'),
 		A2(
@@ -12710,12 +12711,26 @@ var _strelka_2017$phi$Update$update = F2(
 					msg = _v1;
 					model = _v2;
 					continue update;
-				case 'NextDay':
-					var _v3 = _strelka_2017$phi$Action$Tick(1),
+				case 'DaySummary':
+					var txt = 'Last week we have generated a bunch of kWh in total, the community had consumed lots of energy, and some of has stored in the batteries. Do you want to know more before I go on?';
+					var _v3 = _strelka_2017$phi$Action$SendBotChatMsg(txt),
 						_v4 = model;
 					msg = _v3;
 					model = _v4;
 					continue update;
+				case 'CallTurn':
+					return A3(
+						_ccapndave$elm_update_extra$Update_Extra$andThen,
+						_strelka_2017$phi$Update$update,
+						_strelka_2017$phi$Action$DaySummary,
+						A3(
+							_ccapndave$elm_update_extra$Update_Extra$andThen,
+							_strelka_2017$phi$Update$update,
+							_strelka_2017$phi$Action$CheckWeather,
+							A2(
+								_strelka_2017$phi$Update$update,
+								_strelka_2017$phi$Action$Tick(1),
+								model)));
 				case 'DescribeNode':
 					return _strelka_2017$phi$Update$update(
 						_strelka_2017$phi$Action$SendBotChatMsg(

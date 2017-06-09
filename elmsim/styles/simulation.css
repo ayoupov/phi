@@ -30,3 +30,9 @@ line.link {
   fill-opacity: 0;
 
 }
+
+.gridlines line {
+  stroke-opacity: 0.3;
+  stroke-width: 0.7px;
+  stroke: #FFF;
+}

@@ -39,7 +39,7 @@ parseUserMessage chatMsg =
     else if chatMsg.text == "/weather" then
         CheckWeather
     else if chatMsg.text == "/turn" then
-        NextDay
+        CallTurn
     else if String.startsWith "/describe" chatMsg.text then
         String.split " " chatMsg.text
             |> (List.head << List.drop 1)

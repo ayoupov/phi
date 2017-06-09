@@ -178,7 +178,6 @@ distributeGeneratedJoules network =
     Graph.mapNodes updateNode network
 
 
-
 -- PORTS
 
 
