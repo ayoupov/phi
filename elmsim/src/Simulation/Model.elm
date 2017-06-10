@@ -64,29 +64,23 @@ type alias EncodedEdge =
 
 
 type NodeLabel
-    = PVNode PVPanel
-    | WTNode WindTurbine
+    = GeneratorNode Generator
     | PeerNode Peer
     | BatNode Battery
 
-
+type GeneratorType
+    = WindTurbine | SolarPanel
 
 -- NODES
 
 
-type alias PVPanel =
-    { dailyGeneration : List KWHour
-    , maxGeneration : KWHour
-    , pos : Coords
-    }
-
-
-type alias WindTurbine =
-    { dailyGeneration : List KWHour
-    , maxGeneration : KWHour
-    , pos : Coords
-    }
-
+type alias Generator =
+     {
+       dailyGeneration : List KWHour
+      , maxGeneration : KWHour
+      , pos : Coords
+      , generatorType: GeneratorType
+     }
 
 type alias Battery =
     { capacity : KWHour
@@ -125,20 +119,13 @@ encodeList encoder list =
 encodeNodeLabel : NodeLabel -> Json.Value
 encodeNodeLabel nodeLabel =
     case nodeLabel of
-        PVNode label ->
+        GeneratorNode label ->
             Json.object
                 [ ( "maxGeneration", Json.float label.maxGeneration )
                 , ( "dailyGeneration", encodeList Json.float label.dailyGeneration )
                 , ( "pos", encodeCoords label.pos )
-                , ( "nodeType", Json.string "pvPanel" )
-                ]
-
-        WTNode label ->
-            Json.object
-                [ ( "maxGeneration", Json.float label.maxGeneration )
-                , ( "dailyGeneration", encodeList Json.float label.dailyGeneration )
-                , ( "pos", encodeCoords label.pos )
-                , ( "nodeType", Json.string "windTurbine" )
+                , ( "generatorType", encodeGeneratorType label.generatorType )
+                , ( "nodeType", Json.string "generator" )
                 ]
 
         PeerNode label ->
@@ -159,6 +146,12 @@ encodeNodeLabel nodeLabel =
                 ]
 
 
+encodeGeneratorType : GeneratorType -> Json.Value
+encodeGeneratorType generatorType =
+    case generatorType of
+        WindTurbine wt -> Json.string "wt"
+        SolarPanel sp -> Json.string "sp"
+
 encodeNode : Node NodeLabel -> Node Json.Value
 encodeNode { id, label } =
     Node id (encodeNodeLabel label)
@@ -175,10 +168,7 @@ encodeCoords pos =
 pos : NodeLabel -> Coords
 pos nodeLabel =
     case nodeLabel of
-        PVNode n ->
-            n.pos
-
-        WTNode n ->
+        GeneratorNode n ->
             n.pos
 
         BatNode n ->
