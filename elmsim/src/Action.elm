@@ -1,12 +1,13 @@
 module Action exposing (Msg(..))
 
 import Simulation.Model exposing (PVPanel, Peer, TransmissionLine, Weather, WindTurbine)
+import Chat.Model exposing (BotChatItem)
 
 
 type Msg
     = Input String
     | SendUserChatMsg
-    | SendBotChatMsg String
+    | SendBotChatItem BotChatItem
     | NoOp
     | CheckWeather
     | DescribeNode Int

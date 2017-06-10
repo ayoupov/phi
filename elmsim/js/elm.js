@@ -12332,6 +12332,23 @@ var _strelka_2017$phi$Simulation_Model$PVNode = function (a) {
 	return {ctor: 'PVNode', _0: a};
 };
 
+var _strelka_2017$phi$Chat_Model$BotItem = function (a) {
+	return {ctor: 'BotItem', _0: a};
+};
+var _strelka_2017$phi$Chat_Model$UserMessage = function (a) {
+	return {ctor: 'UserMessage', _0: a};
+};
+var _strelka_2017$phi$Chat_Model$BotMessage = function (a) {
+	return {ctor: 'BotMessage', _0: a};
+};
+var _strelka_2017$phi$Chat_Model$initChat = _strelka_2017$phi$Chat_Model$BotItem(
+	_strelka_2017$phi$Chat_Model$BotMessage('Welcome to Φ Chat! I only respond to commands for now.\nCurrent available commands are:\n\n/weather (i tell you abt the weather today)\n/turn (i move to the next day)\n/describe [nodeId] (i tell you some info about a specific node)\n'));
+var _strelka_2017$phi$Chat_Model$WidgetItem = function (a) {
+	return {ctor: 'WidgetItem', _0: a};
+};
+var _strelka_2017$phi$Chat_Model$BotMultiQuestion = {ctor: 'BotMultiQuestion'};
+var _strelka_2017$phi$Chat_Model$WeatherWidget = {ctor: 'WeatherWidget'};
+
 var _strelka_2017$phi$Action$DaySummary = {ctor: 'DaySummary'};
 var _strelka_2017$phi$Action$Tick = function (a) {
 	return {ctor: 'Tick', _0: a};
@@ -12358,18 +12375,20 @@ var _strelka_2017$phi$Action$DescribeNode = function (a) {
 };
 var _strelka_2017$phi$Action$CheckWeather = {ctor: 'CheckWeather'};
 var _strelka_2017$phi$Action$NoOp = {ctor: 'NoOp'};
-var _strelka_2017$phi$Action$SendBotChatMsg = function (a) {
-	return {ctor: 'SendBotChatMsg', _0: a};
+var _strelka_2017$phi$Action$SendBotChatItem = function (a) {
+	return {ctor: 'SendBotChatItem', _0: a};
 };
 var _strelka_2017$phi$Action$SendUserChatMsg = {ctor: 'SendUserChatMsg'};
 var _strelka_2017$phi$Action$Input = function (a) {
 	return {ctor: 'Input', _0: a};
 };
 
-var _strelka_2017$phi$Chat$parseUserMessage = function (chatMsg) {
-	return (!A2(_elm_lang$core$String$startsWith, '/', chatMsg.text)) ? _strelka_2017$phi$Action$SendBotChatMsg('Sorry, I only respond to commands! Current available ones are:\n\n/weather (i tell you abt the weather today)\n/turn (i move to the next day)\n/describe [nodeId] (i tell you some info about a specific node)\n') : (_elm_lang$core$Native_Utils.eq(chatMsg.text, '/weather') ? _strelka_2017$phi$Action$CheckWeather : (_elm_lang$core$Native_Utils.eq(chatMsg.text, '/turn') ? _strelka_2017$phi$Action$CallTurn : (A2(_elm_lang$core$String$startsWith, '/describe', chatMsg.text) ? A2(
+var _strelka_2017$phi$Chat_Chat$parseUserMessage = function (chatMsg) {
+	return (!A2(_elm_lang$core$String$startsWith, '/', chatMsg)) ? _strelka_2017$phi$Action$SendBotChatItem(
+		_strelka_2017$phi$Chat_Model$BotMessage('Sorry, I only respond to commands! Current available ones are:\n\n/weather (i tell you abt the weather today)\n/turn (i move to the next day)\n/describe [nodeId] (i tell you some info about a specific node)\n')) : (_elm_lang$core$Native_Utils.eq(chatMsg, '/weather') ? _strelka_2017$phi$Action$CheckWeather : (_elm_lang$core$Native_Utils.eq(chatMsg, '/turn') ? _strelka_2017$phi$Action$CallTurn : (A2(_elm_lang$core$String$startsWith, '/describe', chatMsg) ? A2(
 		_elm_lang$core$Maybe$withDefault,
-		_strelka_2017$phi$Action$SendBotChatMsg('I can\'t find that node!'),
+		_strelka_2017$phi$Action$SendBotChatItem(
+			_strelka_2017$phi$Chat_Model$BotMessage('I can\'t find that node!')),
 		A2(
 			_elm_lang$core$Maybe$map,
 			_strelka_2017$phi$Action$DescribeNode,
@@ -12383,15 +12402,8 @@ var _strelka_2017$phi$Chat$parseUserMessage = function (chatMsg) {
 					return _elm_lang$core$List$head(
 						A2(_elm_lang$core$List$drop, 1, _p1));
 				}(
-					A2(_elm_lang$core$String$split, ' ', chatMsg.text))))) : _strelka_2017$phi$Action$NoOp)));
+					A2(_elm_lang$core$String$split, ' ', chatMsg))))) : _strelka_2017$phi$Action$NoOp)));
 };
-var _strelka_2017$phi$Chat$ChatMsg = F2(
-	function (a, b) {
-		return {sender: a, text: b};
-	});
-var _strelka_2017$phi$Chat$Bot = {ctor: 'Bot'};
-var _strelka_2017$phi$Chat$initChat = A2(_strelka_2017$phi$Chat$ChatMsg, _strelka_2017$phi$Chat$Bot, 'Welcome to Φ Chat! I only respond to commands for now.\nCurrent available commands are:\n\n/weather (i tell you abt the weather today)\n/turn (i move to the next day)\n/describe [nodeId] (i tell you some info about a specific node)\n');
-var _strelka_2017$phi$Chat$User = {ctor: 'User'};
 
 var _strelka_2017$phi$Simulation_Simulation$toPeer = function (_p0) {
 	var _p1 = _p0;
@@ -12628,7 +12640,7 @@ var _strelka_2017$phi$Model$initModel = A2(
 		'',
 		{
 			ctor: '::',
-			_0: _strelka_2017$phi$Chat$initChat,
+			_0: _strelka_2017$phi$Chat_Model$initChat,
 			_1: {ctor: '[]'}
 		},
 		_elm_community$graph$Graph$empty,
@@ -12663,7 +12675,7 @@ var _strelka_2017$phi$Update$update = F2(
 					if (_elm_lang$core$String$isEmpty(model.input)) {
 						return noOp;
 					} else {
-						var chatMsg = A2(_strelka_2017$phi$Chat$ChatMsg, _strelka_2017$phi$Chat$User, model.input);
+						var chatMsg = _strelka_2017$phi$Chat_Model$UserMessage(model.input);
 						var newModel = _elm_lang$core$Native_Utils.update(
 							model,
 							{
@@ -12673,10 +12685,10 @@ var _strelka_2017$phi$Update$update = F2(
 						return A3(
 							_ccapndave$elm_update_extra$Update_Extra$andThen,
 							_strelka_2017$phi$Update$update,
-							_strelka_2017$phi$Chat$parseUserMessage(chatMsg),
+							_strelka_2017$phi$Chat_Chat$parseUserMessage(model.input),
 							{ctor: '_Tuple2', _0: newModel, _1: scrollDown});
 					}
-				case 'SendBotChatMsg':
+				case 'SendBotChatItem':
 					return {
 						ctor: '_Tuple2',
 						_0: _elm_lang$core$Native_Utils.update(
@@ -12684,7 +12696,7 @@ var _strelka_2017$phi$Update$update = F2(
 							{
 								messages: {
 									ctor: '::',
-									_0: A2(_strelka_2017$phi$Chat$ChatMsg, _strelka_2017$phi$Chat$Bot, _p0._0),
+									_0: _strelka_2017$phi$Chat_Model$BotItem(_p0._0),
 									_1: model.messages
 								}
 							}),
@@ -12693,30 +12705,36 @@ var _strelka_2017$phi$Update$update = F2(
 				case 'CheckWeather':
 					var windy = _elm_lang$core$Basics$toString(model.weather.wind);
 					var sunny = _elm_lang$core$Basics$toString(model.weather.sun);
-					var txt = A2(
-						_elm_lang$core$Basics_ops['++'],
-						'There\'s ',
+					var chatMsg = _strelka_2017$phi$Chat_Model$BotMessage(
 						A2(
 							_elm_lang$core$Basics_ops['++'],
-							sunny,
+							'There\'s ',
 							A2(
 								_elm_lang$core$Basics_ops['++'],
-								' amount of sun, ',
+								sunny,
 								A2(
 									_elm_lang$core$Basics_ops['++'],
-									'and ',
-									A2(_elm_lang$core$Basics_ops['++'], windy, ' amount of wind')))));
-					var _v1 = _strelka_2017$phi$Action$SendBotChatMsg(txt),
+									' amount of sun, ',
+									A2(
+										_elm_lang$core$Basics_ops['++'],
+										'and ',
+										A2(_elm_lang$core$Basics_ops['++'], windy, ' amount of wind'))))));
+					return A3(
+						_ccapndave$elm_update_extra$Update_Extra$andThen,
+						_strelka_2017$phi$Update$update,
+						_strelka_2017$phi$Action$SendBotChatItem(
+							_strelka_2017$phi$Chat_Model$WidgetItem(_strelka_2017$phi$Chat_Model$WeatherWidget)),
+						A2(
+							_strelka_2017$phi$Update$update,
+							_strelka_2017$phi$Action$SendBotChatItem(chatMsg),
+							model));
+				case 'DaySummary':
+					var txt = 'Last week we have generated a bunch of kWh in total, the community had consumed lots of energy, and some of has stored in the batteries. Do you want to know more before I go on?';
+					var _v1 = _strelka_2017$phi$Action$SendBotChatItem(
+						_strelka_2017$phi$Chat_Model$BotMessage(txt)),
 						_v2 = model;
 					msg = _v1;
 					model = _v2;
-					continue update;
-				case 'DaySummary':
-					var txt = 'Last week we have generated a bunch of kWh in total, the community had consumed lots of energy, and some of has stored in the batteries. Do you want to know more before I go on?';
-					var _v3 = _strelka_2017$phi$Action$SendBotChatMsg(txt),
-						_v4 = model;
-					msg = _v3;
-					model = _v4;
 					continue update;
 				case 'CallTurn':
 					return A3(
@@ -12733,13 +12751,16 @@ var _strelka_2017$phi$Update$update = F2(
 								model)));
 				case 'DescribeNode':
 					return _strelka_2017$phi$Update$update(
-						_strelka_2017$phi$Action$SendBotChatMsg(
+						function (_p1) {
+							return _strelka_2017$phi$Action$SendBotChatItem(
+								_strelka_2017$phi$Chat_Model$BotMessage(_p1));
+						}(
 							A2(
 								_elm_lang$core$Maybe$withDefault,
 								'Node not found :(',
 								A2(
 									_elm_lang$core$Maybe$map,
-									function (_p1) {
+									function (_p2) {
 										return A2(
 											_elm_lang$core$Json_Encode$encode,
 											4,
@@ -12749,12 +12770,12 @@ var _strelka_2017$phi$Update$update = F2(
 												}(
 													function (_) {
 														return _.node;
-													}(_p1))));
+													}(_p2))));
 									},
 									A2(_elm_community$graph$Graph$get, _p0._0, model.network)))))(model);
 				case 'AddPVPanel':
-					var _v5 = _strelka_2017$phi$Action$RenderPhiNetwork,
-						_v6 = _elm_lang$core$Native_Utils.update(
+					var _v3 = _strelka_2017$phi$Action$RenderPhiNetwork,
+						_v4 = _elm_lang$core$Native_Utils.update(
 						model,
 						{
 							network: A2(
@@ -12762,12 +12783,12 @@ var _strelka_2017$phi$Update$update = F2(
 								_strelka_2017$phi$Simulation_Model$PVNode(_p0._0),
 								model.network)
 						});
-					msg = _v5;
-					model = _v6;
+					msg = _v3;
+					model = _v4;
 					continue update;
 				case 'AddWindTurbine':
-					var _v7 = _strelka_2017$phi$Action$RenderPhiNetwork,
-						_v8 = _elm_lang$core$Native_Utils.update(
+					var _v5 = _strelka_2017$phi$Action$RenderPhiNetwork,
+						_v6 = _elm_lang$core$Native_Utils.update(
 						model,
 						{
 							network: A2(
@@ -12775,12 +12796,12 @@ var _strelka_2017$phi$Update$update = F2(
 								_strelka_2017$phi$Simulation_Model$WTNode(_p0._0),
 								model.network)
 						});
-					msg = _v7;
-					model = _v8;
+					msg = _v5;
+					model = _v6;
 					continue update;
 				case 'AddPeer':
-					var _v9 = _strelka_2017$phi$Action$RenderPhiNetwork,
-						_v10 = _elm_lang$core$Native_Utils.update(
+					var _v7 = _strelka_2017$phi$Action$RenderPhiNetwork,
+						_v8 = _elm_lang$core$Native_Utils.update(
 						model,
 						{
 							network: A2(
@@ -12788,26 +12809,26 @@ var _strelka_2017$phi$Update$update = F2(
 								_strelka_2017$phi$Simulation_Model$PeerNode(_p0._0),
 								model.network)
 						});
-					msg = _v9;
-					model = _v10;
+					msg = _v7;
+					model = _v8;
 					continue update;
 				case 'AddEdge':
-					var _v11 = _strelka_2017$phi$Action$RenderPhiNetwork,
-						_v12 = _elm_lang$core$Native_Utils.update(
+					var _v9 = _strelka_2017$phi$Action$RenderPhiNetwork,
+						_v10 = _elm_lang$core$Native_Utils.update(
 						model,
 						{
 							network: A2(_strelka_2017$phi$Simulation_Simulation$addEdge, _p0._0, model.network)
 						});
-					msg = _v11;
-					model = _v12;
+					msg = _v9;
+					model = _v10;
 					continue update;
 				case 'UpdateWeather':
-					var _v13 = _strelka_2017$phi$Action$RenderPhiNetwork,
-						_v14 = _elm_lang$core$Native_Utils.update(
+					var _v11 = _strelka_2017$phi$Action$RenderPhiNetwork,
+						_v12 = _elm_lang$core$Native_Utils.update(
 						model,
 						{weather: _p0._0});
-					msg = _v13;
-					model = _v14;
+					msg = _v11;
+					model = _v12;
 					continue update;
 				case 'RenderPhiNetwork':
 					return {
@@ -12817,9 +12838,9 @@ var _strelka_2017$phi$Update$update = F2(
 							_strelka_2017$phi$Simulation_Model$encodeGraph(model.network))
 					};
 				default:
-					var _p3 = _p0._0;
-					var _p2 = _p3;
-					if (_p2 === 0) {
+					var _p4 = _p0._0;
+					var _p3 = _p4;
+					if (_p3 === 0) {
 						return A3(
 							_ccapndave$elm_update_extra$Update_Extra$andThen,
 							_strelka_2017$phi$Update$update,
@@ -12832,7 +12853,7 @@ var _strelka_2017$phi$Update$update = F2(
 						return A3(
 							_ccapndave$elm_update_extra$Update_Extra$andThen,
 							_strelka_2017$phi$Update$update,
-							_strelka_2017$phi$Action$Tick(_p3 - 1),
+							_strelka_2017$phi$Action$Tick(_p4 - 1),
 							_strelka_2017$phi$Update$nextDay(model));
 					}
 			}
@@ -12872,36 +12893,18 @@ var _strelka_2017$phi$View$onEnter = function (msg) {
 		'keyup',
 		A2(_elm_lang$core$Json_Decode$map, isEnter, _elm_lang$html$Html_Events$keyCode));
 };
-var _strelka_2017$phi$View$senderClass = function (sender) {
-	var _p1 = sender;
-	if (_p1.ctor === 'User') {
-		return 'user-sent';
-	} else {
-		return 'bot-sent';
-	}
-};
-var _strelka_2017$phi$View$viewChatMsg = function (msg) {
-	return A2(
-		_elm_lang$html$Html$li,
-		{
-			ctor: '::',
-			_0: _elm_lang$html$Html_Attributes$class(
-				A2(
-					_elm_lang$core$Basics_ops['++'],
-					'message ',
-					A2(
-						_elm_lang$core$Basics_ops['++'],
-						_strelka_2017$phi$View$senderClass(msg.sender),
-						' appeared'))),
-			_1: {ctor: '[]'}
-		},
-		{
-			ctor: '::',
-			_0: A2(
-				_elm_lang$html$Html$div,
+var _strelka_2017$phi$View$viewChatMsg = function (chatItem) {
+	var textMessage = F2(
+		function (msgText, senderClass) {
+			return A2(
+				_elm_lang$html$Html$li,
 				{
 					ctor: '::',
-					_0: _elm_lang$html$Html_Attributes$class('text_wrapper'),
+					_0: _elm_lang$html$Html_Attributes$class(
+						A2(
+							_elm_lang$core$Basics_ops['++'],
+							'message ',
+							A2(_elm_lang$core$Basics_ops['++'], senderClass, ' appeared'))),
 					_1: {ctor: '[]'}
 				},
 				{
@@ -12910,18 +12913,46 @@ var _strelka_2017$phi$View$viewChatMsg = function (msg) {
 						_elm_lang$html$Html$div,
 						{
 							ctor: '::',
-							_0: _elm_lang$html$Html_Attributes$class('text'),
+							_0: _elm_lang$html$Html_Attributes$class('text_wrapper'),
 							_1: {ctor: '[]'}
 						},
 						{
 							ctor: '::',
-							_0: _elm_lang$html$Html$text(msg.text),
+							_0: A2(
+								_elm_lang$html$Html$div,
+								{
+									ctor: '::',
+									_0: _elm_lang$html$Html_Attributes$class('text'),
+									_1: {ctor: '[]'}
+								},
+								{
+									ctor: '::',
+									_0: _elm_lang$html$Html$text(msgText),
+									_1: {ctor: '[]'}
+								}),
 							_1: {ctor: '[]'}
 						}),
 					_1: {ctor: '[]'}
-				}),
-			_1: {ctor: '[]'}
+				});
 		});
+	var _p1 = chatItem;
+	if (_p1.ctor === 'UserMessage') {
+		return A2(textMessage, _p1._0, 'user-sent');
+	} else {
+		var _p2 = _p1._0;
+		if (_p2.ctor === 'BotMessage') {
+			return A2(textMessage, _p2._0, 'bot-sent');
+		} else {
+			return A2(
+				_elm_lang$html$Html$li,
+				{ctor: '[]'},
+				{
+					ctor: '::',
+					_0: _elm_lang$html$Html$text('rendering a fancy widget'),
+					_1: {ctor: '[]'}
+				});
+		}
+	}
 };
 var _strelka_2017$phi$View$inputFooter = function (model) {
 	return A2(

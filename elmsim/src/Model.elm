@@ -1,7 +1,7 @@
 module Model exposing (..)
 
 import Action exposing (Msg)
-import Chat exposing (ChatMsg, initChat)
+import Chat.Model exposing (ChatItem, initChat)
 import Graph
 import Simulation.Model exposing (PhiNetwork, Weather)
 import Simulation.Simulation as Simulation
@@ -9,7 +9,7 @@ import Simulation.Simulation as Simulation
 
 type alias Model =
     { input : String
-    , messages : List ChatMsg
+    , messages : List ChatItem
     , network : PhiNetwork
     , weather : Weather
     }
