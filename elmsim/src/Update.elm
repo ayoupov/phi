@@ -91,13 +91,13 @@ update msg model =
                         |> update
                    )
 
-        AddPVPanel node ->
-            { model | network = addNode (PVNode node) model.network }
+        AddGenerator node ->
+            { model | network = addNode (GeneratorNode node) model.network }
                 |> update RenderPhiNetwork
 
-        AddWindTurbine node ->
-            { model | network = addNode (WTNode node) model.network }
-                |> update RenderPhiNetwork
+--        AddWindTurbine node ->
+--            { model | network = addNode (WTNode node) model.network }
+--                |> update RenderPhiNetwork
 
         AddPeer node ->
             { model | network = addNode (PeerNode node) model.network }

@@ -64,7 +64,7 @@ type alias EncodedEdge =
 
 
 type NodeLabel
-    = GeneratorNode Generator
+    = GeneratorNode SimGenerator
     | PeerNode Peer
     | BatNode Battery
 
@@ -74,7 +74,7 @@ type GeneratorType
 -- NODES
 
 
-type alias Generator =
+type alias SimGenerator =
      {
        dailyGeneration : List KWHour
       , maxGeneration : KWHour
@@ -149,8 +149,8 @@ encodeNodeLabel nodeLabel =
 encodeGeneratorType : GeneratorType -> Json.Value
 encodeGeneratorType generatorType =
     case generatorType of
-        WindTurbine wt -> Json.string "wt"
-        SolarPanel sp -> Json.string "sp"
+        WindTurbine -> Json.string "windTurbine"
+        SolarPanel -> Json.string "solarPanel"
 
 encodeNode : Node NodeLabel -> Node Json.Value
 encodeNode { id, label } =

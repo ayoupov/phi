@@ -104,15 +104,23 @@ document.addEventListener("DOMContentLoaded", function(event) {
     }
 
     function nodeShape(d) {
+        var defaultSymbol = d3.symbolCircle;
       switch(d.label.nodeType) {
         case "peer":
           return d3.symbolCircle;
-        case "pvPanel":
-          return d3.symbolSquare;
-        case "windTurbine":
-          return d3.symbolTriangle;
+
+        case "generator" :
+           switch (d.label.generatorType) {
+              case "solarPanel":
+                 return d3.symbolSquare;
+              case "windTurbine":
+                 return d3.symbolTriangle;
+               default:
+                   return defaultSymbol;
+              }
+
         default:
-          return d3.symbolCircle;
+          return defaultSymbol;
       }
     }
 
@@ -125,7 +133,8 @@ document.addEventListener("DOMContentLoaded", function(event) {
     function transactionShadow() {
       return d3.symbol()
         .size(function(d) {
-          if (["pvPanel", "windTurbine"].includes(d.label.nodeType)) {
+            if (d.label.nodeType == "generator" && ["solarPanel", "windTurbine"].includes(d.label.generatorType))
+            {
             return 70 + 500*(d.label.dailyGeneration[0] || 0);
           } else {
             return 0;

@@ -1,6 +1,6 @@
 module Action exposing (Msg(..))
 
-import Simulation.Model exposing (PVPanel, Peer, TransmissionLine, Weather, WindTurbine)
+import Simulation.Model exposing (GeneratorType, Peer, SimGenerator, TransmissionLine, Weather)
 import Chat.Model exposing (BotChatItem)
 
 
@@ -11,8 +11,7 @@ type Msg
     | NoOp
     | CheckWeather
     | DescribeNode Int
-    | AddPVPanel PVPanel
-    | AddWindTurbine WindTurbine
+    | AddGenerator SimGenerator
     | AddPeer Peer
     | AddEdge TransmissionLine
     | RenderPhiNetwork

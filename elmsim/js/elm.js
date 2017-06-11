@@ -4361,8 +4361,8 @@ var _elm_community$graph$Graph$ignorePath = F4(
 			return _elm_lang$core$Native_Utils.crashCase(
 				'Graph',
 				{
-					start: {line: 880, column: 3},
-					end: {line: 884, column: 20}
+					start: {line: 885, column: 3},
+					end: {line: 889, column: 20}
 				},
 				_p1)('Graph.ignorePath: No algorithm should ever pass an empty path into this BfsNodeVisitor.');
 		} else {
@@ -4587,6 +4587,10 @@ var _elm_community$graph$Graph$fromNodesAndEdges = F2(
 						_elm_lang$core$Maybe$map(updateOutgoing),
 						rep));
 			});
+		var addEdgeIfValid = F2(
+			function (edge, rep) {
+				return (A2(_elm_community$intdict$IntDict$member, edge.from, rep) && A2(_elm_community$intdict$IntDict$member, edge.to, rep)) ? A2(addEdge, edge, rep) : rep;
+			});
 		var nodeRep = A3(
 			_elm_lang$core$List$foldl,
 			function (n) {
@@ -4598,7 +4602,7 @@ var _elm_community$graph$Graph$fromNodesAndEdges = F2(
 			_elm_community$intdict$IntDict$empty,
 			nodes);
 		return _elm_community$graph$Graph$Graph(
-			A3(_elm_lang$core$List$foldl, addEdge, nodeRep, edges));
+			A3(_elm_lang$core$List$foldl, addEdgeIfValid, nodeRep, edges));
 	});
 var _elm_community$graph$Graph$fromNodeLabelsAndEdgePairs = F2(
 	function (labels, edgePairs) {
@@ -5017,8 +5021,8 @@ var _elm_community$graph$Graph$dfsTree = F2(
 				return _elm_lang$core$Native_Utils.crashCase(
 					'Graph',
 					{
-						start: {line: 822, column: 3},
-						end: {line: 828, column: 120}
+						start: {line: 827, column: 3},
+						end: {line: 833, column: 120}
 					},
 					_p42)('dfsTree: There can\'t be more than one DFS tree. This invariant is violated, please report this bug.');
 			}
@@ -5066,8 +5070,8 @@ var _elm_community$graph$Graph$topologicalSort = function (graph) {
 			return _elm_lang$core$Native_Utils.crashCase(
 				'Graph',
 				{
-					start: {line: 1041, column: 7},
-					end: {line: 1049, column: 18}
+					start: {line: 1046, column: 7},
+					end: {line: 1054, column: 18}
 				},
 				_p46)('Invariant hurt in Graph.topologicalSort: No strongly connected component should be empty');
 		} else {
@@ -5076,8 +5080,8 @@ var _elm_community$graph$Graph$topologicalSort = function (graph) {
 				return _elm_lang$core$Native_Utils.crashCase(
 					'Graph',
 					{
-						start: {line: 1045, column: 11},
-						end: {line: 1049, column: 18}
+						start: {line: 1050, column: 11},
+						end: {line: 1054, column: 18}
 					},
 					_p48)('Invariant hurt in Graph.topologicalSort: nodeId in nodeIdRange of the strongly connected component should be present in the original graph');
 			} else {
@@ -5217,8 +5221,8 @@ var _elm_community$graph$Graph$heightLevels = function (graph) {
 					return _elm_lang$core$Native_Utils.crashCase(
 						'Graph',
 						{
-							start: {line: 1001, column: 13},
-							end: {line: 1003, column: 154}
+							start: {line: 1006, column: 13},
+							end: {line: 1008, column: 154}
 						},
 						_p62)('Graph.heightLevels: Could not get a node of a graph which should be there by invariants. Please file a bug report!');
 				}
@@ -5271,8 +5275,8 @@ var _elm_community$graph$Graph$heightLevels = function (graph) {
 					return _elm_lang$core$Native_Utils.crashCase(
 						'Graph',
 						{
-							start: {line: 1020, column: 13},
-							end: {line: 1024, column: 44}
+							start: {line: 1025, column: 13},
+							end: {line: 1029, column: 44}
 						},
 						_p67)('Graph.heightLevels: Reached a branch which is impossible by invariants. Please file a bug report!');
 				} else {
@@ -12045,9 +12049,7 @@ var _elm_lang$svg$Svg_Attributes$accentHeight = _elm_lang$virtual_dom$VirtualDom
 var _strelka_2017$phi$Simulation_Model$pos = function (nodeLabel) {
 	var _p0 = nodeLabel;
 	switch (_p0.ctor) {
-		case 'PVNode':
-			return _p0._0.pos;
-		case 'WTNode':
+		case 'GeneratorNode':
 			return _p0._0.pos;
 		case 'BatNode':
 			return _p0._0.pos;
@@ -12075,52 +12077,24 @@ var _strelka_2017$phi$Simulation_Model$encodeCoords = function (pos) {
 			}
 		});
 };
+var _strelka_2017$phi$Simulation_Model$encodeGeneratorType = function (generatorType) {
+	var _p1 = generatorType;
+	if (_p1.ctor === 'WindTurbine') {
+		return _elm_lang$core$Json_Encode$string('windTurbine');
+	} else {
+		return _elm_lang$core$Json_Encode$string('solarPanel');
+	}
+};
 var _strelka_2017$phi$Simulation_Model$encodeList = F2(
 	function (encoder, list) {
 		return _elm_lang$core$Json_Encode$list(
 			A2(_elm_lang$core$List$map, encoder, list));
 	});
 var _strelka_2017$phi$Simulation_Model$encodeNodeLabel = function (nodeLabel) {
-	var _p1 = nodeLabel;
-	switch (_p1.ctor) {
-		case 'PVNode':
-			var _p2 = _p1._0;
-			return _elm_lang$core$Json_Encode$object(
-				{
-					ctor: '::',
-					_0: {
-						ctor: '_Tuple2',
-						_0: 'maxGeneration',
-						_1: _elm_lang$core$Json_Encode$float(_p2.maxGeneration)
-					},
-					_1: {
-						ctor: '::',
-						_0: {
-							ctor: '_Tuple2',
-							_0: 'dailyGeneration',
-							_1: A2(_strelka_2017$phi$Simulation_Model$encodeList, _elm_lang$core$Json_Encode$float, _p2.dailyGeneration)
-						},
-						_1: {
-							ctor: '::',
-							_0: {
-								ctor: '_Tuple2',
-								_0: 'pos',
-								_1: _strelka_2017$phi$Simulation_Model$encodeCoords(_p2.pos)
-							},
-							_1: {
-								ctor: '::',
-								_0: {
-									ctor: '_Tuple2',
-									_0: 'nodeType',
-									_1: _elm_lang$core$Json_Encode$string('pvPanel')
-								},
-								_1: {ctor: '[]'}
-							}
-						}
-					}
-				});
-		case 'WTNode':
-			var _p3 = _p1._0;
+	var _p2 = nodeLabel;
+	switch (_p2.ctor) {
+		case 'GeneratorNode':
+			var _p3 = _p2._0;
 			return _elm_lang$core$Json_Encode$object(
 				{
 					ctor: '::',
@@ -12147,16 +12121,24 @@ var _strelka_2017$phi$Simulation_Model$encodeNodeLabel = function (nodeLabel) {
 								ctor: '::',
 								_0: {
 									ctor: '_Tuple2',
-									_0: 'nodeType',
-									_1: _elm_lang$core$Json_Encode$string('windTurbine')
+									_0: 'generatorType',
+									_1: _strelka_2017$phi$Simulation_Model$encodeGeneratorType(_p3.generatorType)
 								},
-								_1: {ctor: '[]'}
+								_1: {
+									ctor: '::',
+									_0: {
+										ctor: '_Tuple2',
+										_0: 'nodeType',
+										_1: _elm_lang$core$Json_Encode$string('generator')
+									},
+									_1: {ctor: '[]'}
+								}
 							}
 						}
 					}
 				});
 		case 'PeerNode':
-			var _p4 = _p1._0;
+			var _p4 = _p2._0;
 			return _elm_lang$core$Json_Encode$object(
 				{
 					ctor: '::',
@@ -12200,7 +12182,7 @@ var _strelka_2017$phi$Simulation_Model$encodeNodeLabel = function (nodeLabel) {
 					}
 				});
 		default:
-			var _p5 = _p1._0;
+			var _p5 = _p2._0;
 			return _elm_lang$core$Json_Encode$object(
 				{
 					ctor: '::',
@@ -12299,13 +12281,9 @@ var _strelka_2017$phi$Simulation_Model$encodeGraph = function (graph) {
 		_elm_community$graph$Graph$nodes(graph));
 	return {ctor: '_Tuple2', _0: encodedNodes, _1: tLines};
 };
-var _strelka_2017$phi$Simulation_Model$PVPanel = F3(
-	function (a, b, c) {
-		return {dailyGeneration: a, maxGeneration: b, pos: c};
-	});
-var _strelka_2017$phi$Simulation_Model$WindTurbine = F3(
-	function (a, b, c) {
-		return {dailyGeneration: a, maxGeneration: b, pos: c};
+var _strelka_2017$phi$Simulation_Model$SimGenerator = F4(
+	function (a, b, c, d) {
+		return {dailyGeneration: a, maxGeneration: b, pos: c, generatorType: d};
 	});
 var _strelka_2017$phi$Simulation_Model$Battery = F3(
 	function (a, b, c) {
@@ -12325,12 +12303,11 @@ var _strelka_2017$phi$Simulation_Model$BatNode = function (a) {
 var _strelka_2017$phi$Simulation_Model$PeerNode = function (a) {
 	return {ctor: 'PeerNode', _0: a};
 };
-var _strelka_2017$phi$Simulation_Model$WTNode = function (a) {
-	return {ctor: 'WTNode', _0: a};
+var _strelka_2017$phi$Simulation_Model$GeneratorNode = function (a) {
+	return {ctor: 'GeneratorNode', _0: a};
 };
-var _strelka_2017$phi$Simulation_Model$PVNode = function (a) {
-	return {ctor: 'PVNode', _0: a};
-};
+var _strelka_2017$phi$Simulation_Model$SolarPanel = {ctor: 'SolarPanel'};
+var _strelka_2017$phi$Simulation_Model$WindTurbine = {ctor: 'WindTurbine'};
 
 var _strelka_2017$phi$Chat_Model$BotItem = function (a) {
 	return {ctor: 'BotItem', _0: a};
@@ -12364,11 +12341,8 @@ var _strelka_2017$phi$Action$AddEdge = function (a) {
 var _strelka_2017$phi$Action$AddPeer = function (a) {
 	return {ctor: 'AddPeer', _0: a};
 };
-var _strelka_2017$phi$Action$AddWindTurbine = function (a) {
-	return {ctor: 'AddWindTurbine', _0: a};
-};
-var _strelka_2017$phi$Action$AddPVPanel = function (a) {
-	return {ctor: 'AddPVPanel', _0: a};
+var _strelka_2017$phi$Action$AddGenerator = function (a) {
+	return {ctor: 'AddGenerator', _0: a};
 };
 var _strelka_2017$phi$Action$DescribeNode = function (a) {
 	return {ctor: 'DescribeNode', _0: a};
@@ -12430,13 +12404,10 @@ var _strelka_2017$phi$Simulation_Simulation$distributeGeneratedJoules = function
 	var nodeGeneratedEnergy = function (_p4) {
 		var _p5 = _p4;
 		var _p6 = _p5.label;
-		switch (_p6.ctor) {
-			case 'PVNode':
-				return _elm_lang$core$List$head(_p6._0.dailyGeneration);
-			case 'WTNode':
-				return _elm_lang$core$List$head(_p6._0.dailyGeneration);
-			default:
-				return _elm_lang$core$Maybe$Nothing;
+		if (_p6.ctor === 'GeneratorNode') {
+			return _elm_lang$core$List$head(_p6._0.dailyGeneration);
+		} else {
+			return _elm_lang$core$Maybe$Nothing;
 		}
 	};
 	var networkGeneratedEnergy = _elm_lang$core$List$sum(
@@ -12473,25 +12444,26 @@ var _strelka_2017$phi$Simulation_Simulation$joulesToGenerators = F2(
 		var sun = weather.sun;
 		var updateNode = function (node) {
 			var _p9 = node;
-			switch (_p9.ctor) {
-				case 'PVNode':
-					var _p10 = _p9._0;
-					return _strelka_2017$phi$Simulation_Model$PVNode(
+			if (_p9.ctor === 'GeneratorNode') {
+				var _p11 = _p9._0;
+				var _p10 = _p11.generatorType;
+				if (_p10.ctor === 'SolarPanel') {
+					return _strelka_2017$phi$Simulation_Model$GeneratorNode(
 						_elm_lang$core$Native_Utils.update(
-							_p10,
+							_p11,
 							{
-								dailyGeneration: A2(newDailyGeneration, _p10, sun)
+								dailyGeneration: A2(newDailyGeneration, _p11, sun)
 							}));
-				case 'WTNode':
-					var _p11 = _p9._0;
-					return _strelka_2017$phi$Simulation_Model$WTNode(
+				} else {
+					return _strelka_2017$phi$Simulation_Model$GeneratorNode(
 						_elm_lang$core$Native_Utils.update(
 							_p11,
 							{
 								dailyGeneration: A2(newDailyGeneration, _p11, wind)
 							}));
-				default:
-					return node;
+				}
+			} else {
+				return node;
 			}
 		};
 		return A2(_elm_community$graph$Graph$mapNodes, updateNode, network);
@@ -12567,24 +12539,26 @@ var _strelka_2017$phi$Simulation_Simulation$coordsGenerator = A3(
 	A2(_elm_lang$core$Random$float, 50.4501 - 1.0e-2, 50.4501 + 1.0e-2));
 var _strelka_2017$phi$Simulation_Simulation$generatePVPanel = A2(
 	_elm_lang$core$Random$generate,
-	_strelka_2017$phi$Action$AddPVPanel,
-	A4(
-		_elm_lang$core$Random$map3,
-		_strelka_2017$phi$Simulation_Model$PVPanel,
+	_strelka_2017$phi$Action$AddGenerator,
+	A5(
+		_elm_lang$core$Random$map4,
+		_strelka_2017$phi$Simulation_Model$SimGenerator,
 		_elm_community$random_extra$Random_Extra$constant(
 			{ctor: '[]'}),
 		A2(_elm_lang$core$Random$float, 0, 10),
-		_strelka_2017$phi$Simulation_Simulation$coordsGenerator));
+		_strelka_2017$phi$Simulation_Simulation$coordsGenerator,
+		_elm_community$random_extra$Random_Extra$constant(_strelka_2017$phi$Simulation_Model$SolarPanel)));
 var _strelka_2017$phi$Simulation_Simulation$generateWindTurbine = A2(
 	_elm_lang$core$Random$generate,
-	_strelka_2017$phi$Action$AddWindTurbine,
-	A4(
-		_elm_lang$core$Random$map3,
-		_strelka_2017$phi$Simulation_Model$WindTurbine,
+	_strelka_2017$phi$Action$AddGenerator,
+	A5(
+		_elm_lang$core$Random$map4,
+		_strelka_2017$phi$Simulation_Model$SimGenerator,
 		_elm_community$random_extra$Random_Extra$constant(
 			{ctor: '[]'}),
 		A2(_elm_lang$core$Random$float, 0, 10),
-		_strelka_2017$phi$Simulation_Simulation$coordsGenerator));
+		_strelka_2017$phi$Simulation_Simulation$coordsGenerator,
+		_elm_community$random_extra$Random_Extra$constant(_strelka_2017$phi$Simulation_Model$WindTurbine)));
 var _strelka_2017$phi$Simulation_Simulation$generatePeer = A2(
 	_elm_lang$core$Random$generate,
 	_strelka_2017$phi$Action$AddPeer,
@@ -12773,35 +12747,22 @@ var _strelka_2017$phi$Update$update = F2(
 													}(_p2))));
 									},
 									A2(_elm_community$graph$Graph$get, _p0._0, model.network)))))(model);
-				case 'AddPVPanel':
+				case 'AddGenerator':
 					var _v3 = _strelka_2017$phi$Action$RenderPhiNetwork,
 						_v4 = _elm_lang$core$Native_Utils.update(
 						model,
 						{
 							network: A2(
 								_strelka_2017$phi$Simulation_Simulation$addNode,
-								_strelka_2017$phi$Simulation_Model$PVNode(_p0._0),
+								_strelka_2017$phi$Simulation_Model$GeneratorNode(_p0._0),
 								model.network)
 						});
 					msg = _v3;
 					model = _v4;
 					continue update;
-				case 'AddWindTurbine':
+				case 'AddPeer':
 					var _v5 = _strelka_2017$phi$Action$RenderPhiNetwork,
 						_v6 = _elm_lang$core$Native_Utils.update(
-						model,
-						{
-							network: A2(
-								_strelka_2017$phi$Simulation_Simulation$addNode,
-								_strelka_2017$phi$Simulation_Model$WTNode(_p0._0),
-								model.network)
-						});
-					msg = _v5;
-					model = _v6;
-					continue update;
-				case 'AddPeer':
-					var _v7 = _strelka_2017$phi$Action$RenderPhiNetwork,
-						_v8 = _elm_lang$core$Native_Utils.update(
 						model,
 						{
 							network: A2(
@@ -12809,26 +12770,26 @@ var _strelka_2017$phi$Update$update = F2(
 								_strelka_2017$phi$Simulation_Model$PeerNode(_p0._0),
 								model.network)
 						});
-					msg = _v7;
-					model = _v8;
+					msg = _v5;
+					model = _v6;
 					continue update;
 				case 'AddEdge':
-					var _v9 = _strelka_2017$phi$Action$RenderPhiNetwork,
-						_v10 = _elm_lang$core$Native_Utils.update(
+					var _v7 = _strelka_2017$phi$Action$RenderPhiNetwork,
+						_v8 = _elm_lang$core$Native_Utils.update(
 						model,
 						{
 							network: A2(_strelka_2017$phi$Simulation_Simulation$addEdge, _p0._0, model.network)
 						});
-					msg = _v9;
-					model = _v10;
+					msg = _v7;
+					model = _v8;
 					continue update;
 				case 'UpdateWeather':
-					var _v11 = _strelka_2017$phi$Action$RenderPhiNetwork,
-						_v12 = _elm_lang$core$Native_Utils.update(
+					var _v9 = _strelka_2017$phi$Action$RenderPhiNetwork,
+						_v10 = _elm_lang$core$Native_Utils.update(
 						model,
 						{weather: _p0._0});
-					msg = _v11;
-					model = _v12;
+					msg = _v9;
+					model = _v10;
 					continue update;
 				case 'RenderPhiNetwork':
 					return {

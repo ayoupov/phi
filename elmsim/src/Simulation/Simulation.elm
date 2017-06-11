@@ -14,7 +14,7 @@ import Svg.Attributes as SVG
 import Update.Extra exposing (andThen)
 
 
-coordsGenerator : Generator Coords
+coordsGenerator : Random.Generator Coords
 coordsGenerator =
     Random.map2 Coords
         (Random.float (30.5234 - 0.01) (30.5234 + 0.01))
@@ -32,15 +32,26 @@ generateWeather =
 
 generatePVPanel : Cmd Msg
 generatePVPanel =
-    Random.map3 PVPanel
+    Random.map4 SimGenerator
         (Random.constant [])
         -- dailyConsumption
         (Random.float 0 10)
         -- maxGeneration
         coordsGenerator
         -- xy coordinates
-        |> Random.generate AddPVPanel
+        (Random.constant SolarPanel)
+        -- generator type
+        |> Random.generate AddGenerator
 
+generateWindTurbine : Cmd Msg
+generateWindTurbine =
+    Random.map4 SimGenerator
+        (Random.constant [])
+        (Random.float 0 10)
+        -- capacity
+        coordsGenerator
+        (Random.constant WindTurbine)
+        |> Random.generate AddGenerator
 
 generateEdge : Cmd Msg
 generateEdge =
@@ -54,15 +65,6 @@ createEdge : NodeId -> NodeId -> TransmissionLine
 createEdge a b =
     Edge a b (toString a ++ "-" ++ toString b)
 
-
-generateWindTurbine : Cmd Msg
-generateWindTurbine =
-    Random.map3 WindTurbine
-        (Random.constant [])
-        (Random.float 0 10)
-        -- capacity
-        coordsGenerator
-        |> Random.generate AddWindTurbine
 
 generatePeer : Cmd Msg
 generatePeer =
@@ -114,11 +116,13 @@ joulesToGenerators weather network =
 
         updateNode node =
             case node of
-                PVNode node ->
-                    PVNode { node | dailyGeneration = newDailyGeneration node sun }
+                GeneratorNode node ->
+                    case node.generatorType of
+                        SolarPanel ->
+                            GeneratorNode { node | dailyGeneration = newDailyGeneration node sun }
 
-                WTNode node ->
-                    WTNode { node | dailyGeneration = newDailyGeneration node wind }
+                        WindTurbine ->
+                            GeneratorNode { node | dailyGeneration = newDailyGeneration node wind }
 
                 _ ->
                     node
@@ -141,11 +145,11 @@ distributeGeneratedJoules network =
     let
         nodeGeneratedEnergy { label, id } =
             case label of
-                PVNode node ->
+                GeneratorNode node ->
                     List.head node.dailyGeneration
 
-                WTNode node ->
-                    List.head node.dailyGeneration
+--                WTNode node ->
+--                    List.head node.dailyGeneration
 
                 _ ->
                     Nothing
