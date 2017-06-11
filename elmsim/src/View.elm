@@ -1,7 +1,7 @@
 module View exposing (view)
 
 import Action exposing (Msg(..))
-import Chat exposing (ChatMsg, Sender(..))
+import Chat.Model exposing (ChatItem(..), BotChatItem(..))
 import Html exposing (..)
 import Html.Attributes exposing (..)
 import Html.Events exposing (..)
@@ -41,23 +41,24 @@ inputFooter model =
         ]
 
 
-senderClass : Sender -> String
-senderClass sender =
-    case sender of
-        User ->
-            "user-sent"
-
-        Bot ->
-            "bot-sent"
-
-
-viewChatMsg : ChatMsg -> Html msg
-viewChatMsg msg =
-    li [ class <| "message " ++ senderClass msg.sender ++ " appeared" ]
-        [ div [ class "text_wrapper" ]
-            [ div [ class "text" ] [ text msg.text ] ]
-        ]
-
+viewChatMsg : ChatItem -> Html msg
+viewChatMsg chatItem =
+  let
+      textMessage msgText senderClass = 
+        li [ class <| "message " ++ senderClass ++ " appeared" ]
+            [ div [ class "text_wrapper" ]
+                [ div [ class "text" ] [ text msgText ] ]
+            ]
+  in
+      case chatItem of
+        UserMessage txt ->
+          textMessage txt "user-sent"
+        BotItem botItem ->
+          case botItem of
+            BotMessage txt ->
+              textMessage txt "bot-sent"
+            WidgetItem widget ->
+              li [] [ text "rendering a fancy widget" ]
 
 onEnter : Msg -> Attribute Msg
 onEnter msg =

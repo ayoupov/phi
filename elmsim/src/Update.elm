@@ -1,7 +1,8 @@
 module Update exposing (update)
 
 import Action exposing (Msg(..))
-import Chat exposing (ChatMsg, Sender(..), parseUserMessage)
+import Chat.Model exposing (..)
+import Chat.Chat exposing (parseUserMessage)
 import Dom.Scroll as Scroll
 import Graph
 import Json.Encode exposing (encode)
@@ -34,7 +35,7 @@ update msg model =
             else
                 let
                     chatMsg =
-                        ChatMsg User model.input
+                        UserMessage model.input
 
                     newModel =
                         { model
@@ -43,10 +44,10 @@ update msg model =
                         }
                 in
                 ( newModel, scrollDown )
-                    |> andThen update (parseUserMessage chatMsg)
+                    |> andThen update (parseUserMessage model.input)
 
-        SendBotChatMsg msgText ->
-            ( { model | messages = ChatMsg Bot msgText :: model.messages }
+        SendBotChatItem chatItem ->
+            ( { model | messages = (BotItem chatItem) :: model.messages }
             , scrollDown
             )
 
@@ -58,7 +59,7 @@ update msg model =
                 windy =
                     toString model.weather.wind
 
-                txt =
+                chatMsg = BotMessage <|
                     "There's "
                         ++ sunny
                         ++ " amount of sun, "
@@ -66,13 +67,15 @@ update msg model =
                         ++ windy
                         ++ " amount of wind"
             in
-            update (SendBotChatMsg txt) model
+            update (SendBotChatItem chatMsg) model
+            |> andThen update
+              ( SendBotChatItem <| WidgetItem WeatherWidget )
         DaySummary ->
           let
               txt =
                 "Last week we have generated a bunch of kWh in total, the community had consumed lots of energy, and some of has stored in the batteries. Do you want to know more before I go on?"
           in
-          update (SendBotChatMsg txt) model
+          update (SendBotChatItem <| BotMessage txt) model
 
         CallTurn ->
             update (Tick 1) model
@@ -84,7 +87,7 @@ update msg model =
                 |> (Graph.get n model.network
                         |> Maybe.map (.node >> .label >> encodeNodeLabel >> encode 4)
                         |> Maybe.withDefault "Node not found :("
-                        |> SendBotChatMsg
+                        |> (SendBotChatItem << BotMessage)
                         |> update
                    )
 
