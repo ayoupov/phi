@@ -68,11 +68,13 @@ createEdge a b =
 
 generatePeer : Cmd Msg
 generatePeer =
-    Random.map4 Peer
+    Random.map5 Peer
         (Random.constant [])
         (Random.constant [])
         (Random.float 7 10)
         -- consumptionDesire
+        (Random.constant [1])
+        -- initial seed
         coordsGenerator
         |> Random.generate AddPeer
 

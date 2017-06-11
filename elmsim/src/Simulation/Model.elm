@@ -93,6 +93,7 @@ type alias Peer =
     { joules : List KWHour
     , dailyConsumption : List KWHour
     , desiredConsumption : KWHour
+    , seed : List SeedRating
     , pos : Coords
     }
 
@@ -133,6 +134,7 @@ encodeNodeLabel nodeLabel =
                 [ ( "dailyConsumption", encodeList Json.float label.dailyConsumption )
                 , ( "joules", encodeList Json.float label.joules )
                 , ( "desiredConsumption", Json.float label.desiredConsumption )
+                , ( "seedRating", encodeList Json.float label.seed )
                 , ( "pos", encodeCoords label.pos )
                 , ( "nodeType", Json.string "peer" )
                 ]

@@ -12165,17 +12165,25 @@ var _strelka_2017$phi$Simulation_Model$encodeNodeLabel = function (nodeLabel) {
 								ctor: '::',
 								_0: {
 									ctor: '_Tuple2',
-									_0: 'pos',
-									_1: _strelka_2017$phi$Simulation_Model$encodeCoords(_p4.pos)
+									_0: 'seedRating',
+									_1: A2(_strelka_2017$phi$Simulation_Model$encodeList, _elm_lang$core$Json_Encode$float, _p4.seed)
 								},
 								_1: {
 									ctor: '::',
 									_0: {
 										ctor: '_Tuple2',
-										_0: 'nodeType',
-										_1: _elm_lang$core$Json_Encode$string('peer')
+										_0: 'pos',
+										_1: _strelka_2017$phi$Simulation_Model$encodeCoords(_p4.pos)
 									},
-									_1: {ctor: '[]'}
+									_1: {
+										ctor: '::',
+										_0: {
+											ctor: '_Tuple2',
+											_0: 'nodeType',
+											_1: _elm_lang$core$Json_Encode$string('peer')
+										},
+										_1: {ctor: '[]'}
+									}
 								}
 							}
 						}
@@ -12289,9 +12297,9 @@ var _strelka_2017$phi$Simulation_Model$Battery = F3(
 	function (a, b, c) {
 		return {capacity: a, storage: b, pos: c};
 	});
-var _strelka_2017$phi$Simulation_Model$Peer = F4(
-	function (a, b, c, d) {
-		return {joules: a, dailyConsumption: b, desiredConsumption: c, pos: d};
+var _strelka_2017$phi$Simulation_Model$Peer = F5(
+	function (a, b, c, d, e) {
+		return {joules: a, dailyConsumption: b, desiredConsumption: c, seed: d, pos: e};
 	});
 var _strelka_2017$phi$Simulation_Model$Weather = F2(
 	function (a, b) {
@@ -12562,14 +12570,20 @@ var _strelka_2017$phi$Simulation_Simulation$generateWindTurbine = A2(
 var _strelka_2017$phi$Simulation_Simulation$generatePeer = A2(
 	_elm_lang$core$Random$generate,
 	_strelka_2017$phi$Action$AddPeer,
-	A5(
-		_elm_lang$core$Random$map4,
+	A6(
+		_elm_lang$core$Random$map5,
 		_strelka_2017$phi$Simulation_Model$Peer,
 		_elm_community$random_extra$Random_Extra$constant(
 			{ctor: '[]'}),
 		_elm_community$random_extra$Random_Extra$constant(
 			{ctor: '[]'}),
 		A2(_elm_lang$core$Random$float, 7, 10),
+		_elm_community$random_extra$Random_Extra$constant(
+			{
+				ctor: '::',
+				_0: 1,
+				_1: {ctor: '[]'}
+			}),
 		_strelka_2017$phi$Simulation_Simulation$coordsGenerator));
 var _strelka_2017$phi$Simulation_Simulation$renderPhiNetwork = _elm_lang$core$Native_Platform.outgoingPort(
 	'renderPhiNetwork',
