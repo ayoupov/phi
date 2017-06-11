@@ -45,6 +45,28 @@ type alias Phicoin =
     Float
 
 
+-- Game settings
+
+type alias NarrativeItem =
+    {
+      event : String
+    , message : String
+    }
+
+type alias Narrative =
+    List NarrativeItem
+
+type alias Budget =
+    Float
+
+type alias SimMap =
+    {
+      name: String
+    , initialNetwork: PhiNetwork
+    , initialWeather: Weather
+    , narrative : Narrative
+    , initialBudget: Budget
+    }
 
 -- Graph
 
@@ -68,11 +90,10 @@ type NodeLabel
     | PeerNode Peer
     | BatNode Battery
 
-type GeneratorType
-    = WindTurbine | SolarPanel
-
 -- NODES
 
+type GeneratorType
+    = WindTurbine | SolarPanel
 
 type alias SimGenerator =
      {

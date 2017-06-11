@@ -3,7 +3,7 @@ module Model exposing (..)
 import Action exposing (Msg)
 import Chat.Model exposing (ChatItem, initChat)
 import Graph
-import Simulation.Model exposing (PhiNetwork, Weather)
+import Simulation.Model exposing (Budget, Narrative, NarrativeItem, PhiNetwork, SimMap, Weather)
 import Simulation.Simulation as Simulation
 
 
@@ -12,19 +12,45 @@ type alias Model =
     , messages : List ChatItem
     , network : PhiNetwork
     , weather : Weather
+    , budget : Budget
+    , map : SimMap
     }
 
 
 initModel : ( Model, Cmd Msg )
 initModel =
-    Model "" [ initChat ] Graph.empty initWeather
+    let
+       map : SimMap
+       map = initMap
+    in
+    Model ""
+        [ initChat ]
+        (initGraph map)
+        (initWeather map)
+        (initBudget map)
+        map
         ! initGenerators
 
+-- less hardcode??
+initMap : SimMap
+initMap =
+    SimMap "first" Graph.empty (Weather 0.8 0.4) initNarrative 10000
 
-initWeather : Weather
-initWeather =
-    Weather 0.8 0.4
+initGraph : SimMap -> PhiNetwork
+initGraph map =
+    map.initialNetwork
 
+initWeather : SimMap -> Weather
+initWeather map =
+    Weather map.initialWeather.sun map.initialWeather.wind
+
+initBudget : SimMap -> Budget
+initBudget map =
+    map.initialBudget
+
+initNarrative : Narrative
+initNarrative =
+    [NarrativeItem "start" "hi!"]
 
 initGenerators : List (Cmd Msg)
 initGenerators =

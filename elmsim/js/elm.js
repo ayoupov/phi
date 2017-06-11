@@ -12242,6 +12242,14 @@ var _strelka_2017$phi$Simulation_Model$Line = F2(
 	function (a, b) {
 		return {from: a, to: b};
 	});
+var _strelka_2017$phi$Simulation_Model$NarrativeItem = F2(
+	function (a, b) {
+		return {event: a, message: b};
+	});
+var _strelka_2017$phi$Simulation_Model$SimMap = F5(
+	function (a, b, c, d, e) {
+		return {name: a, initialNetwork: b, initialWeather: c, narrative: d, initialBudget: e};
+	});
 var _strelka_2017$phi$Simulation_Model$EncodedEdge = F2(
 	function (a, b) {
 		return {transmissionLine: a, pos: b};
@@ -12616,24 +12624,49 @@ var _strelka_2017$phi$Model$initGenerators = A2(
 			_elm_lang$core$Basics_ops['++'],
 			A2(_elm_lang$core$List$repeat, 30, _strelka_2017$phi$Simulation_Simulation$generatePVPanel),
 			A2(_elm_lang$core$List$repeat, 5, _strelka_2017$phi$Simulation_Simulation$generateWindTurbine))));
-var _strelka_2017$phi$Model$initWeather = A2(_strelka_2017$phi$Simulation_Model$Weather, 0.8, 0.4);
-var _strelka_2017$phi$Model$Model = F4(
-	function (a, b, c, d) {
-		return {input: a, messages: b, network: c, weather: d};
+var _strelka_2017$phi$Model$initNarrative = {
+	ctor: '::',
+	_0: A2(_strelka_2017$phi$Simulation_Model$NarrativeItem, 'start', 'hi!'),
+	_1: {ctor: '[]'}
+};
+var _strelka_2017$phi$Model$initBudget = function (map) {
+	return map.initialBudget;
+};
+var _strelka_2017$phi$Model$initWeather = function (map) {
+	return A2(_strelka_2017$phi$Simulation_Model$Weather, map.initialWeather.sun, map.initialWeather.wind);
+};
+var _strelka_2017$phi$Model$initGraph = function (map) {
+	return map.initialNetwork;
+};
+var _strelka_2017$phi$Model$initMap = A5(
+	_strelka_2017$phi$Simulation_Model$SimMap,
+	'first',
+	_elm_community$graph$Graph$empty,
+	A2(_strelka_2017$phi$Simulation_Model$Weather, 0.8, 0.4),
+	_strelka_2017$phi$Model$initNarrative,
+	10000);
+var _strelka_2017$phi$Model$Model = F6(
+	function (a, b, c, d, e, f) {
+		return {input: a, messages: b, network: c, weather: d, budget: e, map: f};
 	});
-var _strelka_2017$phi$Model$initModel = A2(
-	_elm_lang$core$Platform_Cmd_ops['!'],
-	A4(
-		_strelka_2017$phi$Model$Model,
-		'',
-		{
-			ctor: '::',
-			_0: _strelka_2017$phi$Chat_Model$initChat,
-			_1: {ctor: '[]'}
-		},
-		_elm_community$graph$Graph$empty,
-		_strelka_2017$phi$Model$initWeather),
-	_strelka_2017$phi$Model$initGenerators);
+var _strelka_2017$phi$Model$initModel = function () {
+	var map = _strelka_2017$phi$Model$initMap;
+	return A2(
+		_elm_lang$core$Platform_Cmd_ops['!'],
+		A6(
+			_strelka_2017$phi$Model$Model,
+			'',
+			{
+				ctor: '::',
+				_0: _strelka_2017$phi$Chat_Model$initChat,
+				_1: {ctor: '[]'}
+			},
+			_strelka_2017$phi$Model$initGraph(map),
+			_strelka_2017$phi$Model$initWeather(map),
+			_strelka_2017$phi$Model$initBudget(map),
+			map),
+		_strelka_2017$phi$Model$initGenerators);
+}();
 
 var _strelka_2017$phi$Update$update = F2(
 	function (msg, model) {
