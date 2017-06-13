@@ -4,7 +4,7 @@ import Action exposing (Msg)
 import Chat.Model exposing (ChatItem, initChat)
 import Graph
 import Simulation.Model exposing (Budget, Narrative, NarrativeItem, PhiNetwork, ReputationRatio, SimMap, Weather)
-import Simulation.Simulation as Simulation
+import Simulation.Init.Generators as Generators
 
 
 type alias Model =
@@ -67,7 +67,7 @@ initReputation map =
 
 initGenerators : List (Cmd Msg)
 initGenerators =
-    List.repeat 20 Simulation.generateEdge
-        ++ List.repeat 10 Simulation.generatePeer
-        ++ List.repeat 30 Simulation.generatePVPanel
-        ++ List.repeat 5 Simulation.generateWindTurbine
+    List.repeat 20 Generators.generateEdge
+        ++ List.repeat 10 Generators.generatePeer
+        ++ List.repeat 30 Generators.generatePVPanel
+        ++ List.repeat 5 Generators.generateWindTurbine

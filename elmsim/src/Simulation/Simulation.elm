@@ -6,103 +6,13 @@ import Html.Attributes exposing (..)
 import IntDict
 import Json.Encode as Json
 import List exposing (repeat)
-import Random exposing (Generator)
-import Random.Extra as Random
 import Simulation.Model exposing (..)
 import Svg exposing (..)
 import Svg.Attributes as SVG
 import Update.Extra exposing (andThen)
 
 
-coordsGenerator : Random.Generator Coords
-coordsGenerator =
-    Random.map2 Coords
-        (Random.float (30.5234 - 0.01) (30.5234 + 0.01))
-        -- longitude
-        (Random.float (50.4501 - 0.01) (50.4501 + 0.01))
-
-
-generateWeather : Cmd Msg
-generateWeather =
-    Random.map2 Weather
-        (Random.float 0 1)
-        (Random.float 0 1)
-        |> Random.generate UpdateWeather
-
-
-generatePVPanel : Cmd Msg
-generatePVPanel =
-    Random.map4 SimGenerator
-        (Random.constant [])
-        -- dailyConsumption
-        (Random.float 0 10)
-        -- maxGeneration
-        coordsGenerator
-        -- xy coordinates
-        (Random.constant SolarPanel)
-        -- generator type
-        |> Random.generate AddGenerator
-
-
-generateWindTurbine : Cmd Msg
-generateWindTurbine =
-    Random.map4 SimGenerator
-        (Random.constant [])
-        (Random.float 0 10)
-        -- capacity
-        coordsGenerator
-        (Random.constant WindTurbine)
-        |> Random.generate AddGenerator
-
-
-generateEdge : Cmd Msg
-generateEdge =
-    Random.map2 createEdge
-        (Random.int 0 45)
-        (Random.int 0 45)
-        |> Random.generate AddEdge
-
-
-createEdge : NodeId -> NodeId -> TransmissionLine
-createEdge a b =
-    Edge a b (toString a ++ "-" ++ toString b)
-
-
-generatePeer : Cmd Msg
-generatePeer =
-    Random.map6 Peer
-        (Random.constant [0])
-        (Random.constant [0])
-        (Random.float 7 10)
-        -- consumptionDesire
-        (Random.constant [ 1 ])
-        -- negawatts
-        (Random.constant [0])
-        -- initial seed
-        coordsGenerator
-        |> Random.generate AddPeer
-
-
-
 -- UPDATE
-
-
-addNode : NodeLabel -> PhiNetwork -> PhiNetwork
-addNode nodeLabel network =
-    let
-        nodeId =
-            Maybe.withDefault 0 <|
-                Maybe.map ((+) 1 << Tuple.second) (Graph.nodeIdRange network)
-
-        node =
-            Node nodeId nodeLabel
-    in
-    Graph.insert (NodeContext node IntDict.empty IntDict.empty) network
-
-
-addEdge : TransmissionLine -> PhiNetwork -> PhiNetwork
-addEdge edge network =
-    Graph.fromNodesAndEdges (Graph.nodes network) (edge :: Graph.edges network)
 
 
 joulesToGenerators : Weather -> PhiNetwork -> PhiNetwork
@@ -174,54 +84,61 @@ distributeGeneratedJoules ratio network =
         negawattsReward peer quotient =
             quotient * (takeFirstElementWithDefault0 peer.negawatts)
 
-        -- todo: passed through ???
-        passedThroughReward peer quotient =
+        seedRating peer quotient =
              quotient * 0
 
-        newSeedRating peer =
-             ((takeFirstElementWithDefault0 peer.seed) + (negawattsReward peer ratio.a) + (passedThroughReward peer ratio.b)) :: peer.seed
+        newReputationRating peer =
+             ((takeFirstElementWithDefault0 peer.reputation) + (negawattsReward peer ratio.a) + (seedRating peer ratio.b)) :: peer.reputation
 
---        thisDaySeed =
---            (.seed >> List.head >> Maybe.withDefault 0)
+        thisDayReputation peer =
+            takeFirstElementWithDefault0 peer.reputation
 
---        thisDaySeed peer =
---            peer.seed
---            |> List.head
---            |> Maybe.withDefault 0
-
-        thisDaySeed peer =
-            takeFirstElementWithDefault0 peer.seed
-
-        networkTotalSeedRating =
+        networkTotalReputationRating =
             Graph.nodes network
-                |> List.filterMap (toPeer >> Maybe.map thisDaySeed)
+                |> List.filterMap (toPeer >> Maybe.map thisDayReputation)
                 |> List.sum
 
-        weightening network networkDesiredEnergy =
-            networkDesiredEnergy / networkTotalSeedRating
+        weightening networkDesiredEnergy =
+            networkDesiredEnergy / networkTotalReputationRating
 
         networkDesiredEnergy =
             Graph.nodes network
-                |> List.filterMap (toPeer >> Maybe.map .desiredConsumption)
+                |> List.filterMap (toPeer >> Maybe.map (.joules >> .desiredConsumption))
                 |> List.sum
 
         newConsumption peer =
-            (peer.desiredConsumption
-                * networkGeneratedEnergy network
-                * (takeFirstElementWithDefault1 peer.seed)
-                * (weightening network networkDesiredEnergy)
+            (peer.joules.desiredConsumption
+                * (networkGeneratedEnergy network)
+                * (takeFirstElementWithDefault1 peer.reputation)
+                * (weightening networkDesiredEnergy)
                 / networkDesiredEnergy
             )
-                :: peer.actualConsumption
+                :: peer.joules.actualConsumption
+
+        setActualConsumption: List KWHour -> PeerJoules -> PeerJoules
+        setActualConsumption ac joules =
+            {joules | actualConsumption = ac}
+
+        asActualConsumptionIn: PeerJoules -> List KWHour -> PeerJoules
+        asActualConsumptionIn =
+            flip setActualConsumption
+
+        setJoules : PeerJoules -> Peer -> Peer
+        setJoules newJoules peer =
+            {peer | joules = newJoules}
+
+        asJoulesIn: Peer -> PeerJoules -> Peer
+        asJoulesIn =
+            flip setJoules
 
         updateNode node =
             case node of
                 PeerNode n ->
-                    PeerNode {
-                    n | seed = newSeedRating n,
-                        actualConsumption = newConsumption n
-                             }
-
+                    PeerNode (
+                    n.joules
+                    |> setActualConsumption (newConsumption n)
+                    |> asJoulesIn n
+                    )
                 _ ->
                     node
     in

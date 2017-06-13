@@ -8,8 +8,11 @@ import Dom.Scroll as Scroll
 import Graph
 import Json.Encode exposing (encode)
 import Model exposing (Model)
-import Simulation.Model exposing (NodeLabel(..), encodeGraph, encodeNodeLabel)
-import Simulation.Simulation as Simulation exposing (addEdge, addNode, renderPhiNetwork)
+import Simulation.Encoding exposing (encodeEdge, encodeGraph, encodeNodeLabel)
+import Simulation.GraphUpdates exposing (addNode,addEdge)
+import Simulation.Model exposing (..)
+import Simulation.Simulation as Simulation exposing (..)
+import Simulation.Init.Generators as Generators exposing (..)
 import Task
 import Update.Extra exposing (andThen)
 
@@ -129,7 +132,7 @@ runDay model =
             { model | network = newNetwork }
     in
     newModel
-        ! [ Simulation.generateWeather ]
+        ! [ Generators.generateWeather ]       -- should be not in Generators
         |> andThen update RenderPhiNetwork
 
 
