@@ -2,21 +2,27 @@
   box-sizing: border-box;
 }
 
+@font-face {
+    font-family: "OpenSans Light";
+    src: url("../fonts/Open_Sans/OpenSans-Light.ttf") format("truetype");
+}
+
 body {
   background: #FFF;
   background-size: cover;
-  font-family: "Monaco", monospace;
+  font-family: "OpenSans Light", monospace;
   color: white;
 }
 
 .chat_window {
-  opacity: 0.9;
+  opacity: 1;
   position: absolute;
   padding-left: 20px;
   padding-right: 20px;
   width: 475px;
   height: 100%;
-  background-color: rgba(200,200,200,0.10);
+  -webkit-filter-background: blur(10px);
+  background-color: rgba(200,200,200,0.40);
   left: 0px;
   top: 0px;
   transform: translateX(0) translateY(0);
@@ -30,6 +36,7 @@ body {
   padding: 20px 0 0 0;
   margin: 0;
   height: calc(100% - 80px);
+  width: 100%;
   overflow: scroll;
 }
 
@@ -52,12 +59,13 @@ body {
 }
 
 .messages .message.bot-sent .text_wrapper {
-  background: linear-gradient(to right, rgba(255,180,0,0.7), rgba(250,180,0,0.8));
+  background: linear-gradient(rgba(246, 229, 191, 0.7), rgba(255,255,255,0.7));
+  width: 100%;
   left: 0px;
 }
 
 .messages .message.user-sent .text_wrapper {
-  background: linear-gradient(to right, rgba(255,180,0,0.7), rgba(250,180,0,0.8));
+  background: linear-gradient(rgba(246, 229, 191, 0.7), rgba(255,255,255,0.7));
   width: calc(100% - 40px);
   right: 0px;
   float: right;
@@ -72,7 +80,8 @@ body {
 .messages .message .text_wrapper {
   display: inline-block;
   padding: 10px;
-  border: 1.4px solid #338;
+  --border: 1.4px solid #338;
+  border-radius: 12px;
   width: 100%;
   min-width: 100px;
   position: relative;
@@ -114,46 +123,70 @@ body {
   padding-right: 10px;
   position: relative;
   width: 435px;
-  height: 54px;
+  height: 44px;
   position: absolute;
-  background: linear-gradient(to right, rgba(255,180,0,0.7), rgba(250,180,0,0.8));
+  background: rgba(246, 229, 191, 0.7);
   bottom: 0;
   left: 0;
-  border: 1.5px solid #338;
-}
-.bottom_wrapper .message_input_wrapper {
-  display: inline-block;
-  height: 54px;
-  width: calc(100% - 160px);
-  background: rgba(0,0,0,0);
-  position: relative;
+  --border: 1.5px solid #338;
 }
 
-.bottom_wrapper .message_input_wrapper .message_input {
-  border: none;
-  height: 100%;
-  box-sizing: border-box;
-  width: 100%;
-  background: rgba(0,0,0,0);
-  position: absolute;
-  outline-width: 0;
-  color: #338;
-  font-family: "Monaco", monospace;
+.bottom_wrapper .input_type {
+  display: inline-block;
+  width: 17px;
+  cursor: pointer;
+  color: #00f;
+  font-family: "OpenSans Light", monospace;
   font-size: 15px;
 }
 
-.bottom_wrapper .send_message {
+
+.bottom_wrapper .input_container {
   display: inline-block;
+  border-left: 1px solid rgba(255,255,255,0.7);
+  padding-left: 5px;
+  height: 100%;
+  background: rgba(0,0,0,0);
+  width: calc(100% - 17px);
+}
+
+.bottom_wrapper .input_container .message_input {
+  height: 100%;
+  outline-width: 0;
+  border: none;
+  background: rgba(0,0,0,0);
+  width: calc(100% - 35px);
+  color: #338;
+  font-family: "OpenSans Light", monospace;
+  font-size: 15px;
+}
+
+.bottom_wrapper .input_container .multi_button {
+  height: calc(100% - 10px);
+  color: #338;
+  background: rgba(255,255,255,0.6);
+  font-family: "OpenSans Light", monospace;
+  font-size: 15px;
+  border: none;
+  outline: none;
+  cursor: pointer;
+  border-radius: 13px;
+  margin: 5px 2px 5px 2px;
+  padding-left: 10px;
+  padding-right: 10px;
+}
+
+.bottom_wrapper .input_container .send_button {
+  width: 35px;
+  height: 90%;
   color: #00f;
   cursor: pointer;
-  transition: all 0.2s linear;
-  text-align: center;
+  padding: 0;
+  border: none;
+  background-color: Transparent;
+  outline: none;
   float: right;
+  text-align: center;
+  font-family: "OpenSans Light", monospace;
+  font-size: 15px;
 }
-
-.bottom_wrapper .send_message .text {
-  font-size: 18px;
-  display: inline-block;
-  line-height: 48px;
-}
-

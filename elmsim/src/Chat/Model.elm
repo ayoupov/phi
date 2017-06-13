@@ -3,6 +3,11 @@ module Chat.Model exposing (..)
 import Dict exposing (Dict)
 
 
+type InputType
+    = MultiChoiceInput
+    | FreeTextInput
+
+
 type ChatItem
     = UserMessage UserChatMessage
     | BotItem BotChatItem
@@ -34,6 +39,25 @@ type MultiChoiceAction
     | McaWeatherForecast
     | McaChangeDesign
     | McaSelectLocation Int
+
+
+mcaName : MultiChoiceAction -> String
+mcaName action =
+    case action of
+        McaRunDay ->
+            "Next Day"
+
+        McaWeatherForecast ->
+            "Weather Forecast"
+
+        McaChangeDesign ->
+            "Change Design"
+
+        McaRunWeek ->
+            "Next Week"
+
+        McaSelectLocation n ->
+            "Selection some location"
 
 
 type Widget

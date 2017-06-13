@@ -1,7 +1,7 @@
 module Model exposing (..)
 
 import Action exposing (Msg)
-import Chat.Model exposing (ChatItem, initChat)
+import Chat.Model exposing (ChatItem, InputType(..), initChat)
 import Graph
 import Simulation.Model exposing (Budget, Narrative, NarrativeItem, PhiNetwork, ReputationRatio, SimMap, Weather)
 import Simulation.Init.Generators as Generators
@@ -9,6 +9,7 @@ import Simulation.Init.Generators as Generators
 
 type alias Model =
     { input : String
+    , inputType : InputType
     , messages : List ChatItem
     , network : PhiNetwork
     , weather : Weather
@@ -25,6 +26,7 @@ initModel =
             initMap
     in
     Model ""
+        FreeTextInput
         [ initChat ]
         (initGraph map)
         (initWeather map)

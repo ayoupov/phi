@@ -4361,8 +4361,8 @@ var _elm_community$graph$Graph$ignorePath = F4(
 			return _elm_lang$core$Native_Utils.crashCase(
 				'Graph',
 				{
-					start: {line: 885, column: 3},
-					end: {line: 889, column: 20}
+					start: {line: 880, column: 3},
+					end: {line: 884, column: 20}
 				},
 				_p1)('Graph.ignorePath: No algorithm should ever pass an empty path into this BfsNodeVisitor.');
 		} else {
@@ -4587,10 +4587,6 @@ var _elm_community$graph$Graph$fromNodesAndEdges = F2(
 						_elm_lang$core$Maybe$map(updateOutgoing),
 						rep));
 			});
-		var addEdgeIfValid = F2(
-			function (edge, rep) {
-				return (A2(_elm_community$intdict$IntDict$member, edge.from, rep) && A2(_elm_community$intdict$IntDict$member, edge.to, rep)) ? A2(addEdge, edge, rep) : rep;
-			});
 		var nodeRep = A3(
 			_elm_lang$core$List$foldl,
 			function (n) {
@@ -4602,7 +4598,7 @@ var _elm_community$graph$Graph$fromNodesAndEdges = F2(
 			_elm_community$intdict$IntDict$empty,
 			nodes);
 		return _elm_community$graph$Graph$Graph(
-			A3(_elm_lang$core$List$foldl, addEdgeIfValid, nodeRep, edges));
+			A3(_elm_lang$core$List$foldl, addEdge, nodeRep, edges));
 	});
 var _elm_community$graph$Graph$fromNodeLabelsAndEdgePairs = F2(
 	function (labels, edgePairs) {
@@ -5021,8 +5017,8 @@ var _elm_community$graph$Graph$dfsTree = F2(
 				return _elm_lang$core$Native_Utils.crashCase(
 					'Graph',
 					{
-						start: {line: 827, column: 3},
-						end: {line: 833, column: 120}
+						start: {line: 822, column: 3},
+						end: {line: 828, column: 120}
 					},
 					_p42)('dfsTree: There can\'t be more than one DFS tree. This invariant is violated, please report this bug.');
 			}
@@ -5070,8 +5066,8 @@ var _elm_community$graph$Graph$topologicalSort = function (graph) {
 			return _elm_lang$core$Native_Utils.crashCase(
 				'Graph',
 				{
-					start: {line: 1046, column: 7},
-					end: {line: 1054, column: 18}
+					start: {line: 1041, column: 7},
+					end: {line: 1049, column: 18}
 				},
 				_p46)('Invariant hurt in Graph.topologicalSort: No strongly connected component should be empty');
 		} else {
@@ -5080,8 +5076,8 @@ var _elm_community$graph$Graph$topologicalSort = function (graph) {
 				return _elm_lang$core$Native_Utils.crashCase(
 					'Graph',
 					{
-						start: {line: 1050, column: 11},
-						end: {line: 1054, column: 18}
+						start: {line: 1045, column: 11},
+						end: {line: 1049, column: 18}
 					},
 					_p48)('Invariant hurt in Graph.topologicalSort: nodeId in nodeIdRange of the strongly connected component should be present in the original graph');
 			} else {
@@ -5221,8 +5217,8 @@ var _elm_community$graph$Graph$heightLevels = function (graph) {
 					return _elm_lang$core$Native_Utils.crashCase(
 						'Graph',
 						{
-							start: {line: 1006, column: 13},
-							end: {line: 1008, column: 154}
+							start: {line: 1001, column: 13},
+							end: {line: 1003, column: 154}
 						},
 						_p62)('Graph.heightLevels: Could not get a node of a graph which should be there by invariants. Please file a bug report!');
 				}
@@ -5275,8 +5271,8 @@ var _elm_community$graph$Graph$heightLevels = function (graph) {
 					return _elm_lang$core$Native_Utils.crashCase(
 						'Graph',
 						{
-							start: {line: 1025, column: 13},
-							end: {line: 1029, column: 44}
+							start: {line: 1020, column: 13},
+							end: {line: 1024, column: 44}
 						},
 						_p67)('Graph.heightLevels: Reached a branch which is impossible by invariants. Please file a bug report!');
 				} else {
@@ -12046,10 +12042,27 @@ var _elm_lang$svg$Svg_Attributes$accumulate = _elm_lang$virtual_dom$VirtualDom$a
 var _elm_lang$svg$Svg_Attributes$accelerate = _elm_lang$virtual_dom$VirtualDom$attribute('accelerate');
 var _elm_lang$svg$Svg_Attributes$accentHeight = _elm_lang$virtual_dom$VirtualDom$attribute('accent-height');
 
+var _strelka_2017$phi$Chat_Model$mcaName = function (action) {
+	var _p0 = action;
+	switch (_p0.ctor) {
+		case 'McaRunDay':
+			return 'Next Day';
+		case 'McaWeatherForecast':
+			return 'Weather Forecast';
+		case 'McaChangeDesign':
+			return 'Change Design';
+		case 'McaRunWeek':
+			return 'Next Week';
+		default:
+			return 'Selection some location';
+	}
+};
 var _strelka_2017$phi$Chat_Model$MultiChoiceMessage = F2(
 	function (a, b) {
 		return {text: a, options: b};
 	});
+var _strelka_2017$phi$Chat_Model$FreeTextInput = {ctor: 'FreeTextInput'};
+var _strelka_2017$phi$Chat_Model$MultiChoiceInput = {ctor: 'MultiChoiceInput'};
 var _strelka_2017$phi$Chat_Model$BotItem = function (a) {
 	return {ctor: 'BotItem', _0: a};
 };
@@ -12133,6 +12146,7 @@ var _strelka_2017$phi$Simulation_Model$GeneratorNode = function (a) {
 var _strelka_2017$phi$Simulation_Model$SolarPanel = {ctor: 'SolarPanel'};
 var _strelka_2017$phi$Simulation_Model$WindTurbine = {ctor: 'WindTurbine'};
 
+var _strelka_2017$phi$Action$ToggleInputType = {ctor: 'ToggleInputType'};
 var _strelka_2017$phi$Action$MultiChoiceMsg = function (a) {
 	return {ctor: 'MultiChoiceMsg', _0: a};
 };
@@ -12355,17 +12369,18 @@ var _strelka_2017$phi$Model$initMap = A6(
 	_strelka_2017$phi$Model$initNarrative,
 	10000,
 	{a: 1, b: 0});
-var _strelka_2017$phi$Model$Model = F6(
-	function (a, b, c, d, e, f) {
-		return {input: a, messages: b, network: c, weather: d, budget: e, reputationRatio: f};
+var _strelka_2017$phi$Model$Model = F7(
+	function (a, b, c, d, e, f, g) {
+		return {input: a, inputType: b, messages: c, network: d, weather: e, budget: f, reputationRatio: g};
 	});
 var _strelka_2017$phi$Model$initModel = function () {
 	var map = _strelka_2017$phi$Model$initMap;
 	return A2(
 		_elm_lang$core$Platform_Cmd_ops['!'],
-		A6(
+		A7(
 			_strelka_2017$phi$Model$Model,
 			'',
+			_strelka_2017$phi$Chat_Model$FreeTextInput,
 			{
 				ctor: '::',
 				_0: _strelka_2017$phi$Chat_Model$initChat,
@@ -12835,6 +12850,14 @@ var _strelka_2017$phi$Update$update = F2(
 	function (msg, model) {
 		update:
 		while (true) {
+			var addChatItem = F2(
+				function (chatMsg, model) {
+					return _elm_lang$core$Native_Utils.update(
+						model,
+						{
+							messages: {ctor: '::', _0: chatMsg, _1: model.messages}
+						});
+				});
 			var scrollDown = A2(
 				_elm_lang$core$Task$attempt,
 				_elm_lang$core$Basics$always(_strelka_2017$phi$Action$NoOp),
@@ -12859,13 +12882,11 @@ var _strelka_2017$phi$Update$update = F2(
 					if (_elm_lang$core$String$isEmpty(model.input)) {
 						return noOp;
 					} else {
-						var chatMsg = _strelka_2017$phi$Chat_Model$UserMessage(model.input);
-						var newModel = _elm_lang$core$Native_Utils.update(
+						var clearedInputModel = _elm_lang$core$Native_Utils.update(
 							model,
-							{
-								input: '',
-								messages: {ctor: '::', _0: chatMsg, _1: model.messages}
-							});
+							{input: ''});
+						var chatMsg = _strelka_2017$phi$Chat_Model$UserMessage(model.input);
+						var newModel = A2(addChatItem, chatMsg, clearedInputModel);
 						return A3(
 							_ccapndave$elm_update_extra$Update_Extra$andThen,
 							_strelka_2017$phi$Update$update,
@@ -12875,15 +12896,10 @@ var _strelka_2017$phi$Update$update = F2(
 				case 'SendBotChatItem':
 					return {
 						ctor: '_Tuple2',
-						_0: _elm_lang$core$Native_Utils.update(
-							model,
-							{
-								messages: {
-									ctor: '::',
-									_0: _strelka_2017$phi$Chat_Model$BotItem(_p0._0),
-									_1: model.messages
-								}
-							}),
+						_0: A2(
+							addChatItem,
+							_strelka_2017$phi$Chat_Model$BotItem(_p0._0),
+							model),
 						_1: scrollDown
 					};
 				case 'CheckWeather':
@@ -12976,15 +12992,38 @@ var _strelka_2017$phi$Update$update = F2(
 						_1: _strelka_2017$phi$Simulation_Simulation$renderPhiNetwork(
 							_strelka_2017$phi$Simulation_Encoding$encodeGraph(model.network))
 					};
+				case 'MultiChoiceMsg':
+					var _p3 = _p0._0;
+					var newModel = A2(
+						addChatItem,
+						_strelka_2017$phi$Chat_Model$UserMessage(
+							_strelka_2017$phi$Chat_Model$mcaName(_p3)),
+						model);
+					return A2(_strelka_2017$phi$Update$handleMultiChoiceMsg, _p3, newModel);
 				default:
-					return A2(_strelka_2017$phi$Update$handleMultiChoiceMsg, _p0._0, model);
+					var _p4 = model.inputType;
+					if (_p4.ctor === 'FreeTextInput') {
+						return A2(
+							_elm_lang$core$Platform_Cmd_ops['!'],
+							_elm_lang$core$Native_Utils.update(
+								model,
+								{inputType: _strelka_2017$phi$Chat_Model$MultiChoiceInput}),
+							{ctor: '[]'});
+					} else {
+						return A2(
+							_elm_lang$core$Platform_Cmd_ops['!'],
+							_elm_lang$core$Native_Utils.update(
+								model,
+								{inputType: _strelka_2017$phi$Chat_Model$FreeTextInput}),
+							{ctor: '[]'});
+					}
 			}
 		}
 	});
 var _strelka_2017$phi$Update$handleMultiChoiceMsg = F2(
 	function (action, model) {
-		var _p3 = action;
-		switch (_p3.ctor) {
+		var _p5 = action;
+		switch (_p5.ctor) {
 			case 'McaWeatherForecast':
 				return _strelka_2017$phi$Update$weatherForecast(model);
 			case 'McaChangeDesign':
@@ -13063,57 +13102,169 @@ var _strelka_2017$phi$Update$weatherForecast = function (model) {
 			model));
 };
 
-var _strelka_2017$phi$View$onEnter = function (msg) {
+var _strelka_2017$phi$View$viewMCA = function (action) {
+	return A2(
+		_elm_lang$html$Html$button,
+		{
+			ctor: '::',
+			_0: _elm_lang$html$Html_Attributes$class('multi_button'),
+			_1: {
+				ctor: '::',
+				_0: _elm_lang$html$Html_Events$onClick(
+					_strelka_2017$phi$Action$MultiChoiceMsg(action)),
+				_1: {ctor: '[]'}
+			}
+		},
+		{
+			ctor: '::',
+			_0: _elm_lang$html$Html$text(
+				_strelka_2017$phi$Chat_Model$mcaName(action)),
+			_1: {ctor: '[]'}
+		});
+};
+var _strelka_2017$phi$View$freeTextFooter = function (model) {
 	var isEnter = function (num) {
 		var _p0 = num;
 		if (_p0 === 13) {
-			return msg;
+			return _strelka_2017$phi$Action$SendUserChatMsg;
 		} else {
 			return _strelka_2017$phi$Action$NoOp;
 		}
 	};
-	return A2(
+	var onEnter = A2(
 		_elm_lang$html$Html_Events$on,
 		'keyup',
 		A2(_elm_lang$core$Json_Decode$map, isEnter, _elm_lang$html$Html_Events$keyCode));
-};
-var _strelka_2017$phi$View$viewMCA = function (action) {
-	var buttonName = function () {
-		var _p1 = action;
-		switch (_p1.ctor) {
-			case 'McaRunDay':
-				return 'Next Day';
-			case 'McaWeatherForecast':
-				return 'Weather Forecast';
-			case 'McaChangeDesign':
-				return 'Change Design';
-			default:
-				return 'Not Foundz';
-		}
-	}();
 	return A2(
-		_elm_lang$html$Html$li,
+		_elm_lang$html$Html$div,
 		{
 			ctor: '::',
-			_0: _elm_lang$html$Html_Attributes$class('button bot-sent appeared'),
+			_0: _elm_lang$html$Html_Attributes$class('input_container'),
 			_1: {ctor: '[]'}
 		},
 		{
 			ctor: '::',
 			_0: A2(
-				_elm_lang$html$Html$button,
+				_elm_lang$html$Html$input,
 				{
 					ctor: '::',
-					_0: _elm_lang$html$Html_Events$onClick(
-						_strelka_2017$phi$Action$MultiChoiceMsg(action)),
-					_1: {ctor: '[]'}
+					_0: _elm_lang$html$Html_Attributes$class('message_input'),
+					_1: {
+						ctor: '::',
+						_0: onEnter,
+						_1: {
+							ctor: '::',
+							_0: _elm_lang$html$Html_Events$onInput(_strelka_2017$phi$Action$Input),
+							_1: {
+								ctor: '::',
+								_0: _elm_lang$html$Html_Attributes$value(model.input),
+								_1: {ctor: '[]'}
+							}
+						}
+					}
+				},
+				{ctor: '[]'}),
+			_1: {
+				ctor: '::',
+				_0: A2(
+					_elm_lang$html$Html$button,
+					{
+						ctor: '::',
+						_0: _elm_lang$html$Html_Attributes$class('send_button'),
+						_1: {
+							ctor: '::',
+							_0: _elm_lang$html$Html_Events$onClick(_strelka_2017$phi$Action$SendUserChatMsg),
+							_1: {ctor: '[]'}
+						}
+					},
+					{
+						ctor: '::',
+						_0: _elm_lang$html$Html$text('Send'),
+						_1: {ctor: '[]'}
+					}),
+				_1: {ctor: '[]'}
+			}
+		});
+};
+var _strelka_2017$phi$View$multiChoiceFooter = function (model) {
+	var toMultiChoiceActionList = function (chatItem) {
+		var _p1 = chatItem;
+		if (_p1.ctor === 'BotItem') {
+			var _p2 = _p1._0;
+			if (_p2.ctor === 'MultiChoiceItem') {
+				return _elm_lang$core$Maybe$Just(_p2._0.options);
+			} else {
+				return _elm_lang$core$Maybe$Nothing;
+			}
+		} else {
+			return _elm_lang$core$Maybe$Nothing;
+		}
+	};
+	var lastMultiChoiceActionList = A2(
+		_elm_lang$core$Maybe$withDefault,
+		{
+			ctor: '::',
+			_0: _strelka_2017$phi$Chat_Model$McaRunDay,
+			_1: {ctor: '[]'}
+		},
+		_elm_lang$core$List$head(
+			A2(_elm_lang$core$List$filterMap, toMultiChoiceActionList, model.messages)));
+	return A2(
+		_elm_lang$html$Html$div,
+		{
+			ctor: '::',
+			_0: _elm_lang$html$Html_Attributes$class('input_container'),
+			_1: {ctor: '[]'}
+		},
+		A2(_elm_lang$core$List$map, _strelka_2017$phi$View$viewMCA, lastMultiChoiceActionList));
+};
+var _strelka_2017$phi$View$inputFooter = function (model) {
+	var inputCountainer = function () {
+		var _p3 = model.inputType;
+		if (_p3.ctor === 'FreeTextInput') {
+			return _strelka_2017$phi$View$freeTextFooter(model);
+		} else {
+			return _strelka_2017$phi$View$multiChoiceFooter(model);
+		}
+	}();
+	var toggleIcon = function () {
+		var _p4 = model.inputType;
+		if (_p4.ctor === 'FreeTextInput') {
+			return 'B';
+		} else {
+			return 'A';
+		}
+	}();
+	return A2(
+		_elm_lang$html$Html$div,
+		{
+			ctor: '::',
+			_0: _elm_lang$html$Html_Attributes$class('bottom_wrapper'),
+			_1: {ctor: '[]'}
+		},
+		{
+			ctor: '::',
+			_0: A2(
+				_elm_lang$html$Html$div,
+				{
+					ctor: '::',
+					_0: _elm_lang$html$Html_Attributes$class('input_type'),
+					_1: {
+						ctor: '::',
+						_0: _elm_lang$html$Html_Events$onClick(_strelka_2017$phi$Action$ToggleInputType),
+						_1: {ctor: '[]'}
+					}
 				},
 				{
 					ctor: '::',
-					_0: _elm_lang$html$Html$text(buttonName),
+					_0: _elm_lang$html$Html$text(toggleIcon),
 					_1: {ctor: '[]'}
 				}),
-			_1: {ctor: '[]'}
+			_1: {
+				ctor: '::',
+				_0: inputCountainer,
+				_1: {ctor: '[]'}
+			}
 		});
 };
 var _strelka_2017$phi$View$viewChatMsg = function (chatItem) {
@@ -13158,14 +13309,14 @@ var _strelka_2017$phi$View$viewChatMsg = function (chatItem) {
 					_1: {ctor: '[]'}
 				});
 		});
-	var _p2 = chatItem;
-	if (_p2.ctor === 'UserMessage') {
-		return A2(textMessage, _p2._0, 'user-sent');
+	var _p5 = chatItem;
+	if (_p5.ctor === 'UserMessage') {
+		return A2(textMessage, _p5._0, 'user-sent');
 	} else {
-		var _p3 = _p2._0;
-		switch (_p3.ctor) {
+		var _p6 = _p5._0;
+		switch (_p6.ctor) {
 			case 'BotMessage':
-				return A2(textMessage, _p3._0, 'bot-sent');
+				return A2(textMessage, _p6._0, 'bot-sent');
 			case 'WidgetItem':
 				return A2(
 					_elm_lang$html$Html$li,
@@ -13176,113 +13327,9 @@ var _strelka_2017$phi$View$viewChatMsg = function (chatItem) {
 						_1: {ctor: '[]'}
 					});
 			default:
-				var _p4 = _p3._0;
-				return A2(
-					_elm_lang$html$Html$div,
-					{ctor: '[]'},
-					{
-						ctor: '::',
-						_0: A2(textMessage, _p4.text, 'bot-sent'),
-						_1: {
-							ctor: '::',
-							_0: A2(
-								_elm_lang$html$Html$ul,
-								{
-									ctor: '::',
-									_0: _elm_lang$html$Html_Attributes$class('buttons'),
-									_1: {ctor: '[]'}
-								},
-								A2(_elm_lang$core$List$map, _strelka_2017$phi$View$viewMCA, _p4.options)),
-							_1: {ctor: '[]'}
-						}
-					});
+				return A2(textMessage, _p6._0.text, 'bot-sent');
 		}
 	}
-};
-var _strelka_2017$phi$View$inputFooter = function (model) {
-	return A2(
-		_elm_lang$html$Html$div,
-		{
-			ctor: '::',
-			_0: _elm_lang$html$Html_Attributes$class('bottom_wrapper clearfix'),
-			_1: {ctor: '[]'}
-		},
-		{
-			ctor: '::',
-			_0: A2(
-				_elm_lang$html$Html$div,
-				{
-					ctor: '::',
-					_0: _elm_lang$html$Html_Attributes$class('message_input_wrapper'),
-					_1: {ctor: '[]'}
-				},
-				{
-					ctor: '::',
-					_0: A2(
-						_elm_lang$html$Html$input,
-						{
-							ctor: '::',
-							_0: _elm_lang$html$Html_Attributes$class('message_input'),
-							_1: {
-								ctor: '::',
-								_0: _strelka_2017$phi$View$onEnter(_strelka_2017$phi$Action$SendUserChatMsg),
-								_1: {
-									ctor: '::',
-									_0: _elm_lang$html$Html_Events$onInput(_strelka_2017$phi$Action$Input),
-									_1: {
-										ctor: '::',
-										_0: _elm_lang$html$Html_Attributes$value(model.input),
-										_1: {ctor: '[]'}
-									}
-								}
-							}
-						},
-						{ctor: '[]'}),
-					_1: {ctor: '[]'}
-				}),
-			_1: {
-				ctor: '::',
-				_0: A2(
-					_elm_lang$html$Html$div,
-					{
-						ctor: '::',
-						_0: _elm_lang$html$Html_Attributes$class('send_message'),
-						_1: {
-							ctor: '::',
-							_0: _elm_lang$html$Html_Events$onClick(_strelka_2017$phi$Action$SendUserChatMsg),
-							_1: {ctor: '[]'}
-						}
-					},
-					{
-						ctor: '::',
-						_0: A2(
-							_elm_lang$html$Html$div,
-							{
-								ctor: '::',
-								_0: _elm_lang$html$Html_Attributes$class('icon'),
-								_1: {ctor: '[]'}
-							},
-							{ctor: '[]'}),
-						_1: {
-							ctor: '::',
-							_0: A2(
-								_elm_lang$html$Html$div,
-								{
-									ctor: '::',
-									_0: _elm_lang$html$Html_Attributes$class('text'),
-									_1: {ctor: '[]'}
-								},
-								{
-									ctor: '::',
-									_0: _elm_lang$html$Html$text('Send'),
-									_1: {ctor: '[]'}
-								}),
-							_1: {ctor: '[]'}
-						}
-					}),
-				_1: {ctor: '[]'}
-			}
-		});
 };
 var _strelka_2017$phi$View$view = function (model) {
 	return A2(

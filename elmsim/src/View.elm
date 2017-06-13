@@ -1,7 +1,7 @@
 module View exposing (view)
 
 import Action exposing (Msg(..))
-import Chat.Model exposing (BotChatItem(..), ChatItem(..), MultiChoiceAction(..))
+import Chat.Model exposing (BotChatItem(..), ChatItem(..), InputType(..), MultiChoiceAction(..), mcaName)
 import Html exposing (..)
 import Html.Attributes exposing (..)
 import Html.Events exposing (..)
@@ -18,25 +18,6 @@ view model =
             [ ul [ id "toScroll", class "messages" ]
                 (List.map viewChatMsg (List.reverse model.messages))
             , inputFooter model
-            ]
-        ]
-
-
-inputFooter : Model -> Html Msg
-inputFooter model =
-    div [ class "bottom_wrapper clearfix" ]
-        [ div [ class "message_input_wrapper" ]
-            [ input
-                [ class "message_input"
-                , onEnter SendUserChatMsg
-                , onInput Input
-                , value model.input
-                ]
-                []
-            ]
-        , div [ class "send_message", onClick SendUserChatMsg ]
-            [ div [ class "icon" ] []
-            , div [ class "text" ] [ text "Send" ]
             ]
         ]
 
@@ -63,42 +44,88 @@ viewChatMsg chatItem =
                     li [] [ text "rendering a fancy widget" ]
 
                 MultiChoiceItem item ->
-                    div []
-                        [ textMessage item.text "bot-sent"
-                        , ul [ class "buttons" ] <| List.map viewMCA item.options
-                        ]
+                    textMessage item.text "bot-sent"
 
 
-viewMCA : MultiChoiceAction -> Html Msg
-viewMCA action =
+inputFooter : Model -> Html Msg
+inputFooter model =
     let
-        buttonName =
-            case action of
-                McaRunDay ->
-                    "Next Day"
+        toggleIcon =
+            case model.inputType of
+                FreeTextInput ->
+                    "B"
 
-                McaWeatherForecast ->
-                    "Weather Forecast"
+                MultiChoiceInput ->
+                    "A"
 
-                McaChangeDesign ->
-                    "Change Design"
+        inputCountainer =
+            case model.inputType of
+                FreeTextInput ->
+                    freeTextFooter model
+
+                MultiChoiceInput ->
+                    multiChoiceFooter model
+    in
+    div [ class "bottom_wrapper" ]
+        [ div [ class "input_type", onClick ToggleInputType ] [ text toggleIcon ]
+        , inputCountainer
+        ]
+
+
+multiChoiceFooter : Model -> Html Msg
+multiChoiceFooter model =
+    let
+        toMultiChoiceActionList chatItem =
+            case chatItem of
+                BotItem botItem ->
+                    case botItem of
+                        MultiChoiceItem item ->
+                            Just item.options
+
+                        _ ->
+                            Nothing
 
                 _ ->
-                    "Not Foundz"
+                    Nothing
+
+        lastMultiChoiceActionList =
+            List.filterMap toMultiChoiceActionList model.messages
+                |> List.head
+                |> Maybe.withDefault [ McaRunDay ]
     in
-    li [ class "button bot-sent appeared" ]
-        [ button [ onClick (MultiChoiceMsg action) ] [ text buttonName ] ]
+    div [ class "input_container" ]
+        (List.map viewMCA lastMultiChoiceActionList)
 
 
-onEnter : Msg -> Attribute Msg
-onEnter msg =
+freeTextFooter : Model -> Html Msg
+freeTextFooter model =
     let
         isEnter num =
             case num of
                 13 ->
-                    msg
+                    SendUserChatMsg
 
                 _ ->
                     NoOp
+
+        onEnter =
+            on "keyup" (Json.map isEnter keyCode)
     in
-    on "keyup" (Json.map isEnter keyCode)
+    div [ class "input_container" ]
+        [ input
+            [ class "message_input"
+            , onEnter
+            , onInput Input
+            , value model.input
+            ]
+            []
+        , button [ class "send_button", onClick SendUserChatMsg ]
+            [ text "Send" ]
+        ]
+
+
+viewMCA : MultiChoiceAction -> Html Msg
+viewMCA action =
+    button
+        [ class "multi_button", onClick (MultiChoiceMsg action) ]
+        [ text (mcaName action) ]

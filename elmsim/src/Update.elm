@@ -25,6 +25,9 @@ update msg model =
 
         scrollDown =
             Task.attempt (always NoOp) <| Scroll.toBottom "toScroll"
+
+        addChatItem chatMsg model =
+            { model | messages = chatMsg :: model.messages }
     in
     case msg of
         NoOp ->
@@ -41,17 +44,17 @@ update msg model =
                     chatMsg =
                         UserMessage model.input
 
+                    clearedInputModel =
+                        { model | input = "" }
+
                     newModel =
-                        { model
-                            | input = ""
-                            , messages = chatMsg :: model.messages
-                        }
+                        addChatItem chatMsg clearedInputModel
                 in
                 ( newModel, scrollDown )
                     |> andThen update (parseUserMessage model.input)
 
         SendBotChatItem chatItem ->
-            ( { model | messages = BotItem chatItem :: model.messages }
+            ( addChatItem (BotItem chatItem) model
             , scrollDown
             )
 
@@ -93,7 +96,19 @@ update msg model =
             ( model, renderPhiNetwork <| encodeGraph model.network )
 
         MultiChoiceMsg multiChoiceAction ->
-            handleMultiChoiceMsg multiChoiceAction model
+            let
+                newModel =
+                    addChatItem (UserMessage <| mcaName multiChoiceAction) model
+            in
+            handleMultiChoiceMsg multiChoiceAction newModel
+
+        ToggleInputType ->
+            case model.inputType of
+                FreeTextInput ->
+                    { model | inputType = MultiChoiceInput } ! []
+
+                MultiChoiceInput ->
+                    { model | inputType = FreeTextInput } ! []
 
 
 

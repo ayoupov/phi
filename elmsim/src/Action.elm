@@ -19,3 +19,4 @@ type Msg
     | CallTurn
     | DaySummary
     | MultiChoiceMsg MultiChoiceAction
+    | ToggleInputType
