@@ -12175,15 +12175,15 @@ var _strelka_2017$phi$Simulation_Model$encodeNodeLabel = function (nodeLabel) {
 					ctor: '::',
 					_0: {
 						ctor: '_Tuple2',
-						_0: 'dailyConsumption',
-						_1: A2(_strelka_2017$phi$Simulation_Model$encodeList, _elm_lang$core$Json_Encode$float, _p4.dailyConsumption)
+						_0: 'actualConsumption',
+						_1: A2(_strelka_2017$phi$Simulation_Model$encodeList, _elm_lang$core$Json_Encode$float, _p4.actualConsumption)
 					},
 					_1: {
 						ctor: '::',
 						_0: {
 							ctor: '_Tuple2',
 							_0: 'joules',
-							_1: A2(_strelka_2017$phi$Simulation_Model$encodeList, _elm_lang$core$Json_Encode$float, _p4.joules)
+							_1: A2(_strelka_2017$phi$Simulation_Model$encodeList, _elm_lang$core$Json_Encode$float, _p4.storedJoules)
 						},
 						_1: {
 							ctor: '::',
@@ -12273,13 +12273,17 @@ var _strelka_2017$phi$Simulation_Model$Line = F2(
 	function (a, b) {
 		return {from: a, to: b};
 	});
+var _strelka_2017$phi$Simulation_Model$ReputationRatio = F2(
+	function (a, b) {
+		return {a: a, b: b};
+	});
 var _strelka_2017$phi$Simulation_Model$NarrativeItem = F2(
 	function (a, b) {
 		return {event: a, message: b};
 	});
-var _strelka_2017$phi$Simulation_Model$SimMap = F5(
-	function (a, b, c, d, e) {
-		return {name: a, initialNetwork: b, initialWeather: c, narrative: d, initialBudget: e};
+var _strelka_2017$phi$Simulation_Model$SimMap = F6(
+	function (a, b, c, d, e, f) {
+		return {name: a, initialNetwork: b, initialWeather: c, narrative: d, initialBudget: e, initialReputationRatio: f};
 	});
 var _strelka_2017$phi$Simulation_Model$EncodedEdge = F2(
 	function (a, b) {
@@ -12336,9 +12340,9 @@ var _strelka_2017$phi$Simulation_Model$Battery = F3(
 	function (a, b, c) {
 		return {capacity: a, storage: b, pos: c};
 	});
-var _strelka_2017$phi$Simulation_Model$Peer = F5(
-	function (a, b, c, d, e) {
-		return {joules: a, dailyConsumption: b, desiredConsumption: c, seed: d, pos: e};
+var _strelka_2017$phi$Simulation_Model$Peer = F6(
+	function (a, b, c, d, e, f) {
+		return {storedJoules: a, actualConsumption: b, desiredConsumption: c, negawatts: d, seed: e, pos: f};
 	});
 var _strelka_2017$phi$Simulation_Model$Weather = F2(
 	function (a, b) {
@@ -12434,42 +12438,88 @@ var _strelka_2017$phi$Simulation_Simulation$toPeer = function (_p3) {
 		return _elm_lang$core$Maybe$Nothing;
 	}
 };
-var _strelka_2017$phi$Simulation_Simulation$distributeGeneratedJoules = function (network) {
-	var networkDesiredEnergy = _elm_lang$core$List$sum(
-		A2(
-			_elm_lang$core$List$filterMap,
-			function (_p6) {
-				return A2(
-					_elm_lang$core$Maybe$map,
-					function (_) {
-						return _.desiredConsumption;
-					},
-					_strelka_2017$phi$Simulation_Simulation$toPeer(_p6));
-			},
-			_elm_community$graph$Graph$nodes(network)));
-	var newConsumption = function (node) {
-		return {
-			ctor: '::',
-			_0: (node.desiredConsumption * _strelka_2017$phi$Simulation_Simulation$networkGeneratedEnergy(network)) / networkDesiredEnergy,
-			_1: node.dailyConsumption
+var _strelka_2017$phi$Simulation_Simulation$distributeGeneratedJoules = F2(
+	function (ratio, network) {
+		var networkDesiredEnergy = _elm_lang$core$List$sum(
+			A2(
+				_elm_lang$core$List$filterMap,
+				function (_p6) {
+					return A2(
+						_elm_lang$core$Maybe$map,
+						function (_) {
+							return _.desiredConsumption;
+						},
+						_strelka_2017$phi$Simulation_Simulation$toPeer(_p6));
+				},
+				_elm_community$graph$Graph$nodes(network)));
+		var passedThroughReward = F2(
+			function (peer, quotient) {
+				return quotient * 0;
+			});
+		var takeFirstElementWithDefault0 = function (list) {
+			return A2(
+				_elm_lang$core$Maybe$withDefault,
+				0,
+				_elm_lang$core$List$head(list));
 		};
-	};
-	var updateNode = function (node) {
-		var _p7 = node;
-		if (_p7.ctor === 'PeerNode') {
-			var _p8 = _p7._0;
-			return _strelka_2017$phi$Simulation_Model$PeerNode(
-				_elm_lang$core$Native_Utils.update(
-					_p8,
-					{
-						dailyConsumption: newConsumption(_p8)
-					}));
-		} else {
-			return node;
-		}
-	};
-	return A2(_elm_community$graph$Graph$mapNodes, updateNode, network);
-};
+		var negawattsReward = F2(
+			function (peer, quotient) {
+				return quotient * takeFirstElementWithDefault0(peer.negawatts);
+			});
+		var newSeedRating = function (peer) {
+			return {
+				ctor: '::',
+				_0: (takeFirstElementWithDefault0(peer.seed) + A2(negawattsReward, peer, ratio.a)) + A2(passedThroughReward, peer, ratio.b),
+				_1: peer.seed
+			};
+		};
+		var thisDaySeed = function (peer) {
+			return takeFirstElementWithDefault0(peer.seed);
+		};
+		var networkTotalSeedRating = _elm_lang$core$List$sum(
+			A2(
+				_elm_lang$core$List$filterMap,
+				function (_p7) {
+					return A2(
+						_elm_lang$core$Maybe$map,
+						thisDaySeed,
+						_strelka_2017$phi$Simulation_Simulation$toPeer(_p7));
+				},
+				_elm_community$graph$Graph$nodes(network)));
+		var weightening = F2(
+			function (network, networkDesiredEnergy) {
+				return networkDesiredEnergy / networkTotalSeedRating;
+			});
+		var takeFirstElementWithDefault1 = function (list) {
+			return A2(
+				_elm_lang$core$Maybe$withDefault,
+				1,
+				_elm_lang$core$List$head(list));
+		};
+		var newConsumption = function (peer) {
+			return {
+				ctor: '::',
+				_0: (((peer.desiredConsumption * _strelka_2017$phi$Simulation_Simulation$networkGeneratedEnergy(network)) * takeFirstElementWithDefault1(peer.seed)) * A2(weightening, network, networkDesiredEnergy)) / networkDesiredEnergy,
+				_1: peer.actualConsumption
+			};
+		};
+		var updateNode = function (node) {
+			var _p8 = node;
+			if (_p8.ctor === 'PeerNode') {
+				var _p9 = _p8._0;
+				return _strelka_2017$phi$Simulation_Model$PeerNode(
+					_elm_lang$core$Native_Utils.update(
+						_p9,
+						{
+							seed: newSeedRating(_p9),
+							actualConsumption: newConsumption(_p9)
+						}));
+			} else {
+				return node;
+			}
+		};
+		return A2(_elm_community$graph$Graph$mapNodes, updateNode, network);
+	});
 var _strelka_2017$phi$Simulation_Simulation$joulesToGenerators = F2(
 	function (weather, network) {
 		var newDailyGeneration = F2(
@@ -12479,23 +12529,23 @@ var _strelka_2017$phi$Simulation_Simulation$joulesToGenerators = F2(
 		var wind = weather.wind;
 		var sun = weather.sun;
 		var updateNode = function (node) {
-			var _p9 = node;
-			if (_p9.ctor === 'GeneratorNode') {
-				var _p11 = _p9._0;
-				var _p10 = _p11.generatorType;
-				if (_p10.ctor === 'SolarPanel') {
+			var _p10 = node;
+			if (_p10.ctor === 'GeneratorNode') {
+				var _p12 = _p10._0;
+				var _p11 = _p12.generatorType;
+				if (_p11.ctor === 'SolarPanel') {
 					return _strelka_2017$phi$Simulation_Model$GeneratorNode(
 						_elm_lang$core$Native_Utils.update(
-							_p11,
+							_p12,
 							{
-								dailyGeneration: A2(newDailyGeneration, _p11, sun)
+								dailyGeneration: A2(newDailyGeneration, _p12, sun)
 							}));
 				} else {
 					return _strelka_2017$phi$Simulation_Model$GeneratorNode(
 						_elm_lang$core$Native_Utils.update(
-							_p11,
+							_p12,
 							{
-								dailyGeneration: A2(newDailyGeneration, _p11, wind)
+								dailyGeneration: A2(newDailyGeneration, _p12, wind)
 							}));
 				}
 			} else {
@@ -12522,14 +12572,14 @@ var _strelka_2017$phi$Simulation_Simulation$addNode = F2(
 			0,
 			A2(
 				_elm_lang$core$Maybe$map,
-				function (_p12) {
+				function (_p13) {
 					return A2(
 						F2(
 							function (x, y) {
 								return x + y;
 							}),
 						1,
-						_elm_lang$core$Tuple$second(_p12));
+						_elm_lang$core$Tuple$second(_p13));
 				},
 				_elm_community$graph$Graph$nodeIdRange(network)));
 		var node = A2(_elm_community$graph$Graph$Node, nodeId, nodeLabel);
@@ -12598,18 +12648,32 @@ var _strelka_2017$phi$Simulation_Simulation$generateWindTurbine = A2(
 var _strelka_2017$phi$Simulation_Simulation$generatePeer = A2(
 	_elm_lang$core$Random$generate,
 	_strelka_2017$phi$Action$AddPeer,
-	A6(
-		_elm_lang$core$Random$map5,
+	A7(
+		_elm_community$random_extra$Random_Extra$map6,
 		_strelka_2017$phi$Simulation_Model$Peer,
 		_elm_community$random_extra$Random_Extra$constant(
-			{ctor: '[]'}),
+			{
+				ctor: '::',
+				_0: 0,
+				_1: {ctor: '[]'}
+			}),
 		_elm_community$random_extra$Random_Extra$constant(
-			{ctor: '[]'}),
+			{
+				ctor: '::',
+				_0: 0,
+				_1: {ctor: '[]'}
+			}),
 		A2(_elm_lang$core$Random$float, 7, 10),
 		_elm_community$random_extra$Random_Extra$constant(
 			{
 				ctor: '::',
 				_0: 1,
+				_1: {ctor: '[]'}
+			}),
+		_elm_community$random_extra$Random_Extra$constant(
+			{
+				ctor: '::',
+				_0: 0,
 				_1: {ctor: '[]'}
 			}),
 		_strelka_2017$phi$Simulation_Simulation$coordsGenerator));
@@ -12644,6 +12708,9 @@ var _strelka_2017$phi$Model$initGenerators = A2(
 			_elm_lang$core$Basics_ops['++'],
 			A2(_elm_lang$core$List$repeat, 30, _strelka_2017$phi$Simulation_Simulation$generatePVPanel),
 			A2(_elm_lang$core$List$repeat, 5, _strelka_2017$phi$Simulation_Simulation$generateWindTurbine))));
+var _strelka_2017$phi$Model$initReputation = function (map) {
+	return map.initialReputationRatio;
+};
 var _strelka_2017$phi$Model$initNarrative = {
 	ctor: '::',
 	_0: A2(_strelka_2017$phi$Simulation_Model$NarrativeItem, 'start', 'hi!'),
@@ -12658,16 +12725,17 @@ var _strelka_2017$phi$Model$initWeather = function (map) {
 var _strelka_2017$phi$Model$initGraph = function (map) {
 	return map.initialNetwork;
 };
-var _strelka_2017$phi$Model$initMap = A5(
+var _strelka_2017$phi$Model$initMap = A6(
 	_strelka_2017$phi$Simulation_Model$SimMap,
 	'first',
 	_elm_community$graph$Graph$empty,
 	A2(_strelka_2017$phi$Simulation_Model$Weather, 0.8, 0.4),
 	_strelka_2017$phi$Model$initNarrative,
-	10000);
+	10000,
+	{a: 1, b: 0});
 var _strelka_2017$phi$Model$Model = F6(
 	function (a, b, c, d, e, f) {
-		return {input: a, messages: b, network: c, weather: d, budget: e, map: f};
+		return {input: a, messages: b, network: c, weather: d, budget: e, reputationRatio: f};
 	});
 var _strelka_2017$phi$Model$initModel = function () {
 	var map = _strelka_2017$phi$Model$initMap;
@@ -12684,7 +12752,7 @@ var _strelka_2017$phi$Model$initModel = function () {
 			_strelka_2017$phi$Model$initGraph(map),
 			_strelka_2017$phi$Model$initWeather(map),
 			_strelka_2017$phi$Model$initBudget(map),
-			map),
+			_strelka_2017$phi$Model$initReputation(map)),
 		_strelka_2017$phi$Model$initGenerators);
 }();
 
@@ -12904,7 +12972,9 @@ var _strelka_2017$phi$Update$changeDesign = function (model) {
 		model);
 };
 var _strelka_2017$phi$Update$runDay = function (model) {
-	var newNetwork = _strelka_2017$phi$Simulation_Simulation$distributeGeneratedJoules(
+	var newNetwork = A2(
+		_strelka_2017$phi$Simulation_Simulation$distributeGeneratedJoules,
+		model.reputationRatio,
 		A2(_strelka_2017$phi$Simulation_Simulation$joulesToGenerators, model.weather, model.network));
 	var newModel = _elm_lang$core$Native_Utils.update(
 		model,

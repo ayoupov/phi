@@ -123,7 +123,7 @@ runDay model =
         newNetwork =
             model.network
                 |> Simulation.joulesToGenerators model.weather
-                |> Simulation.distributeGeneratedJoules
+                |> Simulation.distributeGeneratedJoules model.reputationRatio
 
         newModel =
             { model | network = newNetwork }

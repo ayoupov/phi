@@ -70,12 +70,14 @@ createEdge a b =
 
 generatePeer : Cmd Msg
 generatePeer =
-    Random.map5 Peer
-        (Random.constant [])
-        (Random.constant [])
+    Random.map6 Peer
+        (Random.constant [0])
+        (Random.constant [0])
         (Random.float 7 10)
         -- consumptionDesire
         (Random.constant [ 1 ])
+        -- negawatts
+        (Random.constant [0])
         -- initial seed
         coordsGenerator
         |> Random.generate AddPeer
@@ -160,25 +162,65 @@ networkGeneratedEnergy network =
         |> List.sum
 
 
-distributeGeneratedJoules : PhiNetwork -> PhiNetwork
-distributeGeneratedJoules network =
+distributeGeneratedJoules : ReputationRatio -> PhiNetwork -> PhiNetwork
+distributeGeneratedJoules ratio network =
     let
+        takeFirstElementWithDefault1 list =
+            Maybe.withDefault 1 (List.head list)
+
+        takeFirstElementWithDefault0 list =
+            Maybe.withDefault 0 (List.head list)
+
+        negawattsReward peer quotient =
+            quotient * (takeFirstElementWithDefault0 peer.negawatts)
+
+        -- todo: passed through ???
+        passedThroughReward peer quotient =
+             quotient * 0
+
+        newSeedRating peer =
+             ((takeFirstElementWithDefault0 peer.seed) + (negawattsReward peer ratio.a) + (passedThroughReward peer ratio.b)) :: peer.seed
+
+--        thisDaySeed =
+--            (.seed >> List.head >> Maybe.withDefault 0)
+
+--        thisDaySeed peer =
+--            peer.seed
+--            |> List.head
+--            |> Maybe.withDefault 0
+
+        thisDaySeed peer =
+            takeFirstElementWithDefault0 peer.seed
+
+        networkTotalSeedRating =
+            Graph.nodes network
+                |> List.filterMap (toPeer >> Maybe.map thisDaySeed)
+                |> List.sum
+
+        weightening network networkDesiredEnergy =
+            networkDesiredEnergy / networkTotalSeedRating
+
         networkDesiredEnergy =
             Graph.nodes network
                 |> List.filterMap (toPeer >> Maybe.map .desiredConsumption)
                 |> List.sum
 
-        newConsumption node =
-            (node.desiredConsumption
+        newConsumption peer =
+            (peer.desiredConsumption
                 * networkGeneratedEnergy network
+                * (takeFirstElementWithDefault1 peer.seed)
+                * (weightening network networkDesiredEnergy)
                 / networkDesiredEnergy
             )
-                :: node.dailyConsumption
+                :: peer.actualConsumption
 
         updateNode node =
             case node of
                 PeerNode n ->
-                    PeerNode { n | dailyConsumption = newConsumption n }
+                    PeerNode {
+                    n | seed = newSeedRating n,
+                        actualConsumption = newConsumption n
+                             }
 
                 _ ->
                     node

@@ -44,11 +44,12 @@ type alias SeedRating =
 type alias Phicoin =
     Float
 
--- a and b quotients -> a = ratio, b = 1 - ratio
+-- a and b quotients ~> a = ratio, b = 1 - ratio
 type alias ReputationRatio =
-    Float
-
-
+    {
+        a: Float
+        , b : Float
+    }
 
 -- Game settings
 
@@ -126,9 +127,10 @@ type alias Battery =
 
 
 type alias Peer =
-    { joules : List KWHour
-    , dailyConsumption : List KWHour
+    { storedJoules : List KWHour
+    , actualConsumption : List KWHour
     , desiredConsumption : KWHour
+    , negawatts : List Negawatts
     , seed : List SeedRating
     , pos : Coords
     }
@@ -167,8 +169,8 @@ encodeNodeLabel nodeLabel =
 
         PeerNode label ->
             Json.object
-                [ ( "dailyConsumption", encodeList Json.float label.dailyConsumption )
-                , ( "joules", encodeList Json.float label.joules )
+                [ ( "actualConsumption", encodeList Json.float label.actualConsumption )
+                , ( "joules", encodeList Json.float label.storedJoules )
                 , ( "desiredConsumption", Json.float label.desiredConsumption )
                 , ( "seedRating", encodeList Json.float label.seed )
                 , ( "pos", encodeCoords label.pos )
