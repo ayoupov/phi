@@ -3,7 +3,7 @@ module Model exposing (..)
 import Action exposing (Msg)
 import Chat.Model exposing (ChatItem, initChat)
 import Graph
-import Simulation.Model exposing (Budget, Narrative, NarrativeItem, PhiNetwork, SimMap, Weather)
+import Simulation.Model exposing (Budget, Narrative, NarrativeItem, PhiNetwork, ReputationRatio, SimMap, Weather)
 import Simulation.Simulation as Simulation
 
 
@@ -13,7 +13,7 @@ type alias Model =
     , network : PhiNetwork
     , weather : Weather
     , budget : Budget
-    , map : SimMap
+    , reputationRatio : ReputationRatio
     }
 
 
@@ -29,7 +29,7 @@ initModel =
         (initGraph map)
         (initWeather map)
         (initBudget map)
-        map
+        (initReputation map)
         ! initGenerators
 
 
@@ -61,6 +61,9 @@ initNarrative : Narrative
 initNarrative =
     [ NarrativeItem "start" "hi!" ]
 
+initReputation : SimMap -> ReputationRatio
+initReputation map =
+    map.initialReputationRatio
 
 initGenerators : List (Cmd Msg)
 initGenerators =

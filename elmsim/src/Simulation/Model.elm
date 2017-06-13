@@ -44,6 +44,10 @@ type alias SeedRating =
 type alias Phicoin =
     Float
 
+-- a and b quotients -> a = ratio, b = 1 - ratio
+type alias ReputationRatio =
+    Float
+
 
 
 -- Game settings
@@ -69,6 +73,7 @@ type alias SimMap =
     , initialWeather : Weather
     , narrative : Narrative
     , initialBudget : Budget
+    , initialReputationRatio : ReputationRatio
     }
 
 

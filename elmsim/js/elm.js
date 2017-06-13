@@ -4361,8 +4361,8 @@ var _elm_community$graph$Graph$ignorePath = F4(
 			return _elm_lang$core$Native_Utils.crashCase(
 				'Graph',
 				{
-					start: {line: 880, column: 3},
-					end: {line: 884, column: 20}
+					start: {line: 885, column: 3},
+					end: {line: 889, column: 20}
 				},
 				_p1)('Graph.ignorePath: No algorithm should ever pass an empty path into this BfsNodeVisitor.');
 		} else {
@@ -4587,6 +4587,10 @@ var _elm_community$graph$Graph$fromNodesAndEdges = F2(
 						_elm_lang$core$Maybe$map(updateOutgoing),
 						rep));
 			});
+		var addEdgeIfValid = F2(
+			function (edge, rep) {
+				return (A2(_elm_community$intdict$IntDict$member, edge.from, rep) && A2(_elm_community$intdict$IntDict$member, edge.to, rep)) ? A2(addEdge, edge, rep) : rep;
+			});
 		var nodeRep = A3(
 			_elm_lang$core$List$foldl,
 			function (n) {
@@ -4598,7 +4602,7 @@ var _elm_community$graph$Graph$fromNodesAndEdges = F2(
 			_elm_community$intdict$IntDict$empty,
 			nodes);
 		return _elm_community$graph$Graph$Graph(
-			A3(_elm_lang$core$List$foldl, addEdge, nodeRep, edges));
+			A3(_elm_lang$core$List$foldl, addEdgeIfValid, nodeRep, edges));
 	});
 var _elm_community$graph$Graph$fromNodeLabelsAndEdgePairs = F2(
 	function (labels, edgePairs) {
@@ -5017,8 +5021,8 @@ var _elm_community$graph$Graph$dfsTree = F2(
 				return _elm_lang$core$Native_Utils.crashCase(
 					'Graph',
 					{
-						start: {line: 822, column: 3},
-						end: {line: 828, column: 120}
+						start: {line: 827, column: 3},
+						end: {line: 833, column: 120}
 					},
 					_p42)('dfsTree: There can\'t be more than one DFS tree. This invariant is violated, please report this bug.');
 			}
@@ -5066,8 +5070,8 @@ var _elm_community$graph$Graph$topologicalSort = function (graph) {
 			return _elm_lang$core$Native_Utils.crashCase(
 				'Graph',
 				{
-					start: {line: 1041, column: 7},
-					end: {line: 1049, column: 18}
+					start: {line: 1046, column: 7},
+					end: {line: 1054, column: 18}
 				},
 				_p46)('Invariant hurt in Graph.topologicalSort: No strongly connected component should be empty');
 		} else {
@@ -5076,8 +5080,8 @@ var _elm_community$graph$Graph$topologicalSort = function (graph) {
 				return _elm_lang$core$Native_Utils.crashCase(
 					'Graph',
 					{
-						start: {line: 1045, column: 11},
-						end: {line: 1049, column: 18}
+						start: {line: 1050, column: 11},
+						end: {line: 1054, column: 18}
 					},
 					_p48)('Invariant hurt in Graph.topologicalSort: nodeId in nodeIdRange of the strongly connected component should be present in the original graph');
 			} else {
@@ -5217,8 +5221,8 @@ var _elm_community$graph$Graph$heightLevels = function (graph) {
 					return _elm_lang$core$Native_Utils.crashCase(
 						'Graph',
 						{
-							start: {line: 1001, column: 13},
-							end: {line: 1003, column: 154}
+							start: {line: 1006, column: 13},
+							end: {line: 1008, column: 154}
 						},
 						_p62)('Graph.heightLevels: Could not get a node of a graph which should be there by invariants. Please file a bug report!');
 				}
@@ -5271,8 +5275,8 @@ var _elm_community$graph$Graph$heightLevels = function (graph) {
 					return _elm_lang$core$Native_Utils.crashCase(
 						'Graph',
 						{
-							start: {line: 1020, column: 13},
-							end: {line: 1024, column: 44}
+							start: {line: 1025, column: 13},
+							end: {line: 1029, column: 44}
 						},
 						_p67)('Graph.heightLevels: Reached a branch which is impossible by invariants. Please file a bug report!');
 				} else {
