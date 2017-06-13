@@ -3,8 +3,8 @@ module Model exposing (..)
 import Action exposing (Msg)
 import Chat.Model exposing (ChatItem, InputType(..), initChat)
 import Graph
-import Simulation.Model exposing (Budget, Narrative, NarrativeItem, PhiNetwork, ReputationRatio, SimMap, Weather)
 import Simulation.Init.Generators as Generators
+import Simulation.Model exposing (Budget, Narrative, NarrativeItem, PhiNetwork, ReputationRatio, SimMap, Weather)
 
 
 type alias Model =
@@ -41,7 +41,7 @@ initModel =
 
 initMap : SimMap
 initMap =
-    SimMap "first" Graph.empty (Weather 0.8 0.4) initNarrative 10000 {a = 1, b = 0}
+    SimMap "first" Graph.empty (Weather 0.8 0.4) initNarrative 10000 { a = 1, b = 0 }
 
 
 initGraph : SimMap -> PhiNetwork
@@ -63,9 +63,11 @@ initNarrative : Narrative
 initNarrative =
     [ NarrativeItem "start" "hi!" ]
 
+
 initReputation : SimMap -> ReputationRatio
 initReputation map =
     map.initialReputationRatio
+
 
 initGenerators : List (Cmd Msg)
 initGenerators =

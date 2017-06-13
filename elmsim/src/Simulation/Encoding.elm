@@ -1,8 +1,8 @@
 module Simulation.Encoding exposing (..)
 
+import Graph exposing (Edge, Graph, Node)
 import Json.Encode as Json
 import Simulation.Model exposing (..)
-import Graph exposing (Edge, Graph, Node)
 
 
 -- ENCODING

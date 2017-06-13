@@ -44,12 +44,17 @@ type alias ReputationRating =
 type alias Phicoin =
     Float
 
+
+
 -- a and b quotients ~> a = ratio, b = 1 - ratio
+
+
 type alias ReputationRatio =
-    {
-        a: Float
-        , b : Float
+    { a : Float
+    , b : Float
     }
+
+
 
 -- Game settings
 
@@ -125,12 +130,14 @@ type alias Battery =
     , pos : Coords
     }
 
+
 type alias PeerJoules =
     { storedJoules : List KWHour
     , actualConsumption : List KWHour
     , desiredConsumption : KWHour
     , seedRatingJoules : List KWHour
     }
+
 
 type alias Peer =
     { joules : PeerJoules

@@ -58,15 +58,14 @@ body {
   opacity: 0;
 }
 
+
 .messages .message.bot-sent .text_wrapper {
-  background: linear-gradient(rgba(246, 229, 191, 0.7), rgba(255,255,255,0.7));
-  width: 100%;
+  --width: 100%;
   left: 0px;
 }
 
 .messages .message.user-sent .text_wrapper {
-  background: linear-gradient(rgba(246, 229, 191, 0.7), rgba(255,255,255,0.7));
-  width: calc(100% - 40px);
+  --width: calc(100% - 40px);
   right: 0px;
   float: right;
 }
@@ -78,12 +77,12 @@ body {
 }
 
 .messages .message .text_wrapper {
+  background: linear-gradient(rgba(246, 229, 191, 0.7), rgba(255,255,255,0.7));
   display: inline-block;
   padding: 10px;
   --border: 1.4px solid #338;
   border-radius: 12px;
-  width: 100%;
-  min-width: 100px;
+  --width: 100%;
   position: relative;
 }
 
@@ -119,8 +118,6 @@ body {
 .bottom_wrapper {
   margin-left: 20px;
   margin-bottom: 30px;
-  padding-left: 10px;
-  padding-right: 10px;
   position: relative;
   width: 435px;
   height: 44px;
@@ -133,7 +130,8 @@ body {
 
 .bottom_wrapper .input_type {
   display: inline-block;
-  width: 17px;
+  width: 35px;
+  text-align: center;
   cursor: pointer;
   color: #00f;
   font-family: "OpenSans Light", monospace;
@@ -147,7 +145,7 @@ body {
   padding-left: 5px;
   height: 100%;
   background: rgba(0,0,0,0);
-  width: calc(100% - 17px);
+  width: calc(100% - 35px);
 }
 
 .bottom_wrapper .input_container .message_input {
@@ -155,14 +153,14 @@ body {
   outline-width: 0;
   border: none;
   background: rgba(0,0,0,0);
-  width: calc(100% - 35px);
+  width: calc(100% - 60px);
   color: #338;
   font-family: "OpenSans Light", monospace;
   font-size: 15px;
 }
 
 .bottom_wrapper .input_container .multi_button {
-  height: calc(100% - 10px);
+  height: calc(100% - 14px);
   color: #338;
   background: rgba(255,255,255,0.6);
   font-family: "OpenSans Light", monospace;
@@ -171,13 +169,14 @@ body {
   outline: none;
   cursor: pointer;
   border-radius: 13px;
-  margin: 5px 2px 5px 2px;
+  margin: 7px 2px 7px 2px;
   padding-left: 10px;
   padding-right: 10px;
 }
 
 .bottom_wrapper .input_container .send_button {
-  width: 35px;
+  width: 60px;
+  text-align: center;
   height: 90%;
   color: #00f;
   cursor: pointer;

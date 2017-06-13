@@ -82,13 +82,13 @@ distributeGeneratedJoules ratio network =
             Maybe.withDefault 0 (List.head list)
 
         negawattsReward peer quotient =
-            quotient * (takeFirstElementWithDefault0 peer.negawatts)
+            quotient * takeFirstElementWithDefault0 peer.negawatts
 
         seedRating peer quotient =
-             quotient * 0
+            quotient * 0
 
         newReputationRating peer =
-             ((takeFirstElementWithDefault0 peer.reputation) + (negawattsReward peer ratio.a) + (seedRating peer ratio.b)) :: peer.reputation
+            (takeFirstElementWithDefault0 peer.reputation + negawattsReward peer ratio.a + seedRating peer ratio.b) :: peer.reputation
 
         thisDayReputation peer =
             takeFirstElementWithDefault0 peer.reputation
@@ -108,37 +108,38 @@ distributeGeneratedJoules ratio network =
 
         newConsumption peer =
             (peer.joules.desiredConsumption
-                * (networkGeneratedEnergy network)
-                * (takeFirstElementWithDefault1 peer.reputation)
-                * (weightening networkDesiredEnergy)
+                * networkGeneratedEnergy network
+                * takeFirstElementWithDefault1 peer.reputation
+                * weightening networkDesiredEnergy
                 / networkDesiredEnergy
             )
                 :: peer.joules.actualConsumption
 
-        setActualConsumption: List KWHour -> PeerJoules -> PeerJoules
+        setActualConsumption : List KWHour -> PeerJoules -> PeerJoules
         setActualConsumption ac joules =
-            {joules | actualConsumption = ac}
+            { joules | actualConsumption = ac }
 
-        asActualConsumptionIn: PeerJoules -> List KWHour -> PeerJoules
+        asActualConsumptionIn : PeerJoules -> List KWHour -> PeerJoules
         asActualConsumptionIn =
             flip setActualConsumption
 
         setJoules : PeerJoules -> Peer -> Peer
         setJoules newJoules peer =
-            {peer | joules = newJoules}
+            { peer | joules = newJoules }
 
-        asJoulesIn: Peer -> PeerJoules -> Peer
+        asJoulesIn : Peer -> PeerJoules -> Peer
         asJoulesIn =
             flip setJoules
 
         updateNode node =
             case node of
                 PeerNode n ->
-                    PeerNode (
-                    n.joules
-                    |> setActualConsumption (newConsumption n)
-                    |> asJoulesIn n
-                    )
+                    PeerNode
+                        (n.joules
+                            |> setActualConsumption (newConsumption n)
+                            |> asJoulesIn n
+                        )
+
                 _ ->
                     node
     in

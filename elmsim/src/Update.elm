@@ -9,10 +9,10 @@ import Graph
 import Json.Encode exposing (encode)
 import Model exposing (Model)
 import Simulation.Encoding exposing (encodeEdge, encodeGraph, encodeNodeLabel)
-import Simulation.GraphUpdates exposing (addNode,addEdge)
+import Simulation.GraphUpdates exposing (addEdge, addNode)
+import Simulation.Init.Generators as Generators exposing (..)
 import Simulation.Model exposing (..)
 import Simulation.Simulation as Simulation exposing (..)
-import Simulation.Init.Generators as Generators exposing (..)
 import Task
 import Update.Extra exposing (andThen)
 
@@ -147,7 +147,8 @@ runDay model =
             { model | network = newNetwork }
     in
     newModel
-        ! [ Generators.generateWeather ]       -- should be not in Generators
+        ! [ Generators.generateWeather ]
+        -- should be not in Generators
         |> andThen update RenderPhiNetwork
 
 

@@ -1,8 +1,9 @@
 module Simulation.GraphUpdates exposing (..)
 
-import Graph exposing (NodeId, Node, NodeContext,Edge)
+import Graph exposing (Edge, Node, NodeContext, NodeId)
 import IntDict
 import Simulation.Model exposing (NodeLabel, PhiNetwork, TransmissionLine)
+
 
 addNode : NodeLabel -> PhiNetwork -> PhiNetwork
 addNode nodeLabel network =
@@ -20,6 +21,7 @@ addNode nodeLabel network =
 addEdge : TransmissionLine -> PhiNetwork -> PhiNetwork
 addEdge edge network =
     Graph.fromNodesAndEdges (Graph.nodes network) (edge :: Graph.edges network)
+
 
 createEdge : NodeId -> NodeId -> TransmissionLine
 createEdge a b =

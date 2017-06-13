@@ -2,10 +2,11 @@ module Simulation.Init.Generators exposing (..)
 
 import Action exposing (Msg(..))
 import Graph exposing (NodeId)
-import Simulation.GraphUpdates exposing (createEdge)
 import Random exposing (Generator)
 import Random.Extra as Random
+import Simulation.GraphUpdates exposing (createEdge)
 import Simulation.Model exposing (..)
+
 
 coordsGenerator : Random.Generator Coords
 coordsGenerator =
@@ -48,6 +49,7 @@ generateWindTurbine =
         |> Random.generate AddGenerator
 
 
+
 --generatePeerJoules : PeerJoules
 --generatePeerJoules =
 --    Random.map4 PeerJoules
@@ -61,25 +63,27 @@ generateWindTurbine =
 --        (Random.constant [0])
 --        |> Random.generate
 
+
 generatePeer : Cmd Msg
 generatePeer =
     Random.map4 Peer
---        generatePeerJoules
+        --        generatePeerJoules
         (Random.map4 PeerJoules
-            (Random.constant [0])
+            (Random.constant [ 0 ])
             -- actual consumption
-            (Random.constant [0])
+            (Random.constant [ 0 ])
             -- desired consumption
             (Random.float 7 10)
             -- seedRating in joules?
-            (Random.constant [0])
+            (Random.constant [ 0 ])
         )
         -- negawatts
-        (Random.constant [0])
+        (Random.constant [ 0 ])
         -- initial reputation
-        (Random.constant [1])
+        (Random.constant [ 1 ])
         coordsGenerator
         |> Random.generate AddPeer
+
 
 generateEdge : Cmd Msg
 generateEdge =
