@@ -1,8 +1,9 @@
 module Update exposing (update)
 
 import Action exposing (Msg(..))
-import Chat.Model exposing (..)
 import Chat.Chat exposing (parseUserMessage)
+import Chat.Model exposing (..)
+import Chat.Narrative as Narrative
 import Dom.Scroll as Scroll
 import Graph
 import Json.Encode exposing (encode)
@@ -47,40 +48,19 @@ update msg model =
                     |> andThen update (parseUserMessage model.input)
 
         SendBotChatItem chatItem ->
-            ( { model | messages = (BotItem chatItem) :: model.messages }
+            ( { model | messages = BotItem chatItem :: model.messages }
             , scrollDown
             )
 
         CheckWeather ->
-            let
-                sunny =
-                    toString model.weather.sun
+            weatherForecast model
 
-                windy =
-                    toString model.weather.wind
-
-                chatMsg = BotMessage <|
-                    "There's "
-                        ++ sunny
-                        ++ " amount of sun, "
-                        ++ "and "
-                        ++ windy
-                        ++ " amount of wind"
-            in
-            update (SendBotChatItem chatMsg) model
-            |> andThen update
-              ( SendBotChatItem <| WidgetItem WeatherWidget )
         DaySummary ->
-          let
-              txt =
-                "Last week we have generated a bunch of kWh in total, the community had consumed lots of energy, and some of has stored in the batteries. Do you want to know more before I go on?"
-          in
-          update (SendBotChatItem <| BotMessage txt) model
+            update (SendBotChatItem <| Narrative.daySummary model) model
 
         CallTurn ->
-            update (Tick 1) model
-            |> andThen update CheckWeather
-            |> andThen update DaySummary
+            runDay model
+                |> andThen update DaySummary
 
         DescribeNode n ->
             model
@@ -94,10 +74,6 @@ update msg model =
         AddGenerator node ->
             { model | network = addNode (GeneratorNode node) model.network }
                 |> update RenderPhiNetwork
-
---        AddWindTurbine node ->
---            { model | network = addNode (WTNode node) model.network }
---                |> update RenderPhiNetwork
 
         AddPeer node ->
             { model | network = addNode (PeerNode node) model.network }
@@ -113,22 +89,36 @@ update msg model =
         RenderPhiNetwork ->
             ( model, renderPhiNetwork <| encodeGraph model.network )
 
-        Tick n ->
-            case n of
-                0 ->
-                    model ! [] |> andThen update RenderPhiNetwork
-
-                _ ->
-                    nextDay model
-                        |> andThen update (Tick (n - 1))
+        MultiChoiceMsg multiChoiceAction ->
+            handleMultiChoiceMsg multiChoiceAction model
 
 
 
 -- HELPERS
 
 
-nextDay : Model -> ( Model, Cmd Msg )
-nextDay model =
+handleMultiChoiceMsg : MultiChoiceAction -> Model -> ( Model, Cmd Msg )
+handleMultiChoiceMsg action model =
+    case action of
+        McaWeatherForecast ->
+            weatherForecast model
+
+        McaChangeDesign ->
+            changeDesign model
+
+        McaRunDay ->
+            runDay model
+                |> andThen update DaySummary
+
+        McaSelectLocation _ ->
+            model ! []
+
+        _ ->
+            model ! []
+
+
+runDay : Model -> ( Model, Cmd Msg )
+runDay model =
     let
         newNetwork =
             model.network
@@ -141,3 +131,35 @@ nextDay model =
     newModel
         ! [ Simulation.generateWeather ]
         |> andThen update RenderPhiNetwork
+
+
+weatherForecast : Model -> ( Model, Cmd Msg )
+weatherForecast model =
+    let
+        sunny =
+            toString model.weather.sun
+
+        windy =
+            toString model.weather.wind
+
+        chatMsg =
+            BotMessage <|
+                "Tomorrow should have"
+                    ++ sunny
+                    ++ " amount of sun, "
+                    ++ "and "
+                    ++ windy
+                    ++ " amount of wind"
+    in
+    update (SendBotChatItem chatMsg) model
+        |> andThen update
+            (SendBotChatItem <| WidgetItem WeatherWidget)
+
+
+changeDesign : Model -> ( Model, Cmd Msg )
+changeDesign model =
+    let
+        chatMsg =
+            BotMessage "Sorry that's not available yet!"
+    in
+    update (SendBotChatItem chatMsg) model

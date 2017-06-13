@@ -1,7 +1,7 @@
 module Action exposing (Msg(..))
 
+import Chat.Model exposing (BotChatItem, MultiChoiceAction)
 import Simulation.Model exposing (GeneratorType, Peer, SimGenerator, TransmissionLine, Weather)
-import Chat.Model exposing (BotChatItem)
 
 
 type Msg
@@ -17,5 +17,5 @@ type Msg
     | RenderPhiNetwork
     | UpdateWeather Weather
     | CallTurn
-    | Tick Int
     | DaySummary
+    | MultiChoiceMsg MultiChoiceAction

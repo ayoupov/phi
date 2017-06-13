@@ -45,28 +45,33 @@ type alias Phicoin =
     Float
 
 
+
 -- Game settings
 
+
 type alias NarrativeItem =
-    {
-      event : String
+    { event : String
     , message : String
     }
+
 
 type alias Narrative =
     List NarrativeItem
 
+
 type alias Budget =
     Float
 
+
 type alias SimMap =
-    {
-      name: String
-    , initialNetwork: PhiNetwork
-    , initialWeather: Weather
+    { name : String
+    , initialNetwork : PhiNetwork
+    , initialWeather : Weather
     , narrative : Narrative
-    , initialBudget: Budget
+    , initialBudget : Budget
     }
+
+
 
 -- Graph
 
@@ -90,18 +95,23 @@ type NodeLabel
     | PeerNode Peer
     | BatNode Battery
 
+
+
 -- NODES
 
+
 type GeneratorType
-    = WindTurbine | SolarPanel
+    = WindTurbine
+    | SolarPanel
+
 
 type alias SimGenerator =
-     {
-       dailyGeneration : List KWHour
-      , maxGeneration : KWHour
-      , pos : Coords
-      , generatorType: GeneratorType
-     }
+    { dailyGeneration : List KWHour
+    , maxGeneration : KWHour
+    , pos : Coords
+    , generatorType : GeneratorType
+    }
+
 
 type alias Battery =
     { capacity : KWHour
@@ -172,8 +182,12 @@ encodeNodeLabel nodeLabel =
 encodeGeneratorType : GeneratorType -> Json.Value
 encodeGeneratorType generatorType =
     case generatorType of
-        WindTurbine -> Json.string "windTurbine"
-        SolarPanel -> Json.string "solarPanel"
+        WindTurbine ->
+            Json.string "windTurbine"
+
+        SolarPanel ->
+            Json.string "solarPanel"
+
 
 encodeNode : Node NodeLabel -> Node Json.Value
 encodeNode { id, label } =

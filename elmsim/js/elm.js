@@ -4361,8 +4361,8 @@ var _elm_community$graph$Graph$ignorePath = F4(
 			return _elm_lang$core$Native_Utils.crashCase(
 				'Graph',
 				{
-					start: {line: 885, column: 3},
-					end: {line: 889, column: 20}
+					start: {line: 880, column: 3},
+					end: {line: 884, column: 20}
 				},
 				_p1)('Graph.ignorePath: No algorithm should ever pass an empty path into this BfsNodeVisitor.');
 		} else {
@@ -4587,10 +4587,6 @@ var _elm_community$graph$Graph$fromNodesAndEdges = F2(
 						_elm_lang$core$Maybe$map(updateOutgoing),
 						rep));
 			});
-		var addEdgeIfValid = F2(
-			function (edge, rep) {
-				return (A2(_elm_community$intdict$IntDict$member, edge.from, rep) && A2(_elm_community$intdict$IntDict$member, edge.to, rep)) ? A2(addEdge, edge, rep) : rep;
-			});
 		var nodeRep = A3(
 			_elm_lang$core$List$foldl,
 			function (n) {
@@ -4602,7 +4598,7 @@ var _elm_community$graph$Graph$fromNodesAndEdges = F2(
 			_elm_community$intdict$IntDict$empty,
 			nodes);
 		return _elm_community$graph$Graph$Graph(
-			A3(_elm_lang$core$List$foldl, addEdgeIfValid, nodeRep, edges));
+			A3(_elm_lang$core$List$foldl, addEdge, nodeRep, edges));
 	});
 var _elm_community$graph$Graph$fromNodeLabelsAndEdgePairs = F2(
 	function (labels, edgePairs) {
@@ -5021,8 +5017,8 @@ var _elm_community$graph$Graph$dfsTree = F2(
 				return _elm_lang$core$Native_Utils.crashCase(
 					'Graph',
 					{
-						start: {line: 827, column: 3},
-						end: {line: 833, column: 120}
+						start: {line: 822, column: 3},
+						end: {line: 828, column: 120}
 					},
 					_p42)('dfsTree: There can\'t be more than one DFS tree. This invariant is violated, please report this bug.');
 			}
@@ -5070,8 +5066,8 @@ var _elm_community$graph$Graph$topologicalSort = function (graph) {
 			return _elm_lang$core$Native_Utils.crashCase(
 				'Graph',
 				{
-					start: {line: 1046, column: 7},
-					end: {line: 1054, column: 18}
+					start: {line: 1041, column: 7},
+					end: {line: 1049, column: 18}
 				},
 				_p46)('Invariant hurt in Graph.topologicalSort: No strongly connected component should be empty');
 		} else {
@@ -5080,8 +5076,8 @@ var _elm_community$graph$Graph$topologicalSort = function (graph) {
 				return _elm_lang$core$Native_Utils.crashCase(
 					'Graph',
 					{
-						start: {line: 1050, column: 11},
-						end: {line: 1054, column: 18}
+						start: {line: 1045, column: 11},
+						end: {line: 1049, column: 18}
 					},
 					_p48)('Invariant hurt in Graph.topologicalSort: nodeId in nodeIdRange of the strongly connected component should be present in the original graph');
 			} else {
@@ -5221,8 +5217,8 @@ var _elm_community$graph$Graph$heightLevels = function (graph) {
 					return _elm_lang$core$Native_Utils.crashCase(
 						'Graph',
 						{
-							start: {line: 1006, column: 13},
-							end: {line: 1008, column: 154}
+							start: {line: 1001, column: 13},
+							end: {line: 1003, column: 154}
 						},
 						_p62)('Graph.heightLevels: Could not get a node of a graph which should be there by invariants. Please file a bug report!');
 				}
@@ -5275,8 +5271,8 @@ var _elm_community$graph$Graph$heightLevels = function (graph) {
 					return _elm_lang$core$Native_Utils.crashCase(
 						'Graph',
 						{
-							start: {line: 1025, column: 13},
-							end: {line: 1029, column: 44}
+							start: {line: 1020, column: 13},
+							end: {line: 1024, column: 44}
 						},
 						_p67)('Graph.heightLevels: Reached a branch which is impossible by invariants. Please file a bug report!');
 				} else {
@@ -12046,6 +12042,37 @@ var _elm_lang$svg$Svg_Attributes$accumulate = _elm_lang$virtual_dom$VirtualDom$a
 var _elm_lang$svg$Svg_Attributes$accelerate = _elm_lang$virtual_dom$VirtualDom$attribute('accelerate');
 var _elm_lang$svg$Svg_Attributes$accentHeight = _elm_lang$virtual_dom$VirtualDom$attribute('accent-height');
 
+var _strelka_2017$phi$Chat_Model$MultiChoiceMessage = F2(
+	function (a, b) {
+		return {text: a, options: b};
+	});
+var _strelka_2017$phi$Chat_Model$BotItem = function (a) {
+	return {ctor: 'BotItem', _0: a};
+};
+var _strelka_2017$phi$Chat_Model$UserMessage = function (a) {
+	return {ctor: 'UserMessage', _0: a};
+};
+var _strelka_2017$phi$Chat_Model$MultiChoiceItem = function (a) {
+	return {ctor: 'MultiChoiceItem', _0: a};
+};
+var _strelka_2017$phi$Chat_Model$BotMessage = function (a) {
+	return {ctor: 'BotMessage', _0: a};
+};
+var _strelka_2017$phi$Chat_Model$initChat = _strelka_2017$phi$Chat_Model$BotItem(
+	_strelka_2017$phi$Chat_Model$BotMessage('Welcome to Φ Chat! I only respond to commands for now.\nCurrent available commands are:\n\n/weather (i tell you abt the weather today)\n/turn (i move to the next day)\n/describe [nodeId] (i tell you some info about a specific node)\n'));
+var _strelka_2017$phi$Chat_Model$WidgetItem = function (a) {
+	return {ctor: 'WidgetItem', _0: a};
+};
+var _strelka_2017$phi$Chat_Model$McaSelectLocation = function (a) {
+	return {ctor: 'McaSelectLocation', _0: a};
+};
+var _strelka_2017$phi$Chat_Model$McaChangeDesign = {ctor: 'McaChangeDesign'};
+var _strelka_2017$phi$Chat_Model$McaWeatherForecast = {ctor: 'McaWeatherForecast'};
+var _strelka_2017$phi$Chat_Model$McaRunWeek = {ctor: 'McaRunWeek'};
+var _strelka_2017$phi$Chat_Model$McaRunDay = {ctor: 'McaRunDay'};
+var _strelka_2017$phi$Chat_Model$BotMultiQuestion = {ctor: 'BotMultiQuestion'};
+var _strelka_2017$phi$Chat_Model$WeatherWidget = {ctor: 'WeatherWidget'};
+
 var _strelka_2017$phi$Simulation_Model$pos = function (nodeLabel) {
 	var _p0 = nodeLabel;
 	switch (_p0.ctor) {
@@ -12325,27 +12352,10 @@ var _strelka_2017$phi$Simulation_Model$GeneratorNode = function (a) {
 var _strelka_2017$phi$Simulation_Model$SolarPanel = {ctor: 'SolarPanel'};
 var _strelka_2017$phi$Simulation_Model$WindTurbine = {ctor: 'WindTurbine'};
 
-var _strelka_2017$phi$Chat_Model$BotItem = function (a) {
-	return {ctor: 'BotItem', _0: a};
+var _strelka_2017$phi$Action$MultiChoiceMsg = function (a) {
+	return {ctor: 'MultiChoiceMsg', _0: a};
 };
-var _strelka_2017$phi$Chat_Model$UserMessage = function (a) {
-	return {ctor: 'UserMessage', _0: a};
-};
-var _strelka_2017$phi$Chat_Model$BotMessage = function (a) {
-	return {ctor: 'BotMessage', _0: a};
-};
-var _strelka_2017$phi$Chat_Model$initChat = _strelka_2017$phi$Chat_Model$BotItem(
-	_strelka_2017$phi$Chat_Model$BotMessage('Welcome to Φ Chat! I only respond to commands for now.\nCurrent available commands are:\n\n/weather (i tell you abt the weather today)\n/turn (i move to the next day)\n/describe [nodeId] (i tell you some info about a specific node)\n'));
-var _strelka_2017$phi$Chat_Model$WidgetItem = function (a) {
-	return {ctor: 'WidgetItem', _0: a};
-};
-var _strelka_2017$phi$Chat_Model$BotMultiQuestion = {ctor: 'BotMultiQuestion'};
-var _strelka_2017$phi$Chat_Model$WeatherWidget = {ctor: 'WeatherWidget'};
-
 var _strelka_2017$phi$Action$DaySummary = {ctor: 'DaySummary'};
-var _strelka_2017$phi$Action$Tick = function (a) {
-	return {ctor: 'Tick', _0: a};
-};
 var _strelka_2017$phi$Action$CallTurn = {ctor: 'CallTurn'};
 var _strelka_2017$phi$Action$UpdateWeather = function (a) {
 	return {ctor: 'UpdateWeather', _0: a};
@@ -12395,11 +12405,27 @@ var _strelka_2017$phi$Chat_Chat$parseUserMessage = function (chatMsg) {
 					A2(_elm_lang$core$String$split, ' ', chatMsg))))) : _strelka_2017$phi$Action$NoOp)));
 };
 
-var _strelka_2017$phi$Simulation_Simulation$toPeer = function (_p0) {
-	var _p1 = _p0;
-	var _p2 = _p1.label;
-	if (_p2.ctor === 'PeerNode') {
-		return _elm_lang$core$Maybe$Just(_p2._0);
+var _strelka_2017$phi$Simulation_Simulation$networkGeneratedEnergy = function (network) {
+	var nodeGeneratedEnergy = function (_p0) {
+		var _p1 = _p0;
+		var _p2 = _p1.label;
+		if (_p2.ctor === 'GeneratorNode') {
+			return _elm_lang$core$List$head(_p2._0.dailyGeneration);
+		} else {
+			return _elm_lang$core$Maybe$Nothing;
+		}
+	};
+	return _elm_lang$core$List$sum(
+		A2(
+			_elm_lang$core$List$filterMap,
+			nodeGeneratedEnergy,
+			_elm_community$graph$Graph$nodes(network)));
+};
+var _strelka_2017$phi$Simulation_Simulation$toPeer = function (_p3) {
+	var _p4 = _p3;
+	var _p5 = _p4.label;
+	if (_p5.ctor === 'PeerNode') {
+		return _elm_lang$core$Maybe$Just(_p5._0);
 	} else {
 		return _elm_lang$core$Maybe$Nothing;
 	}
@@ -12408,31 +12434,21 @@ var _strelka_2017$phi$Simulation_Simulation$distributeGeneratedJoules = function
 	var networkDesiredEnergy = _elm_lang$core$List$sum(
 		A2(
 			_elm_lang$core$List$filterMap,
-			function (_p3) {
+			function (_p6) {
 				return A2(
 					_elm_lang$core$Maybe$map,
 					function (_) {
 						return _.desiredConsumption;
 					},
-					_strelka_2017$phi$Simulation_Simulation$toPeer(_p3));
+					_strelka_2017$phi$Simulation_Simulation$toPeer(_p6));
 			},
 			_elm_community$graph$Graph$nodes(network)));
-	var nodeGeneratedEnergy = function (_p4) {
-		var _p5 = _p4;
-		var _p6 = _p5.label;
-		if (_p6.ctor === 'GeneratorNode') {
-			return _elm_lang$core$List$head(_p6._0.dailyGeneration);
-		} else {
-			return _elm_lang$core$Maybe$Nothing;
-		}
-	};
-	var networkGeneratedEnergy = _elm_lang$core$List$sum(
-		A2(
-			_elm_lang$core$List$filterMap,
-			nodeGeneratedEnergy,
-			_elm_community$graph$Graph$nodes(network)));
 	var newConsumption = function (node) {
-		return {ctor: '::', _0: (node.desiredConsumption * networkGeneratedEnergy) / networkDesiredEnergy, _1: node.dailyConsumption};
+		return {
+			ctor: '::',
+			_0: (node.desiredConsumption * _strelka_2017$phi$Simulation_Simulation$networkGeneratedEnergy(network)) / networkDesiredEnergy,
+			_1: node.dailyConsumption
+		};
 	};
 	var updateNode = function (node) {
 		var _p7 = node;
@@ -12668,6 +12684,38 @@ var _strelka_2017$phi$Model$initModel = function () {
 		_strelka_2017$phi$Model$initGenerators);
 }();
 
+var _strelka_2017$phi$Chat_Narrative$daySummary = function (model) {
+	var generatedEnergy = _elm_lang$core$Basics$toString(
+		_strelka_2017$phi$Simulation_Simulation$networkGeneratedEnergy(model.network));
+	var text = A2(
+		_elm_lang$core$Basics_ops['++'],
+		'Yesterday we have generated ',
+		A2(
+			_elm_lang$core$Basics_ops['++'],
+			generatedEnergy,
+			A2(
+				_elm_lang$core$Basics_ops['++'],
+				' kWh in total, ',
+				A2(_elm_lang$core$Basics_ops['++'], 'the community had consumed lots of energy, and some ', 'of has stored in the batteries. Do you want to know more before I go on?'))));
+	return _strelka_2017$phi$Chat_Model$MultiChoiceItem(
+		A2(
+			_strelka_2017$phi$Chat_Model$MultiChoiceMessage,
+			text,
+			{
+				ctor: '::',
+				_0: _strelka_2017$phi$Chat_Model$McaWeatherForecast,
+				_1: {
+					ctor: '::',
+					_0: _strelka_2017$phi$Chat_Model$McaRunDay,
+					_1: {
+						ctor: '::',
+						_0: _strelka_2017$phi$Chat_Model$McaChangeDesign,
+						_1: {ctor: '[]'}
+					}
+				}
+			}));
+};
+
 var _strelka_2017$phi$Update$update = F2(
 	function (msg, model) {
 		update:
@@ -12724,35 +12772,10 @@ var _strelka_2017$phi$Update$update = F2(
 						_1: scrollDown
 					};
 				case 'CheckWeather':
-					var windy = _elm_lang$core$Basics$toString(model.weather.wind);
-					var sunny = _elm_lang$core$Basics$toString(model.weather.sun);
-					var chatMsg = _strelka_2017$phi$Chat_Model$BotMessage(
-						A2(
-							_elm_lang$core$Basics_ops['++'],
-							'There\'s ',
-							A2(
-								_elm_lang$core$Basics_ops['++'],
-								sunny,
-								A2(
-									_elm_lang$core$Basics_ops['++'],
-									' amount of sun, ',
-									A2(
-										_elm_lang$core$Basics_ops['++'],
-										'and ',
-										A2(_elm_lang$core$Basics_ops['++'], windy, ' amount of wind'))))));
-					return A3(
-						_ccapndave$elm_update_extra$Update_Extra$andThen,
-						_strelka_2017$phi$Update$update,
-						_strelka_2017$phi$Action$SendBotChatItem(
-							_strelka_2017$phi$Chat_Model$WidgetItem(_strelka_2017$phi$Chat_Model$WeatherWidget)),
-						A2(
-							_strelka_2017$phi$Update$update,
-							_strelka_2017$phi$Action$SendBotChatItem(chatMsg),
-							model));
+					return _strelka_2017$phi$Update$weatherForecast(model);
 				case 'DaySummary':
-					var txt = 'Last week we have generated a bunch of kWh in total, the community had consumed lots of energy, and some of has stored in the batteries. Do you want to know more before I go on?';
 					var _v1 = _strelka_2017$phi$Action$SendBotChatItem(
-						_strelka_2017$phi$Chat_Model$BotMessage(txt)),
+						_strelka_2017$phi$Chat_Narrative$daySummary(model)),
 						_v2 = model;
 					msg = _v1;
 					model = _v2;
@@ -12762,14 +12785,7 @@ var _strelka_2017$phi$Update$update = F2(
 						_ccapndave$elm_update_extra$Update_Extra$andThen,
 						_strelka_2017$phi$Update$update,
 						_strelka_2017$phi$Action$DaySummary,
-						A3(
-							_ccapndave$elm_update_extra$Update_Extra$andThen,
-							_strelka_2017$phi$Update$update,
-							_strelka_2017$phi$Action$CheckWeather,
-							A2(
-								_strelka_2017$phi$Update$update,
-								_strelka_2017$phi$Action$Tick(1),
-								model)));
+						_strelka_2017$phi$Update$runDay(model));
 				case 'DescribeNode':
 					return _strelka_2017$phi$Update$update(
 						function (_p1) {
@@ -12846,28 +12862,44 @@ var _strelka_2017$phi$Update$update = F2(
 							_strelka_2017$phi$Simulation_Model$encodeGraph(model.network))
 					};
 				default:
-					var _p4 = _p0._0;
-					var _p3 = _p4;
-					if (_p3 === 0) {
-						return A3(
-							_ccapndave$elm_update_extra$Update_Extra$andThen,
-							_strelka_2017$phi$Update$update,
-							_strelka_2017$phi$Action$RenderPhiNetwork,
-							A2(
-								_elm_lang$core$Platform_Cmd_ops['!'],
-								model,
-								{ctor: '[]'}));
-					} else {
-						return A3(
-							_ccapndave$elm_update_extra$Update_Extra$andThen,
-							_strelka_2017$phi$Update$update,
-							_strelka_2017$phi$Action$Tick(_p4 - 1),
-							_strelka_2017$phi$Update$nextDay(model));
-					}
+					return A2(_strelka_2017$phi$Update$handleMultiChoiceMsg, _p0._0, model);
 			}
 		}
 	});
-var _strelka_2017$phi$Update$nextDay = function (model) {
+var _strelka_2017$phi$Update$handleMultiChoiceMsg = F2(
+	function (action, model) {
+		var _p3 = action;
+		switch (_p3.ctor) {
+			case 'McaWeatherForecast':
+				return _strelka_2017$phi$Update$weatherForecast(model);
+			case 'McaChangeDesign':
+				return _strelka_2017$phi$Update$changeDesign(model);
+			case 'McaRunDay':
+				return A3(
+					_ccapndave$elm_update_extra$Update_Extra$andThen,
+					_strelka_2017$phi$Update$update,
+					_strelka_2017$phi$Action$DaySummary,
+					_strelka_2017$phi$Update$runDay(model));
+			case 'McaSelectLocation':
+				return A2(
+					_elm_lang$core$Platform_Cmd_ops['!'],
+					model,
+					{ctor: '[]'});
+			default:
+				return A2(
+					_elm_lang$core$Platform_Cmd_ops['!'],
+					model,
+					{ctor: '[]'});
+		}
+	});
+var _strelka_2017$phi$Update$changeDesign = function (model) {
+	var chatMsg = _strelka_2017$phi$Chat_Model$BotMessage('Sorry that\'s not available yet!');
+	return A2(
+		_strelka_2017$phi$Update$update,
+		_strelka_2017$phi$Action$SendBotChatItem(chatMsg),
+		model);
+};
+var _strelka_2017$phi$Update$runDay = function (model) {
 	var newNetwork = _strelka_2017$phi$Simulation_Simulation$distributeGeneratedJoules(
 		A2(_strelka_2017$phi$Simulation_Simulation$joulesToGenerators, model.weather, model.network));
 	var newModel = _elm_lang$core$Native_Utils.update(
@@ -12886,6 +12918,33 @@ var _strelka_2017$phi$Update$nextDay = function (model) {
 				_1: {ctor: '[]'}
 			}));
 };
+var _strelka_2017$phi$Update$weatherForecast = function (model) {
+	var windy = _elm_lang$core$Basics$toString(model.weather.wind);
+	var sunny = _elm_lang$core$Basics$toString(model.weather.sun);
+	var chatMsg = _strelka_2017$phi$Chat_Model$BotMessage(
+		A2(
+			_elm_lang$core$Basics_ops['++'],
+			'Tomorrow should have',
+			A2(
+				_elm_lang$core$Basics_ops['++'],
+				sunny,
+				A2(
+					_elm_lang$core$Basics_ops['++'],
+					' amount of sun, ',
+					A2(
+						_elm_lang$core$Basics_ops['++'],
+						'and ',
+						A2(_elm_lang$core$Basics_ops['++'], windy, ' amount of wind'))))));
+	return A3(
+		_ccapndave$elm_update_extra$Update_Extra$andThen,
+		_strelka_2017$phi$Update$update,
+		_strelka_2017$phi$Action$SendBotChatItem(
+			_strelka_2017$phi$Chat_Model$WidgetItem(_strelka_2017$phi$Chat_Model$WeatherWidget)),
+		A2(
+			_strelka_2017$phi$Update$update,
+			_strelka_2017$phi$Action$SendBotChatItem(chatMsg),
+			model));
+};
 
 var _strelka_2017$phi$View$onEnter = function (msg) {
 	var isEnter = function (num) {
@@ -12900,6 +12959,45 @@ var _strelka_2017$phi$View$onEnter = function (msg) {
 		_elm_lang$html$Html_Events$on,
 		'keyup',
 		A2(_elm_lang$core$Json_Decode$map, isEnter, _elm_lang$html$Html_Events$keyCode));
+};
+var _strelka_2017$phi$View$viewMCA = function (action) {
+	var buttonName = function () {
+		var _p1 = action;
+		switch (_p1.ctor) {
+			case 'McaRunDay':
+				return 'Next Day';
+			case 'McaWeatherForecast':
+				return 'Weather Forecast';
+			case 'McaChangeDesign':
+				return 'Change Design';
+			default:
+				return 'Not Foundz';
+		}
+	}();
+	return A2(
+		_elm_lang$html$Html$li,
+		{
+			ctor: '::',
+			_0: _elm_lang$html$Html_Attributes$class('button bot-sent appeared'),
+			_1: {ctor: '[]'}
+		},
+		{
+			ctor: '::',
+			_0: A2(
+				_elm_lang$html$Html$button,
+				{
+					ctor: '::',
+					_0: _elm_lang$html$Html_Events$onClick(
+						_strelka_2017$phi$Action$MultiChoiceMsg(action)),
+					_1: {ctor: '[]'}
+				},
+				{
+					ctor: '::',
+					_0: _elm_lang$html$Html$text(buttonName),
+					_1: {ctor: '[]'}
+				}),
+			_1: {ctor: '[]'}
+		});
 };
 var _strelka_2017$phi$View$viewChatMsg = function (chatItem) {
 	var textMessage = F2(
@@ -12943,22 +13041,44 @@ var _strelka_2017$phi$View$viewChatMsg = function (chatItem) {
 					_1: {ctor: '[]'}
 				});
 		});
-	var _p1 = chatItem;
-	if (_p1.ctor === 'UserMessage') {
-		return A2(textMessage, _p1._0, 'user-sent');
+	var _p2 = chatItem;
+	if (_p2.ctor === 'UserMessage') {
+		return A2(textMessage, _p2._0, 'user-sent');
 	} else {
-		var _p2 = _p1._0;
-		if (_p2.ctor === 'BotMessage') {
-			return A2(textMessage, _p2._0, 'bot-sent');
-		} else {
-			return A2(
-				_elm_lang$html$Html$li,
-				{ctor: '[]'},
-				{
-					ctor: '::',
-					_0: _elm_lang$html$Html$text('rendering a fancy widget'),
-					_1: {ctor: '[]'}
-				});
+		var _p3 = _p2._0;
+		switch (_p3.ctor) {
+			case 'BotMessage':
+				return A2(textMessage, _p3._0, 'bot-sent');
+			case 'WidgetItem':
+				return A2(
+					_elm_lang$html$Html$li,
+					{ctor: '[]'},
+					{
+						ctor: '::',
+						_0: _elm_lang$html$Html$text('rendering a fancy widget'),
+						_1: {ctor: '[]'}
+					});
+			default:
+				var _p4 = _p3._0;
+				return A2(
+					_elm_lang$html$Html$div,
+					{ctor: '[]'},
+					{
+						ctor: '::',
+						_0: A2(textMessage, _p4.text, 'bot-sent'),
+						_1: {
+							ctor: '::',
+							_0: A2(
+								_elm_lang$html$Html$ul,
+								{
+									ctor: '::',
+									_0: _elm_lang$html$Html_Attributes$class('buttons'),
+									_1: {ctor: '[]'}
+								},
+								A2(_elm_lang$core$List$map, _strelka_2017$phi$View$viewMCA, _p4.options)),
+							_1: {ctor: '[]'}
+						}
+					});
 		}
 	}
 };

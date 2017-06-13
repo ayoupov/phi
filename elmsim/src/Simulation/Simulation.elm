@@ -43,6 +43,7 @@ generatePVPanel =
         -- generator type
         |> Random.generate AddGenerator
 
+
 generateWindTurbine : Cmd Msg
 generateWindTurbine =
     Random.map4 SimGenerator
@@ -52,6 +53,7 @@ generateWindTurbine =
         coordsGenerator
         (Random.constant WindTurbine)
         |> Random.generate AddGenerator
+
 
 generateEdge : Cmd Msg
 generateEdge =
@@ -73,7 +75,7 @@ generatePeer =
         (Random.constant [])
         (Random.float 7 10)
         -- consumptionDesire
-        (Random.constant [1])
+        (Random.constant [ 1 ])
         -- initial seed
         coordsGenerator
         |> Random.generate AddPeer
@@ -142,25 +144,25 @@ toPeer { label, id } =
             Nothing
 
 
-distributeGeneratedJoules : PhiNetwork -> PhiNetwork
-distributeGeneratedJoules network =
+networkGeneratedEnergy : PhiNetwork -> KWHour
+networkGeneratedEnergy network =
     let
         nodeGeneratedEnergy { label, id } =
             case label of
                 GeneratorNode node ->
                     List.head node.dailyGeneration
 
---                WTNode node ->
---                    List.head node.dailyGeneration
-
                 _ ->
                     Nothing
+    in
+    Graph.nodes network
+        |> List.filterMap nodeGeneratedEnergy
+        |> List.sum
 
-        networkGeneratedEnergy =
-            Graph.nodes network
-                |> List.filterMap nodeGeneratedEnergy
-                |> List.sum
 
+distributeGeneratedJoules : PhiNetwork -> PhiNetwork
+distributeGeneratedJoules network =
+    let
         networkDesiredEnergy =
             Graph.nodes network
                 |> List.filterMap (toPeer >> Maybe.map .desiredConsumption)
@@ -168,7 +170,7 @@ distributeGeneratedJoules network =
 
         newConsumption node =
             (node.desiredConsumption
-                * networkGeneratedEnergy
+                * networkGeneratedEnergy network
                 / networkDesiredEnergy
             )
                 :: node.dailyConsumption
@@ -182,6 +184,7 @@ distributeGeneratedJoules network =
                     node
     in
     Graph.mapNodes updateNode network
+
 
 
 -- PORTS

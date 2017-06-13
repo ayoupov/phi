@@ -3,6 +3,7 @@ module Chat.Chat exposing (..)
 import Action exposing (Msg(..))
 import Chat.Model exposing (..)
 
+
 parseUserMessage : UserChatMessage -> Msg
 parseUserMessage chatMsg =
     if not (String.startsWith "/" chatMsg) then
@@ -12,8 +13,8 @@ parseUserMessage chatMsg =
 /turn (i move to the next day)
 /describe [nodeId] (i tell you some info about a specific node)
 """
-      |> BotMessage
-      |> SendBotChatItem
+            |> BotMessage
+            |> SendBotChatItem
     else if chatMsg == "/weather" then
         CheckWeather
     else if chatMsg == "/turn" then
@@ -24,9 +25,9 @@ parseUserMessage chatMsg =
             |> Maybe.andThen (Result.toMaybe << String.toInt)
             |> Maybe.map DescribeNode
             |> Maybe.withDefault
-              ( "I can't find that node!"
-              |> BotMessage
-              |> SendBotChatItem
-              )
+                ("I can't find that node!"
+                    |> BotMessage
+                    |> SendBotChatItem
+                )
     else
         NoOp

@@ -20,8 +20,9 @@ type alias Model =
 initModel : ( Model, Cmd Msg )
 initModel =
     let
-       map : SimMap
-       map = initMap
+        map : SimMap
+        map =
+            initMap
     in
     Model ""
         [ initChat ]
@@ -31,26 +32,35 @@ initModel =
         map
         ! initGenerators
 
+
+
 -- less hardcode??
+
+
 initMap : SimMap
 initMap =
     SimMap "first" Graph.empty (Weather 0.8 0.4) initNarrative 10000
+
 
 initGraph : SimMap -> PhiNetwork
 initGraph map =
     map.initialNetwork
 
+
 initWeather : SimMap -> Weather
 initWeather map =
     Weather map.initialWeather.sun map.initialWeather.wind
+
 
 initBudget : SimMap -> Budget
 initBudget map =
     map.initialBudget
 
+
 initNarrative : Narrative
 initNarrative =
-    [NarrativeItem "start" "hi!"]
+    [ NarrativeItem "start" "hi!" ]
+
 
 initGenerators : List (Cmd Msg)
 initGenerators =

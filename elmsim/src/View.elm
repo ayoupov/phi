@@ -1,7 +1,7 @@
 module View exposing (view)
 
 import Action exposing (Msg(..))
-import Chat.Model exposing (ChatItem(..), BotChatItem(..))
+import Chat.Model exposing (BotChatItem(..), ChatItem(..), MultiChoiceAction(..))
 import Html exposing (..)
 import Html.Attributes exposing (..)
 import Html.Events exposing (..)
@@ -41,24 +41,54 @@ inputFooter model =
         ]
 
 
-viewChatMsg : ChatItem -> Html msg
+viewChatMsg : ChatItem -> Html Msg
 viewChatMsg chatItem =
-  let
-      textMessage msgText senderClass = 
-        li [ class <| "message " ++ senderClass ++ " appeared" ]
-            [ div [ class "text_wrapper" ]
-                [ div [ class "text" ] [ text msgText ] ]
-            ]
-  in
-      case chatItem of
+    let
+        textMessage msgText senderClass =
+            li [ class <| "message " ++ senderClass ++ " appeared" ]
+                [ div [ class "text_wrapper" ]
+                    [ div [ class "text" ] [ text msgText ] ]
+                ]
+    in
+    case chatItem of
         UserMessage txt ->
-          textMessage txt "user-sent"
+            textMessage txt "user-sent"
+
         BotItem botItem ->
-          case botItem of
-            BotMessage txt ->
-              textMessage txt "bot-sent"
-            WidgetItem widget ->
-              li [] [ text "rendering a fancy widget" ]
+            case botItem of
+                BotMessage txt ->
+                    textMessage txt "bot-sent"
+
+                WidgetItem widget ->
+                    li [] [ text "rendering a fancy widget" ]
+
+                MultiChoiceItem item ->
+                    div []
+                        [ textMessage item.text "bot-sent"
+                        , ul [ class "buttons" ] <| List.map viewMCA item.options
+                        ]
+
+
+viewMCA : MultiChoiceAction -> Html Msg
+viewMCA action =
+    let
+        buttonName =
+            case action of
+                McaRunDay ->
+                    "Next Day"
+
+                McaWeatherForecast ->
+                    "Weather Forecast"
+
+                McaChangeDesign ->
+                    "Change Design"
+
+                _ ->
+                    "Not Foundz"
+    in
+    li [ class "button bot-sent appeared" ]
+        [ button [ onClick (MultiChoiceMsg action) ] [ text buttonName ] ]
+
 
 onEnter : Msg -> Attribute Msg
 onEnter msg =
