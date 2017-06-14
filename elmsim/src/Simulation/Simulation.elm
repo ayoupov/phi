@@ -115,9 +115,21 @@ distributeGeneratedJoules ratio network =
             )
                 :: peer.joules.actualConsumption
 
+        -- todo: possible function chaining => actualConsumption is not applied yet
+        newStoredJoules : Peer -> List KWHour
+        newStoredJoules peer =
+            (takeFirstElementWithDefault0 peer.joules.storedJoules) +
+                (Basics.max
+                    ((takeFirstElementWithDefault0 peer.joules.actualConsumption) - peer.joules.desiredConsumption)
+            0) :: peer.joules.storedJoules
+
         setActualConsumption : List KWHour -> PeerJoules -> PeerJoules
         setActualConsumption ac joules =
             { joules | actualConsumption = ac }
+
+        setStoredJoules : List KWHour -> PeerJoules -> PeerJoules
+        setStoredJoules sjl joules =
+            { joules | storedJoules = sjl}
 
         asActualConsumptionIn : PeerJoules -> List KWHour -> PeerJoules
         asActualConsumptionIn =
@@ -134,11 +146,18 @@ distributeGeneratedJoules ratio network =
         updateNode node =
             case node of
                 PeerNode n ->
-                    PeerNode
-                        (n.joules
-                            |> setActualConsumption (newConsumption n)
-                            |> asJoulesIn n
-                        )
+                    let
+                        k =
+                            (n.joules
+                                |> setActualConsumption (newConsumption n)
+                                |> asJoulesIn n
+                            )
+                    in
+                        PeerNode
+                            (k.joules
+                                |> setStoredJoules (newStoredJoules k)
+                                |> asJoulesIn k
+                            )
 
                 _ ->
                     node
