@@ -4,7 +4,7 @@ import Action exposing (Msg)
 import Chat.Model exposing (ChatItem, InputType(..), initChat)
 import Graph
 import Simulation.Init.Generators as Generators
-import Simulation.Model exposing (Budget, Narrative, NarrativeItem, PhiNetwork, ReputationRatio, SimMap, Weather)
+import Simulation.Model exposing (Budget, MapLimit, Narrative, NarrativeItem, PhiNetwork, ReputationRatio, SimMap, Weather)
 
 
 type alias Model =
@@ -15,6 +15,7 @@ type alias Model =
     , weather : Weather
     , budget : Budget
     , reputationRatio : ReputationRatio
+    , negawattLimit : MapLimit
     }
 
 
@@ -32,6 +33,7 @@ initModel =
         (initWeather map)
         (initBudget map)
         (initReputation map)
+        (initNegawattLimit map)
         ! initGenerators
 
 
@@ -41,7 +43,7 @@ initModel =
 
 initMap : SimMap
 initMap =
-    SimMap "first" Graph.empty (Weather 0.8 0.4) initNarrative 10000 { a = 1, b = 0 }
+    SimMap "first" Graph.empty (Weather 0.8 0.4) initNarrative 10000 { a = 1, b = 0 } 10
 
 
 initGraph : SimMap -> PhiNetwork
@@ -67,6 +69,10 @@ initNarrative =
 initReputation : SimMap -> ReputationRatio
 initReputation map =
     map.initialReputationRatio
+
+initNegawattLimit : SimMap -> MapLimit
+initNegawattLimit map =
+    map.initialNegawattLimit
 
 
 initGenerators : List (Cmd Msg)

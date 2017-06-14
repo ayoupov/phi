@@ -30,6 +30,7 @@ encodeNodeLabel nodeLabel =
                 [ ( "actualConsumption", encodeList Json.float label.joules.actualConsumption )
                 , ( "storedJoules", encodeList Json.float label.joules.storedJoules )
                 , ( "desiredConsumption", Json.float label.joules.desiredConsumption )
+                , ( "negawatts", encodeList Json.float label.negawatts )
                 , ( "seedRating", encodeList Json.float label.joules.seedRatingJoules )
                 , ( "reputationRating", encodeList Json.float label.reputation )
                 , ( "pos", encodeCoords label.pos )

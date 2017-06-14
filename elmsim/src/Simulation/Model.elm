@@ -54,7 +54,8 @@ type alias ReputationRatio =
     , b : Float
     }
 
-
+type alias MapLimit =
+    Float
 
 -- Game settings
 
@@ -80,6 +81,7 @@ type alias SimMap =
     , narrative : Narrative
     , initialBudget : Budget
     , initialReputationRatio : ReputationRatio
+    , initialNegawattLimit : MapLimit
     }
 
 

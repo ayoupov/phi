@@ -141,7 +141,7 @@ runDay model =
         newNetwork =
             model.network
                 |> Simulation.joulesToGenerators model.weather
-                |> Simulation.distributeGeneratedJoules model.reputationRatio
+                |> Simulation.distributeGeneratedJoules model.negawattLimit model.reputationRatio
 
         newModel =
             { model | network = newNetwork }
@@ -163,7 +163,7 @@ weatherForecast model =
 
         chatMsg =
             BotMessage <|
-                "Tomorrow should have"
+                "Tomorrow should have "
                     ++ sunny
                     ++ " amount of sun, "
                     ++ "and "

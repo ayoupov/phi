@@ -72,8 +72,8 @@ networkGeneratedEnergy network =
         |> List.sum
 
 
-distributeGeneratedJoules : ReputationRatio -> PhiNetwork -> PhiNetwork
-distributeGeneratedJoules ratio network =
+distributeGeneratedJoules : MapLimit -> ReputationRatio -> PhiNetwork -> PhiNetwork
+distributeGeneratedJoules limit ratio network =
     let
         takeFirstElementWithDefault1 list =
             Maybe.withDefault 1 (List.head list)
@@ -115,13 +115,19 @@ distributeGeneratedJoules ratio network =
             )
                 :: peer.joules.actualConsumption
 
-        -- todo: possible function chaining => actualConsumption is not applied yet
         newStoredJoules : Peer -> List KWHour
         newStoredJoules peer =
             (takeFirstElementWithDefault0 peer.joules.storedJoules) +
                 (Basics.max
                     ((takeFirstElementWithDefault0 peer.joules.actualConsumption) - peer.joules.desiredConsumption)
             0) :: peer.joules.storedJoules
+
+        newNegawatts : Peer -> List KWHour
+        newNegawatts peer =
+            let
+                possibleNW = limit - (takeFirstElementWithDefault0 peer.joules.actualConsumption)
+            in
+                (Basics.max possibleNW 0) :: peer.negawatts
 
         setActualConsumption : List KWHour -> PeerJoules -> PeerJoules
         setActualConsumption ac joules =
@@ -143,6 +149,11 @@ distributeGeneratedJoules ratio network =
         asJoulesIn =
             flip setJoules
 
+        setNegawatts : List KWHour -> Peer -> Peer
+        setNegawatts newNW peer =
+            { peer | negawatts = newNW }
+
+        -- todo: chain better?
         updateNode node =
             case node of
                 PeerNode n ->
@@ -157,6 +168,7 @@ distributeGeneratedJoules ratio network =
                             (k.joules
                                 |> setStoredJoules (newStoredJoules k)
                                 |> asJoulesIn k
+                                |> setNegawatts (newNegawatts k)
                             )
 
                 _ ->
