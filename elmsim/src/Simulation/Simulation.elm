@@ -117,17 +117,19 @@ distributeGeneratedJoules limit ratio network =
 
         newStoredJoules : Peer -> List KWHour
         newStoredJoules peer =
-            (takeFirstElementWithDefault0 peer.joules.storedJoules) +
-                (Basics.max
-                    ((takeFirstElementWithDefault0 peer.joules.actualConsumption) - peer.joules.desiredConsumption)
-            0) :: peer.joules.storedJoules
+            takeFirstElementWithDefault0 peer.joules.storedJoules
+                + Basics.max
+                    (takeFirstElementWithDefault0 peer.joules.actualConsumption - peer.joules.desiredConsumption)
+                    0
+                :: peer.joules.storedJoules
 
         newNegawatts : Peer -> List KWHour
         newNegawatts peer =
             let
-                possibleNW = limit - (takeFirstElementWithDefault0 peer.joules.actualConsumption)
+                possibleNW =
+                    limit - takeFirstElementWithDefault0 peer.joules.actualConsumption
             in
-                (Basics.max possibleNW 0) :: peer.negawatts
+            Basics.max possibleNW 0 :: peer.negawatts
 
         setActualConsumption : List KWHour -> PeerJoules -> PeerJoules
         setActualConsumption ac joules =
@@ -135,7 +137,7 @@ distributeGeneratedJoules limit ratio network =
 
         setStoredJoules : List KWHour -> PeerJoules -> PeerJoules
         setStoredJoules sjl joules =
-            { joules | storedJoules = sjl}
+            { joules | storedJoules = sjl }
 
         asActualConsumptionIn : PeerJoules -> List KWHour -> PeerJoules
         asActualConsumptionIn =
@@ -159,17 +161,16 @@ distributeGeneratedJoules limit ratio network =
                 PeerNode n ->
                     let
                         k =
-                            (n.joules
+                            n.joules
                                 |> setActualConsumption (newConsumption n)
                                 |> asJoulesIn n
-                            )
                     in
-                        PeerNode
-                            (k.joules
-                                |> setStoredJoules (newStoredJoules k)
-                                |> asJoulesIn k
-                                |> setNegawatts (newNegawatts k)
-                            )
+                    PeerNode
+                        (k.joules
+                            |> setStoredJoules (newStoredJoules k)
+                            |> asJoulesIn k
+                            |> setNegawatts (newNegawatts k)
+                        )
 
                 _ ->
                     node

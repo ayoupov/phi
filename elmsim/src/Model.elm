@@ -3,6 +3,7 @@ module Model exposing (..)
 import Action exposing (Msg)
 import Chat.Model exposing (ChatItem, InputType(..), initChat)
 import Graph
+import Material
 import Simulation.Init.Generators as Generators
 import Simulation.Model exposing (Budget, MapLimit, Narrative, NarrativeItem, PhiNetwork, ReputationRatio, SimMap, Weather)
 
@@ -16,6 +17,7 @@ type alias Model =
     , budget : Budget
     , reputationRatio : ReputationRatio
     , negawattLimit : MapLimit
+    , mdl : Material.Model
     }
 
 
@@ -34,6 +36,7 @@ initModel =
         (initBudget map)
         (initReputation map)
         (initNegawattLimit map)
+        Material.model
         ! initGenerators
 
 
@@ -69,6 +72,7 @@ initNarrative =
 initReputation : SimMap -> ReputationRatio
 initReputation map =
     map.initialReputationRatio
+
 
 initNegawattLimit : SimMap -> MapLimit
 initNegawattLimit map =

@@ -54,8 +54,11 @@ type alias ReputationRatio =
     , b : Float
     }
 
+
 type alias MapLimit =
     Float
+
+
 
 -- Game settings
 

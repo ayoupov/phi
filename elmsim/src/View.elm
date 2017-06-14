@@ -6,6 +6,9 @@ import Html exposing (..)
 import Html.Attributes exposing (..)
 import Html.Events exposing (..)
 import Json.Decode as Json
+import Material.Button as Button
+import Material.Icon as Icon
+import Material.Options as Options
 import Model exposing (Model)
 import Svg exposing (g, svg)
 import Svg.Attributes as SVG
@@ -53,11 +56,17 @@ inputFooter model =
         toggleIcon =
             case model.inputType of
                 FreeTextInput ->
-                    "B"
+                    "dns"
 
+                --  https://material.io/icons/#ic_text_format
+                --  https://material.io/icons/#ic_border_color
                 MultiChoiceInput ->
-                    "A"
+                    "text_format"
 
+        -- https://material.io/icons/#ic_radio_button_checked
+        -- https://material.io/icons/#ic_filter_none
+        -- https://material.io/icons/#ic_add_circle_outline
+        -- https://material.io/icons/#ic_library_add
         inputCountainer =
             case model.inputType of
                 FreeTextInput ->
@@ -67,7 +76,15 @@ inputFooter model =
                     multiChoiceFooter model
     in
     div [ class "bottom_wrapper" ]
-        [ div [ class "input_type", onClick ToggleInputType ] [ text toggleIcon ]
+        --[ div [ class "input_type", onClick ToggleInputType ] [ text toggleIcon ]
+        [ Button.render Mdl
+            [ 0 ]
+            model.mdl
+            [ Button.icon
+            , Options.cs "input_type"
+            , Options.onClick ToggleInputType
+            ]
+            [ Icon.i toggleIcon ]
         , inputCountainer
         ]
 
@@ -119,7 +136,16 @@ freeTextFooter model =
             , value model.input
             ]
             []
-        , button [ class "send_button", onClick SendUserChatMsg ]
+
+        --, button [ class "send_button", onClick SendUserChatMsg ]
+        --    [ text "Send" ]
+        , Button.render Mdl
+            [ 0 ]
+            model.mdl
+            [ Button.flat
+            , Options.onClick SendUserChatMsg
+            , Options.cs "send_button"
+            ]
             [ text "Send" ]
         ]
 

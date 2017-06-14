@@ -7,6 +7,7 @@ import Chat.Narrative as Narrative
 import Dom.Scroll as Scroll
 import Graph
 import Json.Encode exposing (encode)
+import Material
 import Model exposing (Model)
 import Simulation.Encoding exposing (encodeEdge, encodeGraph, encodeNodeLabel)
 import Simulation.GraphUpdates exposing (addEdge, addNode)
@@ -35,6 +36,9 @@ update msg model =
 
         Input newInput ->
             ( { model | input = newInput }, Cmd.none )
+
+        Mdl message_ ->
+            Material.update Mdl message_ model
 
         SendUserChatMsg ->
             if String.isEmpty model.input then

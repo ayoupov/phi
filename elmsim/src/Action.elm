@@ -1,6 +1,7 @@
 module Action exposing (Msg(..))
 
 import Chat.Model exposing (BotChatItem, MultiChoiceAction)
+import Material
 import Simulation.Model exposing (GeneratorType, Peer, SimGenerator, TransmissionLine, Weather)
 
 
@@ -20,3 +21,4 @@ type Msg
     | DaySummary
     | MultiChoiceMsg MultiChoiceAction
     | ToggleInputType
+    | Mdl (Material.Msg Msg)

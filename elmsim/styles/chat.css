@@ -4,7 +4,7 @@
 
 @font-face {
     font-family: "OpenSans Light";
-    src: url("../fonts/Open_Sans/OpenSans-Light.ttf") format("truetype");
+    src: url("../fonts/Open_Sans/OpenSans-Regular.ttf") format("truetype");
 }
 
 body {
@@ -130,10 +130,12 @@ body {
 
 .bottom_wrapper .input_type {
   display: inline-block;
-  width: 35px;
+  width: 32px;
+  margin-left: 5px;
+  margin-right: 5px;
   text-align: center;
   cursor: pointer;
-  color: #00f;
+  color: #338;
   font-family: "OpenSans Light", monospace;
   font-size: 15px;
 }
@@ -141,11 +143,10 @@ body {
 
 .bottom_wrapper .input_container {
   display: inline-block;
-  border-left: 1px solid rgba(255,255,255,0.7);
   padding-left: 5px;
   height: 100%;
   background: rgba(0,0,0,0);
-  width: calc(100% - 35px);
+  width: calc(100% - 42px);
 }
 
 .bottom_wrapper .input_container .message_input {
@@ -153,7 +154,7 @@ body {
   outline-width: 0;
   border: none;
   background: rgba(0,0,0,0);
-  width: calc(100% - 60px);
+  width: calc(100% - 64px);
   color: #338;
   font-family: "OpenSans Light", monospace;
   font-size: 15px;
@@ -175,17 +176,15 @@ body {
 }
 
 .bottom_wrapper .input_container .send_button {
-  width: 60px;
+  width: 64px;
   text-align: center;
-  height: 90%;
-  color: #00f;
+  height: 100%;
+  color: #338;
   cursor: pointer;
   padding: 0;
   border: none;
-  background-color: Transparent;
   outline: none;
   float: right;
-  text-align: center;
   font-family: "OpenSans Light", monospace;
-  font-size: 15px;
+  font-weight: 600;
 }
