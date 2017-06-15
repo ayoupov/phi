@@ -129,7 +129,7 @@ distributeGeneratedJoules limit ratio network =
                 possibleNW =
                     limit - takeFirstElementWithDefault0 peer.joules.actualConsumption
             in
-            Basics.max possibleNW 0 :: peer.negawatts
+            (takeFirstElementWithDefault0 peer.negawatts) + Basics.max possibleNW 0 :: peer.negawatts
 
         setActualConsumption : List KWHour -> PeerJoules -> PeerJoules
         setActualConsumption ac joules =
