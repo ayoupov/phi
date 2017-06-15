@@ -153,26 +153,32 @@ distributeGeneratedJoules limit ratio network =
             (takeFirstElementWithDefault0 peer.negawatts) + Basics.max possibleNW 0 :: peer.negawatts
 
         -- todo: chain better?
-        updateNode node =
+        updateNodeActualConsumption node =
             case node of
                 PeerNode n ->
-                    let
-                        k =
-                            n.joules
+                    PeerNode(n.joules
                                 |> setActualConsumption (newConsumption n)
                                 |> asJoulesIn n
-                    in
-                    PeerNode
-                        (k.joules
-                            |> setStoredJoules (newStoredJoules k)
-                            |> asJoulesIn k
-                            |> setNegawatts (newNegawatts k)
-                        )
-
+                                )
                 _ ->
                     node
+
+        updateNodeStoredJoulesAndNegawatts node =
+            case node of
+                PeerNode n ->
+                    PeerNode
+                        (n.joules
+                            |> setStoredJoules (newStoredJoules n)
+                            |> asJoulesIn n
+                            |> setNegawatts (newNegawatts n)
+                        )
+                _ ->
+                    node
+
     in
-    Graph.mapNodes updateNode network
+        network
+            |> Graph.mapNodes updateNodeActualConsumption
+            |> Graph.mapNodes updateNodeStoredJoulesAndNegawatts
 
 
 
