@@ -7,6 +7,7 @@ import IntDict
 import Json.Encode as Json
 import List exposing (repeat)
 import Simulation.Model exposing (..)
+import Simulation.SimulationHelpers exposing (takeFirstElementWithDefault0, takeFirstElementWithDefault1)
 import Svg exposing (..)
 import Svg.Attributes as SVG
 import Update.Extra exposing (andThen)
@@ -71,16 +72,36 @@ networkGeneratedEnergy network =
         |> List.filterMap nodeGeneratedEnergy
         |> List.sum
 
+-- update helpers
+
+setActualConsumption : List KWHour -> PeerJoules -> PeerJoules
+setActualConsumption ac joules =
+    { joules | actualConsumption = ac }
+
+setStoredJoules : List KWHour -> PeerJoules -> PeerJoules
+setStoredJoules sjl joules =
+    { joules | storedJoules = sjl }
+
+asActualConsumptionIn : PeerJoules -> List KWHour -> PeerJoules
+asActualConsumptionIn =
+    flip setActualConsumption
+
+setJoules : PeerJoules -> Peer -> Peer
+setJoules newJoules peer =
+    { peer | joules = newJoules }
+
+asJoulesIn : Peer -> PeerJoules -> Peer
+asJoulesIn =
+    flip setJoules
+
+setNegawatts : List KWHour -> Peer -> Peer
+setNegawatts newNW peer =
+    { peer | negawatts = newNW }
+
 
 distributeGeneratedJoules : MapLimit -> ReputationRatio -> PhiNetwork -> PhiNetwork
 distributeGeneratedJoules limit ratio network =
     let
-        takeFirstElementWithDefault1 list =
-            Maybe.withDefault 1 (List.head list)
-
-        takeFirstElementWithDefault0 list =
-            Maybe.withDefault 0 (List.head list)
-
         negawattsReward peer quotient =
             quotient * takeFirstElementWithDefault0 peer.negawatts
 
@@ -130,30 +151,6 @@ distributeGeneratedJoules limit ratio network =
                     limit - takeFirstElementWithDefault0 peer.joules.actualConsumption
             in
             (takeFirstElementWithDefault0 peer.negawatts) + Basics.max possibleNW 0 :: peer.negawatts
-
-        setActualConsumption : List KWHour -> PeerJoules -> PeerJoules
-        setActualConsumption ac joules =
-            { joules | actualConsumption = ac }
-
-        setStoredJoules : List KWHour -> PeerJoules -> PeerJoules
-        setStoredJoules sjl joules =
-            { joules | storedJoules = sjl }
-
-        asActualConsumptionIn : PeerJoules -> List KWHour -> PeerJoules
-        asActualConsumptionIn =
-            flip setActualConsumption
-
-        setJoules : PeerJoules -> Peer -> Peer
-        setJoules newJoules peer =
-            { peer | joules = newJoules }
-
-        asJoulesIn : Peer -> PeerJoules -> Peer
-        asJoulesIn =
-            flip setJoules
-
-        setNegawatts : List KWHour -> Peer -> Peer
-        setNegawatts newNW peer =
-            { peer | negawatts = newNW }
 
         -- todo: chain better?
         updateNode node =
