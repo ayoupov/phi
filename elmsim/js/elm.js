@@ -18178,6 +18178,9 @@ var _strelka_2017$phi$Simulation_Model$GeneratorNode = function (a) {
 var _strelka_2017$phi$Simulation_Model$SolarPanel = {ctor: 'SolarPanel'};
 var _strelka_2017$phi$Simulation_Model$WindTurbine = {ctor: 'WindTurbine'};
 
+var _strelka_2017$phi$Action$SendToEliza = function (a) {
+	return {ctor: 'SendToEliza', _0: a};
+};
 var _strelka_2017$phi$Action$Mdl = function (a) {
 	return {ctor: 'Mdl', _0: a};
 };
@@ -18214,8 +18217,7 @@ var _strelka_2017$phi$Action$Input = function (a) {
 };
 
 var _strelka_2017$phi$Chat_Chat$parseUserMessage = function (chatMsg) {
-	return (!A2(_elm_lang$core$String$startsWith, '/', chatMsg)) ? _strelka_2017$phi$Action$SendBotChatItem(
-		_strelka_2017$phi$Chat_Model$BotMessage('Sorry, I only respond to commands! Current available ones are:\n\n/weather (i tell you abt the weather today)\n/turn (i move to the next day)\n/describe [nodeId] (i tell you some info about a specific node)\n')) : (_elm_lang$core$Native_Utils.eq(chatMsg, '/weather') ? _strelka_2017$phi$Action$CheckWeather : (_elm_lang$core$Native_Utils.eq(chatMsg, '/turn') ? _strelka_2017$phi$Action$CallTurn : (A2(_elm_lang$core$String$startsWith, '/describe', chatMsg) ? A2(
+	return (!A2(_elm_lang$core$String$startsWith, '/', chatMsg)) ? _strelka_2017$phi$Action$SendToEliza(chatMsg) : (_elm_lang$core$Native_Utils.eq(chatMsg, '/weather') ? _strelka_2017$phi$Action$CheckWeather : (_elm_lang$core$Native_Utils.eq(chatMsg, '/turn') ? _strelka_2017$phi$Action$CallTurn : (A2(_elm_lang$core$String$startsWith, '/describe', chatMsg) ? A2(
 		_elm_lang$core$Maybe$withDefault,
 		_strelka_2017$phi$Action$SendBotChatItem(
 			_strelka_2017$phi$Chat_Model$BotMessage('I can\'t find that node!')),
@@ -18232,8 +18234,15 @@ var _strelka_2017$phi$Chat_Chat$parseUserMessage = function (chatMsg) {
 					return _elm_lang$core$List$head(
 						A2(_elm_lang$core$List$drop, 1, _p1));
 				}(
-					A2(_elm_lang$core$String$split, ' ', chatMsg))))) : _strelka_2017$phi$Action$NoOp)));
+					A2(_elm_lang$core$String$split, ' ', chatMsg))))) : _strelka_2017$phi$Action$SendBotChatItem(
+		_strelka_2017$phi$Chat_Model$BotMessage('Sorry, I only respond to a few commands! Current available ones are:\n\n/weather (i tell you abt the weather today)\n/turn (i move to the next day)\n/describe [nodeId] (i tell you some info about a specific node)\n')))));
 };
+var _strelka_2017$phi$Chat_Chat$sendToEliza = _elm_lang$core$Native_Platform.outgoingPort(
+	'sendToEliza',
+	function (v) {
+		return v;
+	});
+var _strelka_2017$phi$Chat_Chat$elizaReply = _elm_lang$core$Native_Platform.incomingPort('elizaReply', _elm_lang$core$Json_Decode$string);
 
 var _strelka_2017$phi$Simulation_GraphUpdates$createEdge = F2(
 	function (a, b) {
@@ -18434,12 +18443,83 @@ var _strelka_2017$phi$Model$initModel = function () {
 		_strelka_2017$phi$Model$initGenerators);
 }();
 
-var _strelka_2017$phi$Simulation_Simulation$networkGeneratedEnergy = function (network) {
-	var nodeGeneratedEnergy = function (_p0) {
+var _strelka_2017$phi$Simulation_SimulationHelpers$takeTailDefaultEmpty = function (list) {
+	return A2(
+		_elm_lang$core$Maybe$withDefault,
+		{ctor: '[]'},
+		_elm_lang$core$List$tail(list));
+};
+var _strelka_2017$phi$Simulation_SimulationHelpers$takeFirstElementWithDefault0 = function (list) {
+	return A2(
+		_elm_lang$core$Maybe$withDefault,
+		0,
+		_elm_lang$core$List$head(list));
+};
+var _strelka_2017$phi$Simulation_SimulationHelpers$takeFirstElementWithDefault1 = function (list) {
+	return A2(
+		_elm_lang$core$Maybe$withDefault,
+		1,
+		_elm_lang$core$List$head(list));
+};
+
+var _strelka_2017$phi$Simulation_Simulation$maxDesiredTrade = function (peerInNeed) {
+	return peerInNeed.joules.desiredConsumption - _strelka_2017$phi$Simulation_SimulationHelpers$takeFirstElementWithDefault0(peerInNeed.joules.actualConsumption);
+};
+var _strelka_2017$phi$Simulation_Simulation$setNegawatts = F2(
+	function (newNW, peer) {
+		return _elm_lang$core$Native_Utils.update(
+			peer,
+			{negawatts: newNW});
+	});
+var _strelka_2017$phi$Simulation_Simulation$setJoules = F2(
+	function (newJoules, peer) {
+		return _elm_lang$core$Native_Utils.update(
+			peer,
+			{joules: newJoules});
+	});
+var _strelka_2017$phi$Simulation_Simulation$asJoulesIn = _elm_lang$core$Basics$flip(_strelka_2017$phi$Simulation_Simulation$setJoules);
+var _strelka_2017$phi$Simulation_Simulation$setStoredJoules = F2(
+	function (sjl, joules) {
+		return _elm_lang$core$Native_Utils.update(
+			joules,
+			{storedJoules: sjl});
+	});
+var _strelka_2017$phi$Simulation_Simulation$asStoredJoulesIn = _elm_lang$core$Basics$flip(_strelka_2017$phi$Simulation_Simulation$setStoredJoules);
+var _strelka_2017$phi$Simulation_Simulation$setNegawattsAndStoredJoules = F2(
+	function (_p0, peer) {
 		var _p1 = _p0;
-		var _p2 = _p1.label;
-		if (_p2.ctor === 'GeneratorNode') {
-			return _elm_lang$core$List$head(_p2._0.dailyGeneration);
+		return A2(
+			_strelka_2017$phi$Simulation_Simulation$setNegawatts,
+			_p1._0,
+			A2(
+				_strelka_2017$phi$Simulation_Simulation$asJoulesIn,
+				peer,
+				A2(_strelka_2017$phi$Simulation_Simulation$setStoredJoules, _p1._1, peer.joules)));
+	});
+var _strelka_2017$phi$Simulation_Simulation$setActualConsumption = F2(
+	function (ac, joules) {
+		return _elm_lang$core$Native_Utils.update(
+			joules,
+			{actualConsumption: ac});
+	});
+var _strelka_2017$phi$Simulation_Simulation$asActualConsumptionIn = _elm_lang$core$Basics$flip(_strelka_2017$phi$Simulation_Simulation$setActualConsumption);
+var _strelka_2017$phi$Simulation_Simulation$setNegawattsAndActualConsumption = F2(
+	function (_p2, peer) {
+		var _p3 = _p2;
+		return A2(
+			_strelka_2017$phi$Simulation_Simulation$setNegawatts,
+			_p3._0,
+			A2(
+				_strelka_2017$phi$Simulation_Simulation$asJoulesIn,
+				peer,
+				A2(_strelka_2017$phi$Simulation_Simulation$setActualConsumption, _p3._1, peer.joules)));
+	});
+var _strelka_2017$phi$Simulation_Simulation$networkGeneratedEnergy = function (network) {
+	var nodeGeneratedEnergy = function (_p4) {
+		var _p5 = _p4;
+		var _p6 = _p5.label;
+		if (_p6.ctor === 'GeneratorNode') {
+			return _elm_lang$core$List$head(_p6._0.dailyGeneration);
 		} else {
 			return _elm_lang$core$Maybe$Nothing;
 		}
@@ -18450,156 +18530,337 @@ var _strelka_2017$phi$Simulation_Simulation$networkGeneratedEnergy = function (n
 			nodeGeneratedEnergy,
 			_elm_community$graph$Graph$nodes(network)));
 };
-var _strelka_2017$phi$Simulation_Simulation$toPeer = function (_p3) {
-	var _p4 = _p3;
-	var _p5 = _p4.label;
-	if (_p5.ctor === 'PeerNode') {
-		return _elm_lang$core$Maybe$Just(_p5._0);
+var _strelka_2017$phi$Simulation_Simulation$toPeer = function (_p7) {
+	var _p8 = _p7;
+	var _p9 = _p8.label;
+	if (_p9.ctor === 'PeerNode') {
+		return _elm_lang$core$Maybe$Just(_p9._0);
 	} else {
 		return _elm_lang$core$Maybe$Nothing;
 	}
 };
 var _strelka_2017$phi$Simulation_Simulation$distributeGeneratedJoules = F3(
 	function (limit, ratio, network) {
-		var setNegawatts = F2(
-			function (newNW, peer) {
-				return _elm_lang$core$Native_Utils.update(
-					peer,
-					{negawatts: newNW});
-			});
-		var setJoules = F2(
-			function (newJoules, peer) {
-				return _elm_lang$core$Native_Utils.update(
-					peer,
-					{joules: newJoules});
-			});
-		var asJoulesIn = _elm_lang$core$Basics$flip(setJoules);
-		var setStoredJoules = F2(
-			function (sjl, joules) {
-				return _elm_lang$core$Native_Utils.update(
-					joules,
-					{storedJoules: sjl});
-			});
-		var setActualConsumption = F2(
-			function (ac, joules) {
-				return _elm_lang$core$Native_Utils.update(
-					joules,
-					{actualConsumption: ac});
-			});
-		var asActualConsumptionIn = _elm_lang$core$Basics$flip(setActualConsumption);
+		var newNegawatts = function (peer) {
+			var possibleNW = limit - _strelka_2017$phi$Simulation_SimulationHelpers$takeFirstElementWithDefault0(peer.joules.actualConsumption);
+			return {
+				ctor: '::',
+				_0: _strelka_2017$phi$Simulation_SimulationHelpers$takeFirstElementWithDefault0(peer.negawatts) + A2(_elm_lang$core$Basics$max, possibleNW, 0),
+				_1: peer.negawatts
+			};
+		};
+		var newStoredJoules = function (peer) {
+			return {
+				ctor: '::',
+				_0: _strelka_2017$phi$Simulation_SimulationHelpers$takeFirstElementWithDefault0(peer.joules.storedJoules) + A2(
+					_elm_lang$core$Basics$max,
+					_strelka_2017$phi$Simulation_SimulationHelpers$takeFirstElementWithDefault0(peer.joules.actualConsumption) - peer.joules.desiredConsumption,
+					0),
+				_1: peer.joules.storedJoules
+			};
+		};
+		var updateNodeStoredJoulesAndNegawatts = function (node) {
+			var _p10 = node;
+			if (_p10.ctor === 'PeerNode') {
+				var _p11 = _p10._0;
+				return _strelka_2017$phi$Simulation_Model$PeerNode(
+					A2(
+						_strelka_2017$phi$Simulation_Simulation$setNegawatts,
+						newNegawatts(_p11),
+						A2(
+							_strelka_2017$phi$Simulation_Simulation$asJoulesIn,
+							_p11,
+							A2(
+								_strelka_2017$phi$Simulation_Simulation$setStoredJoules,
+								newStoredJoules(_p11),
+								_p11.joules))));
+			} else {
+				return node;
+			}
+		};
 		var networkDesiredEnergy = _elm_lang$core$List$sum(
 			A2(
 				_elm_lang$core$List$filterMap,
-				function (_p6) {
+				function (_p12) {
 					return A2(
 						_elm_lang$core$Maybe$map,
-						function (_p7) {
+						function (_p13) {
 							return function (_) {
 								return _.desiredConsumption;
 							}(
 								function (_) {
 									return _.joules;
-								}(_p7));
+								}(_p13));
 						},
-						_strelka_2017$phi$Simulation_Simulation$toPeer(_p6));
+						_strelka_2017$phi$Simulation_Simulation$toPeer(_p12));
 				},
 				_elm_community$graph$Graph$nodes(network)));
-		var seedRating = F2(
-			function (peer, quotient) {
-				return quotient * 0;
-			});
-		var takeFirstElementWithDefault0 = function (list) {
-			return A2(
-				_elm_lang$core$Maybe$withDefault,
-				0,
-				_elm_lang$core$List$head(list));
-		};
-		var negawattsReward = F2(
-			function (peer, quotient) {
-				return quotient * takeFirstElementWithDefault0(peer.negawatts);
-			});
-		var newReputationRating = function (peer) {
-			return {
-				ctor: '::',
-				_0: (takeFirstElementWithDefault0(peer.reputation) + A2(negawattsReward, peer, ratio.a)) + A2(seedRating, peer, ratio.b),
-				_1: peer.reputation
-			};
-		};
 		var thisDayReputation = function (peer) {
-			return takeFirstElementWithDefault0(peer.reputation);
+			return _strelka_2017$phi$Simulation_SimulationHelpers$takeFirstElementWithDefault0(peer.reputation);
 		};
 		var networkTotalReputationRating = _elm_lang$core$List$sum(
 			A2(
 				_elm_lang$core$List$filterMap,
-				function (_p8) {
+				function (_p14) {
 					return A2(
 						_elm_lang$core$Maybe$map,
 						thisDayReputation,
-						_strelka_2017$phi$Simulation_Simulation$toPeer(_p8));
+						_strelka_2017$phi$Simulation_Simulation$toPeer(_p14));
 				},
 				_elm_community$graph$Graph$nodes(network)));
 		var weightening = function (networkDesiredEnergy) {
 			return networkDesiredEnergy / networkTotalReputationRating;
 		};
-		var newStoredJoules = function (peer) {
-			return {
-				ctor: '::',
-				_0: takeFirstElementWithDefault0(peer.joules.storedJoules) + A2(
-					_elm_lang$core$Basics$max,
-					takeFirstElementWithDefault0(peer.joules.actualConsumption) - peer.joules.desiredConsumption,
-					0),
-				_1: peer.joules.storedJoules
-			};
-		};
-		var newNegawatts = function (peer) {
-			var possibleNW = limit - takeFirstElementWithDefault0(peer.joules.actualConsumption);
-			return {
-				ctor: '::',
-				_0: A2(_elm_lang$core$Basics$max, possibleNW, 0),
-				_1: peer.negawatts
-			};
-		};
-		var takeFirstElementWithDefault1 = function (list) {
-			return A2(
-				_elm_lang$core$Maybe$withDefault,
-				1,
-				_elm_lang$core$List$head(list));
-		};
 		var newConsumption = function (peer) {
 			return {
 				ctor: '::',
-				_0: (((peer.joules.desiredConsumption * _strelka_2017$phi$Simulation_Simulation$networkGeneratedEnergy(network)) * takeFirstElementWithDefault1(peer.reputation)) * weightening(networkDesiredEnergy)) / networkDesiredEnergy,
+				_0: (((peer.joules.desiredConsumption * _strelka_2017$phi$Simulation_Simulation$networkGeneratedEnergy(network)) * _strelka_2017$phi$Simulation_SimulationHelpers$takeFirstElementWithDefault1(peer.reputation)) * weightening(networkDesiredEnergy)) / networkDesiredEnergy,
 				_1: peer.joules.actualConsumption
 			};
 		};
-		var updateNode = function (node) {
-			var _p9 = node;
-			if (_p9.ctor === 'PeerNode') {
-				var _p10 = _p9._0;
-				var k = A2(
-					asJoulesIn,
-					_p10,
-					A2(
-						setActualConsumption,
-						newConsumption(_p10),
-						_p10.joules));
+		var updateNodeActualConsumption = function (node) {
+			var _p15 = node;
+			if (_p15.ctor === 'PeerNode') {
+				var _p16 = _p15._0;
 				return _strelka_2017$phi$Simulation_Model$PeerNode(
 					A2(
-						setNegawatts,
-						newNegawatts(k),
+						_strelka_2017$phi$Simulation_Simulation$asJoulesIn,
+						_p16,
 						A2(
-							asJoulesIn,
-							k,
-							A2(
-								setStoredJoules,
-								newStoredJoules(k),
-								k.joules))));
+							_strelka_2017$phi$Simulation_Simulation$setActualConsumption,
+							newConsumption(_p16),
+							_p16.joules)));
 			} else {
 				return node;
 			}
 		};
-		return A2(_elm_community$graph$Graph$mapNodes, updateNode, network);
+		var seedRating = F2(
+			function (peer, quotient) {
+				return quotient * 0;
+			});
+		var negawattsReward = F2(
+			function (peer, quotient) {
+				return quotient * _strelka_2017$phi$Simulation_SimulationHelpers$takeFirstElementWithDefault0(peer.negawatts);
+			});
+		var newReputationRating = function (peer) {
+			return {
+				ctor: '::',
+				_0: (_strelka_2017$phi$Simulation_SimulationHelpers$takeFirstElementWithDefault0(peer.reputation) + A2(negawattsReward, peer, ratio.a)) + A2(seedRating, peer, ratio.b),
+				_1: peer.reputation
+			};
+		};
+		return A2(
+			_elm_community$graph$Graph$mapNodes,
+			updateNodeStoredJoulesAndNegawatts,
+			A2(_elm_community$graph$Graph$mapNodes, updateNodeActualConsumption, network));
 	});
+var _strelka_2017$phi$Simulation_Simulation$tradingPhase = function (network) {
+	var updateNodes = F2(
+		function (updatedNodeList, network) {
+			return network;
+		});
+	var supplyNodesFilter = function (_p17) {
+		var _p18 = _p17;
+		var _p19 = _p18.label;
+		if (_p19.ctor === 'PeerNode') {
+			var _p20 = _p19._0;
+			return _elm_lang$core$Native_Utils.cmp(
+				_strelka_2017$phi$Simulation_SimulationHelpers$takeFirstElementWithDefault0(_p20.joules.actualConsumption) - _p20.joules.desiredConsumption,
+				0) > 0;
+		} else {
+			return false;
+		}
+	};
+	var supplyNodes = A2(
+		_elm_lang$core$List$filter,
+		supplyNodesFilter,
+		_elm_community$graph$Graph$nodes(network));
+	var demandNodesFilter = function (_p21) {
+		var _p22 = _p21;
+		var _p23 = _p22.label;
+		if (_p23.ctor === 'PeerNode') {
+			var _p24 = _p23._0;
+			return _elm_lang$core$Native_Utils.cmp(
+				_strelka_2017$phi$Simulation_SimulationHelpers$takeFirstElementWithDefault0(_p24.joules.actualConsumption) - _p24.joules.desiredConsumption,
+				0) < 0;
+		} else {
+			return false;
+		}
+	};
+	var nodesInDistress = A2(
+		_elm_lang$core$List$filter,
+		demandNodesFilter,
+		_elm_community$graph$Graph$nodes(network));
+	var newSupplyChanges = F2(
+		function (tradeRatio, peer) {
+			var currentSJ = _strelka_2017$phi$Simulation_SimulationHelpers$takeFirstElementWithDefault0(peer.joules.storedJoules);
+			var currentNW = _strelka_2017$phi$Simulation_SimulationHelpers$takeFirstElementWithDefault0(peer.negawatts);
+			return {
+				ctor: '_Tuple2',
+				_0: {
+					ctor: '::',
+					_0: currentNW + (currentNW * tradeRatio),
+					_1: _strelka_2017$phi$Simulation_SimulationHelpers$takeTailDefaultEmpty(peer.negawatts)
+				},
+				_1: {
+					ctor: '::',
+					_0: currentSJ - (currentSJ * tradeRatio),
+					_1: _strelka_2017$phi$Simulation_SimulationHelpers$takeTailDefaultEmpty(peer.joules.storedJoules)
+				}
+			};
+		});
+	var updateNodeSupplyReward = F2(
+		function (tradeRatio, peer) {
+			var _p25 = A2(newSupplyChanges, tradeRatio, peer);
+			var newNW = _p25._0;
+			var newSJ = _p25._1;
+			var updatedPeer = A2(
+				_strelka_2017$phi$Simulation_Simulation$setNegawattsAndStoredJoules,
+				{ctor: '_Tuple2', _0: newNW, _1: newSJ},
+				peer);
+			return updatedPeer;
+		});
+	var updateNodeListSupply = F2(
+		function (tradeRatio, list) {
+			updateNodeListSupply:
+			while (true) {
+				var _p26 = list;
+				if (_p26.ctor === '[]') {
+					return list;
+				} else {
+					var _p29 = _p26._1;
+					var _p28 = _p26._0;
+					var _p27 = _p28.label;
+					if (_p27.ctor === 'PeerNode') {
+						var tail = A2(updateNodeListSupply, tradeRatio, _p29);
+						var updatedNode = A2(updateNodeSupplyReward, tradeRatio, _p27._0);
+						return {
+							ctor: '::',
+							_0: _elm_lang$core$Native_Utils.update(
+								_p28,
+								{
+									label: _strelka_2017$phi$Simulation_Model$PeerNode(updatedNode)
+								}),
+							_1: tail
+						};
+					} else {
+						var _v14 = tradeRatio,
+							_v15 = _p29;
+						tradeRatio = _v14;
+						list = _v15;
+						continue updateNodeListSupply;
+					}
+				}
+			}
+		});
+	var newDemandChanges = F2(
+		function (pool, peer) {
+			var currentDesired = _strelka_2017$phi$Simulation_Simulation$maxDesiredTrade(peer);
+			var currentAC = _strelka_2017$phi$Simulation_SimulationHelpers$takeFirstElementWithDefault0(peer.joules.actualConsumption);
+			var currentNW = _strelka_2017$phi$Simulation_SimulationHelpers$takeFirstElementWithDefault0(peer.negawatts);
+			var actualTradeConsumption = A2(
+				_elm_lang$core$Basics$min,
+				pool,
+				A2(_elm_lang$core$Basics$min, currentNW, currentDesired));
+			var newPool = pool - actualTradeConsumption;
+			return {
+				ctor: '_Tuple3',
+				_0: {
+					ctor: '::',
+					_0: currentNW - actualTradeConsumption,
+					_1: _strelka_2017$phi$Simulation_SimulationHelpers$takeTailDefaultEmpty(peer.negawatts)
+				},
+				_1: {
+					ctor: '::',
+					_0: currentAC + actualTradeConsumption,
+					_1: _strelka_2017$phi$Simulation_SimulationHelpers$takeTailDefaultEmpty(peer.joules.actualConsumption)
+				},
+				_2: newPool
+			};
+		});
+	var updateNodeDemand = F2(
+		function (pool, peer) {
+			var _p30 = A2(newDemandChanges, pool, peer);
+			var newNW = _p30._0;
+			var newAC = _p30._1;
+			var newPool = _p30._2;
+			var updatedPeer = A2(
+				_strelka_2017$phi$Simulation_Simulation$setNegawattsAndActualConsumption,
+				{ctor: '_Tuple2', _0: newNW, _1: newAC},
+				peer);
+			return {ctor: '_Tuple2', _0: newPool, _1: updatedPeer};
+		});
+	var updateNodeListDemand = F2(
+		function (pool, list) {
+			updateNodeListDemand:
+			while (true) {
+				var _p31 = list;
+				if (_p31.ctor === '[]') {
+					return {ctor: '_Tuple2', _0: pool, _1: list};
+				} else {
+					var _p36 = _p31._1;
+					var _p35 = _p31._0;
+					var _p32 = _p35.label;
+					if (_p32.ctor === 'PeerNode') {
+						var _p33 = A2(updateNodeDemand, pool, _p32._0);
+						var newPool = _p33._0;
+						var updatedNode = _p33._1;
+						var _p34 = A2(updateNodeListDemand, newPool, _p36);
+						var restPool = _p34._0;
+						var tail = _p34._1;
+						return {
+							ctor: '_Tuple2',
+							_0: restPool,
+							_1: {
+								ctor: '::',
+								_0: _elm_lang$core$Native_Utils.update(
+									_p35,
+									{
+										label: _strelka_2017$phi$Simulation_Model$PeerNode(updatedNode)
+									}),
+								_1: tail
+							}
+						};
+					} else {
+						var _v18 = pool,
+							_v19 = _p36;
+						pool = _v18;
+						list = _v19;
+						continue updateNodeListDemand;
+					}
+				}
+			}
+		});
+	var initialPool = _elm_lang$core$List$sum(
+		A2(
+			_elm_lang$core$List$filterMap,
+			function (_p37) {
+				return A2(
+					_elm_lang$core$Maybe$map,
+					function (_p38) {
+						return _strelka_2017$phi$Simulation_SimulationHelpers$takeFirstElementWithDefault0(
+							function (_) {
+								return _.storedJoules;
+							}(
+								function (_) {
+									return _.joules;
+								}(_p38)));
+					},
+					_strelka_2017$phi$Simulation_Simulation$toPeer(_p37));
+			},
+			_elm_community$graph$Graph$nodes(network)));
+	var updateNetwork = function () {
+		var _p39 = A2(updateNodeListDemand, initialPool, nodesInDistress);
+		var poolLeft = _p39._0;
+		var updatedDemandNodes = _p39._1;
+		var updatedSupplyNodes = A2(updateNodeListSupply, initialPool - poolLeft, supplyNodes);
+		return A2(
+			updateNodes,
+			updatedSupplyNodes,
+			A2(updateNodes, updatedDemandNodes, network));
+	}();
+	return updateNetwork;
+};
 var _strelka_2017$phi$Simulation_Simulation$joulesToGenerators = F2(
 	function (weather, network) {
 		var newDailyGeneration = F2(
@@ -18609,23 +18870,23 @@ var _strelka_2017$phi$Simulation_Simulation$joulesToGenerators = F2(
 		var wind = weather.wind;
 		var sun = weather.sun;
 		var updateNode = function (node) {
-			var _p11 = node;
-			if (_p11.ctor === 'GeneratorNode') {
-				var _p13 = _p11._0;
-				var _p12 = _p13.generatorType;
-				if (_p12.ctor === 'SolarPanel') {
+			var _p40 = node;
+			if (_p40.ctor === 'GeneratorNode') {
+				var _p42 = _p40._0;
+				var _p41 = _p42.generatorType;
+				if (_p41.ctor === 'SolarPanel') {
 					return _strelka_2017$phi$Simulation_Model$GeneratorNode(
 						_elm_lang$core$Native_Utils.update(
-							_p13,
+							_p42,
 							{
-								dailyGeneration: A2(newDailyGeneration, _p13, sun)
+								dailyGeneration: A2(newDailyGeneration, _p42, sun)
 							}));
 				} else {
 					return _strelka_2017$phi$Simulation_Model$GeneratorNode(
 						_elm_lang$core$Native_Utils.update(
-							_p13,
+							_p42,
 							{
-								dailyGeneration: A2(newDailyGeneration, _p13, wind)
+								dailyGeneration: A2(newDailyGeneration, _p42, wind)
 							}));
 				}
 			} else {
@@ -19091,7 +19352,7 @@ var _strelka_2017$phi$Update$update = F2(
 							_strelka_2017$phi$Chat_Model$mcaName(_p3)),
 						model);
 					return A2(_strelka_2017$phi$Update$handleMultiChoiceMsg, _p3, newModel);
-				default:
+				case 'ToggleInputType':
 					var _p4 = model.inputType;
 					if (_p4.ctor === 'FreeTextInput') {
 						return A2(
@@ -19108,6 +19369,15 @@ var _strelka_2017$phi$Update$update = F2(
 								{inputType: _strelka_2017$phi$Chat_Model$FreeTextInput}),
 							{ctor: '[]'});
 					}
+				default:
+					return A2(
+						_elm_lang$core$Platform_Cmd_ops['!'],
+						model,
+						{
+							ctor: '::',
+							_0: _strelka_2017$phi$Chat_Chat$sendToEliza(_p0._0),
+							_1: {ctor: '[]'}
+						});
 			}
 		}
 	});
@@ -19333,7 +19603,7 @@ var _strelka_2017$phi$View$inputFooter = function (model) {
 	var toggleIcon = function () {
 		var _p4 = model.inputType;
 		if (_p4.ctor === 'FreeTextInput') {
-			return 'dns';
+			return 'view_agenda';
 		} else {
 			return 'text_format';
 		}
@@ -19486,7 +19756,11 @@ var _strelka_2017$phi$View$view = function (model) {
 };
 
 var _strelka_2017$phi$Main$subscriptions = function (model) {
-	return _elm_lang$core$Platform_Sub$none;
+	return _strelka_2017$phi$Chat_Chat$elizaReply(
+		function (_p0) {
+			return _strelka_2017$phi$Action$SendBotChatItem(
+				_strelka_2017$phi$Chat_Model$BotMessage(_p0));
+		});
 };
 var _strelka_2017$phi$Main$main = _elm_lang$html$Html$program(
 	{init: _strelka_2017$phi$Model$initModel, view: _strelka_2017$phi$View$view, update: _strelka_2017$phi$Update$update, subscriptions: _strelka_2017$phi$Main$subscriptions})();

@@ -1,7 +1,7 @@
 module Update exposing (update)
 
 import Action exposing (Msg(..))
-import Chat.Chat exposing (parseUserMessage)
+import Chat.Chat exposing (parseUserMessage, sendToEliza)
 import Chat.Model exposing (..)
 import Chat.Narrative as Narrative
 import Dom.Scroll as Scroll
@@ -113,6 +113,9 @@ update msg model =
 
                 MultiChoiceInput ->
                     { model | inputType = FreeTextInput } ! []
+
+        SendToEliza userChatMessage ->
+            model ! [ sendToEliza userChatMessage ]
 
 
 

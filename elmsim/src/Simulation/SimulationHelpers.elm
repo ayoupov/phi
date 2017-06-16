@@ -7,3 +7,6 @@ takeFirstElementWithDefault1 list =
 
 takeFirstElementWithDefault0 list =
     Maybe.withDefault 0 (List.head list)
+
+takeTailDefaultEmpty list =
+    Maybe.withDefault [] (List.tail list)
