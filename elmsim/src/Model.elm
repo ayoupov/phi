@@ -82,6 +82,6 @@ initNegawattLimit map =
 initGenerators : List (Cmd Msg)
 initGenerators =
     List.repeat 20 Generators.generateEdge
-        ++ List.repeat 10 Generators.generatePeer
+        ++ List.repeat 15 Generators.generatePeer
         ++ List.repeat 3 Generators.generatePVPanel
         ++ List.repeat 5 Generators.generateWindTurbine

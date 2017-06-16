@@ -157,7 +157,7 @@ document.addEventListener("DOMContentLoaded", function (event) {
 
         function peerSizeOuter(d) {
             if (d.label.nodeType == "peer") {
-                return 21 + 2 * (d.label.desiredConsumption || 0);
+                return 20 + 2 * (d.label.desiredConsumption || 0);
             }
         }
 
@@ -168,9 +168,17 @@ document.addEventListener("DOMContentLoaded", function (event) {
                 .startAngle(0)
                 .endAngle(function(d){
                     return d.label.actualConsumption && d.label.actualConsumption.length
-                        ? Math.min(2 * Math.PI, 2 * Math.PI * d.label.desiredConsumption / d.label.actualConsumption[0])
+                        ? Math.min(2 * Math.PI, 2 * Math.PI * d.label.actualConsumption[0]/ d.label.desiredConsumption)
                         : 0
                 } );
+        }
+
+        function peerFullOutline() {
+            return d3.arc()
+                .innerRadius(peerSize)
+                .outerRadius(peerSize)
+                .startAngle(0)
+                .endAngle(2 * Math.PI);
         }
 
         function drawNodes(nodes) {
@@ -193,12 +201,22 @@ document.addEventListener("DOMContentLoaded", function (event) {
 
             nodeEnter.append("path")
                 .attr("d", function(d) {
+                    return ((isGenerator(d))? "" : peerFullOutline()(d));
+                })
+                .attr('transform', function (d) {
+                    return "translate(" + (setX(d)) + "," + (setY(d)) + ")";
+                })
+                .attr("class", "peerFullCircle");
+
+            nodeEnter.append("path")
+                .attr("d", function(d) {
                     return ((isGenerator(d))? transactionShadow()(d) : peerOutline()(d));
                 })
                 .attr('transform', function (d) {
                     return "translate(" + (setX(d)) + "," + (setY(d)) + ")";
                 })
                 .attr("class", "energyIndicator");
+
 
             nodes.select(".energyIndicator")
                 .transition(t)

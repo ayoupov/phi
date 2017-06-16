@@ -17,6 +17,19 @@
   fill: #338;
 }
 
+.node.peer .peerFullCircle{
+  stroke-dasharray: 2,8;
+  stroke: #338;
+  stroke-width: 1px;
+  stroke-opacity: 0.5;
+}
+
+.node.peer .energyIndicator{
+  stroke: #338;
+  stroke-width: 1px;
+  stroke-opacity: 0.5;
+}
+
 line.link {
   stroke: #338;
   stroke-width: 1px;
