@@ -18178,6 +18178,9 @@ var _strelka_2017$phi$Simulation_Model$GeneratorNode = function (a) {
 var _strelka_2017$phi$Simulation_Model$SolarPanel = {ctor: 'SolarPanel'};
 var _strelka_2017$phi$Simulation_Model$WindTurbine = {ctor: 'WindTurbine'};
 
+var _strelka_2017$phi$Action$SendToEliza = function (a) {
+	return {ctor: 'SendToEliza', _0: a};
+};
 var _strelka_2017$phi$Action$Mdl = function (a) {
 	return {ctor: 'Mdl', _0: a};
 };
@@ -18214,8 +18217,7 @@ var _strelka_2017$phi$Action$Input = function (a) {
 };
 
 var _strelka_2017$phi$Chat_Chat$parseUserMessage = function (chatMsg) {
-	return (!A2(_elm_lang$core$String$startsWith, '/', chatMsg)) ? _strelka_2017$phi$Action$SendBotChatItem(
-		_strelka_2017$phi$Chat_Model$BotMessage('Sorry, I only respond to commands! Current available ones are:\n\n/weather (i tell you abt the weather today)\n/turn (i move to the next day)\n/describe [nodeId] (i tell you some info about a specific node)\n')) : (_elm_lang$core$Native_Utils.eq(chatMsg, '/weather') ? _strelka_2017$phi$Action$CheckWeather : (_elm_lang$core$Native_Utils.eq(chatMsg, '/turn') ? _strelka_2017$phi$Action$CallTurn : (A2(_elm_lang$core$String$startsWith, '/describe', chatMsg) ? A2(
+	return (!A2(_elm_lang$core$String$startsWith, '/', chatMsg)) ? _strelka_2017$phi$Action$SendToEliza(chatMsg) : (_elm_lang$core$Native_Utils.eq(chatMsg, '/weather') ? _strelka_2017$phi$Action$CheckWeather : (_elm_lang$core$Native_Utils.eq(chatMsg, '/turn') ? _strelka_2017$phi$Action$CallTurn : (A2(_elm_lang$core$String$startsWith, '/describe', chatMsg) ? A2(
 		_elm_lang$core$Maybe$withDefault,
 		_strelka_2017$phi$Action$SendBotChatItem(
 			_strelka_2017$phi$Chat_Model$BotMessage('I can\'t find that node!')),
@@ -18232,8 +18234,15 @@ var _strelka_2017$phi$Chat_Chat$parseUserMessage = function (chatMsg) {
 					return _elm_lang$core$List$head(
 						A2(_elm_lang$core$List$drop, 1, _p1));
 				}(
-					A2(_elm_lang$core$String$split, ' ', chatMsg))))) : _strelka_2017$phi$Action$NoOp)));
+					A2(_elm_lang$core$String$split, ' ', chatMsg))))) : _strelka_2017$phi$Action$SendBotChatItem(
+		_strelka_2017$phi$Chat_Model$BotMessage('Sorry, I only respond to a few commands! Current available ones are:\n\n/weather (i tell you abt the weather today)\n/turn (i move to the next day)\n/describe [nodeId] (i tell you some info about a specific node)\n')))));
 };
+var _strelka_2017$phi$Chat_Chat$sendToEliza = _elm_lang$core$Native_Platform.outgoingPort(
+	'sendToEliza',
+	function (v) {
+		return v;
+	});
+var _strelka_2017$phi$Chat_Chat$elizaReply = _elm_lang$core$Native_Platform.incomingPort('elizaReply', _elm_lang$core$Json_Decode$string);
 
 var _strelka_2017$phi$Simulation_GraphUpdates$createEdge = F2(
 	function (a, b) {
@@ -19343,7 +19352,7 @@ var _strelka_2017$phi$Update$update = F2(
 							_strelka_2017$phi$Chat_Model$mcaName(_p3)),
 						model);
 					return A2(_strelka_2017$phi$Update$handleMultiChoiceMsg, _p3, newModel);
-				default:
+				case 'ToggleInputType':
 					var _p4 = model.inputType;
 					if (_p4.ctor === 'FreeTextInput') {
 						return A2(
@@ -19360,6 +19369,15 @@ var _strelka_2017$phi$Update$update = F2(
 								{inputType: _strelka_2017$phi$Chat_Model$FreeTextInput}),
 							{ctor: '[]'});
 					}
+				default:
+					return A2(
+						_elm_lang$core$Platform_Cmd_ops['!'],
+						model,
+						{
+							ctor: '::',
+							_0: _strelka_2017$phi$Chat_Chat$sendToEliza(_p0._0),
+							_1: {ctor: '[]'}
+						});
 			}
 		}
 	});
@@ -19585,7 +19603,7 @@ var _strelka_2017$phi$View$inputFooter = function (model) {
 	var toggleIcon = function () {
 		var _p4 = model.inputType;
 		if (_p4.ctor === 'FreeTextInput') {
-			return 'dns';
+			return 'view_agenda';
 		} else {
 			return 'text_format';
 		}
@@ -19738,7 +19756,11 @@ var _strelka_2017$phi$View$view = function (model) {
 };
 
 var _strelka_2017$phi$Main$subscriptions = function (model) {
-	return _elm_lang$core$Platform_Sub$none;
+	return _strelka_2017$phi$Chat_Chat$elizaReply(
+		function (_p0) {
+			return _strelka_2017$phi$Action$SendBotChatItem(
+				_strelka_2017$phi$Chat_Model$BotMessage(_p0));
+		});
 };
 var _strelka_2017$phi$Main$main = _elm_lang$html$Html$program(
 	{init: _strelka_2017$phi$Model$initModel, view: _strelka_2017$phi$View$view, update: _strelka_2017$phi$Update$update, subscriptions: _strelka_2017$phi$Main$subscriptions})();

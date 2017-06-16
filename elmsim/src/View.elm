@@ -56,7 +56,7 @@ inputFooter model =
         toggleIcon =
             case model.inputType of
                 FreeTextInput ->
-                    "dns"
+                    "view_agenda"
 
                 --  https://material.io/icons/#ic_text_format
                 --  https://material.io/icons/#ic_border_color

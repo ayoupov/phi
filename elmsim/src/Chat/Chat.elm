@@ -1,4 +1,4 @@
-module Chat.Chat exposing (..)
+port module Chat.Chat exposing (..)
 
 import Action exposing (Msg(..))
 import Chat.Model exposing (..)
@@ -7,14 +7,7 @@ import Chat.Model exposing (..)
 parseUserMessage : UserChatMessage -> Msg
 parseUserMessage chatMsg =
     if not (String.startsWith "/" chatMsg) then
-        """Sorry, I only respond to commands! Current available ones are:
-
-/weather (i tell you abt the weather today)
-/turn (i move to the next day)
-/describe [nodeId] (i tell you some info about a specific node)
-"""
-            |> BotMessage
-            |> SendBotChatItem
+        SendToEliza chatMsg
     else if chatMsg == "/weather" then
         CheckWeather
     else if chatMsg == "/turn" then
@@ -30,4 +23,17 @@ parseUserMessage chatMsg =
                     |> SendBotChatItem
                 )
     else
-        NoOp
+        """Sorry, I only respond to a few commands! Current available ones are:
+
+/weather (i tell you abt the weather today)
+/turn (i move to the next day)
+/describe [nodeId] (i tell you some info about a specific node)
+"""
+            |> BotMessage
+            |> SendBotChatItem
+
+
+port sendToEliza : UserChatMessage -> Cmd msg
+
+
+port elizaReply : (BotChatMessage -> msg) -> Sub msg
