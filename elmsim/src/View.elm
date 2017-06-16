@@ -7,6 +7,8 @@ import Html.Attributes exposing (..)
 import Html.Events exposing (..)
 import Json.Decode as Json
 import Material.Button as Button
+import Material.Chip as Chip
+import Material.Elevation as Elevation
 import Material.Icon as Icon
 import Material.Options as Options
 import Model exposing (Model)
@@ -28,26 +30,36 @@ view model =
 viewChatMsg : ChatItem -> Html Msg
 viewChatMsg chatItem =
     let
-        textMessage msgText senderClass =
-            li [ class <| "message " ++ senderClass ++ " appeared" ]
-                [ div [ class "text_wrapper" ]
-                    [ div [ class "text" ] [ text msgText ] ]
-                ]
+        messageWrapper senderClass children =
+            li [ class <| "message appeared " ++ senderClass ]
+                children
+
+        messageHeader name =
+            div [ class "message_header" ] [ text name ]
+
+        textContent msgText =
+            [ div [ class "text_wrapper" ]
+                [ div [ class "text" ] [ text msgText ] ]
+            ]
     in
     case chatItem of
         UserMessage txt ->
-            textMessage txt "user-sent"
+            messageWrapper "user-sent" <| textContent txt
 
         BotItem botItem ->
-            case botItem of
-                BotMessage txt ->
-                    textMessage txt "bot-sent"
+            let
+                contents =
+                    case botItem of
+                        BotMessage txt ->
+                            textContent txt
 
-                WidgetItem widget ->
-                    li [] [ text "rendering a fancy widget" ]
+                        WidgetItem widget ->
+                            textContent "rendering a fancy widget"
 
-                MultiChoiceItem item ->
-                    textMessage item.text "bot-sent"
+                        MultiChoiceItem item ->
+                            textContent item.text
+            in
+            messageWrapper "bot-sent" <| [ messageHeader "Phi" ] ++ contents
 
 
 inputFooter : Model -> Html Msg
@@ -58,15 +70,9 @@ inputFooter model =
                 FreeTextInput ->
                     "view_agenda"
 
-                --  https://material.io/icons/#ic_text_format
-                --  https://material.io/icons/#ic_border_color
                 MultiChoiceInput ->
                     "text_format"
 
-        -- https://material.io/icons/#ic_radio_button_checked
-        -- https://material.io/icons/#ic_filter_none
-        -- https://material.io/icons/#ic_add_circle_outline
-        -- https://material.io/icons/#ic_library_add
         inputCountainer =
             case model.inputType of
                 FreeTextInput ->
@@ -75,17 +81,19 @@ inputFooter model =
                 MultiChoiceInput ->
                     multiChoiceFooter model
     in
-    div [ class "bottom_wrapper" ]
-        --[ div [ class "input_type", onClick ToggleInputType ] [ text toggleIcon ]
-        [ Button.render Mdl
-            [ 0 ]
-            model.mdl
-            [ Button.icon
-            , Options.cs "input_type"
-            , Options.onClick ToggleInputType
+    div [ class "input_footer" ]
+        [ Options.div [ Elevation.e2, Options.cs "input_wrapper" ]
+            [ Button.render Mdl
+                [ 0 ]
+                model.mdl
+                [ Button.icon
+                , Options.cs "input_type"
+                , Options.onClick ToggleInputType
+                ]
+                [ Icon.i toggleIcon ]
+            , div [ class "hline" ] []
+            , inputCountainer
             ]
-            [ Icon.i toggleIcon ]
-        , inputCountainer
         ]
 
 
@@ -136,9 +144,7 @@ freeTextFooter model =
             , value model.input
             ]
             []
-
-        --, button [ class "send_button", onClick SendUserChatMsg ]
-        --    [ text "Send" ]
+        , div [ class "hline" ] []
         , Button.render Mdl
             [ 0 ]
             model.mdl
@@ -152,6 +158,14 @@ freeTextFooter model =
 
 viewMCA : MultiChoiceAction -> Html Msg
 viewMCA action =
-    button
-        [ class "multi_button", onClick (MultiChoiceMsg action) ]
-        [ text (mcaName action) ]
+    Chip.span
+        [ Options.cs "multi_button"
+        , Options.onClick (MultiChoiceMsg action)
+        ]
+        [ Chip.text [] <| mcaName action ]
+
+
+
+--button
+--    [ class "multi_button", onClick (MultiChoiceMsg action) ]
+--    [ text (mcaName action) ]
