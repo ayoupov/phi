@@ -149,6 +149,7 @@ runDay model =
             model.network
                 |> Simulation.joulesToGenerators model.weather
                 |> Simulation.distributeGeneratedJoules model.negawattLimit model.reputationRatio
+                |> Simulation.tradingPhase
 
         newModel =
             { model | network = newNetwork }
