@@ -166,6 +166,7 @@ distributeGeneratedJoules limit ratio network =
                 _ ->
                     node
 
+        updateNodeStoredJoulesAndNegawatts: NodeLabel -> NodeLabel
         updateNodeStoredJoulesAndNegawatts node =
             case node of
                 PeerNode n ->
@@ -320,9 +321,22 @@ tradingPhase network =
         supplyNodes =
             List.filter supplyNodesFilter (Graph.nodes network)
 
+        nodeUpdater n foundCtx =
+            case foundCtx of
+                Just(ctx) ->
+                    Just({ctx | node = n})
+                Nothing ->
+                    Nothing
+
         updateNodes: List (Node NodeLabel) -> PhiNetwork -> PhiNetwork
         updateNodes updatedNodeList network =
-            network
+            case updatedNodeList of
+                [] ->
+                    network
+                node::tail ->
+                    network
+                        |> Graph.update node.id ( node |> nodeUpdater )
+                        |> updateNodes tail
 
         updateNetwork =
             let
