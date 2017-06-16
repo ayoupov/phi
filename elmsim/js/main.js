@@ -184,20 +184,6 @@ document.addEventListener("DOMContentLoaded", function (event) {
                 })
                 .attr("class", "energyIndicator");
 
-            //nodeEnter.select('.generator').append("path")
-            //    .attr("d", transactionShadow())
-            //    .attr('transform', function (d) {
-            //        return "translate(" + (setX(d)) + "," + (setY(d)) + ")";
-            //    })
-            //    .attr("class", "energyIndicator");
-
-            //nodeEnter.append("path")
-            //    .attr("d", peerOutline())
-            //    .attr('transform', function (d) {
-            //        return "translate(" + (setX(d)) + "," + (setY(d)) + ")";
-            //    })
-            //    .attr("class", "peerOutline");
-            //
             nodes.select(".energyIndicator")
                 .transition(t)
                 .attr("d", function(d) {
@@ -206,13 +192,6 @@ document.addEventListener("DOMContentLoaded", function (event) {
                 .attr('transform', function (d) {
                     return "translate(" + (setX(d)) + "," + (setY(d)) + ")";
                 });
-            //
-            //nodes.select(".peerOutline")
-            //    .transition(t)
-            //    .attr("d", peerOutline())
-            //    .attr('transform', function (d) {
-            //        return "translate(" + (setX(d)) + "," + (setY(d)) + ")";
-            //    });
 
         }
 
