@@ -15010,6 +15010,319 @@ var _debois$elm_mdl$Material$Model = F8(
 		return {button: a, textfield: b, menu: c, snackbar: d, layout: e, toggles: f, tooltip: g, tabs: h};
 	});
 
+var _debois$elm_mdl$Material_Chip$hasValue = function (m) {
+	var _p0 = m;
+	if (_p0.ctor === 'Just') {
+		return true;
+	} else {
+		return false;
+	}
+};
+var _debois$elm_mdl$Material_Chip$renderItem = function (item) {
+	var _p1 = item;
+	switch (_p1.ctor) {
+		case 'Contact':
+			return A3(
+				_debois$elm_mdl$Material_Options$styled,
+				_p1._0,
+				{
+					ctor: '::',
+					_0: _debois$elm_mdl$Material_Options$cs('mdl-chip__contact'),
+					_1: _p1._1
+				},
+				_p1._2);
+		case 'Text':
+			return A3(
+				_debois$elm_mdl$Material_Options$styled,
+				_elm_lang$html$Html$span,
+				{
+					ctor: '::',
+					_0: _debois$elm_mdl$Material_Options$cs('mdl-chip__text'),
+					_1: _p1._0
+				},
+				_p1._1);
+		default:
+			return A3(
+				_debois$elm_mdl$Material_Options$styled,
+				_p1._0,
+				{
+					ctor: '::',
+					_0: _debois$elm_mdl$Material_Options$cs('mdl-chip__action'),
+					_1: _p1._1
+				},
+				_p1._2);
+	}
+};
+var _debois$elm_mdl$Material_Chip$priority = function (item) {
+	var _p2 = item;
+	switch (_p2.ctor) {
+		case 'Contact':
+			return 0;
+		case 'Text':
+			return 1;
+		default:
+			return 2;
+	}
+};
+var _debois$elm_mdl$Material_Chip$deleteClick = function (msg) {
+	return A3(
+		_debois$elm_mdl$Material_Options$onWithOptions,
+		'click',
+		{stopPropagation: true, preventDefault: true},
+		_elm_lang$core$Json_Decode$succeed(msg));
+};
+var _debois$elm_mdl$Material_Chip$deleteLink = function (_p3) {
+	return _debois$elm_mdl$Material_Options_Internal$option(
+		F2(
+			function (link, config) {
+				return _elm_lang$core$Native_Utils.update(
+					config,
+					{
+						deleteLink: _elm_lang$core$Maybe$Just(
+							_elm_lang$html$Html_Attributes$href(link))
+					});
+			})(_p3));
+};
+var _debois$elm_mdl$Material_Chip$deleteIcon = function (_p4) {
+	return _debois$elm_mdl$Material_Options_Internal$option(
+		F2(
+			function (icon, config) {
+				return _elm_lang$core$Native_Utils.update(
+					config,
+					{
+						deleteIcon: _elm_lang$core$Maybe$Just(icon)
+					});
+			})(_p4));
+};
+var _debois$elm_mdl$Material_Chip$defaultConfig = {deleteIcon: _elm_lang$core$Maybe$Nothing, deleteLink: _elm_lang$core$Maybe$Nothing, deleteClick: _elm_lang$core$Maybe$Nothing};
+var _debois$elm_mdl$Material_Chip$Config = F3(
+	function (a, b, c) {
+		return {deleteIcon: a, deleteLink: b, deleteClick: c};
+	});
+var _debois$elm_mdl$Material_Chip$Action = F3(
+	function (a, b, c) {
+		return {ctor: 'Action', _0: a, _1: b, _2: c};
+	});
+var _debois$elm_mdl$Material_Chip$action = _debois$elm_mdl$Material_Chip$Action;
+var _debois$elm_mdl$Material_Chip$getActionElement = function (config) {
+	var click = function () {
+		var _p5 = config.deleteClick;
+		if (_p5.ctor === 'Just') {
+			return _debois$elm_mdl$Material_Options_Internal$attribute(_p5._0);
+		} else {
+			return _debois$elm_mdl$Material_Options$nop;
+		}
+	}();
+	var link = function () {
+		var _p6 = config.deleteLink;
+		if (_p6.ctor === 'Just') {
+			return _debois$elm_mdl$Material_Options_Internal$attribute(_p6._0);
+		} else {
+			return _debois$elm_mdl$Material_Options$nop;
+		}
+	}();
+	var hasClick = _debois$elm_mdl$Material_Chip$hasValue(config.deleteClick);
+	var hasLink = _debois$elm_mdl$Material_Chip$hasValue(config.deleteLink);
+	var actionElement = hasLink ? _elm_lang$html$Html$a : _elm_lang$html$Html$span;
+	var hasIcon = _debois$elm_mdl$Material_Chip$hasValue(config.deleteIcon);
+	var icon = hasIcon ? A2(_elm_lang$core$Maybe$withDefault, '', config.deleteIcon) : ((hasLink || hasClick) ? A2(_elm_lang$core$Maybe$withDefault, 'cancel', config.deleteIcon) : '');
+	var isDeletable = hasIcon || (hasLink || hasClick);
+	return isDeletable ? _elm_lang$core$Maybe$Just(
+		A3(
+			_debois$elm_mdl$Material_Chip$action,
+			actionElement,
+			{
+				ctor: '::',
+				_0: link,
+				_1: {
+					ctor: '::',
+					_0: click,
+					_1: {ctor: '[]'}
+				}
+			},
+			{
+				ctor: '::',
+				_0: A2(
+					_debois$elm_mdl$Material_Icon$view,
+					icon,
+					{ctor: '[]'}),
+				_1: {ctor: '[]'}
+			})) : _elm_lang$core$Maybe$Nothing;
+};
+var _debois$elm_mdl$Material_Chip$chip = F3(
+	function (element, props, items) {
+		var isContact = A2(
+			_elm_lang$core$List$any,
+			function (x) {
+				return _elm_lang$core$Native_Utils.eq(
+					_debois$elm_mdl$Material_Chip$priority(x),
+					0);
+			},
+			items);
+		var summary = A2(_debois$elm_mdl$Material_Options_Internal$collect, _debois$elm_mdl$Material_Chip$defaultConfig, props);
+		var config = summary.config;
+		var action = _debois$elm_mdl$Material_Chip$getActionElement(config);
+		var isDeletable = _debois$elm_mdl$Material_Chip$hasValue(action);
+		var withIcon = A2(
+			_elm_lang$core$Basics_ops['++'],
+			function () {
+				var _p7 = action;
+				if (_p7.ctor === 'Just') {
+					return {
+						ctor: '::',
+						_0: _p7._0,
+						_1: {ctor: '[]'}
+					};
+				} else {
+					return {ctor: '[]'};
+				}
+			}(),
+			items);
+		var content = A2(
+			_elm_lang$core$List$map,
+			_debois$elm_mdl$Material_Chip$renderItem,
+			A2(_elm_lang$core$List$sortBy, _debois$elm_mdl$Material_Chip$priority, withIcon));
+		return A3(
+			_debois$elm_mdl$Material_Options$styled,
+			element,
+			A2(
+				_elm_lang$core$Basics_ops['++'],
+				{
+					ctor: '::',
+					_0: _debois$elm_mdl$Material_Options$cs('mdl-chip'),
+					_1: {
+						ctor: '::',
+						_0: A2(
+							_debois$elm_mdl$Material_Options$when,
+							isContact,
+							_debois$elm_mdl$Material_Options$cs('mdl-chip--contact')),
+						_1: {
+							ctor: '::',
+							_0: A2(
+								_debois$elm_mdl$Material_Options$when,
+								isDeletable,
+								_debois$elm_mdl$Material_Options$cs('mdl-chip--deletable')),
+							_1: {
+								ctor: '::',
+								_0: _debois$elm_mdl$Material_Options_Internal$attribute(
+									_debois$elm_mdl$Material_Helpers$blurOn('mouseup')),
+								_1: {
+									ctor: '::',
+									_0: _debois$elm_mdl$Material_Options_Internal$attribute(
+										_debois$elm_mdl$Material_Helpers$blurOn('mouseleave')),
+									_1: {
+										ctor: '::',
+										_0: _debois$elm_mdl$Material_Options_Internal$attribute(
+											_debois$elm_mdl$Material_Helpers$blurOn('touchend')),
+										_1: {ctor: '[]'}
+									}
+								}
+							}
+						}
+					}
+				},
+				props),
+			content);
+	});
+var _debois$elm_mdl$Material_Chip$button = function (props) {
+	return A2(
+		_debois$elm_mdl$Material_Chip$chip,
+		_elm_lang$html$Html$button,
+		{
+			ctor: '::',
+			_0: _debois$elm_mdl$Material_Options_Internal$attribute(
+				_elm_lang$html$Html_Attributes$type_('button')),
+			_1: props
+		});
+};
+var _debois$elm_mdl$Material_Chip$span = _debois$elm_mdl$Material_Chip$chip(_elm_lang$html$Html$span);
+var _debois$elm_mdl$Material_Chip$Text = F2(
+	function (a, b) {
+		return {ctor: 'Text', _0: a, _1: b};
+	});
+var _debois$elm_mdl$Material_Chip$content = _debois$elm_mdl$Material_Chip$Text;
+var _debois$elm_mdl$Material_Chip$text = F2(
+	function (props, txt) {
+		return A2(
+			_debois$elm_mdl$Material_Chip$Text,
+			props,
+			{
+				ctor: '::',
+				_0: _elm_lang$html$Html$text(txt),
+				_1: {ctor: '[]'}
+			});
+	});
+var _debois$elm_mdl$Material_Chip$Contact = F3(
+	function (a, b, c) {
+		return {ctor: 'Contact', _0: a, _1: b, _2: c};
+	});
+var _debois$elm_mdl$Material_Chip$contact = _debois$elm_mdl$Material_Chip$Contact;
+
+var _debois$elm_mdl$Material_Elevation$transition = function (duration) {
+	return A2(
+		_debois$elm_mdl$Material_Options$css,
+		'transition',
+		A2(
+			_elm_lang$core$Basics_ops['++'],
+			'box-shadow ',
+			A2(
+				_elm_lang$core$Basics_ops['++'],
+				_elm_lang$core$Basics$toString(duration),
+				'ms ease-in-out 0s')));
+};
+var _debois$elm_mdl$Material_Elevation$e0 = _debois$elm_mdl$Material_Options$nop;
+var _debois$elm_mdl$Material_Elevation$shadow = function (z) {
+	return _debois$elm_mdl$Material_Options$cs(
+		A2(
+			_elm_lang$core$Basics_ops['++'],
+			'mdl-shadow--',
+			A2(
+				_elm_lang$core$Basics_ops['++'],
+				_elm_lang$core$Basics$toString(z),
+				'dp')));
+};
+var _debois$elm_mdl$Material_Elevation$e2 = _debois$elm_mdl$Material_Elevation$shadow(2);
+var _debois$elm_mdl$Material_Elevation$e3 = _debois$elm_mdl$Material_Elevation$shadow(3);
+var _debois$elm_mdl$Material_Elevation$e4 = _debois$elm_mdl$Material_Elevation$shadow(4);
+var _debois$elm_mdl$Material_Elevation$e6 = _debois$elm_mdl$Material_Elevation$shadow(6);
+var _debois$elm_mdl$Material_Elevation$e8 = _debois$elm_mdl$Material_Elevation$shadow(8);
+var _debois$elm_mdl$Material_Elevation$e16 = _debois$elm_mdl$Material_Elevation$shadow(16);
+var _debois$elm_mdl$Material_Elevation$e24 = _debois$elm_mdl$Material_Elevation$shadow(24);
+var _debois$elm_mdl$Material_Elevation$elevations = _elm_lang$core$Array$fromList(
+	{
+		ctor: '::',
+		_0: {ctor: '_Tuple2', _0: _debois$elm_mdl$Material_Elevation$e0, _1: 0},
+		_1: {
+			ctor: '::',
+			_0: {ctor: '_Tuple2', _0: _debois$elm_mdl$Material_Elevation$e2, _1: 2},
+			_1: {
+				ctor: '::',
+				_0: {ctor: '_Tuple2', _0: _debois$elm_mdl$Material_Elevation$e3, _1: 3},
+				_1: {
+					ctor: '::',
+					_0: {ctor: '_Tuple2', _0: _debois$elm_mdl$Material_Elevation$e4, _1: 4},
+					_1: {
+						ctor: '::',
+						_0: {ctor: '_Tuple2', _0: _debois$elm_mdl$Material_Elevation$e6, _1: 6},
+						_1: {
+							ctor: '::',
+							_0: {ctor: '_Tuple2', _0: _debois$elm_mdl$Material_Elevation$e8, _1: 8},
+							_1: {
+								ctor: '::',
+								_0: {ctor: '_Tuple2', _0: _debois$elm_mdl$Material_Elevation$e16, _1: 16},
+								_1: {
+									ctor: '::',
+									_0: {ctor: '_Tuple2', _0: _debois$elm_mdl$Material_Elevation$e24, _1: 24},
+									_1: {ctor: '[]'}
+								}
+							}
+						}
+					}
+				}
+			}
+		}
+	});
+
 var _elm_community$graph$Graph_Tree$pushMany = F2(
 	function (vals, queue) {
 		return A3(_elm_lang$core$List$foldl, _avh4$elm_fifo$Fifo$insert, queue, vals);
@@ -19496,20 +19809,22 @@ var _strelka_2017$phi$Update$weatherForecast = function (model) {
 
 var _strelka_2017$phi$View$viewMCA = function (action) {
 	return A2(
-		_elm_lang$html$Html$button,
+		_debois$elm_mdl$Material_Chip$span,
 		{
 			ctor: '::',
-			_0: _elm_lang$html$Html_Attributes$class('multi_button'),
+			_0: _debois$elm_mdl$Material_Options$cs('multi_button'),
 			_1: {
 				ctor: '::',
-				_0: _elm_lang$html$Html_Events$onClick(
+				_0: _debois$elm_mdl$Material_Options$onClick(
 					_strelka_2017$phi$Action$MultiChoiceMsg(action)),
 				_1: {ctor: '[]'}
 			}
 		},
 		{
 			ctor: '::',
-			_0: _elm_lang$html$Html$text(
+			_0: A2(
+				_debois$elm_mdl$Material_Chip$text,
+				{ctor: '[]'},
 				_strelka_2017$phi$Chat_Model$mcaName(action)),
 			_1: {ctor: '[]'}
 		});
@@ -19558,34 +19873,45 @@ var _strelka_2017$phi$View$freeTextFooter = function (model) {
 				{ctor: '[]'}),
 			_1: {
 				ctor: '::',
-				_0: A5(
-					_debois$elm_mdl$Material_Button$render,
-					_strelka_2017$phi$Action$Mdl,
+				_0: A2(
+					_elm_lang$html$Html$div,
 					{
 						ctor: '::',
-						_0: 0,
+						_0: _elm_lang$html$Html_Attributes$class('hline'),
 						_1: {ctor: '[]'}
 					},
-					model.mdl,
-					{
-						ctor: '::',
-						_0: _debois$elm_mdl$Material_Button$flat,
-						_1: {
+					{ctor: '[]'}),
+				_1: {
+					ctor: '::',
+					_0: A5(
+						_debois$elm_mdl$Material_Button$render,
+						_strelka_2017$phi$Action$Mdl,
+						{
 							ctor: '::',
-							_0: _debois$elm_mdl$Material_Options$onClick(_strelka_2017$phi$Action$SendUserChatMsg),
+							_0: 0,
+							_1: {ctor: '[]'}
+						},
+						model.mdl,
+						{
+							ctor: '::',
+							_0: _debois$elm_mdl$Material_Button$flat,
 							_1: {
 								ctor: '::',
-								_0: _debois$elm_mdl$Material_Options$cs('send_button'),
-								_1: {ctor: '[]'}
+								_0: _debois$elm_mdl$Material_Options$onClick(_strelka_2017$phi$Action$SendUserChatMsg),
+								_1: {
+									ctor: '::',
+									_0: _debois$elm_mdl$Material_Options$cs('send_button'),
+									_1: {ctor: '[]'}
+								}
 							}
-						}
-					},
-					{
-						ctor: '::',
-						_0: _elm_lang$html$Html$text('Send'),
-						_1: {ctor: '[]'}
-					}),
-				_1: {ctor: '[]'}
+						},
+						{
+							ctor: '::',
+							_0: _elm_lang$html$Html$text('Send'),
+							_1: {ctor: '[]'}
+						}),
+					_1: {ctor: '[]'}
+				}
 			}
 		});
 };
@@ -19642,57 +19968,80 @@ var _strelka_2017$phi$View$inputFooter = function (model) {
 		_elm_lang$html$Html$div,
 		{
 			ctor: '::',
-			_0: _elm_lang$html$Html_Attributes$class('bottom_wrapper'),
+			_0: _elm_lang$html$Html_Attributes$class('input_footer'),
 			_1: {ctor: '[]'}
 		},
 		{
 			ctor: '::',
-			_0: A5(
-				_debois$elm_mdl$Material_Button$render,
-				_strelka_2017$phi$Action$Mdl,
+			_0: A2(
+				_debois$elm_mdl$Material_Options$div,
 				{
 					ctor: '::',
-					_0: 0,
-					_1: {ctor: '[]'}
-				},
-				model.mdl,
-				{
-					ctor: '::',
-					_0: _debois$elm_mdl$Material_Button$icon,
+					_0: _debois$elm_mdl$Material_Elevation$e2,
 					_1: {
 						ctor: '::',
-						_0: _debois$elm_mdl$Material_Options$cs('input_type'),
-						_1: {
-							ctor: '::',
-							_0: _debois$elm_mdl$Material_Options$onClick(_strelka_2017$phi$Action$ToggleInputType),
-							_1: {ctor: '[]'}
-						}
+						_0: _debois$elm_mdl$Material_Options$cs('input_wrapper'),
+						_1: {ctor: '[]'}
 					}
 				},
 				{
 					ctor: '::',
-					_0: _debois$elm_mdl$Material_Icon$i(toggleIcon),
-					_1: {ctor: '[]'}
+					_0: A5(
+						_debois$elm_mdl$Material_Button$render,
+						_strelka_2017$phi$Action$Mdl,
+						{
+							ctor: '::',
+							_0: 0,
+							_1: {ctor: '[]'}
+						},
+						model.mdl,
+						{
+							ctor: '::',
+							_0: _debois$elm_mdl$Material_Button$icon,
+							_1: {
+								ctor: '::',
+								_0: _debois$elm_mdl$Material_Options$cs('input_type'),
+								_1: {
+									ctor: '::',
+									_0: _debois$elm_mdl$Material_Options$onClick(_strelka_2017$phi$Action$ToggleInputType),
+									_1: {ctor: '[]'}
+								}
+							}
+						},
+						{
+							ctor: '::',
+							_0: _debois$elm_mdl$Material_Icon$i(toggleIcon),
+							_1: {ctor: '[]'}
+						}),
+					_1: {
+						ctor: '::',
+						_0: A2(
+							_elm_lang$html$Html$div,
+							{
+								ctor: '::',
+								_0: _elm_lang$html$Html_Attributes$class('hline'),
+								_1: {ctor: '[]'}
+							},
+							{ctor: '[]'}),
+						_1: {
+							ctor: '::',
+							_0: inputCountainer,
+							_1: {ctor: '[]'}
+						}
+					}
 				}),
-			_1: {
-				ctor: '::',
-				_0: inputCountainer,
-				_1: {ctor: '[]'}
-			}
+			_1: {ctor: '[]'}
 		});
 };
 var _strelka_2017$phi$View$viewChatMsg = function (chatItem) {
-	var textMessage = F2(
-		function (msgText, senderClass) {
-			return A2(
-				_elm_lang$html$Html$li,
+	var textContent = function (msgText) {
+		return {
+			ctor: '::',
+			_0: A2(
+				_elm_lang$html$Html$div,
 				{
 					ctor: '::',
-					_0: _elm_lang$html$Html_Attributes$class(
-						A2(
-							_elm_lang$core$Basics_ops['++'],
-							'message ',
-							A2(_elm_lang$core$Basics_ops['++'], senderClass, ' appeared'))),
+					_0: _elm_lang$html$Html_Attributes$class('text_wrapper'),
 					_1: {ctor: '[]'}
 				},
 				{
@@ -19701,48 +20050,74 @@ var _strelka_2017$phi$View$viewChatMsg = function (chatItem) {
 						_elm_lang$html$Html$div,
 						{
 							ctor: '::',
-							_0: _elm_lang$html$Html_Attributes$class('text_wrapper'),
+							_0: _elm_lang$html$Html_Attributes$class('text'),
 							_1: {ctor: '[]'}
 						},
 						{
 							ctor: '::',
-							_0: A2(
-								_elm_lang$html$Html$div,
-								{
-									ctor: '::',
-									_0: _elm_lang$html$Html_Attributes$class('text'),
-									_1: {ctor: '[]'}
-								},
-								{
-									ctor: '::',
-									_0: _elm_lang$html$Html$text(msgText),
-									_1: {ctor: '[]'}
-								}),
+							_0: _elm_lang$html$Html$text(msgText),
 							_1: {ctor: '[]'}
 						}),
 					_1: {ctor: '[]'}
-				});
+				}),
+			_1: {ctor: '[]'}
+		};
+	};
+	var messageHeader = function (name) {
+		return A2(
+			_elm_lang$html$Html$div,
+			{
+				ctor: '::',
+				_0: _elm_lang$html$Html_Attributes$class('message_header'),
+				_1: {ctor: '[]'}
+			},
+			{
+				ctor: '::',
+				_0: _elm_lang$html$Html$text(name),
+				_1: {ctor: '[]'}
+			});
+	};
+	var messageWrapper = F2(
+		function (senderClass, children) {
+			return A2(
+				_elm_lang$html$Html$li,
+				{
+					ctor: '::',
+					_0: _elm_lang$html$Html_Attributes$class(
+						A2(_elm_lang$core$Basics_ops['++'], 'message appeared ', senderClass)),
+					_1: {ctor: '[]'}
+				},
+				children);
 		});
 	var _p5 = chatItem;
 	if (_p5.ctor === 'UserMessage') {
-		return A2(textMessage, _p5._0, 'user-sent');
+		return A2(
+			messageWrapper,
+			'user-sent',
+			textContent(_p5._0));
 	} else {
-		var _p6 = _p5._0;
-		switch (_p6.ctor) {
-			case 'BotMessage':
-				return A2(textMessage, _p6._0, 'bot-sent');
-			case 'WidgetItem':
-				return A2(
-					_elm_lang$html$Html$li,
-					{ctor: '[]'},
-					{
-						ctor: '::',
-						_0: _elm_lang$html$Html$text('rendering a fancy widget'),
-						_1: {ctor: '[]'}
-					});
-			default:
-				return A2(textMessage, _p6._0.text, 'bot-sent');
-		}
+		var contents = function () {
+			var _p6 = _p5._0;
+			switch (_p6.ctor) {
+				case 'BotMessage':
+					return textContent(_p6._0);
+				case 'WidgetItem':
+					return textContent('rendering a fancy widget');
+				default:
+					return textContent(_p6._0.text);
+			}
+		}();
+		return A2(
+			messageWrapper,
+			'bot-sent',
+			A2(
+				_elm_lang$core$Basics_ops['++'],
+				{
+					ctor: '::',
+					_0: messageHeader('Phi'),
+					_1: {ctor: '[]'}
+				},
+				contents));
 	}
 };
 var _strelka_2017$phi$View$view = function (model) {
