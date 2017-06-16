@@ -1,6 +1,8 @@
 module Main exposing (..)
 
-import Action exposing (Msg)
+import Action exposing (Msg(..))
+import Chat.Chat as Chat
+import Chat.Model exposing (BotChatItem(..))
 import Html
 import Model exposing (Model, initModel)
 import Update exposing (update)
@@ -22,4 +24,4 @@ main =
 
 subscriptions : Model -> Sub Msg
 subscriptions model =
-    Sub.none
+    Chat.elizaReply (SendBotChatItem << BotMessage)

@@ -79,6 +79,10 @@ document.addEventListener("DOMContentLoaded", function(event) {
 
   d3.select("svg").call(zoom);
 
+  var eliza = new ElizaBot();
+  var initial = eliza.getInitial();
+
+
   app.ports.renderPhiNetwork.subscribe(function(model) {
     var t = d3.transition().duration(1500);
 
@@ -201,6 +205,14 @@ document.addEventListener("DOMContentLoaded", function(event) {
 
     drawNodes(phiNodes);
     drawLinks(phiEdges);
+
+  });
+
+
+  app.ports.sendToEliza.subscribe(function(inputString) {
+    var reply = eliza.transform(inputString);
+
+    app.ports.elizaReply.send(reply);
 
   });
 

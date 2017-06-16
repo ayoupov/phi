@@ -1,6 +1,6 @@
 module Action exposing (Msg(..))
 
-import Chat.Model exposing (BotChatItem, MultiChoiceAction)
+import Chat.Model exposing (BotChatItem, MultiChoiceAction, UserChatMessage)
 import Material
 import Simulation.Model exposing (GeneratorType, Peer, SimGenerator, TransmissionLine, Weather)
 
@@ -22,3 +22,4 @@ type Msg
     | MultiChoiceMsg MultiChoiceAction
     | ToggleInputType
     | Mdl (Material.Msg Msg)
+    | SendToEliza UserChatMessage
