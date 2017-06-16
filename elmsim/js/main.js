@@ -149,14 +149,28 @@ document.addEventListener("DOMContentLoaded", function (event) {
                 .type(nodeShape);
         }
 
+        function peerSize(d) {
+            if (d.label.nodeType == "peer") {
+                return 20 + 2 * (d.label.desiredConsumption || 0);
+            }
+        }
+
+        function peerSizeOuter(d) {
+            if (d.label.nodeType == "peer") {
+                return 21 + 2 * (d.label.desiredConsumption || 0);
+            }
+        }
+
         function peerOutline() {
-            return d3.symbol()
-                .size(function (d) {
-                    if (d.label.nodeType == "peer") {
-                        return 70 + 500 * (d.label.desiredConsumption || 0);
-                    }
-                })
-                .type(nodeShape);
+            return d3.arc()
+                .innerRadius(peerSize)
+                .outerRadius(peerSizeOuter)
+                .startAngle(0)
+                .endAngle(function(d){
+                    return d.label.actualConsumption && d.label.actualConsumption.length
+                        ? Math.min(2 * Math.PI, 2 * Math.PI * d.label.desiredConsumption / d.label.actualConsumption[0])
+                        : 0
+                } );
         }
 
         function drawNodes(nodes) {
@@ -178,7 +192,9 @@ document.addEventListener("DOMContentLoaded", function (event) {
                 .attr("class", "baseNode");
 
             nodeEnter.append("path")
-                .attr("d", transactionShadow())
+                .attr("d", function(d) {
+                    return ((isGenerator(d))? transactionShadow()(d) : peerOutline()(d));
+                })
                 .attr('transform', function (d) {
                     return "translate(" + (setX(d)) + "," + (setY(d)) + ")";
                 })
