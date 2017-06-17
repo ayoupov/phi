@@ -3,6 +3,7 @@ module Action exposing (Msg(..))
 import Chat.Model exposing (BotChatItem, MultiChoiceAction, UserChatMessage)
 import Material
 import Simulation.Model exposing (GeneratorType, Peer, SimGenerator, TransmissionLine, Weather)
+import Simulation.SimulationInterop exposing (AnimationPhase)
 
 
 type Msg
@@ -18,6 +19,7 @@ type Msg
     | RenderPhiNetwork
     | AnimateGeneration
     | AnimatePeerConsumption
+    | AnimationFinished AnimationPhase
     | UpdateWeather Weather
     | CallTurn
     | DaySummary

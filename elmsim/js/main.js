@@ -113,6 +113,21 @@ $(function () {
             .attr('transform', function (d) {
                 return "translate(" + (setX(d)) + "," + (setY(d)) + ")";
             });
+
+        nodes.select(".generator .energyIndicator")
+            .transition(t)
+            .attr("d", function(d) {
+                //return "M0,0";
+                return generatorInitialShadow()(d);
+            })
+            .attr('transform', function (d) {
+                return "translate(" + (setX(d)) + "," + (setY(d)) + ")";
+            })
+            .on("end", function()
+            {
+                app.ports.animationFinished.send("consumptionAnimated");
+            });
+
     });
 
     app.ports.animateGeneration.subscribe(function (model) {
@@ -132,6 +147,10 @@ $(function () {
             })
             .attr('transform', function (d) {
                 return "translate(" + (setX(d)) + "," + (setY(d)) + ")";
+            })
+            .on("end", function()
+            {
+                app.ports.animationFinished.send("generatorsAnimated");
             });
     });
 
@@ -142,6 +161,8 @@ $(function () {
         var phiEdges = model[1];
 
         function drawNodes(nodes) {
+            var t = d3.transition().duration(1500);
+
             var nodes = svg.select(".nodes").selectAll(".node")
                 .data(nodes, function (d) {
                     return d.id;
@@ -160,25 +181,34 @@ $(function () {
                 .attr("class", "baseNode");
 
             nodeEnter.append("path")
-                .attr("d", function(d) {
-                    return (!isGenerator(d) ? peerFullOutline()(d) : "M0,0");
-                })
                 .attr('transform', function (d) {
                     return "translate(" + (setX(d)) + "," + (setY(d)) + ")";
+                })
+                .attr("d", function(d) {
+                    return (!isGenerator(d) ? peerFullOutline()(d) : generatorInitialShadow()(d));
                 })
                 .attr("class", "peerFullCircle");
 
             nodeEnter.append("path")
                 .attr("d", function(d) {
-                    return ((isGenerator(d))? transactionShadow()(d) : peerOutline()(d));
+                    return (generatorInitialShadow()(d));
                 })
-                .attr("stroke-opacity", function(d) {
+                .style("opacity", function(d) {
                     return ((isGenerator(d))? "0.7" : "0");
                 })
                 .attr('transform', function (d) {
                     return "translate(" + (setX(d)) + "," + (setY(d)) + ")";
                 })
                 .attr("class", "energyIndicator");
+
+            nodes.select('.peer .energyIndicator')
+                .transition(t)
+                .style("opacity", "0")
+                .on("end", function()
+                {
+                    app.ports.animationFinished.send("layoutRendered");
+                });
+
 
         }
 
