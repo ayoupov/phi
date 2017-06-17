@@ -16,6 +16,8 @@ type Msg
     | AddPeer Peer
     | AddEdge TransmissionLine
     | RenderPhiNetwork
+    | AnimateGeneration
+    | AnimatePeerConsumption
     | UpdateWeather Weather
     | CallTurn
     | DaySummary
