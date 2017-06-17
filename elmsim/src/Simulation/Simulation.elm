@@ -195,8 +195,7 @@ distributeGeneratedJoules limit ratio network =
                     myAllocatedJoules - joulesForStorage
 
                 negawattAllocation =
-                    limit
-                        - newConsumption
+                    (limit - newConsumption)
                         |> Basics.max 0
             in
             peer.joules

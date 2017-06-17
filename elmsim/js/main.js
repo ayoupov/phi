@@ -229,10 +229,14 @@ $(function () {
                 .attr("class", "energyIndicator");
 
             nodes.select(".peer .energyIndicator")
-                .transition(t)
                 .attr("d", function(d) {
                     return (peerOutline()(d));
                 })
+                .attr("stroke-opacity", "0")
+                .attr("fill-opacity", "0")
+                .style("opacity", "0")
+                .transition(t)
+                .style("opacity", "1")
                 .attr("stroke-opacity", "1")
                 .attr("fill-opacity", "1")
                 .attr('transform', function (d) {
