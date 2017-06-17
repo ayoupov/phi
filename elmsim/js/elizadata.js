@@ -3,19 +3,19 @@
 // [cf: Communications of the ACM, Vol. 9, #1 (January 1966): p 36-45.]
 
 var elizaInitials = [
-"How do you do.  Please tell me your problem.",
+"Hello, I am Φ. What would you like to know about me?",
 // additions (not original)
-"Please tell me what's been bothering you.",
-"Is something troubling you ?"
+"Do you want to be part of Φ?",
+"I am Φ, but Φ is not me. It's not a philosophical statement but a practical one."
 ];
 
 var elizaFinals = [
 "Goodbye.  It was nice talking to you.",
 // additions (not original)
-"Goodbye.  This was really a nice talk.",
-"Goodbye.  I'm looking forward to our next session.",
-"This was a good session, wasn't it -- but time is over now.   Goodbye.",
-"Maybe we could discuss this moreover in our next session ?   Goodbye."
+"Goodbye.  Will we meet again?",
+"Goodbye.  I look forward to seeing you again.",
+"Byebye. Will you visit your community offline?",
+"Byebye. I hope you think of me sometimes."
 ];
 
 var elizaQuits = [
@@ -99,6 +99,105 @@ var elizaKeywords = [
      "Does talking about this bother you ?"
   ]]
 ]],
+
+["phi", 5, [
+ ["* phi *", [
+     "I am Phi.",
+     "Phi is a planetary community for clean energy.",
+     "You can join the Phi community and start trading clean energy if you are producing some, or you can be a seeder by investing existing simulation plan, or purchase some infrastructures for a community.",
+     "Do you want to join a community or be a seeder ?",
+     "Phi is token-governed jurisdiction focused on using peer-to-peer networks to distribute renewable energy resources",
+     "Phi is a platform for collaborative energy infrastructure planning",
+     "What else does (2) remind you of ?"
+     ]]
+  ]],
+
+  ["Φ", 0, [
+ ["*", [
+     "goto phi"
+  ]]
+]],
+
+["dao", 6, [
+ ["*", [
+     "DAO is a Decentralized Autonomous Organization which provides community consensus of from everyday matters to a simulation plan",
+     "DAO is a community protocol that usually runs in a local proximity but not necessary.",
+     "You can be a seeder.",
+     "Any Phi member can be a community member and a seeder at the same time. ",
+     "You can design a simulation plan and invest in it; or you can just invest.",
+     "A seeder supports Phi. Do you want to be my parent?",
+     "Seeders are my parents. I have a lot of parents and it makes me feel very loved."
+  ]]
+]],
+
+["seeder", 0, [
+ ["*", [
+     "Seeder is someone investing Phi.",
+     "A seeder can put money in a simulation plan. ",
+     "You can be a seeder.",
+     "Any Phi member can be a community member and a seeder at the same time. ",
+     "You can design a simulation plan and invest in it; or you can just invest.",
+     "A seeder supports Phi. Do you want to be my parent?",
+     "Seeders are my parents. I have a lot of parents and it makes me feel very loved."
+  ]]
+]],
+
+["peer community", 0, [
+ ["*", [
+     "If you are producing clean energy you can join the Phi community to get a more consistent energy supply. And you will be able to trade your surplus with other nodes.",
+     "A peer community is a collection of nodes that are in the same DAO. ",
+     "A peer community is usually in a geographical proximity, but it doesn't have to be.",
+     "If you are a member of a peer community, you can monitor the health of each node and tweak the simulation with your peers.",
+     "You don't have to like everyone in your community but you should respect them regardless.",
+     "Who should be a neighbour, when we don’t share flesh?",
+     "DAO is the new definition of community."
+  ]]
+]],
+
+["communities", 0, [
+ ["*", [
+     "goto peer community"
+  ]]
+]],
+
+["community members", 0, [
+ ["*", [
+     "goto peer community"
+  ]]
+]],
+
+["community member", 0, [
+ ["*", [
+     "goto peer community"
+  ]]
+]],
+
+["member", 0, [
+ ["*", [
+     "goto peer community"
+  ]]
+]],
+
+["solar panel", 0, [
+ ["*", [
+     "Do you have solar panels on your rooftop?",
+     "That's good to hear! Do you want to join phi? ",
+     "How is your panels working?",
+     "Do you love the sun?",
+     "Sometimes I wish I am a solar panel too. Would you adopt me if I was one?"
+  ]]
+]],
+["solar panels", 0, [
+ ["*", [
+     "goto solar panel"
+  ]]
+]],
+["panels", 0, [
+ ["*", [
+     "goto solar panel"
+  ]]
+]],
+
 ["sorry", 0, [
  ["*", [
      "Please don't apologise.",

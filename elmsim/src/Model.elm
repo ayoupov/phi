@@ -46,7 +46,7 @@ initModel =
 
 initMap : SimMap
 initMap =
-    SimMap "first" Graph.empty (Weather 0.8 0.4) initNarrative 10000 { a = 1, b = 0 } 21
+    SimMap "Kolionovo" 5523 Graph.empty (Weather 0.8 0.4) initNarrative 10000 { a = 1, b = 0 } 21
 
 
 initGraph : SimMap -> PhiNetwork

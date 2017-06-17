@@ -79,6 +79,7 @@ type alias Budget =
 
 type alias SimMap =
     { name : String
+    , population : Int
     , initialNetwork : PhiNetwork
     , initialWeather : Weather
     , narrative : Narrative

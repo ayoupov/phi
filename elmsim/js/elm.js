@@ -18451,9 +18451,9 @@ var _strelka_2017$phi$Simulation_Model$NarrativeItem = F2(
 	function (a, b) {
 		return {event: a, message: b};
 	});
-var _strelka_2017$phi$Simulation_Model$SimMap = F7(
-	function (a, b, c, d, e, f, g) {
-		return {name: a, initialNetwork: b, initialWeather: c, narrative: d, initialBudget: e, initialReputationRatio: f, initialNegawattLimit: g};
+var _strelka_2017$phi$Simulation_Model$SimMap = F8(
+	function (a, b, c, d, e, f, g, h) {
+		return {name: a, population: b, initialNetwork: c, initialWeather: d, narrative: e, initialBudget: f, initialReputationRatio: g, initialNegawattLimit: h};
 	});
 var _strelka_2017$phi$Simulation_Model$EncodedEdge = F2(
 	function (a, b) {
@@ -18723,9 +18723,10 @@ var _strelka_2017$phi$Model$initWeather = function (map) {
 var _strelka_2017$phi$Model$initGraph = function (map) {
 	return map.initialNetwork;
 };
-var _strelka_2017$phi$Model$initMap = A7(
+var _strelka_2017$phi$Model$initMap = A8(
 	_strelka_2017$phi$Simulation_Model$SimMap,
-	'first',
+	'Kolionovo',
+	5523,
 	_elm_community$graph$Graph$empty,
 	A2(_strelka_2017$phi$Simulation_Model$Weather, 0.8, 0.4),
 	_strelka_2017$phi$Model$initNarrative,
@@ -19917,11 +19918,12 @@ var _strelka_2017$phi$Update$changeDesign = function (model) {
 		model);
 };
 var _strelka_2017$phi$Update$runDay = function (model) {
-	var newNetwork = A3(
-		_strelka_2017$phi$Simulation_Simulation$distributeGeneratedJoules,
-		model.negawattLimit,
-		model.reputationRatio,
-		A2(_strelka_2017$phi$Simulation_Simulation$joulesToGenerators, model.weather, model.network));
+	var newNetwork = _strelka_2017$phi$Simulation_Simulation$tradingPhase(
+		A3(
+			_strelka_2017$phi$Simulation_Simulation$distributeGeneratedJoules,
+			model.negawattLimit,
+			model.reputationRatio,
+			A2(_strelka_2017$phi$Simulation_Simulation$joulesToGenerators, model.weather, model.network)));
 	var newModel = _elm_lang$core$Native_Utils.update(
 		model,
 		{network: newNetwork});
@@ -20214,10 +20216,88 @@ var _strelka_2017$phi$View$chatHeader = function (model) {
 				_elm_lang$html$Html$div,
 				{
 					ctor: '::',
-					_0: _elm_lang$html$Html_Attributes$class('status-bar'),
+					_0: _elm_lang$html$Html_Attributes$class('map_status'),
 					_1: {ctor: '[]'}
 				},
-				{ctor: '[]'}),
+				{
+					ctor: '::',
+					_0: A2(
+						_elm_lang$html$Html$div,
+						{
+							ctor: '::',
+							_0: _elm_lang$html$Html_Attributes$class('title_bar'),
+							_1: {ctor: '[]'}
+						},
+						{
+							ctor: '::',
+							_0: A2(
+								_elm_lang$html$Html$span,
+								{
+									ctor: '::',
+									_0: _elm_lang$html$Html_Attributes$class('site_name'),
+									_1: {ctor: '[]'}
+								},
+								{
+									ctor: '::',
+									_0: _elm_lang$html$Html$text('Nomovovo'),
+									_1: {ctor: '[]'}
+								}),
+							_1: {
+								ctor: '::',
+								_0: A2(
+									_elm_lang$html$Html$span,
+									{
+										ctor: '::',
+										_0: _elm_lang$html$Html_Attributes$class('population'),
+										_1: {ctor: '[]'}
+									},
+									{
+										ctor: '::',
+										_0: _elm_lang$html$Html$text('12345'),
+										_1: {ctor: '[]'}
+									}),
+								_1: {
+									ctor: '::',
+									_0: A2(
+										_elm_lang$html$Html$span,
+										{
+											ctor: '::',
+											_0: _elm_lang$html$Html_Attributes$class('week_no'),
+											_1: {ctor: '[]'}
+										},
+										{
+											ctor: '::',
+											_0: _elm_lang$html$Html$text('Week 20'),
+											_1: {ctor: '[]'}
+										}),
+									_1: {ctor: '[]'}
+								}
+							}
+						}),
+					_1: {
+						ctor: '::',
+						_0: A2(
+							_elm_lang$html$Html$div,
+							{
+								ctor: '::',
+								_0: _elm_lang$html$Html_Attributes$class('status_body'),
+								_1: {ctor: '[]'}
+							},
+							{
+								ctor: '::',
+								_0: A2(
+									_elm_lang$html$Html$div,
+									{
+										ctor: '::',
+										_0: _elm_lang$html$Html_Attributes$class('hline'),
+										_1: {ctor: '[]'}
+									},
+									{ctor: '[]'}),
+								_1: {ctor: '[]'}
+							}),
+						_1: {ctor: '[]'}
+					}
+				}),
 			_1: {ctor: '[]'}
 		});
 };

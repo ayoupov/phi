@@ -40,6 +40,37 @@ body {
   height: 90px;
 }
 
+.chat_header .map_status {
+  overflow: hidden;
+  position: absolute;
+  top: 50%; left: 50%;
+  transform: translate(-50%,-50%);
+  display: flex;
+  width: 435px;
+  height: 60px;
+  background: rgba(255,255,255,1);
+  border-radius: 10px;
+}
+
+.chat_header .map_status .title_bar {
+  top: 0;
+  margin: 0px;
+  padding: 0px;
+  height: 18px;
+  width: 100%;
+  background: rgba(229,229,229,1);
+  color: #338;
+  font-size: 13px;
+  line-height: 20px;
+  padding-left: 5px;
+  display: flex;
+}
+
+.title_bar span {
+  padding: 0 5px 0 5px;
+  flex: 100%;
+}
+
 .messages {
   position: relative;
   list-style: none;
@@ -79,8 +110,8 @@ body {
 
 .message .message_header {
   background: rgba(229,229,229,1);
-  color: #338;
   height: 18px;
+  color: #338;
   font-size: 13px;
   line-height: 20px;
   padding-left: 5px;
