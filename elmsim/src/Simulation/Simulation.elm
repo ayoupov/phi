@@ -427,6 +427,8 @@ tradingPhase network =
 
 
 port renderPhiNetwork : ( List (Node Json.Value), List EncodedEdge ) -> Cmd msg
+port animateGeneration : ( List (Node Json.Value), List EncodedEdge ) -> Cmd msg
+port animatePeerConsumption : ( List (Node Json.Value), List EncodedEdge ) -> Cmd msg
 
 
 

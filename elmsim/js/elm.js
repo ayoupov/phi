@@ -18506,6 +18506,8 @@ var _strelka_2017$phi$Action$CallTurn = {ctor: 'CallTurn'};
 var _strelka_2017$phi$Action$UpdateWeather = function (a) {
 	return {ctor: 'UpdateWeather', _0: a};
 };
+var _strelka_2017$phi$Action$AnimatePeerConsumption = {ctor: 'AnimatePeerConsumption'};
+var _strelka_2017$phi$Action$AnimateGeneration = {ctor: 'AnimateGeneration'};
 var _strelka_2017$phi$Action$RenderPhiNetwork = {ctor: 'RenderPhiNetwork'};
 var _strelka_2017$phi$Action$AddEdge = function (a) {
 	return {ctor: 'AddEdge', _0: a};
@@ -19258,6 +19260,46 @@ var _strelka_2017$phi$Simulation_Simulation$renderPhiNetwork = _elm_lang$core$Na
 			})
 		];
 	});
+var _strelka_2017$phi$Simulation_Simulation$animateGeneration = _elm_lang$core$Native_Platform.outgoingPort(
+	'animateGeneration',
+	function (v) {
+		return [
+			_elm_lang$core$Native_List.toArray(v._0).map(
+			function (v) {
+				return {id: v.id, label: v.label};
+			}),
+			_elm_lang$core$Native_List.toArray(v._1).map(
+			function (v) {
+				return {
+					transmissionLine: {from: v.transmissionLine.from, to: v.transmissionLine.to, label: v.transmissionLine.label},
+					pos: {
+						from: {x: v.pos.from.x, y: v.pos.from.y},
+						to: {x: v.pos.to.x, y: v.pos.to.y}
+					}
+				};
+			})
+		];
+	});
+var _strelka_2017$phi$Simulation_Simulation$animatePeerConsumption = _elm_lang$core$Native_Platform.outgoingPort(
+	'animatePeerConsumption',
+	function (v) {
+		return [
+			_elm_lang$core$Native_List.toArray(v._0).map(
+			function (v) {
+				return {id: v.id, label: v.label};
+			}),
+			_elm_lang$core$Native_List.toArray(v._1).map(
+			function (v) {
+				return {
+					transmissionLine: {from: v.transmissionLine.from, to: v.transmissionLine.to, label: v.transmissionLine.label},
+					pos: {
+						from: {x: v.pos.from.x, y: v.pos.from.y},
+						to: {x: v.pos.to.x, y: v.pos.to.y}
+					}
+				};
+			})
+		];
+	});
 
 var _strelka_2017$phi$Chat_Narrative$daySummary = function (model) {
 	var totalStored = _elm_lang$core$Basics$toString(
@@ -19791,6 +19833,20 @@ var _strelka_2017$phi$Update$update = F2(
 						_1: _strelka_2017$phi$Simulation_Simulation$renderPhiNetwork(
 							_strelka_2017$phi$Simulation_Encoding$encodeGraph(model.network))
 					};
+				case 'AnimateGeneration':
+					return {
+						ctor: '_Tuple2',
+						_0: model,
+						_1: _strelka_2017$phi$Simulation_Simulation$animateGeneration(
+							_strelka_2017$phi$Simulation_Encoding$encodeGraph(model.network))
+					};
+				case 'AnimatePeerConsumption':
+					return {
+						ctor: '_Tuple2',
+						_0: model,
+						_1: _strelka_2017$phi$Simulation_Simulation$animatePeerConsumption(
+							_strelka_2017$phi$Simulation_Encoding$encodeGraph(model.network))
+					};
 				case 'MultiChoiceMsg':
 					var _p3 = _p0._0;
 					var newModel = A2(
@@ -19874,15 +19930,23 @@ var _strelka_2017$phi$Update$runDay = function (model) {
 	return A3(
 		_ccapndave$elm_update_extra$Update_Extra$andThen,
 		_strelka_2017$phi$Update$update,
-		_strelka_2017$phi$Action$RenderPhiNetwork,
-		A2(
-			_elm_lang$core$Platform_Cmd_ops['!'],
-			newModel,
-			{
-				ctor: '::',
-				_0: _strelka_2017$phi$Simulation_Init_Generators$generateWeather,
-				_1: {ctor: '[]'}
-			}));
+		_strelka_2017$phi$Action$AnimatePeerConsumption,
+		A3(
+			_ccapndave$elm_update_extra$Update_Extra$andThen,
+			_strelka_2017$phi$Update$update,
+			_strelka_2017$phi$Action$AnimateGeneration,
+			A3(
+				_ccapndave$elm_update_extra$Update_Extra$andThen,
+				_strelka_2017$phi$Update$update,
+				_strelka_2017$phi$Action$RenderPhiNetwork,
+				A2(
+					_elm_lang$core$Platform_Cmd_ops['!'],
+					newModel,
+					{
+						ctor: '::',
+						_0: _strelka_2017$phi$Simulation_Init_Generators$generateWeather,
+						_1: {ctor: '[]'}
+					}))));
 };
 var _strelka_2017$phi$Update$weatherForecast = function (model) {
 	var windy = _elm_lang$core$Basics$toString(model.weather.wind);

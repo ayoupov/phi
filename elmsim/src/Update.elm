@@ -99,6 +99,12 @@ update msg model =
         RenderPhiNetwork ->
             ( model, renderPhiNetwork <| encodeGraph model.network )
 
+        AnimateGeneration ->
+            ( model, animateGeneration <| encodeGraph model.network )
+
+        AnimatePeerConsumption ->
+            ( model, animatePeerConsumption <| encodeGraph model.network )
+
         MultiChoiceMsg multiChoiceAction ->
             let
                 newModel =
@@ -159,6 +165,8 @@ runDay model =
         ! [ Generators.generateWeather ]
         -- should be not in Generators
         |> andThen update RenderPhiNetwork
+        |> andThen update AnimateGeneration
+        |> andThen update AnimatePeerConsumption
 
 
 weatherForecast : Model -> ( Model, Cmd Msg )
