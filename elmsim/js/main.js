@@ -189,6 +189,34 @@ $(function () {
                 .endAngle(2 * Math.PI);
         }
 
+        function animatePeerEnergyUse(nodes) {
+            nodes.select(".peer .energyIndicator")
+                .attr("d", function(d) {
+                    return (peerOutline()(d));
+                })
+                .attr("stroke-opacity", "0")
+                .attr("fill-opacity", "0")
+                .style("opacity", "0")
+                .transition(t)
+                .style("opacity", "1")
+                .attr("stroke-opacity", "1")
+                .attr("fill-opacity", "1")
+                .attr('transform', function (d) {
+                    return "translate(" + (setX(d)) + "," + (setY(d)) + ")";
+                });
+        }
+
+        function animateGeneration(nodes) {
+            nodes.select(".generator .energyIndicator")
+                .transition(t)
+                .attr("d", function(d) {
+                    return (transactionShadow()(d));
+                })
+                .attr('transform', function (d) {
+                    return "translate(" + (setX(d)) + "," + (setY(d)) + ")";
+                });
+        }
+
         function drawNodes(nodes) {
             var nodes = svg.select(".nodes").selectAll(".node")
                 .data(nodes, function (d) {
@@ -228,30 +256,8 @@ $(function () {
                 })
                 .attr("class", "energyIndicator");
 
-            nodes.select(".peer .energyIndicator")
-                .attr("d", function(d) {
-                    return (peerOutline()(d));
-                })
-                .attr("stroke-opacity", "0")
-                .attr("fill-opacity", "0")
-                .style("opacity", "0")
-                .transition(t)
-                .style("opacity", "1")
-                .attr("stroke-opacity", "1")
-                .attr("fill-opacity", "1")
-                .attr('transform', function (d) {
-                    return "translate(" + (setX(d)) + "," + (setY(d)) + ")";
-                });
-
-            nodes.select(".generator .energyIndicator")
-                .transition(t)
-                .attr("d", function(d) {
-                    return (transactionShadow()(d));
-                })
-                .attr('transform', function (d) {
-                    return "translate(" + (setX(d)) + "," + (setY(d)) + ")";
-                });
-
+            animatePeerEnergyUse(nodes);
+            animateGeneration(nodes);
         }
 
         function drawLinks(links) {
