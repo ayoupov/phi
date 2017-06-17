@@ -37,8 +37,16 @@ view model =
 chatHeader : Model -> Html Msg
 chatHeader model =
     div [ class "chat_header" ]
-        [ div [ class "status-bar" ]
-            []
+        [ div [ class "map_status" ]
+            [ div [ class "title_bar" ]
+                [ span [ class "site_name" ] [ text "Nomovovo" ]
+                , span [ class "population" ] [ text "12345" ]
+                , span [ class "week_no" ] [ text "Week 20" ]
+                ]
+            , div [ class "status_body" ]
+                [ div [ class "hline" ] []
+                ]
+            ]
         ]
 
 
