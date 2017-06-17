@@ -14,6 +14,7 @@ import Simulation.GraphUpdates exposing (addEdge, addNode)
 import Simulation.Init.Generators as Generators exposing (..)
 import Simulation.Model exposing (..)
 import Simulation.Simulation as Simulation exposing (..)
+import Simulation.SimulationInterop exposing (..)
 import Task
 import Update.Extra exposing (andThen)
 
@@ -105,6 +106,17 @@ update msg model =
         AnimatePeerConsumption ->
             ( model, animatePeerConsumption <| encodeGraph model.network )
 
+        AnimationFinished phase ->
+            case phase of
+                "layoutRendered" ->
+                    update AnimateGeneration model
+                "generatorsAnimated" ->
+                    update AnimatePeerConsumption model
+                "consumptionAnimated" ->
+                    update NoOp model
+                _ ->
+                    update NoOp model
+
         MultiChoiceMsg multiChoiceAction ->
             let
                 newModel =
@@ -155,18 +167,16 @@ runDay model =
             model.network
                 |> Simulation.joulesToGenerators model.weather
                 |> Simulation.distributeGeneratedJoules model.negawattLimit model.reputationRatio
-                |> Simulation.tradingPhase
+--                |> Simulation.tradingPhase
 
-        --|> Simulation.tradingPhase
         newModel =
             { model | network = newNetwork }
     in
     newModel
         ! [ Generators.generateWeather ]
-        -- should be not in Generators
         |> andThen update RenderPhiNetwork
-        |> andThen update AnimateGeneration
-        |> andThen update AnimatePeerConsumption
+--        |> andThen update AnimateGeneration
+--        |> andThen update AnimatePeerConsumption
 
 
 weatherForecast : Model -> ( Model, Cmd Msg )

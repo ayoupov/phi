@@ -18,6 +18,13 @@ function isGenerator(d) {
     return d.label.nodeType == "generator" && ["solarPanel", "windTurbine"].indexOf(d.label.generatorType > -1);
 }
 
+function generatorInitialShadow()
+{
+    return d3.symbol()
+        .size(0)
+        .type(nodeShape);
+}
+
 function transactionShadow() {
     return d3.symbol()
         .size(function (d) {

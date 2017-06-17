@@ -18491,6 +18491,8 @@ var _strelka_2017$phi$Simulation_Model$GeneratorNode = function (a) {
 var _strelka_2017$phi$Simulation_Model$SolarPanel = {ctor: 'SolarPanel'};
 var _strelka_2017$phi$Simulation_Model$WindTurbine = {ctor: 'WindTurbine'};
 
+var _strelka_2017$phi$Simulation_SimulationInterop$animationFinished = _elm_lang$core$Native_Platform.incomingPort('animationFinished', _elm_lang$core$Json_Decode$string);
+
 var _strelka_2017$phi$Action$SendToEliza = function (a) {
 	return {ctor: 'SendToEliza', _0: a};
 };
@@ -18505,6 +18507,9 @@ var _strelka_2017$phi$Action$DaySummary = {ctor: 'DaySummary'};
 var _strelka_2017$phi$Action$CallTurn = {ctor: 'CallTurn'};
 var _strelka_2017$phi$Action$UpdateWeather = function (a) {
 	return {ctor: 'UpdateWeather', _0: a};
+};
+var _strelka_2017$phi$Action$AnimationFinished = function (a) {
+	return {ctor: 'AnimationFinished', _0: a};
 };
 var _strelka_2017$phi$Action$AnimatePeerConsumption = {ctor: 'AnimatePeerConsumption'};
 var _strelka_2017$phi$Action$AnimateGeneration = {ctor: 'AnimateGeneration'};
@@ -19847,17 +19852,45 @@ var _strelka_2017$phi$Update$update = F2(
 						_1: _strelka_2017$phi$Simulation_Simulation$animatePeerConsumption(
 							_strelka_2017$phi$Simulation_Encoding$encodeGraph(model.network))
 					};
-				case 'MultiChoiceMsg':
+				case 'AnimationFinished':
 					var _p3 = _p0._0;
+					switch (_p3) {
+						case 'layoutRendered':
+							var _v12 = _strelka_2017$phi$Action$AnimateGeneration,
+								_v13 = model;
+							msg = _v12;
+							model = _v13;
+							continue update;
+						case 'generatorsAnimated':
+							var _v14 = _strelka_2017$phi$Action$AnimatePeerConsumption,
+								_v15 = model;
+							msg = _v14;
+							model = _v15;
+							continue update;
+						case 'consumptionAnimated':
+							var _v16 = _strelka_2017$phi$Action$NoOp,
+								_v17 = model;
+							msg = _v16;
+							model = _v17;
+							continue update;
+						default:
+							var _v18 = _strelka_2017$phi$Action$NoOp,
+								_v19 = model;
+							msg = _v18;
+							model = _v19;
+							continue update;
+					}
+				case 'MultiChoiceMsg':
+					var _p4 = _p0._0;
 					var newModel = A2(
 						addChatItem,
 						_strelka_2017$phi$Chat_Model$UserMessage(
-							_strelka_2017$phi$Chat_Model$mcaName(_p3)),
+							_strelka_2017$phi$Chat_Model$mcaName(_p4)),
 						model);
-					return A2(_strelka_2017$phi$Update$handleMultiChoiceMsg, _p3, newModel);
+					return A2(_strelka_2017$phi$Update$handleMultiChoiceMsg, _p4, newModel);
 				case 'ToggleInputType':
-					var _p4 = model.inputType;
-					if (_p4.ctor === 'FreeTextInput') {
+					var _p5 = model.inputType;
+					if (_p5.ctor === 'FreeTextInput') {
 						return A2(
 							_elm_lang$core$Platform_Cmd_ops['!'],
 							_elm_lang$core$Native_Utils.update(
@@ -19886,8 +19919,8 @@ var _strelka_2017$phi$Update$update = F2(
 	});
 var _strelka_2017$phi$Update$handleMultiChoiceMsg = F2(
 	function (action, model) {
-		var _p5 = action;
-		switch (_p5.ctor) {
+		var _p6 = action;
+		switch (_p6.ctor) {
 			case 'McaWeatherForecast':
 				return _strelka_2017$phi$Update$weatherForecast(model);
 			case 'McaChangeDesign':
@@ -19918,35 +19951,26 @@ var _strelka_2017$phi$Update$changeDesign = function (model) {
 		model);
 };
 var _strelka_2017$phi$Update$runDay = function (model) {
-	var newNetwork = _strelka_2017$phi$Simulation_Simulation$tradingPhase(
-		A3(
-			_strelka_2017$phi$Simulation_Simulation$distributeGeneratedJoules,
-			model.negawattLimit,
-			model.reputationRatio,
-			A2(_strelka_2017$phi$Simulation_Simulation$joulesToGenerators, model.weather, model.network)));
+	var newNetwork = A3(
+		_strelka_2017$phi$Simulation_Simulation$distributeGeneratedJoules,
+		model.negawattLimit,
+		model.reputationRatio,
+		A2(_strelka_2017$phi$Simulation_Simulation$joulesToGenerators, model.weather, model.network));
 	var newModel = _elm_lang$core$Native_Utils.update(
 		model,
 		{network: newNetwork});
 	return A3(
 		_ccapndave$elm_update_extra$Update_Extra$andThen,
 		_strelka_2017$phi$Update$update,
-		_strelka_2017$phi$Action$AnimatePeerConsumption,
-		A3(
-			_ccapndave$elm_update_extra$Update_Extra$andThen,
-			_strelka_2017$phi$Update$update,
-			_strelka_2017$phi$Action$AnimateGeneration,
-			A3(
-				_ccapndave$elm_update_extra$Update_Extra$andThen,
-				_strelka_2017$phi$Update$update,
-				_strelka_2017$phi$Action$RenderPhiNetwork,
-				A2(
-					_elm_lang$core$Platform_Cmd_ops['!'],
-					newModel,
-					{
-						ctor: '::',
-						_0: _strelka_2017$phi$Simulation_Init_Generators$generateWeather,
-						_1: {ctor: '[]'}
-					}))));
+		_strelka_2017$phi$Action$RenderPhiNetwork,
+		A2(
+			_elm_lang$core$Platform_Cmd_ops['!'],
+			newModel,
+			{
+				ctor: '::',
+				_0: _strelka_2017$phi$Simulation_Init_Generators$generateWeather,
+				_1: {ctor: '[]'}
+			}));
 };
 var _strelka_2017$phi$Update$weatherForecast = function (model) {
 	var windy = _elm_lang$core$Basics$toString(model.weather.wind);
@@ -20339,10 +20363,19 @@ var _strelka_2017$phi$View$view = function (model) {
 };
 
 var _strelka_2017$phi$Main$subscriptions = function (model) {
-	return _strelka_2017$phi$Chat_Chat$elizaReply(
-		function (_p0) {
-			return _strelka_2017$phi$Action$SendBotChatItem(
-				_strelka_2017$phi$Chat_Model$BotMessage(_p0));
+	return _elm_lang$core$Platform_Sub$batch(
+		{
+			ctor: '::',
+			_0: _strelka_2017$phi$Chat_Chat$elizaReply(
+				function (_p0) {
+					return _strelka_2017$phi$Action$SendBotChatItem(
+						_strelka_2017$phi$Chat_Model$BotMessage(_p0));
+				}),
+			_1: {
+				ctor: '::',
+				_0: _strelka_2017$phi$Simulation_SimulationInterop$animationFinished(_strelka_2017$phi$Action$AnimationFinished),
+				_1: {ctor: '[]'}
+			}
 		});
 };
 var _strelka_2017$phi$Main$main = _elm_lang$html$Html$program(
