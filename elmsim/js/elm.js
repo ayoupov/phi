@@ -20138,40 +20138,33 @@ var _strelka_2017$phi$View$viewChatMsg = function (chatItem) {
 var _strelka_2017$phi$View$view = function (model) {
 	return A2(
 		_elm_lang$html$Html$div,
-		{ctor: '[]'},
+		{
+			ctor: '::',
+			_0: _elm_lang$html$Html_Attributes$class('chat_window'),
+			_1: {ctor: '[]'}
+		},
 		{
 			ctor: '::',
 			_0: A2(
-				_elm_lang$html$Html$div,
+				_elm_lang$html$Html$ul,
 				{
 					ctor: '::',
-					_0: _elm_lang$html$Html_Attributes$class('chat_window'),
-					_1: {ctor: '[]'}
-				},
-				{
-					ctor: '::',
-					_0: A2(
-						_elm_lang$html$Html$ul,
-						{
-							ctor: '::',
-							_0: _elm_lang$html$Html_Attributes$id('toScroll'),
-							_1: {
-								ctor: '::',
-								_0: _elm_lang$html$Html_Attributes$class('messages'),
-								_1: {ctor: '[]'}
-							}
-						},
-						A2(
-							_elm_lang$core$List$map,
-							_strelka_2017$phi$View$viewChatMsg,
-							_elm_lang$core$List$reverse(model.messages))),
+					_0: _elm_lang$html$Html_Attributes$id('toScroll'),
 					_1: {
 						ctor: '::',
-						_0: _strelka_2017$phi$View$inputFooter(model),
+						_0: _elm_lang$html$Html_Attributes$class('messages'),
 						_1: {ctor: '[]'}
 					}
-				}),
-			_1: {ctor: '[]'}
+				},
+				A2(
+					_elm_lang$core$List$map,
+					_strelka_2017$phi$View$viewChatMsg,
+					_elm_lang$core$List$reverse(model.messages))),
+			_1: {
+				ctor: '::',
+				_0: _strelka_2017$phi$View$inputFooter(model),
+				_1: {ctor: '[]'}
+			}
 		});
 };
 

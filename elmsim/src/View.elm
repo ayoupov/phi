@@ -18,12 +18,10 @@ import Svg.Attributes as SVG
 
 view : Model -> Html Msg
 view model =
-    div []
-        [ div [ class "chat_window" ]
-            [ ul [ id "toScroll", class "messages" ]
-                (List.map viewChatMsg (List.reverse model.messages))
-            , inputFooter model
-            ]
+    div [ class "chat_window" ]
+        [ ul [ id "toScroll", class "messages" ]
+            (List.map viewChatMsg (List.reverse model.messages))
+        , inputFooter model
         ]
 
 

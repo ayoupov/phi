@@ -73,13 +73,20 @@ function zoomed() {
     container.attr("transform", transform);
 }
 
-document.addEventListener("DOMContentLoaded", function (event) {
-    var app = Elm.Main.fullscreen();
+$(function () {
+    var node = document.getElementById('elm-node');
+    var app = Elm.Main.embed(node);
 
     d3.select("svg").call(zoom);
 
     var eliza = new ElizaBot();
     var initial = eliza.getInitial();
+
+    $('.chat_wrapper').draggable({
+        containment: "parent",
+        axis: "x",
+        cancel: ".chat_window .message, .input_wrapper"
+    });
 
 
     app.ports.renderPhiNetwork.subscribe(function (model) {
