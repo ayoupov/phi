@@ -73,7 +73,7 @@ generatePeer =
             -- actual consumption
             (Random.constant [ 0 ])
             -- desired consumption
-            (Random.float 5 20)
+            (Random.float 5 10)
             -- seedRating in joules?
             (Random.constant [ 0 ])
         )
