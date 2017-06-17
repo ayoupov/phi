@@ -46,7 +46,7 @@ initModel =
 
 initMap : SimMap
 initMap =
-    SimMap "first" Graph.empty (Weather 0.8 0.4) initNarrative 10000 { a = 1, b = 0 } 10
+    SimMap "first" Graph.empty (Weather 0.8 0.4) initNarrative 10000 { a = 1, b = 0 } 21
 
 
 initGraph : SimMap -> PhiNetwork
@@ -82,6 +82,6 @@ initNegawattLimit map =
 initGenerators : List (Cmd Msg)
 initGenerators =
     List.repeat 20 Generators.generateEdge
-        ++ List.repeat 15 Generators.generatePeer
-        ++ List.repeat 3 Generators.generatePVPanel
-        ++ List.repeat 5 Generators.generateWindTurbine
+        ++ List.repeat 5 Generators.generatePeer
+        ++ List.repeat 10 Generators.generatePVPanel
+        ++ List.repeat 10 Generators.generateWindTurbine
