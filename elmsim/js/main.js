@@ -230,6 +230,9 @@ $(function () {
 
             nodes.select(".peer .energyIndicator")
                 .transition(t)
+                .attr("d", function(d) {
+                    return (peerOutline()(d));
+                })
                 .attr("stroke-opacity", "1")
                 .attr("fill-opacity", "1")
                 .attr('transform', function (d) {
