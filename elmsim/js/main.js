@@ -140,8 +140,9 @@ $(function () {
                 .type(nodeShape);
         }
 
+
         function isGenerator(d) {
-            return d.label.nodeType == "generator" && ["solarPanel", "windTurbine"].includes(d.label.generatorType);
+            return d.label.nodeType == "generator" && ["solarPanel", "windTurbine"].indexOf(d.label.generatorType > -1);
         }
 
         function transactionShadow() {

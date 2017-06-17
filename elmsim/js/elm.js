@@ -19306,6 +19306,94 @@ var _strelka_2017$phi$Chat_Narrative$daySummary = function (model) {
 			}));
 };
 
+var _strelka_2017$phi$Chat_View$viewChatMsg = function (chatItem) {
+	var textContent = function (msgText) {
+		return {
+			ctor: '::',
+			_0: A2(
+				_elm_lang$html$Html$div,
+				{
+					ctor: '::',
+					_0: _elm_lang$html$Html_Attributes$class('text_wrapper'),
+					_1: {ctor: '[]'}
+				},
+				{
+					ctor: '::',
+					_0: A2(
+						_elm_lang$html$Html$div,
+						{
+							ctor: '::',
+							_0: _elm_lang$html$Html_Attributes$class('text'),
+							_1: {ctor: '[]'}
+						},
+						{
+							ctor: '::',
+							_0: _elm_lang$html$Html$text(msgText),
+							_1: {ctor: '[]'}
+						}),
+					_1: {ctor: '[]'}
+				}),
+			_1: {ctor: '[]'}
+		};
+	};
+	var messageHeader = function (name) {
+		return A2(
+			_elm_lang$html$Html$div,
+			{
+				ctor: '::',
+				_0: _elm_lang$html$Html_Attributes$class('message_header'),
+				_1: {ctor: '[]'}
+			},
+			{
+				ctor: '::',
+				_0: _elm_lang$html$Html$text(name),
+				_1: {ctor: '[]'}
+			});
+	};
+	var messageWrapper = F2(
+		function (senderClass, children) {
+			return A2(
+				_elm_lang$html$Html$li,
+				{
+					ctor: '::',
+					_0: _elm_lang$html$Html_Attributes$class(
+						A2(_elm_lang$core$Basics_ops['++'], 'message appeared ', senderClass)),
+					_1: {ctor: '[]'}
+				},
+				children);
+		});
+	var _p0 = chatItem;
+	if (_p0.ctor === 'UserMessage') {
+		return A2(
+			messageWrapper,
+			'user-sent',
+			textContent(_p0._0));
+	} else {
+		var contents = function () {
+			var _p1 = _p0._0;
+			switch (_p1.ctor) {
+				case 'BotMessage':
+					return textContent(_p1._0);
+				case 'WidgetItem':
+					return textContent('rendering a fancy widget');
+				default:
+					return textContent(_p1._0.text);
+			}
+		}();
+		return A2(
+			messageWrapper,
+			'bot-sent',
+			A2(
+				_elm_lang$core$Basics_ops['++'],
+				{
+					ctor: '::',
+					_0: messageHeader('Phi'),
+					_1: {ctor: '[]'}
+				},
+				contents));
+	}
+};
+
 var _strelka_2017$phi$Simulation_Encoding$pos = function (nodeLabel) {
 	var _p0 = nodeLabel;
 	switch (_p0.ctor) {
@@ -20048,92 +20136,26 @@ var _strelka_2017$phi$View$inputFooter = function (model) {
 			_1: {ctor: '[]'}
 		});
 };
-var _strelka_2017$phi$View$viewChatMsg = function (chatItem) {
-	var textContent = function (msgText) {
-		return {
+var _strelka_2017$phi$View$chatHeader = function (model) {
+	return A2(
+		_elm_lang$html$Html$div,
+		{
+			ctor: '::',
+			_0: _elm_lang$html$Html_Attributes$class('chat_header'),
+			_1: {ctor: '[]'}
+		},
+		{
 			ctor: '::',
 			_0: A2(
 				_elm_lang$html$Html$div,
 				{
 					ctor: '::',
-					_0: _elm_lang$html$Html_Attributes$class('text_wrapper'),
+					_0: _elm_lang$html$Html_Attributes$class('status-bar'),
 					_1: {ctor: '[]'}
 				},
-				{
-					ctor: '::',
-					_0: A2(
-						_elm_lang$html$Html$div,
-						{
-							ctor: '::',
-							_0: _elm_lang$html$Html_Attributes$class('text'),
-							_1: {ctor: '[]'}
-						},
-						{
-							ctor: '::',
-							_0: _elm_lang$html$Html$text(msgText),
-							_1: {ctor: '[]'}
-						}),
-					_1: {ctor: '[]'}
-				}),
+				{ctor: '[]'}),
 			_1: {ctor: '[]'}
-		};
-	};
-	var messageHeader = function (name) {
-		return A2(
-			_elm_lang$html$Html$div,
-			{
-				ctor: '::',
-				_0: _elm_lang$html$Html_Attributes$class('message_header'),
-				_1: {ctor: '[]'}
-			},
-			{
-				ctor: '::',
-				_0: _elm_lang$html$Html$text(name),
-				_1: {ctor: '[]'}
-			});
-	};
-	var messageWrapper = F2(
-		function (senderClass, children) {
-			return A2(
-				_elm_lang$html$Html$li,
-				{
-					ctor: '::',
-					_0: _elm_lang$html$Html_Attributes$class(
-						A2(_elm_lang$core$Basics_ops['++'], 'message appeared ', senderClass)),
-					_1: {ctor: '[]'}
-				},
-				children);
 		});
-	var _p5 = chatItem;
-	if (_p5.ctor === 'UserMessage') {
-		return A2(
-			messageWrapper,
-			'user-sent',
-			textContent(_p5._0));
-	} else {
-		var contents = function () {
-			var _p6 = _p5._0;
-			switch (_p6.ctor) {
-				case 'BotMessage':
-					return textContent(_p6._0);
-				case 'WidgetItem':
-					return textContent('rendering a fancy widget');
-				default:
-					return textContent(_p6._0.text);
-			}
-		}();
-		return A2(
-			messageWrapper,
-			'bot-sent',
-			A2(
-				_elm_lang$core$Basics_ops['++'],
-				{
-					ctor: '::',
-					_0: messageHeader('Phi'),
-					_1: {ctor: '[]'}
-				},
-				contents));
-	}
 };
 var _strelka_2017$phi$View$view = function (model) {
 	return A2(
@@ -20158,12 +20180,16 @@ var _strelka_2017$phi$View$view = function (model) {
 				},
 				A2(
 					_elm_lang$core$List$map,
-					_strelka_2017$phi$View$viewChatMsg,
+					_strelka_2017$phi$Chat_View$viewChatMsg,
 					_elm_lang$core$List$reverse(model.messages))),
 			_1: {
 				ctor: '::',
-				_0: _strelka_2017$phi$View$inputFooter(model),
-				_1: {ctor: '[]'}
+				_0: _strelka_2017$phi$View$chatHeader(model),
+				_1: {
+					ctor: '::',
+					_0: _strelka_2017$phi$View$inputFooter(model),
+					_1: {ctor: '[]'}
+				}
 			}
 		});
 };
