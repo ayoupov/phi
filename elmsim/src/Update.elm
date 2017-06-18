@@ -167,7 +167,7 @@ runDay model =
             model.network
                 |> Simulation.joulesToGenerators model.weather
                 |> Simulation.distributeGeneratedJoules model.negawattLimit model.reputationRatio
---                |> Simulation.tradingPhase
+                |> Simulation.tradingPhase
 
         newModel =
             { model | network = newNetwork }
@@ -175,8 +175,6 @@ runDay model =
     newModel
         ! [ Generators.generateWeather ]
         |> andThen update RenderPhiNetwork
---        |> andThen update AnimateGeneration
---        |> andThen update AnimatePeerConsumption
 
 
 weatherForecast : Model -> ( Model, Cmd Msg )
