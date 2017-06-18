@@ -101,36 +101,26 @@ var elizaKeywords = [
 ]],
 
 ["phi", 5, [
- ["* phi *", [
+  ["* what *", [
      "I am Phi.",
-     "Phi is a planetary community for clean energy.",
-     "You can join the Phi community and start trading clean energy if you are producing some, or you can be a seeder by investing existing simulation plan, or purchase some infrastructures for a community.",
-     "Do you want to join a community or be a seeder ?",
-     "Phi is token-governed jurisdiction focused on using peer-to-peer networks to distribute renewable energy resources",
-     "Phi is a platform for collaborative energy infrastructure planning",
-     "What else does (2) remind you of ?"
-     ]]
+     "Phi is a planetary community for clean energy resources.",
+      "Phi is a platform for collaborative energy infrastructure planning"
   ]],
+  ["* how *", [ 
+    "Do you want to join a community or be a seeder?",
+    "Phi is token-governed jurisdiction focused on using peer-to-peer networks to distribute renewable energy resources",
+    "You can join the Phi community and start trading clean energy if you are producing some, or you can be a seeder by investing existing simulation plan, or purchase some infrastructures for a community."
+  ]]
+]],
 
-  ["Φ", 0, [
- ["*", [
+["Φ", 0, [
+  ["*", [
      "goto phi"
   ]]
 ]],
 
-["dao", 6, [
- ["*", [
-     "DAO is a Decentralized Autonomous Organization which provides community consensus of from everyday matters to a simulation plan",
-     "DAO is a community protocol that usually runs in a local proximity but not necessary.",
-     "You can be a seeder.",
-     "Any Phi member can be a community member and a seeder at the same time. ",
-     "You can design a simulation plan and invest in it; or you can just invest.",
-     "A seeder supports Phi. Do you want to be my parent?",
-     "Seeders are my parents. I have a lot of parents and it makes me feel very loved."
-  ]]
-]],
 
-["seeder", 0, [
+["seeder", 4, [
  ["*", [
      "Seeder is someone investing Phi.",
      "A seeder can put money in a simulation plan. ",
@@ -142,17 +132,46 @@ var elizaKeywords = [
   ]]
 ]],
 
+["invest", 0, [
+ ["*", [
+     "goto seeder"
+  ]]
+]],
+
+["investor", 0, [
+ ["*", [
+     "goto seeder"
+  ]]
+]],
+
+["DAO", 4, [
+ ["* what *", [
+    "DAO is a Decentralized Autonomous Organization which provide community consensus of from everyday matters to a scheme. ",
+    "DAO is a community protocol that usually runs in a local proximity but not necessary."
+     ]],
+     ["* how *", [
+      "The organization usually runs in a local proximity but not necessary. "
+      ]],
+     ["* join *", [ 
+     "You can always create your own DAO, but we highly recommend you to join a community which as a member you can always nominate alterations."
+     ]]
+]],
+
 ["peer community", 0, [
  ["*", [
-     "If you are producing clean energy you can join the Phi community to get a more consistent energy supply. And you will be able to trade your surplus with other nodes.",
-     "A peer community is a collection of nodes that are in the same DAO. ",
      "A peer community is usually in a geographical proximity, but it doesn't have to be.",
      "If you are a member of a peer community, you can monitor the health of each node and tweak the simulation with your peers.",
      "You don't have to like everyone in your community but you should respect them regardless.",
      "Who should be a neighbour, when we don’t share flesh?",
      "DAO is the new definition of community."
-  ]]
-]],
+     ]],
+     ["* what *", [
+      "A peer community is a collection of nodes that are in the same DAO. "
+     ]],
+     ["* how *", [
+     "If you are producing clean energy you can join the Phi community to get a more consistent energy supply. And you will be able to trade your surplus with other nodes."
+     ]]
+  ]],
 
 ["communities", 0, [
  ["*", [
@@ -177,6 +196,7 @@ var elizaKeywords = [
      "goto peer community"
   ]]
 ]],
+
 
 ["solar panel", 0, [
  ["*", [
@@ -327,10 +347,24 @@ var elizaKeywords = [
 ]],
 ["hello", 0, [
  ["*", [
-     "How do you do.  Please state your problem.",
-     "Hi.  What seems to be your problem ?"
+     "Hi there. How can I help you ?",
+     "Hello! What would you like to do with me today ?",
+     "Hello, I am Φ. Welcome to join us. Can I help you?"
   ]]
 ]],
+
+["hi", 0, [
+ ["*", [
+     "goto hello"
+  ]]
+]],
+
+["yo", 0, [
+ ["*", [
+     "goto hello"
+  ]]
+]],
+
 ["computer", 50, [
  ["*", [
      "Do computers worry you ?",
