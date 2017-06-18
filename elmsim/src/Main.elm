@@ -5,9 +5,9 @@ import Chat.Chat as Chat
 import Chat.Model exposing (BotChatItem(..))
 import Html
 import Model exposing (Model, initModel)
+import Simulation.SimulationInterop as Interop exposing (..)
 import Update exposing (update)
 import View exposing (view)
-import Simulation.SimulationInterop as Interop exposing (..)
 
 
 main =
@@ -25,4 +25,4 @@ main =
 
 subscriptions : Model -> Sub Msg
 subscriptions model =
-    Sub.batch [Chat.elizaReply (SendBotChatItem << BotMessage), Interop.animationFinished AnimationFinished]
+    Sub.batch [ Chat.elizaReply (SendBotChatItem << BotMessage), Interop.animationFinished AnimationFinished ]
