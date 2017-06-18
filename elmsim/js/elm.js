@@ -19992,10 +19992,10 @@ var _strelka_2017$phi$Update$changeDesign = function (model) {
 		model);
 };
 var _strelka_2017$phi$Update$runDay = function (model) {
-	var newNetwork = A2(
-		_elm_community$graph$Graph$mapNodes,
-		_strelka_2017$phi$Simulation_Simulation$consumeFromStorage,
-		_strelka_2017$phi$Simulation_Simulation$tradingPhase(
+	var newNetwork = _strelka_2017$phi$Simulation_Simulation$tradingPhase(
+		A2(
+			_elm_community$graph$Graph$mapNodes,
+			_strelka_2017$phi$Simulation_Simulation$consumeFromStorage,
 			A3(
 				_strelka_2017$phi$Simulation_Simulation$distributeGeneratedJoules,
 				model.negawattLimit,
