@@ -247,6 +247,33 @@ maxDesiredTrade peerInNeed =
         - takeFirstElementWithDefault0 peerInNeed.joules.actualConsumption
 
 
+consumeFromStorage : NodeLabel -> NodeLabel
+consumeFromStorage node =
+    case node of
+        PeerNode peer ->
+            let
+                actualConsumption =
+                    takeFirstElementWithDefault0 peer.joules.actualConsumption
+
+                remainingDesiredConsumption =
+                    Basics.max 0 <| peer.joules.desiredConsumption - actualConsumption
+
+                storedJoules =
+                    takeFirstElementWithDefault0 peer.joules.storedJoules
+
+                toConsume =
+                    Basics.min remainingDesiredConsumption storedJoules
+            in
+            (actualConsumption + toConsume)
+                :: (Maybe.withDefault [] <| List.tail peer.joules.actualConsumption)
+                |> asActualConsumptionIn peer.joules
+                |> asJoulesIn peer
+                |> PeerNode
+
+        _ ->
+            node
+
+
 tradingPhase : PhiNetwork -> PhiNetwork
 tradingPhase network =
     let
@@ -435,7 +462,11 @@ tradingPhase network =
 
 
 port renderPhiNetwork : ( List (Node Json.Value), List EncodedEdge ) -> Cmd msg
+
+
 port animateGeneration : ( List (Node Json.Value), List EncodedEdge ) -> Cmd msg
+
+
 port animatePeerConsumption : ( List (Node Json.Value), List EncodedEdge ) -> Cmd msg
 
 

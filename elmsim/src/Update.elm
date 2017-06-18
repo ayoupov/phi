@@ -110,10 +110,13 @@ update msg model =
             case phase of
                 "layoutRendered" ->
                     update AnimateGeneration model
+
                 "generatorsAnimated" ->
                     update AnimatePeerConsumption model
+
                 "consumptionAnimated" ->
                     update NoOp model
+
                 _ ->
                     update NoOp model
 
@@ -168,6 +171,7 @@ runDay model =
                 |> Simulation.joulesToGenerators model.weather
                 |> Simulation.distributeGeneratedJoules model.negawattLimit model.reputationRatio
                 |> Simulation.tradingPhase
+                |> Graph.mapNodes Simulation.consumeFromStorage
 
         newModel =
             { model | network = newNetwork }
