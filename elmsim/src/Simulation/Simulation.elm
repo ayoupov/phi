@@ -250,7 +250,7 @@ maxDesiredTrade peerInNeed =
 tradingPhase : PhiNetwork -> PhiNetwork
 tradingPhase network =
     let
-        initialPool =
+        getInitialPool =
             Graph.nodes network
                 |> List.filterMap (toPeer >> Maybe.map (.joules >> .storedJoules >> takeFirstElementWithDefault0))
                 |> List.sum
@@ -311,7 +311,6 @@ tradingPhase network =
                 updatedPeer =
                     setNegawattsAndActualConsumption ( newNW, newAC ) peer
             in
-            -- ^ should update in graph
             ( newPool, updatedPeer )
 
         newSupplyChanges : Float -> Peer -> ( List KWHour, List KWHour )
@@ -375,8 +374,7 @@ tradingPhase network =
         supplyNodesFilter { label, id } =
             case label of
                 PeerNode peer ->
-                    takeFirstElementWithDefault0 peer.joules.actualConsumption
-                        - peer.joules.desiredConsumption
+                    takeFirstElementWithDefault0 peer.joules.storedJoules
                         > 0
 
                 _ ->
@@ -409,11 +407,21 @@ tradingPhase network =
 
         updateNetwork =
             let
+                initialPool = getInitialPool
+                demandList = nodesInDistress
+                supplyList = supplyNodes
+
+                tradeRatioValue initialPool actualPool =
+                    case initialPool of
+                        0 -> 0
+                        _ ->
+                            (initialPool - poolLeft)/initialPool
+
                 ( poolLeft, updatedDemandNodes ) =
-                    updateNodeListDemand initialPool nodesInDistress
+                    updateNodeListDemand initialPool demandList
 
                 updatedSupplyNodes =
-                    updateNodeListSupply (initialPool - poolLeft) supplyNodes
+                    updateNodeListSupply (tradeRatioValue initialPool poolLeft) supplyList
             in
             network
                 |> updateNodes updatedDemandNodes

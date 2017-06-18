@@ -18703,7 +18703,7 @@ var _strelka_2017$phi$Model$initGenerators = A2(
 	A2(_elm_lang$core$List$repeat, 20, _strelka_2017$phi$Simulation_Init_Generators$generateEdge),
 	A2(
 		_elm_lang$core$Basics_ops['++'],
-		A2(_elm_lang$core$List$repeat, 5, _strelka_2017$phi$Simulation_Init_Generators$generatePeer),
+		A2(_elm_lang$core$List$repeat, 8, _strelka_2017$phi$Simulation_Init_Generators$generatePeer),
 		A2(
 			_elm_lang$core$Basics_ops['++'],
 			A2(_elm_lang$core$List$repeat, 10, _strelka_2017$phi$Simulation_Init_Generators$generatePVPanel),
@@ -19013,9 +19013,8 @@ var _strelka_2017$phi$Simulation_Simulation$tradingPhase = function (network) {
 		var _p24 = _p23;
 		var _p25 = _p24.label;
 		if (_p25.ctor === 'PeerNode') {
-			var _p26 = _p25._0;
 			return _elm_lang$core$Native_Utils.cmp(
-				_strelka_2017$phi$Simulation_SimulationHelpers$takeFirstElementWithDefault0(_p26.joules.actualConsumption) - _p26.joules.desiredConsumption,
+				_strelka_2017$phi$Simulation_SimulationHelpers$takeFirstElementWithDefault0(_p25._0.joules.storedJoules),
 				0) > 0;
 		} else {
 			return false;
@@ -19025,13 +19024,13 @@ var _strelka_2017$phi$Simulation_Simulation$tradingPhase = function (network) {
 		_elm_lang$core$List$filter,
 		supplyNodesFilter,
 		_elm_community$graph$Graph$nodes(network));
-	var demandNodesFilter = function (_p27) {
-		var _p28 = _p27;
-		var _p29 = _p28.label;
-		if (_p29.ctor === 'PeerNode') {
-			var _p30 = _p29._0;
+	var demandNodesFilter = function (_p26) {
+		var _p27 = _p26;
+		var _p28 = _p27.label;
+		if (_p28.ctor === 'PeerNode') {
+			var _p29 = _p28._0;
 			return _elm_lang$core$Native_Utils.cmp(
-				_strelka_2017$phi$Simulation_SimulationHelpers$takeFirstElementWithDefault0(_p30.joules.actualConsumption) - _p30.joules.desiredConsumption,
+				_strelka_2017$phi$Simulation_SimulationHelpers$takeFirstElementWithDefault0(_p29.joules.actualConsumption) - _p29.joules.desiredConsumption,
 				0) < 0;
 		} else {
 			return false;
@@ -19061,9 +19060,9 @@ var _strelka_2017$phi$Simulation_Simulation$tradingPhase = function (network) {
 		});
 	var updateNodeSupplyReward = F2(
 		function (tradeRatio, peer) {
-			var _p31 = A2(newSupplyChanges, tradeRatio, peer);
-			var newNW = _p31._0;
-			var newSJ = _p31._1;
+			var _p30 = A2(newSupplyChanges, tradeRatio, peer);
+			var newNW = _p30._0;
+			var newSJ = _p30._1;
 			var updatedPeer = A2(
 				_strelka_2017$phi$Simulation_Simulation$setNegawattsAndStoredJoules,
 				{ctor: '_Tuple2', _0: newNW, _1: newSJ},
@@ -19074,20 +19073,20 @@ var _strelka_2017$phi$Simulation_Simulation$tradingPhase = function (network) {
 		function (tradeRatio, list) {
 			updateNodeListSupply:
 			while (true) {
-				var _p32 = list;
-				if (_p32.ctor === '[]') {
+				var _p31 = list;
+				if (_p31.ctor === '[]') {
 					return list;
 				} else {
-					var _p35 = _p32._1;
-					var _p34 = _p32._0;
-					var _p33 = _p34.label;
-					if (_p33.ctor === 'PeerNode') {
-						var tail = A2(updateNodeListSupply, tradeRatio, _p35);
-						var updatedNode = A2(updateNodeSupplyReward, tradeRatio, _p33._0);
+					var _p34 = _p31._1;
+					var _p33 = _p31._0;
+					var _p32 = _p33.label;
+					if (_p32.ctor === 'PeerNode') {
+						var tail = A2(updateNodeListSupply, tradeRatio, _p34);
+						var updatedNode = A2(updateNodeSupplyReward, tradeRatio, _p32._0);
 						return {
 							ctor: '::',
 							_0: _elm_lang$core$Native_Utils.update(
-								_p34,
+								_p33,
 								{
 									label: _strelka_2017$phi$Simulation_Model$PeerNode(updatedNode)
 								}),
@@ -19095,7 +19094,7 @@ var _strelka_2017$phi$Simulation_Simulation$tradingPhase = function (network) {
 						};
 					} else {
 						var _v21 = tradeRatio,
-							_v22 = _p35;
+							_v22 = _p34;
 						tradeRatio = _v21;
 						list = _v22;
 						continue updateNodeListSupply;
@@ -19130,10 +19129,10 @@ var _strelka_2017$phi$Simulation_Simulation$tradingPhase = function (network) {
 		});
 	var updateNodeDemand = F2(
 		function (pool, peer) {
-			var _p36 = A2(newDemandChanges, pool, peer);
-			var newNW = _p36._0;
-			var newAC = _p36._1;
-			var newPool = _p36._2;
+			var _p35 = A2(newDemandChanges, pool, peer);
+			var newNW = _p35._0;
+			var newAC = _p35._1;
+			var newPool = _p35._2;
 			var updatedPeer = A2(
 				_strelka_2017$phi$Simulation_Simulation$setNegawattsAndActualConsumption,
 				{ctor: '_Tuple2', _0: newNW, _1: newAC},
@@ -19144,27 +19143,27 @@ var _strelka_2017$phi$Simulation_Simulation$tradingPhase = function (network) {
 		function (pool, list) {
 			updateNodeListDemand:
 			while (true) {
-				var _p37 = list;
-				if (_p37.ctor === '[]') {
+				var _p36 = list;
+				if (_p36.ctor === '[]') {
 					return {ctor: '_Tuple2', _0: pool, _1: list};
 				} else {
-					var _p42 = _p37._1;
-					var _p41 = _p37._0;
-					var _p38 = _p41.label;
-					if (_p38.ctor === 'PeerNode') {
-						var _p39 = A2(updateNodeDemand, pool, _p38._0);
-						var newPool = _p39._0;
-						var updatedNode = _p39._1;
-						var _p40 = A2(updateNodeListDemand, newPool, _p42);
-						var restPool = _p40._0;
-						var tail = _p40._1;
+					var _p41 = _p36._1;
+					var _p40 = _p36._0;
+					var _p37 = _p40.label;
+					if (_p37.ctor === 'PeerNode') {
+						var _p38 = A2(updateNodeDemand, pool, _p37._0);
+						var newPool = _p38._0;
+						var updatedNode = _p38._1;
+						var _p39 = A2(updateNodeListDemand, newPool, _p41);
+						var restPool = _p39._0;
+						var tail = _p39._1;
 						return {
 							ctor: '_Tuple2',
 							_0: restPool,
 							_1: {
 								ctor: '::',
 								_0: _elm_lang$core$Native_Utils.update(
-									_p41,
+									_p40,
 									{
 										label: _strelka_2017$phi$Simulation_Model$PeerNode(updatedNode)
 									}),
@@ -19173,7 +19172,7 @@ var _strelka_2017$phi$Simulation_Simulation$tradingPhase = function (network) {
 						};
 					} else {
 						var _v25 = pool,
-							_v26 = _p42;
+							_v26 = _p41;
 						pool = _v25;
 						list = _v26;
 						continue updateNodeListDemand;
@@ -19181,29 +19180,44 @@ var _strelka_2017$phi$Simulation_Simulation$tradingPhase = function (network) {
 				}
 			}
 		});
-	var initialPool = _elm_lang$core$List$sum(
+	var getInitialPool = _elm_lang$core$List$sum(
 		A2(
 			_elm_lang$core$List$filterMap,
-			function (_p43) {
+			function (_p42) {
 				return A2(
 					_elm_lang$core$Maybe$map,
-					function (_p44) {
+					function (_p43) {
 						return _strelka_2017$phi$Simulation_SimulationHelpers$takeFirstElementWithDefault0(
 							function (_) {
 								return _.storedJoules;
 							}(
 								function (_) {
 									return _.joules;
-								}(_p44)));
+								}(_p43)));
 					},
-					_strelka_2017$phi$Simulation_Simulation$toPeer(_p43));
+					_strelka_2017$phi$Simulation_Simulation$toPeer(_p42));
 			},
 			_elm_community$graph$Graph$nodes(network)));
 	var updateNetwork = function () {
-		var _p45 = A2(updateNodeListDemand, initialPool, nodesInDistress);
-		var poolLeft = _p45._0;
-		var updatedDemandNodes = _p45._1;
-		var updatedSupplyNodes = A2(updateNodeListSupply, initialPool - poolLeft, supplyNodes);
+		var supplyList = supplyNodes;
+		var demandList = nodesInDistress;
+		var initialPool = getInitialPool;
+		var _p44 = A2(updateNodeListDemand, initialPool, demandList);
+		var poolLeft = _p44._0;
+		var updatedDemandNodes = _p44._1;
+		var tradeRatioValue = F2(
+			function (initialPool, actualPool) {
+				var _p45 = initialPool;
+				if (_p45 === 0) {
+					return 0;
+				} else {
+					return (initialPool - poolLeft) / initialPool;
+				}
+			});
+		var updatedSupplyNodes = A2(
+			updateNodeListSupply,
+			A2(tradeRatioValue, initialPool, poolLeft),
+			supplyList);
 		return A2(
 			updateNodes,
 			updatedSupplyNodes,
@@ -19951,11 +19965,12 @@ var _strelka_2017$phi$Update$changeDesign = function (model) {
 		model);
 };
 var _strelka_2017$phi$Update$runDay = function (model) {
-	var newNetwork = A3(
-		_strelka_2017$phi$Simulation_Simulation$distributeGeneratedJoules,
-		model.negawattLimit,
-		model.reputationRatio,
-		A2(_strelka_2017$phi$Simulation_Simulation$joulesToGenerators, model.weather, model.network));
+	var newNetwork = _strelka_2017$phi$Simulation_Simulation$tradingPhase(
+		A3(
+			_strelka_2017$phi$Simulation_Simulation$distributeGeneratedJoules,
+			model.negawattLimit,
+			model.reputationRatio,
+			A2(_strelka_2017$phi$Simulation_Simulation$joulesToGenerators, model.weather, model.network)));
 	var newModel = _elm_lang$core$Native_Utils.update(
 		model,
 		{network: newNetwork});
