@@ -5,7 +5,7 @@ import Chat.Model exposing (ChatItem, InputType(..), initChat)
 import Graph
 import Material
 import Simulation.Init.Generators as Generators
-import Simulation.Model exposing (Budget, MapLimit, Narrative, NarrativeItem, PhiNetwork, ReputationRatio, SimMap, Weather)
+import Simulation.Model exposing (Budget, MapLimit, Narrative, NarrativeItem, PhiNetwork, ReputationRatio, SimMap, SiteInfo, Weather)
 
 
 type alias Model =
@@ -14,6 +14,7 @@ type alias Model =
     , messages : List ChatItem
     , network : PhiNetwork
     , weather : Weather
+    , siteInfo : SiteInfo
     , budget : Budget
     , reputationRatio : ReputationRatio
     , negawattLimit : MapLimit
@@ -33,11 +34,19 @@ initModel =
         [ initChat ]
         (initGraph map)
         (initWeather map)
+        (initSiteInfo map)
         (initBudget map)
         (initReputation map)
         (initNegawattLimit map)
         Material.model
         ! initGenerators
+
+
+initSiteInfo : SimMap -> SiteInfo
+initSiteInfo map =
+    { name = map.name
+    , population = map.population
+    }
 
 
 
