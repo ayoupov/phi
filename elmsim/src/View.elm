@@ -151,9 +151,3 @@ viewMCA action =
         , Options.onClick (MultiChoiceMsg action)
         ]
         [ Chip.text [] <| mcaName action ]
-
-
-
---button
---    [ class "multi_button", onClick (MultiChoiceMsg action) ]
---    [ text (mcaName action) ]

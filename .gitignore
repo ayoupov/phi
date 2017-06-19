@@ -3,4 +3,4 @@ ipython/.ipynb_checkpoints/*
 *.mb
 elmsim/elm-stuff/*
 .idea
-elmsim/js/elm.js
+elmsim/public/js/elm.js
