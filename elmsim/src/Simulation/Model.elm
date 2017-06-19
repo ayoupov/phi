@@ -77,6 +77,12 @@ type alias Budget =
     Float
 
 
+type alias SiteInfo =
+    { name : String
+    , population : Int
+    }
+
+
 type alias SimMap =
     { name : String
     , population : Int
