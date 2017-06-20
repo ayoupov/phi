@@ -88,6 +88,7 @@ type alias SimMap =
     , population : Int
     , initialNetwork : PhiNetwork
     , initialWeather : Weather
+    , initialWeatherList : List WeatherTuple
     , narrative : Narrative
     , initialBudget : Budget
     , initialReputationRatio : ReputationRatio
@@ -168,3 +169,6 @@ type alias Weather =
     { sun : Float
     , wind : Float
     }
+
+type alias WeatherTuple =
+    (Float, Float)
