@@ -5,7 +5,8 @@ import Chat.Model exposing (ChatItem, InputType(..), initChat)
 import Graph
 import Material
 import Simulation.Init.Generators as Generators
-import Simulation.Model exposing (Budget, MapLimit, Narrative, NarrativeItem, PhiNetwork, ReputationRatio, SimMap, SiteInfo, Weather)
+import Simulation.Model exposing (Budget, MapLimit, Narrative, NarrativeItem, PhiNetwork, ReputationRatio, SimMap, SiteInfo, Weather, WeatherTuple)
+import Simulation.WeatherList exposing (restWeather)
 
 
 type alias Model =
@@ -14,6 +15,7 @@ type alias Model =
     , messages : List ChatItem
     , network : PhiNetwork
     , weather : Weather
+    , weatherList : List WeatherTuple
     , siteInfo : SiteInfo
     , budget : Budget
     , reputationRatio : ReputationRatio
@@ -34,6 +36,7 @@ initModel =
         [ initChat ]
         (initGraph map)
         (initWeather map)
+        (initWeatherList map)
         (initSiteInfo map)
         (initBudget map)
         (initReputation map)
@@ -55,7 +58,7 @@ initSiteInfo map =
 
 initMap : SimMap
 initMap =
-    SimMap "Kolionovo" 5523 Graph.empty (Weather 0.8 0.4) initNarrative 10000 { a = 1, b = 0 } 21
+    SimMap "Kolionovo" 5523 Graph.empty {sun = 0.5, wind = 0.5} (restWeather []) initNarrative 10000 { a = 1, b = 0 } 21
 
 
 initGraph : SimMap -> PhiNetwork
@@ -65,7 +68,11 @@ initGraph map =
 
 initWeather : SimMap -> Weather
 initWeather map =
-    Weather map.initialWeather.sun map.initialWeather.wind
+    map.initialWeather
+
+initWeatherList : SimMap -> List WeatherTuple
+initWeatherList map =
+    map.initialWeatherList
 
 
 initBudget : SimMap -> Budget

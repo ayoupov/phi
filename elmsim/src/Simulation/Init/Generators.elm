@@ -6,6 +6,7 @@ import Random exposing (Generator)
 import Random.Extra as Random
 import Simulation.GraphUpdates exposing (createEdge)
 import Simulation.Model exposing (..)
+import Simulation.WeatherList exposing (restWeather, weatherTupleToWeather)
 
 
 coordsGenerator : Random.Generator Coords
@@ -16,12 +17,12 @@ coordsGenerator =
         (Random.float (50.4501 - 0.01) (50.4501 + 0.01))
 
 
-generateWeather : Cmd Msg
-generateWeather =
-    Random.map2 Weather
-        (Random.float 0 1)
-        (Random.float 0 1)
-        |> Random.generate UpdateWeather
+--generateWeather : List WeatherTuple -> Cmd Msg
+--generateWeather list =
+--    Random.map2 Weather
+--        (Random.float 0 1)
+--        (Random.float 0 1)
+--        |> Random.generate UpdateWeather
 
 
 generatePVPanel : Cmd Msg

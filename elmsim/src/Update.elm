@@ -15,6 +15,7 @@ import Simulation.Init.Generators as Generators exposing (..)
 import Simulation.Model exposing (..)
 import Simulation.Simulation as Simulation exposing (..)
 import Simulation.SimulationInterop exposing (..)
+import Simulation.WeatherList exposing (restWeather, weatherTupleToWeather)
 import Task
 import Update.Extra exposing (andThen)
 
@@ -96,7 +97,7 @@ update msg model =
                 |> update RenderPhiNetwork
 
         UpdateWeather weather ->
-            update RenderPhiNetwork { model | weather = weather }
+            update RenderPhiNetwork { model | weather = weather, weatherList = restWeather model.weatherList }
 
         RenderPhiNetwork ->
             ( model, renderPhiNetwork <| encodeGraph model.network )
@@ -188,7 +189,8 @@ runDay model =
             { model | network = newNetwork }
     in
     newModel
-        ! [ Generators.generateWeather ]
+        |> generateWeather model.weatherList
+--        ! [ generateWeather model.weatherList]
         |> andThen update RenderPhiNetwork
 
 
@@ -222,3 +224,15 @@ changeDesign model =
             BotMessage "Sorry that's not available yet!"
     in
     update (SendBotChatItem chatMsg) model
+
+--generateWeather : List WeatherTuple -> Cmd Msg
+generateWeather list =
+    let
+        currentList = restWeather list
+        currentWeather =
+            currentList
+            |> List.head
+            |> Maybe.withDefault (0.5,0.5)
+            |> weatherTupleToWeather
+    in
+    update (UpdateWeather currentWeather)
