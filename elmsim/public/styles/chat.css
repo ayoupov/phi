@@ -79,6 +79,13 @@ body {
   flex: 0;
 }
 
+.status_body p {
+  color: #000;
+}
+.chat_header .status_body .status_left {
+  display: flex;
+  flex-flow: "row";
+}
 
 .title_bar span {
   position: relative;
@@ -240,7 +247,7 @@ body {
   margin: 0;
 }
 
-input_wrapper .hline {
+.input_wrapper .hline {
   height: 32px;
 }
 
