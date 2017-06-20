@@ -67,7 +67,8 @@ update msg model =
             weatherForecast model
 
         DaySummary ->
-            update (SendBotChatItem <| Narrative.daySummary model) model
+--            update (SendBotChatItem <| Narrative.daySummary model) model
+            update (SendBotChatItem <| Narrative.dayBeginning model) model
 
         CallTurn ->
             runDay model
@@ -106,16 +107,26 @@ update msg model =
         AnimatePeerConsumption ->
             ( model, animatePeerConsumption <| encodeGraph model.network )
 
+        AnimateTrade ->
+            ( model, animateTrade <| encodeGraph model.network )
+
         AnimationFinished phase ->
             case phase of
                 "layoutRendered" ->
                     update AnimateGeneration model
 
                 "generatorsAnimated" ->
-                    update AnimatePeerConsumption model
+                    update (SendBotChatItem <| Narrative.dayGenerated model) model
+                    |> andThen
+                       update AnimatePeerConsumption
 
                 "consumptionAnimated" ->
-                    update NoOp model
+                    update (SendBotChatItem <| Narrative.dayConsumed model) model
+                    |> andThen
+                       update AnimateTrade
+
+                "tradeAnimated" ->
+                    update (SendBotChatItem <| Narrative.dayTraded model) model
 
                 _ ->
                     update NoOp model
@@ -154,7 +165,7 @@ handleMultiChoiceMsg action model =
 
         McaRunDay ->
             runDay model
-                |> andThen update DaySummary
+--                |> andThen update DaySummary
 
         McaSelectLocation _ ->
             model ! []

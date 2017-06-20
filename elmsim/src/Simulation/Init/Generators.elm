@@ -68,13 +68,15 @@ generatePeer : Cmd Msg
 generatePeer =
     Random.map4 Peer
         --        generatePeerJoules
-        (Random.map4 PeerJoules
+        (Random.map5 PeerJoules
             (Random.constant [ 0 ])
             -- actual consumption
             (Random.constant [ 0 ])
             -- desired consumption
             (Random.float 5 10)
             -- seedRating in joules?
+            (Random.constant [ 0 ])
+            -- initial trade balance
             (Random.constant [ 0 ])
         )
         -- negawatts

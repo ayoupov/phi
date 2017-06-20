@@ -88,6 +88,25 @@ networkConsumedEnergy network =
         |> List.filterMap nodeConsumedEnergy
         |> List.sum
 
+networkTradedEnergy : PhiNetwork -> KWHour
+networkTradedEnergy network =
+    let
+        nodeTradedEnergy { label, id } =
+            case label of
+                PeerNode node ->
+                    let
+                        balance = List.head node.joules.tradeBalance
+                    in
+                        if ((Maybe.withDefault 0 balance) > 0)
+                            then balance
+                        else Nothing
+                _ ->
+                    Nothing
+    in
+    Graph.nodes network
+        |> List.filterMap nodeTradedEnergy
+        |> List.sum
+
 
 networkGeneratedEnergy : PhiNetwork -> KWHour
 networkGeneratedEnergy network =
@@ -128,6 +147,10 @@ asStoredJoulesIn : PeerJoules -> List KWHour -> PeerJoules
 asStoredJoulesIn =
     flip setStoredJoules
 
+setTradeBalance : List KWHour -> PeerJoules -> PeerJoules
+setTradeBalance tb joules =
+    { joules | tradeBalance = tb }
+
 
 setJoules : PeerJoules -> Peer -> Peer
 setJoules newJoules peer =
@@ -143,6 +166,23 @@ setNegawatts : List KWHour -> Peer -> Peer
 setNegawatts newNW peer =
     { peer | negawatts = newNW }
 
+setNegawattsStoredJoulesAndBalance : ( List KWHour, List KWHour, List KWHour ) -> Peer -> Peer
+setNegawattsStoredJoulesAndBalance ( newNW, newSJ, newTB ) peer =
+    peer.joules
+        |> setStoredJoules newSJ
+        |> setTradeBalance newTB
+        |> asJoulesIn peer
+        |> setNegawatts newNW
+
+setNegawattsActualConsumptionAndBalance : ( List KWHour, List KWHour, List KWHour ) -> Peer -> Peer
+setNegawattsActualConsumptionAndBalance ( newNW, newAC, newTB ) peer =
+    peer.joules
+        |> setActualConsumption newAC
+        |> setTradeBalance newTB
+        |> asJoulesIn peer
+        |> setNegawatts newNW
+
+-- phases
 
 distributeGeneratedJoules : MapLimit -> ReputationRatio -> PhiNetwork -> PhiNetwork
 distributeGeneratedJoules limit ratio network =
@@ -216,31 +256,6 @@ distributeGeneratedJoules limit ratio network =
     network
         |> Graph.mapNodes updateNode
 
-
-setNegawattsAndStoredJoules : ( List KWHour, List KWHour ) -> Peer -> Peer
-setNegawattsAndStoredJoules ( newNW, newSJ ) peer =
-    peer.joules
-        |> setStoredJoules newSJ
-        |> asJoulesIn peer
-        |> setNegawatts newNW
-
-
-
---    { peer | negawatts = newNW, storedJoules = newSJ }
-
-
-setNegawattsAndActualConsumption : ( List KWHour, List KWHour ) -> Peer -> Peer
-setNegawattsAndActualConsumption ( newNW, newAC ) peer =
-    peer.joules
-        |> setActualConsumption newAC
-        |> asJoulesIn peer
-        |> setNegawatts newNW
-
-
-
---    { peer | negawatts = newNW, actualConsumption = newAC }
-
-
 maxDesiredTrade : Peer -> Float
 maxDesiredTrade peerInNeed =
     peerInNeed.joules.desiredConsumption
@@ -283,7 +298,7 @@ tradingPhase network =
                 |> List.sum
 
         --        currentPool = initialPool
-        newDemandChanges : Float -> Peer -> ( List KWHour, List KWHour, Float )
+        newDemandChanges : Float -> Peer -> ( List KWHour, List KWHour, List KWHour, Float)
         newDemandChanges pool peer =
             let
                 currentNW =
@@ -304,6 +319,7 @@ tradingPhase network =
             in
             ( currentNW - actualTradeConsumption :: takeTailDefaultEmpty peer.negawatts
             , currentAC + actualTradeConsumption :: takeTailDefaultEmpty peer.joules.actualConsumption
+            , (-actualTradeConsumption) :: takeTailDefaultEmpty peer.joules.tradeBalance
             , newPool
             )
 
@@ -332,15 +348,15 @@ tradingPhase network =
         updateNodeDemand : Float -> Peer -> ( Float, Peer )
         updateNodeDemand pool peer =
             let
-                ( newNW, newAC, newPool ) =
+                ( newNW, newAC, newTB, newPool ) =
                     newDemandChanges pool peer
 
                 updatedPeer =
-                    setNegawattsAndActualConsumption ( newNW, newAC ) peer
+                    setNegawattsActualConsumptionAndBalance ( newNW, newAC, newTB ) peer
             in
             ( newPool, updatedPeer )
 
-        newSupplyChanges : Float -> Peer -> ( List KWHour, List KWHour )
+        newSupplyChanges : Float -> Peer -> ( List KWHour, List KWHour, List KWHour )
         newSupplyChanges tradeRatio peer =
             let
                 currentNW =
@@ -351,16 +367,17 @@ tradingPhase network =
             in
             ( currentNW + currentNW * tradeRatio :: takeTailDefaultEmpty peer.negawatts
             , currentSJ - currentSJ * tradeRatio :: takeTailDefaultEmpty peer.joules.storedJoules
+            , currentSJ * tradeRatio :: takeTailDefaultEmpty peer.joules.tradeBalance
             )
 
         updateNodeSupplyReward : Float -> Peer -> Peer
         updateNodeSupplyReward tradeRatio peer =
             let
-                ( newNW, newSJ ) =
+                ( newNW, newSJ, newTB ) =
                     newSupplyChanges tradeRatio peer
 
                 updatedPeer =
-                    setNegawattsAndStoredJoules ( newNW, newSJ ) peer
+                    setNegawattsStoredJoulesAndBalance ( newNW, newSJ, newTB ) peer
             in
             updatedPeer
 
@@ -470,5 +487,6 @@ port animateGeneration : ( List (Node Json.Value), List EncodedEdge ) -> Cmd msg
 port animatePeerConsumption : ( List (Node Json.Value), List EncodedEdge ) -> Cmd msg
 
 
+port animateTrade : ( List (Node Json.Value), List EncodedEdge ) -> Cmd msg
 
 -- VIEW

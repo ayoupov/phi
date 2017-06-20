@@ -148,6 +148,7 @@ type alias PeerJoules =
     , actualConsumption : List KWHour
     , desiredConsumption : KWHour
     , seedRatingJoules : List KWHour
+    , tradeBalance : List KWHour
     }
 
 
