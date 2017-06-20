@@ -75,11 +75,17 @@ function zoomed() {
 
 function endall(transition, callback) {
     if (typeof callback !== "function") throw new Error("Wrong callback in endall");
-    if (transition.size() === 0) { callback() }
+    if (transition.size() === 0) {
+        callback()
+    }
     var n = 0;
     transition
-        .each(function() { ++n; })
-        .on("end", function() { if (!--n) callback.apply(this, arguments); });
+        .each(function () {
+            ++n;
+        })
+        .on("end", function () {
+            if (!--n) callback.apply(this, arguments);
+        });
 }
 
 $(function () {
@@ -97,6 +103,21 @@ $(function () {
         cancel: ".chat_window .message, .input_wrapper"
     });
 
+    app.ports.animateTrade.subscribe(function (model) {
+        var t = d3.transition().duration(1500);
+
+        phiNetwork = model;
+        var phiNodes = model[0];
+
+        var nodes = svg.select(".nodes").selectAll(".node")
+            .data(phiNodes, function (d) {
+                return d.id;
+            });
+
+        app.ports.animationFinished.send("tradeAnimated");
+
+    });
+
     app.ports.animatePeerConsumption.subscribe(function (model) {
         var t = d3.transition().duration(1500);
 
@@ -109,7 +130,7 @@ $(function () {
             });
 
         nodes.select(".peer .energyIndicator")
-            .attr("d", function(d) {
+            .attr("d", function (d) {
                 return (peerOutline()(d));
             })
             .attr("stroke-opacity", "0")
@@ -125,15 +146,14 @@ $(function () {
 
         nodes.select(".generator .energyIndicator")
             .transition(t)
-            .attr("d", function(d) {
+            .attr("d", function (d) {
                 //return "M0,0";
                 return generatorInitialShadow()(d);
             })
             .attr('transform', function (d) {
                 return "translate(" + (setX(d)) + "," + (setY(d)) + ")";
             })
-            .call(endall, function()
-            {
+            .call(endall, function () {
                 app.ports.animationFinished.send("consumptionAnimated");
             });
 
@@ -151,14 +171,13 @@ $(function () {
 
         nodes.select(".generator .energyIndicator")
             .transition(t)
-            .attr("d", function(d) {
+            .attr("d", function (d) {
                 return (transactionShadow()(d));
             })
             .attr('transform', function (d) {
                 return "translate(" + (setX(d)) + "," + (setY(d)) + ")";
             })
-            .call(endall, function()
-            {
+            .call(endall, function () {
                 app.ports.animationFinished.send("generatorsAnimated");
             });
     });
@@ -193,17 +212,17 @@ $(function () {
                 .attr('transform', function (d) {
                     return "translate(" + (setX(d)) + "," + (setY(d)) + ")";
                 })
-                .attr("d", function(d) {
+                .attr("d", function (d) {
                     return (!isGenerator(d) ? peerFullOutline()(d) : generatorInitialShadow()(d));
                 })
                 .attr("class", "peerFullCircle");
 
             nodeEnter.append("path")
-                .attr("d", function(d) {
+                .attr("d", function (d) {
                     return (generatorInitialShadow()(d));
                 })
-                .style("opacity", function(d) {
-                    return ((isGenerator(d))? "0.7" : "0");
+                .style("opacity", function (d) {
+                    return ((isGenerator(d)) ? "0.7" : "0");
                 })
                 .attr('transform', function (d) {
                     return "translate(" + (setX(d)) + "," + (setY(d)) + ")";
@@ -213,9 +232,17 @@ $(function () {
             nodes.select('.peer .energyIndicator')
                 .transition(t)
                 .style("opacity", "0")
-                .call(endall, function()
-                {
-                    app.ports.animationFinished.send("layoutRendered");
+                .call(endall, function () {
+                    // todo: fix ugly hack
+                    var signalSent = false;
+                    d3.select('.peer')
+                        .each(
+                            function (d) {
+                                if (!signalSent && d.label && d.label.actualConsumption && d.label.actualConsumption.length > 1) {
+                                    signalSent = true;
+                                    app.ports.animationFinished.send("layoutRendered");
+                                }
+                            });
                 });
 
 
