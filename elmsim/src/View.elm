@@ -1,6 +1,7 @@
 module View exposing (view)
 
 import Action exposing (Msg(..))
+import Charts
 import Chat.Model
     exposing
         ( BotChatItem(..)
@@ -21,7 +22,7 @@ import Material.Elevation as Elevation
 import Material.Icon as Icon
 import Material.Options as Options
 import Model exposing (Model)
-import Svg exposing (g, svg)
+import Svg exposing (circle, g, svg)
 import Svg.Attributes as SVG
 
 
@@ -71,12 +72,23 @@ chatHeader model =
                 , statusTitle "week_no" "today" "Week 20"
                 ]
             , div [ class "status_body" ]
-                [ div [ class "status_left" ] []
+                [ div [ class "status_left" ]
+                    [ pt "PHI", pt "health", Charts.donutChart 60 10 0.5 ]
                 , div [ class "hline" ] []
                 , div [ class "status_right" ] []
                 ]
             ]
         ]
+
+
+
+--<svg width="100%" height="100%" viewBox="0 0 42 42" class="donut">
+--  <circle class="donut-hole" cx="21" cy="21" r="15.91549430918954" fill="#fff"></circle>
+--  <circle class="donut-ring" cx="21" cy="21" r="15.91549430918954" fill="transparent" stroke="#d2d3d4" stroke-width="3"></circle>
+--
+--  <circle class="donut-segment" cx="21" cy="21" r="15.91549430918954" fill="transparent" stroke="#ce4b99" stroke-width="3" stroke-dasharray="85 15" stroke-dashoffset="25"></circle>
+--  <circle class="donut-segment" cx="21" cy="21" r="15.91549430918954" fill="transparent" stroke="#b1c94e" stroke-width="3" stroke-dasharray="15 85" stroke-dashoffset="25"></circle>
+--</svg>
 
 
 inputFooter : Model -> Html Msg
