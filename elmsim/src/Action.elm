@@ -17,11 +17,8 @@ type Msg
     | AddPeer Peer
     | AddEdge TransmissionLine
     | RenderPhiNetwork
---    | SendOnLayoutMessage
     | AnimateGeneration
---    | SendOnDistributionMessage
     | AnimatePeerConsumption
---    | SendOnTradeMessage
     | AnimateTrade
     | AnimationFinished AnimationPhase
     | UpdateWeather Weather
