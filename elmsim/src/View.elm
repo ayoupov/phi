@@ -10,6 +10,7 @@ import Chat.Model
         , mcaName
         )
 import Chat.View exposing (viewChatMsg)
+import FormatNumber exposing (format)
 import Html exposing (..)
 import Html.Attributes exposing (..)
 import Html.Events exposing (..)
@@ -24,6 +25,16 @@ import Svg exposing (g, svg)
 import Svg.Attributes as SVG
 
 
+intFmt : Int -> String
+intFmt num =
+    format
+        { decimals = 0
+        , thousandSeparator = ","
+        , decimalSeparator = "."
+        }
+        (toFloat num)
+
+
 view : Model -> Html Msg
 view model =
     div [ class "chat_window" ]
@@ -36,15 +47,33 @@ view model =
 
 chatHeader : Model -> Html Msg
 chatHeader model =
+    let
+        pt theText =
+            p [] [ text theText ]
+
+        statusTitle className iconName txt =
+            span [ class className ]
+                [ Icon.view iconName [ Icon.size18 ]
+                , pt txt
+                ]
+
+        sitePop =
+            intFmt model.siteInfo.population
+
+        siteName =
+            model.siteInfo.name
+    in
     div [ class "chat_header" ]
         [ div [ class "map_status" ]
             [ div [ class "title_bar" ]
-                [ span [ class "site_name" ] [ text "Nomovovo" ]
-                , span [ class "population" ] [ text "12345" ]
-                , span [ class "week_no" ] [ text "Week 20" ]
+                [ statusTitle "site_name" "location_city" siteName
+                , statusTitle "population" "people" sitePop
+                , statusTitle "week_no" "today" "Week 20"
                 ]
             , div [ class "status_body" ]
-                [ div [ class "hline" ] []
+                [ div [ class "status_left" ] []
+                , div [ class "hline" ] []
+                , div [ class "status_right" ] []
                 ]
             ]
         ]
@@ -151,9 +180,3 @@ viewMCA action =
         , Options.onClick (MultiChoiceMsg action)
         ]
         [ Chip.text [] <| mcaName action ]
-
-
-
---button
---    [ class "multi_button", onClick (MultiChoiceMsg action) ]
---    [ text (mcaName action) ]
