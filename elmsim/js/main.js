@@ -73,6 +73,15 @@ function zoomed() {
     container.attr("transform", transform);
 }
 
+function endall(transition, callback) {
+    if (typeof callback !== "function") throw new Error("Wrong callback in endall");
+    if (transition.size() === 0) { callback() }
+    var n = 0;
+    transition
+        .each(function() { ++n; })
+        .on("end", function() { if (!--n) callback.apply(this, arguments); });
+}
+
 $(function () {
     var node = document.getElementById('elm-node');
     var app = Elm.Main.embed(node);
@@ -123,7 +132,7 @@ $(function () {
             .attr('transform', function (d) {
                 return "translate(" + (setX(d)) + "," + (setY(d)) + ")";
             })
-            .on("end", function()
+            .call(endall, function()
             {
                 app.ports.animationFinished.send("consumptionAnimated");
             });
@@ -148,7 +157,7 @@ $(function () {
             .attr('transform', function (d) {
                 return "translate(" + (setX(d)) + "," + (setY(d)) + ")";
             })
-            .on("end", function()
+            .call(endall, function()
             {
                 app.ports.animationFinished.send("generatorsAnimated");
             });
@@ -204,7 +213,7 @@ $(function () {
             nodes.select('.peer .energyIndicator')
                 .transition(t)
                 .style("opacity", "0")
-                .on("end", function()
+                .call(endall, function()
                 {
                     app.ports.animationFinished.send("layoutRendered");
                 });
