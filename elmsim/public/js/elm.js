@@ -19752,10 +19752,6 @@ var _strelka_2017$phi$Simulation_Simulation$animateTrade = _elm_lang$core$Native
 		];
 	});
 
-var _strelka_2017$phi$Chat_Narrative$dayBeginning = function (model) {
-	var text = 'Glorious new day in Arstotzka';
-	return _strelka_2017$phi$Chat_Model$BotMessage(text);
-};
 var _strelka_2017$phi$Chat_Narrative$dayTraded = function (model) {
 	var totalTraded = _elm_lang$core$Basics$toString(
 		_strelka_2017$phi$Simulation_Simulation$networkTradedEnergy(model.network));
@@ -19763,7 +19759,23 @@ var _strelka_2017$phi$Chat_Narrative$dayTraded = function (model) {
 		_elm_lang$core$Basics_ops['++'],
 		'The community had traded ',
 		A2(_elm_lang$core$Basics_ops['++'], totalTraded, ' kWh of energy'));
-	return _strelka_2017$phi$Chat_Model$BotMessage(text);
+	return _strelka_2017$phi$Chat_Model$MultiChoiceItem(
+		A2(
+			_strelka_2017$phi$Chat_Model$MultiChoiceMessage,
+			text,
+			{
+				ctor: '::',
+				_0: _strelka_2017$phi$Chat_Model$McaWeatherForecast,
+				_1: {
+					ctor: '::',
+					_0: _strelka_2017$phi$Chat_Model$McaRunDay,
+					_1: {
+						ctor: '::',
+						_0: _strelka_2017$phi$Chat_Model$McaChangeDesign,
+						_1: {ctor: '[]'}
+					}
+				}
+			}));
 };
 var _strelka_2017$phi$Chat_Narrative$dayConsumed = function (model) {
 	var totalConsumed = _elm_lang$core$Basics$toString(
@@ -19789,6 +19801,10 @@ var _strelka_2017$phi$Chat_Narrative$dayGenerated = function (model) {
 				_elm_lang$core$Basics_ops['++'],
 				' kWh in total, ',
 				A2(_elm_lang$core$Basics_ops['++'], totalStored, ' kWh has stored in the batteries.'))));
+	return _strelka_2017$phi$Chat_Model$BotMessage(text);
+};
+var _strelka_2017$phi$Chat_Narrative$dayBeginning = function (model) {
+	var text = 'Glorious new day in Arstotzka';
 	return _strelka_2017$phi$Chat_Model$BotMessage(text);
 };
 var _strelka_2017$phi$Chat_Narrative$daySummary = function (model) {
@@ -20092,24 +20108,32 @@ var _strelka_2017$phi$Simulation_Encoding$encodeNodeLabel = function (nodeLabel)
 										ctor: '::',
 										_0: {
 											ctor: '_Tuple2',
-											_0: 'reputationRating',
-											_1: A2(_strelka_2017$phi$Simulation_Encoding$encodeList, _elm_lang$core$Json_Encode$float, _p6.reputation)
+											_0: 'tradeBalance',
+											_1: A2(_strelka_2017$phi$Simulation_Encoding$encodeList, _elm_lang$core$Json_Encode$float, _p6.joules.tradeBalance)
 										},
 										_1: {
 											ctor: '::',
 											_0: {
 												ctor: '_Tuple2',
-												_0: 'pos',
-												_1: _strelka_2017$phi$Simulation_Encoding$encodeCoords(_p6.pos)
+												_0: 'reputationRating',
+												_1: A2(_strelka_2017$phi$Simulation_Encoding$encodeList, _elm_lang$core$Json_Encode$float, _p6.reputation)
 											},
 											_1: {
 												ctor: '::',
 												_0: {
 													ctor: '_Tuple2',
-													_0: 'nodeType',
-													_1: _elm_lang$core$Json_Encode$string('peer')
+													_0: 'pos',
+													_1: _strelka_2017$phi$Simulation_Encoding$encodeCoords(_p6.pos)
 												},
-												_1: {ctor: '[]'}
+												_1: {
+													ctor: '::',
+													_0: {
+														ctor: '_Tuple2',
+														_0: 'nodeType',
+														_1: _elm_lang$core$Json_Encode$string('peer')
+													},
+													_1: {ctor: '[]'}
+												}
 											}
 										}
 									}

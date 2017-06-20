@@ -37,6 +37,14 @@ daySummary model =
             , McaChangeDesign
             ]
 
+dayBeginning : Model -> BotChatItem
+dayBeginning model =
+    let
+        text = "Glorious new day in Arstotzka"
+        -- add weather?
+    in
+        BotMessage text
+
 dayGenerated : Model -> BotChatItem
 dayGenerated model =
     let
@@ -79,12 +87,10 @@ dayTraded model =
                 ++ totalTraded
                 ++ " kWh of energy"
     in
-        BotMessage text
-
-dayBeginning : Model -> BotChatItem
-dayBeginning model =
-    let
-        text = "Glorious new day in Arstotzka"
-        -- add weather?
-    in
-        BotMessage text
+--        BotMessage text
+    MultiChoiceItem <|
+        MultiChoiceMessage text
+            [ McaWeatherForecast
+            , McaRunDay
+            , McaChangeDesign
+            ]

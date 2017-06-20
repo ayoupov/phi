@@ -32,6 +32,7 @@ encodeNodeLabel nodeLabel =
                 , ( "desiredConsumption", Json.float label.joules.desiredConsumption )
                 , ( "negawatts", encodeList Json.float label.negawatts )
                 , ( "seedRating", encodeList Json.float label.joules.seedRatingJoules )
+                , ( "tradeBalance", encodeList Json.float label.joules.tradeBalance )
                 , ( "reputationRating", encodeList Json.float label.reputation )
                 , ( "pos", encodeCoords label.pos )
                 , ( "nodeType", Json.string "peer" )
