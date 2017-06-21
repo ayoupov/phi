@@ -22,6 +22,7 @@ import Material.Elevation as Elevation
 import Material.Icon as Icon
 import Material.Options as Options
 import Model exposing (Model)
+import ListHelpers exposing (takeFirstElementWithDefault0)
 import Svg exposing (circle, g, svg)
 import Svg.Attributes as SVG
 
@@ -106,7 +107,7 @@ chatHeader model =
                     [ div [ class "budget_status" ]
                         [ b [] [ text "BUDGET" ]
                         , br [] []
-                        , span [ class "budget_coin" ] [ text <| phiCoin model.budget ]
+                        , span [ class "budget_coin" ] [ text <| phiCoin (takeFirstElementWithDefault0 model.budget) ]
                         ]
                     ]
                 ]

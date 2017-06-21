@@ -16703,8 +16703,8 @@ var _elm_community$graph$Graph$ignorePath = F4(
 			return _elm_lang$core$Native_Utils.crashCase(
 				'Graph',
 				{
-					start: {line: 1017, column: 5},
-					end: {line: 1022, column: 26}
+					start: {line: 885, column: 3},
+					end: {line: 889, column: 20}
 				},
 				_p1)('Graph.ignorePath: No algorithm should ever pass an empty path into this BfsNodeVisitor.');
 		} else {
@@ -17049,8 +17049,8 @@ var _elm_community$graph$Graph$computeEdgeDiff = F2(
 								return _elm_lang$core$Native_Utils.crashCase(
 									'Graph',
 									{
-										start: {line: 255, column: 21},
-										end: {line: 269, column: 36}
+										start: {line: 189, column: 11},
+										end: {line: 199, column: 22}
 									},
 									_p21)('Graph.computeEdgeDiff: Collected two removals for the same edge. This is an error in the implementation of Graph and you should file a bug report!');
 							}
@@ -17058,8 +17058,8 @@ var _elm_community$graph$Graph$computeEdgeDiff = F2(
 							return _elm_lang$core$Native_Utils.crashCase(
 								'Graph',
 								{
-									start: {line: 255, column: 21},
-									end: {line: 269, column: 36}
+									start: {line: 189, column: 11},
+									end: {line: 199, column: 22}
 								},
 								_p21)('Graph.computeEdgeDiff: Collected inserts before removals. This is an error in the implementation of Graph and you should file a bug report!');
 						}
@@ -17363,8 +17363,8 @@ var _elm_community$graph$Graph$dfsTree = F2(
 				return _elm_lang$core$Native_Utils.crashCase(
 					'Graph',
 					{
-						start: {line: 953, column: 5},
-						end: {line: 961, column: 126}
+						start: {line: 827, column: 3},
+						end: {line: 833, column: 120}
 					},
 					_p42)('dfsTree: There can\'t be more than one DFS tree. This invariant is violated, please report this bug.');
 			}
@@ -17412,8 +17412,8 @@ var _elm_community$graph$Graph$topologicalSort = function (graph) {
 			return _elm_lang$core$Native_Utils.crashCase(
 				'Graph',
 				{
-					start: {line: 1198, column: 13},
-					end: {line: 1208, column: 32}
+					start: {line: 1046, column: 7},
+					end: {line: 1054, column: 18}
 				},
 				_p46)('Invariant hurt in Graph.topologicalSort: No strongly connected component should be empty');
 		} else {
@@ -17422,8 +17422,8 @@ var _elm_community$graph$Graph$topologicalSort = function (graph) {
 				return _elm_lang$core$Native_Utils.crashCase(
 					'Graph',
 					{
-						start: {line: 1203, column: 21},
-						end: {line: 1208, column: 32}
+						start: {line: 1050, column: 11},
+						end: {line: 1054, column: 18}
 					},
 					_p48)('Invariant hurt in Graph.topologicalSort: nodeId in nodeIdRange of the strongly connected component should be present in the original graph');
 			} else {
@@ -17563,8 +17563,8 @@ var _elm_community$graph$Graph$heightLevels = function (graph) {
 					return _elm_lang$core$Native_Utils.crashCase(
 						'Graph',
 						{
-							start: {line: 1150, column: 21},
-							end: {line: 1155, column: 157}
+							start: {line: 1006, column: 13},
+							end: {line: 1008, column: 154}
 						},
 						_p62)('Graph.heightLevels: Could not get a node of a graph which should be there by invariants. Please file a bug report!');
 				}
@@ -17617,8 +17617,8 @@ var _elm_community$graph$Graph$heightLevels = function (graph) {
 					return _elm_lang$core$Native_Utils.crashCase(
 						'Graph',
 						{
-							start: {line: 1176, column: 21},
-							end: {line: 1181, column: 56}
+							start: {line: 1025, column: 13},
+							end: {line: 1029, column: 44}
 						},
 						_p67)('Graph.heightLevels: Reached a branch which is impossible by invariants. Please file a bug report!');
 				} else {
@@ -20807,19 +20807,19 @@ var _strelka_2017$phi$Model$initModel = function () {
 		_strelka_2017$phi$Model$initGenerators);
 }();
 
-var _strelka_2017$phi$Simulation_SimulationHelpers$takeTailDefaultEmpty = function (list) {
+var _strelka_2017$phi$ListHelpers$takeTailDefaultEmpty = function (list) {
 	return A2(
 		_elm_lang$core$Maybe$withDefault,
 		{ctor: '[]'},
 		_elm_lang$core$List$tail(list));
 };
-var _strelka_2017$phi$Simulation_SimulationHelpers$takeFirstElementWithDefault0 = function (list) {
+var _strelka_2017$phi$ListHelpers$takeFirstElementWithDefault0 = function (list) {
 	return A2(
 		_elm_lang$core$Maybe$withDefault,
 		0,
 		_elm_lang$core$List$head(list));
 };
-var _strelka_2017$phi$Simulation_SimulationHelpers$takeFirstElementWithDefault1 = function (list) {
+var _strelka_2017$phi$ListHelpers$takeFirstElementWithDefault1 = function (list) {
 	return A2(
 		_elm_lang$core$Maybe$withDefault,
 		1,
@@ -20827,7 +20827,7 @@ var _strelka_2017$phi$Simulation_SimulationHelpers$takeFirstElementWithDefault1 
 };
 
 var _strelka_2017$phi$Simulation_Simulation$maxDesiredTrade = function (peerInNeed) {
-	return peerInNeed.joules.desiredConsumption - _strelka_2017$phi$Simulation_SimulationHelpers$takeFirstElementWithDefault0(peerInNeed.joules.actualConsumption);
+	return peerInNeed.joules.desiredConsumption - _strelka_2017$phi$ListHelpers$takeFirstElementWithDefault0(peerInNeed.joules.actualConsumption);
 };
 var _strelka_2017$phi$Simulation_Simulation$setNegawatts = F2(
 	function (newNW, peer) {
@@ -20880,8 +20880,8 @@ var _strelka_2017$phi$Simulation_Simulation$consumeFromStorage = function (node)
 	var _p2 = node;
 	if (_p2.ctor === 'PeerNode') {
 		var _p3 = _p2._0;
-		var storedJoules = _strelka_2017$phi$Simulation_SimulationHelpers$takeFirstElementWithDefault0(_p3.joules.storedJoules);
-		var actualConsumption = _strelka_2017$phi$Simulation_SimulationHelpers$takeFirstElementWithDefault0(_p3.joules.actualConsumption);
+		var storedJoules = _strelka_2017$phi$ListHelpers$takeFirstElementWithDefault0(_p3.joules.storedJoules);
+		var actualConsumption = _strelka_2017$phi$ListHelpers$takeFirstElementWithDefault0(_p3.joules.actualConsumption);
 		var remainingDesiredConsumption = A2(_elm_lang$core$Basics$max, 0, _p3.joules.desiredConsumption - actualConsumption);
 		var toConsume = A2(_elm_lang$core$Basics$min, remainingDesiredConsumption, storedJoules);
 		return _strelka_2017$phi$Simulation_Model$PeerNode(
@@ -20955,7 +20955,7 @@ var _strelka_2017$phi$Simulation_Simulation$networkTradedEnergy = function (netw
 var _strelka_2017$phi$Simulation_Simulation$updateBudget = function (model) {
 	return {
 		ctor: '::',
-		_0: (_strelka_2017$phi$Simulation_Simulation$networkTradedEnergy(model.network) * 0.15) + _strelka_2017$phi$Simulation_SimulationHelpers$takeFirstElementWithDefault0(model.budget),
+		_0: (_strelka_2017$phi$Simulation_Simulation$networkTradedEnergy(model.network) * 0.15) + _strelka_2017$phi$ListHelpers$takeFirstElementWithDefault0(model.budget),
 		_1: model.budget
 	};
 };
@@ -21025,7 +21025,7 @@ var _strelka_2017$phi$Simulation_Simulation$distributeGeneratedJoules = F3(
 			});
 		var weightedNegawatts = F2(
 			function (peer, negawattsFactor) {
-				return negawattsFactor * _strelka_2017$phi$Simulation_SimulationHelpers$takeFirstElementWithDefault0(peer.negawatts);
+				return negawattsFactor * _strelka_2017$phi$ListHelpers$takeFirstElementWithDefault0(peer.negawatts);
 			});
 		var reputationRating = function (peer) {
 			return (1 + A2(weightedNegawatts, peer, ratio.a)) + A2(weightedSeed, peer, ratio.b);
@@ -21055,7 +21055,7 @@ var _strelka_2017$phi$Simulation_Simulation$distributeGeneratedJoules = F3(
 		var updatePeer = function (peer) {
 			var myAllocatedJoules = allocatedJoules(peer);
 			var joulesForStorage = A2(_elm_lang$core$Basics$max, 0, myAllocatedJoules - peer.joules.desiredConsumption);
-			var newStoredJoules = joulesForStorage + _strelka_2017$phi$Simulation_SimulationHelpers$takeFirstElementWithDefault0(peer.joules.storedJoules);
+			var newStoredJoules = joulesForStorage + _strelka_2017$phi$ListHelpers$takeFirstElementWithDefault0(peer.joules.storedJoules);
 			var newConsumption = myAllocatedJoules - joulesForStorage;
 			var negawattAllocation = A2(_elm_lang$core$Basics$max, 0, limit - newConsumption);
 			return A2(
@@ -21089,7 +21089,7 @@ var _strelka_2017$phi$Simulation_Simulation$tradingPhase = function (network) {
 		var _p27 = _p26.label;
 		if (_p27.ctor === 'PeerNode') {
 			return _elm_lang$core$Native_Utils.cmp(
-				_strelka_2017$phi$Simulation_SimulationHelpers$takeFirstElementWithDefault0(_p27._0.joules.storedJoules),
+				_strelka_2017$phi$ListHelpers$takeFirstElementWithDefault0(_p27._0.joules.storedJoules),
 				0) > 0;
 		} else {
 			return false;
@@ -21105,7 +21105,7 @@ var _strelka_2017$phi$Simulation_Simulation$tradingPhase = function (network) {
 		if (_p30.ctor === 'PeerNode') {
 			var _p31 = _p30._0;
 			return _elm_lang$core$Native_Utils.cmp(
-				_strelka_2017$phi$Simulation_SimulationHelpers$takeFirstElementWithDefault0(_p31.joules.actualConsumption) - _p31.joules.desiredConsumption,
+				_strelka_2017$phi$ListHelpers$takeFirstElementWithDefault0(_p31.joules.actualConsumption) - _p31.joules.desiredConsumption,
 				0) < 0;
 		} else {
 			return false;
@@ -21117,24 +21117,24 @@ var _strelka_2017$phi$Simulation_Simulation$tradingPhase = function (network) {
 		_elm_community$graph$Graph$nodes(network));
 	var newSupplyChanges = F2(
 		function (tradeRatio, peer) {
-			var currentSJ = _strelka_2017$phi$Simulation_SimulationHelpers$takeFirstElementWithDefault0(peer.joules.storedJoules);
-			var currentNW = _strelka_2017$phi$Simulation_SimulationHelpers$takeFirstElementWithDefault0(peer.negawatts);
+			var currentSJ = _strelka_2017$phi$ListHelpers$takeFirstElementWithDefault0(peer.joules.storedJoules);
+			var currentNW = _strelka_2017$phi$ListHelpers$takeFirstElementWithDefault0(peer.negawatts);
 			return {
 				ctor: '_Tuple3',
 				_0: {
 					ctor: '::',
 					_0: currentNW + (currentNW * tradeRatio),
-					_1: _strelka_2017$phi$Simulation_SimulationHelpers$takeTailDefaultEmpty(peer.negawatts)
+					_1: _strelka_2017$phi$ListHelpers$takeTailDefaultEmpty(peer.negawatts)
 				},
 				_1: {
 					ctor: '::',
 					_0: currentSJ - (currentSJ * tradeRatio),
-					_1: _strelka_2017$phi$Simulation_SimulationHelpers$takeTailDefaultEmpty(peer.joules.storedJoules)
+					_1: _strelka_2017$phi$ListHelpers$takeTailDefaultEmpty(peer.joules.storedJoules)
 				},
 				_2: {
 					ctor: '::',
 					_0: currentSJ * tradeRatio,
-					_1: _strelka_2017$phi$Simulation_SimulationHelpers$takeTailDefaultEmpty(peer.joules.tradeBalance)
+					_1: _strelka_2017$phi$ListHelpers$takeTailDefaultEmpty(peer.joules.tradeBalance)
 				}
 			};
 		});
@@ -21186,8 +21186,8 @@ var _strelka_2017$phi$Simulation_Simulation$tradingPhase = function (network) {
 	var newDemandChanges = F2(
 		function (pool, peer) {
 			var currentDesired = _strelka_2017$phi$Simulation_Simulation$maxDesiredTrade(peer);
-			var currentAC = _strelka_2017$phi$Simulation_SimulationHelpers$takeFirstElementWithDefault0(peer.joules.actualConsumption);
-			var currentNW = _strelka_2017$phi$Simulation_SimulationHelpers$takeFirstElementWithDefault0(peer.negawatts);
+			var currentAC = _strelka_2017$phi$ListHelpers$takeFirstElementWithDefault0(peer.joules.actualConsumption);
+			var currentNW = _strelka_2017$phi$ListHelpers$takeFirstElementWithDefault0(peer.negawatts);
 			var actualTradeConsumption = A2(
 				_elm_lang$core$Basics$min,
 				pool,
@@ -21198,17 +21198,17 @@ var _strelka_2017$phi$Simulation_Simulation$tradingPhase = function (network) {
 				_0: {
 					ctor: '::',
 					_0: currentNW - actualTradeConsumption,
-					_1: _strelka_2017$phi$Simulation_SimulationHelpers$takeTailDefaultEmpty(peer.negawatts)
+					_1: _strelka_2017$phi$ListHelpers$takeTailDefaultEmpty(peer.negawatts)
 				},
 				_1: {
 					ctor: '::',
 					_0: currentAC + actualTradeConsumption,
-					_1: _strelka_2017$phi$Simulation_SimulationHelpers$takeTailDefaultEmpty(peer.joules.actualConsumption)
+					_1: _strelka_2017$phi$ListHelpers$takeTailDefaultEmpty(peer.joules.actualConsumption)
 				},
 				_2: {
 					ctor: '::',
 					_0: 0 - actualTradeConsumption,
-					_1: _strelka_2017$phi$Simulation_SimulationHelpers$takeTailDefaultEmpty(peer.joules.tradeBalance)
+					_1: _strelka_2017$phi$ListHelpers$takeTailDefaultEmpty(peer.joules.tradeBalance)
 				},
 				_3: newPool
 			};
@@ -21274,7 +21274,7 @@ var _strelka_2017$phi$Simulation_Simulation$tradingPhase = function (network) {
 				return A2(
 					_elm_lang$core$Maybe$map,
 					function (_p45) {
-						return _strelka_2017$phi$Simulation_SimulationHelpers$takeFirstElementWithDefault0(
+						return _strelka_2017$phi$ListHelpers$takeFirstElementWithDefault0(
 							function (_) {
 								return _.storedJoules;
 							}(
@@ -22763,7 +22763,8 @@ var _strelka_2017$phi$View$chatHeader = function (model) {
 																	{
 																		ctor: '::',
 																		_0: _elm_lang$html$Html$text(
-																			_strelka_2017$phi$View$phiCoin(model.budget)),
+																			_strelka_2017$phi$View$phiCoin(
+																				_strelka_2017$phi$ListHelpers$takeFirstElementWithDefault0(model.budget))),
 																		_1: {ctor: '[]'}
 																	}),
 																_1: {ctor: '[]'}
