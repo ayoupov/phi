@@ -27,6 +27,7 @@ createEdge : NodeId -> NodeId -> TransmissionLine
 createEdge a b =
     Edge a b (toString a ++ "-" ++ toString b)
 
+
 nodeUpdater n foundCtx =
     case foundCtx of
         Just ctx ->
@@ -34,6 +35,7 @@ nodeUpdater n foundCtx =
 
         Nothing ->
             Nothing
+
 
 updateNodes : List (Node NodeLabel) -> PhiNetwork -> PhiNetwork
 updateNodes updatedNodeList network =

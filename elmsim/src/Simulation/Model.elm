@@ -170,5 +170,6 @@ type alias Weather =
     , wind : Float
     }
 
+
 type alias WeatherTuple =
-    (Float, Float)
+    ( Float, Float )

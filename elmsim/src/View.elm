@@ -22,7 +22,7 @@ import Material.Elevation as Elevation
 import Material.Icon as Icon
 import Material.Options as Options
 import Model exposing (Model)
-import ListHelpers exposing (takeFirstElementWithDefault0)
+import Simulation.Model exposing (Budget)
 import Svg exposing (circle, g, svg)
 import Svg.Attributes as SVG
 
@@ -37,9 +37,11 @@ intFmt num =
         (toFloat num)
 
 
-phiCoin : Float -> String
-phiCoin num =
-    num
+phiCoin : Budget -> String
+phiCoin budget =
+    budget
+        |> List.head
+        |> Maybe.withDefault 0
         |> format
             { decimals = 0
             , thousandSeparator = ","
@@ -107,7 +109,7 @@ chatHeader model =
                     [ div [ class "budget_status" ]
                         [ b [] [ text "BUDGET" ]
                         , br [] []
-                        , span [ class "budget_coin" ] [ text <| phiCoin (takeFirstElementWithDefault0 model.budget) ]
+                        , span [ class "budget_coin" ] [ text <| phiCoin model.budget ]
                         ]
                     ]
                 ]

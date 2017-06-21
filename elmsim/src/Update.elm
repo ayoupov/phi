@@ -183,7 +183,7 @@ runDay model =
         applyPhases : PhiNetwork -> PhiNetwork
         applyPhases network =
             network
---                |> Debug.log "current nw"
+                --                |> Debug.log "current nw"
                 |> Simulation.joulesToGenerators model.weather
                 |> Simulation.distributeGeneratedJoules model.negawattLimit model.reputationRatio
                 |> Graph.mapNodes Simulation.consumeFromStorage
@@ -196,10 +196,10 @@ runDay model =
         joinNetworks : List PhiNetwork -> PhiNetwork -> PhiNetwork
         joinNetworks list network =
             case list of
+                [] ->
+                    network
 
-                [] -> network
-
-                nw::tail ->
+                nw :: tail ->
                     joinNetworks tail (updateNetwork nw network)
 
         joinEdges : PhiNetwork -> PhiNetwork -> PhiNetwork
@@ -208,27 +208,27 @@ runDay model =
 
         newNetworkList nw =
             nw
-            |> joinEdges (Graph.reverseEdges nw)
-            |> Graph.stronglyConnectedComponents
-            |> List.map applyPhases
+                |> joinEdges (Graph.reverseEdges nw)
+                |> Graph.stronglyConnectedComponents
+                |> List.map applyPhases
 
---        newNetwork =
---            applyPhases model.network
-
+        --        newNetwork =
+        --            applyPhases model.network
         newNetwork =
             joinNetworks (newNetworkList model.network) model.network
 
         modelWithUpdatedNetwork =
-            { model | network = newNetwork}
+            { model | network = newNetwork }
 
         newBudget =
             Simulation.updateBudget modelWithUpdatedNetwork
 
-        newModel = { modelWithUpdatedNetwork | budget = newBudget }
+        newModel =
+            { modelWithUpdatedNetwork | budget = newBudget }
     in
     newModel
         |> generateWeather model.weatherList
---        ! [ generateWeather model.weatherList]
+        --        ! [ generateWeather model.weatherList]
         |> andThen update RenderPhiNetwork
 
 
@@ -263,14 +263,20 @@ changeDesign model =
     in
     update (SendBotChatItem chatMsg) model
 
+
+
 --generateWeather : List WeatherTuple -> Cmd Msg
+
+
 generateWeather list =
     let
-        currentList = restWeather list
+        currentList =
+            restWeather list
+
         currentWeather =
             currentList
-            |> List.head
-            |> Maybe.withDefault (0.5,0.5)
-            |> weatherTupleToWeather
+                |> List.head
+                |> Maybe.withDefault ( 0.5, 0.5 )
+                |> weatherTupleToWeather
     in
     update (UpdateWeather currentWeather)

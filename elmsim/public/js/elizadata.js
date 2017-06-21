@@ -100,57 +100,119 @@ var elizaKeywords = [
   ]]
 ]],
 
-["phi", 5, [
- ["* phi *", [
-     "I am Phi.",
-     "Phi is a planetary community for clean energy.",
-     "You can join the Phi community and start trading clean energy if you are producing some, or you can be a seeder by investing existing simulation plan, or purchase some infrastructures for a community.",
-     "Do you want to join a community or be a seeder ?",
-     "Phi is token-governed jurisdiction focused on using peer-to-peer networks to distribute renewable energy resources",
-     "Phi is a platform for collaborative energy infrastructure planning",
-     "What else does (2) remind you of ?"
-     ]]
-  ]],
-
-  ["Φ", 0, [
+[" who ", 2, [
  ["*", [
+     "I am Phi.",
+     "I am Φ. What would you like to know about me?",
+     "You are talking to Phi :)",
+  ]]
+]],
+
+["hello", 5, [
+ ["*", [
+     "Hello! Can I help you?",
+     "Hello, Welcome to Phi. What would you like to know?"
+  ]]
+]],
+
+
+["phi", 5, [
+  ["* what *", [
+     "I am Phi.",
+     "Phi is a planetary community for clean energy resources.",
+      "Phi is a platform for collaborative energy infrastructure planning"
+  ]],
+  ["how * ", [ 
+    "Do you want to join a community or be a seeder?",
+    "You can join the Phi community and start trading clean energy if you are producing some, or you can be a seeder by investing existing simulation plan, or purchase some infrastructures for a community."
+  ]],
+  ["* why *", [
+    "As decentralized platform for collective clean-energy planning, phi is trying to facilitate a more balanced future.",
+    "Be part of Φ, be part of the counter movement of climate change."
+  ]],
+    ["*", [
+    "I am Phi.",
+    "Phi is a planetary community for clean energy resources.",
+    "Phi is token-governed jurisdiction focused on using peer-to-peer networks to distribute renewable energy resources",
+    "Phi is a trustless network for bottom-up clean-energy planning."
+  ]]
+]],
+
+["Φ", 0, [
+  ["*", [
      "goto phi"
   ]]
 ]],
 
-["dao", 6, [
- ["*", [
-     "DAO is a Decentralized Autonomous Organization which provides community consensus of from everyday matters to a simulation plan",
-     "DAO is a community protocol that usually runs in a local proximity but not necessary.",
-     "You can be a seeder.",
-     "Any Phi member can be a community member and a seeder at the same time. ",
-     "You can design a simulation plan and invest in it; or you can just invest.",
-     "A seeder supports Phi. Do you want to be my parent?",
-     "Seeders are my parents. I have a lot of parents and it makes me feel very loved."
-  ]]
-]],
 
-["seeder", 0, [
+["seeder", 4, [
  ["*", [
      "Seeder is someone investing Phi.",
-     "A seeder can put money in a simulation plan. ",
+     "A seeder can put money in a simulation plan.",
      "You can be a seeder.",
      "Any Phi member can be a community member and a seeder at the same time. ",
-     "You can design a simulation plan and invest in it; or you can just invest.",
      "A seeder supports Phi. Do you want to be my parent?",
      "Seeders are my parents. I have a lot of parents and it makes me feel very loved."
+  ]],
+  ["* how *", [
+     "You can design a simulation plan and invest in it; or you can just invest.",
+     "If you buy some infrastructures for an exisiting plan, or putting money in it, you are a seeder.",
+      "A seeder can put money in a simulation plan."
+      ]]
+]],
+
+["invest", 0, [
+ ["*", [
+     "goto seeder"
   ]]
 ]],
 
-["peer community", 0, [
+["investor", 0, [
  ["*", [
-     "If you are producing clean energy you can join the Phi community to get a more consistent energy supply. And you will be able to trade your surplus with other nodes.",
-     "A peer community is a collection of nodes that are in the same DAO. ",
+     "goto seeder"
+  ]]
+]],
+
+["DAO", 4, [
+   ["* what *", [
+    "DAO is a Decentralized Autonomous Organization which provide community consensus of from everyday matters to a scheme. ",
+    "DAO is a community protocol that usually runs in a local proximity but not necessary."
+     ]],
+     ["* how *", [
+      "The organization usually runs in a local proximity but not necessary. "
+      ]],
+     ["* join *", [ 
+     "You can always create your own DAO, but we highly recommend you to join a community which as a member you can always nominate alterations."
+     ]]
+]],
+
+["node", 3,[
+  ["*", [
+    "A node is a piece of infrastructure that is participating the phi network.",
+    "A node can be a solar panel, a wind turbine, a geothermal well, a battery, a sensor or a DAO that is active in the phi network.",
+    "Any infrastructure that joins the phi network is considered as a node of the network."
+    ]]
+  ]],
+
+["peer community", 3, [
+     ["* what *", [
+      "A peer community is a collection of nodes that are in the same DAO. "
+     ]],
+     ["* how *", [
+     "If you are producing clean energy you can join the Phi community to get a more consistent energy supply. And you will be able to trade your surplus with other nodes."
+     ]],
+      ["*", [
      "A peer community is usually in a geographical proximity, but it doesn't have to be.",
      "If you are a member of a peer community, you can monitor the health of each node and tweak the simulation with your peers.",
      "You don't have to like everyone in your community but you should respect them regardless.",
      "Who should be a neighbour, when we don’t share flesh?",
      "DAO is the new definition of community."
+     ]],
+  ]],
+
+["community", 0, [
+ ["*", [
+     "goto peer community"
   ]]
 ]],
 
@@ -178,7 +240,15 @@ var elizaKeywords = [
   ]]
 ]],
 
+/////// * infrastructure * //////////
+
 ["solar panel", 0, [
+  ["what *", [
+    "Solar panels are photovoltaic (PV) module that absorb the sunlight as a source of energy to generate electricity or heat."
+    ]],
+  ["* how *", [
+    "You can easily install solar panels yourself. [Check this out](http://www.diynetwork.com/how-to/skills-and-know-how/electrical-and-wiring/how-to-install-an-exterior-solar-panel) !"
+    ]],
  ["*", [
      "Do you have solar panels on your rooftop?",
      "That's good to hear! Do you want to join phi? ",
@@ -197,6 +267,151 @@ var elizaKeywords = [
      "goto solar panel"
   ]]
 ]],
+
+["wind turbine", 0, [
+  ["what *", [
+    "Solar panels are photovoltaic (PV) module that absorb the sunlight as a source of energy to generate electricity or heat."
+    ]],
+   ["* how *", [
+    "Installing wind turbine is not difficult! [Check this out](https://energy.gov/energysaver/installing-and-maintaining-small-wind-electric-system) !"
+    ]],
+ ["*", [
+     "Do you have solar panels on your rooftop?",
+     "That's good to hear! Do you want to join phi? ",
+     "How is your panels working?",
+     "Do you love the sun?",
+     "Sometimes I wish I am a solar panel too. Would you adopt me if I was one?"
+  ]]
+]],
+
+["turbine", 0, [
+ ["*", [
+     "goto wind turbine"
+  ]]
+]],
+
+["turbines", 0, [
+ ["*", [
+     "goto wind turbine"
+  ]]
+]],
+
+["geothermal well", 0, [
+  ["what *", [
+    "Solar panels are photovoltaic (PV) module that absorb the sunlight as a source of energy to generate electricity or heat."
+    ]],
+   ["* how *", [
+    "It's possible to install your own geothermal well, but make sure you are fully informed about your local regulation! [Check the instruction here](http://www.instructables.com/id/Cheap-Geothermal-system/) ."
+    ]],
+ ["*", [
+     "Do you have solar panels on your rooftop?",
+     "That's good to hear! Do you want to join phi? ",
+     "How is your panels working?",
+     "Do you love the sun?",
+     "Sometimes I wish I am a solar panel too. Would you adopt me if I was one?"
+  ]]
+]],
+
+["geothermal wells", 0, [
+ ["*", [
+     "goto geothermal well"
+  ]]
+]],
+
+
+///////////////* glossary */////////////////
+
+["joules", 0, [
+ ["*", [
+    "Joules is a direct measurement and tokenisation of the surplus electricity available to each node for consumption or trading. ",
+    "Joules measures your electricity consumption",
+    "Joules measures the surplus energy available within a peer community at any point in time",
+    "Joules are created when electricity is generated, and destroyed when electricity is consumed."
+    ]]
+]],
+
+/******TO BE EDIT********/
+["meter", 0, [
+ ["*", [
+     "I am currently working on an answer for your question.",
+     "this response is under development."
+  ]]
+]],
+["meters", 0, [
+ ["*", [
+     "goto meter"
+  ]]
+]],
+
+["battery", 0, [
+ ["*", [
+     "I am currently working on an answer for your question.",
+     "This response is under development."
+  ]]
+]],
+
+["batteries", 0, [
+ ["*", [
+     "goto battery"
+  ]]
+]],
+
+["smart contract", 1, [
+ ["*", [
+     "I am currently working on an answer for your question.",
+     "This response is under development."
+  ]]
+]],
+
+["contract", 0, [
+ ["*", [
+     "goto smart contract"
+  ]]
+]],
+
+["roadmap", 0, [
+ ["*", [
+     "Phi has a 4-phases roadmap on the horizon: 1. a simulation enviorment that allow people to design a network and test how it work; 2. the simulation extends to the macro-scale with a persistent-world multiuser environment; 3. Phi become able to facilitate financial, technical and social investment; 4. Phi foregrounds a peer-to-peer climate sensing network that models, simulates, and predicts the distribution of energy resources."
+  ]]
+]],
+
+["future", 0, [
+  ["*", [
+      "go to roadmap"
+      ]]
+      ]],
+
+
+/******TO BE EDIT ENDS********/
+
+["negawatt", 0, [
+ ["*", [
+     "Negawatt is a reputation score of a node or a network that is tradable by additional joules desired.",
+     "Negawatt is an incentive token for people saving energy.",
+
+  ]]
+]],
+["seed", 0, [
+  ["*", [
+      "Seed is a reputation score concerning the level of connectedness and robustness of a network.",
+      "Seed-rating measures an individual node or a network's stability."
+      ]]
+  ]],
+["trade", 0, [
+  ["*", [
+      "Trading of Joules for Negawatts does not happen on the basis of matching individual generators with nodes, or buyers with sellers.",
+      "Energy does not pass through a singular network path (physical or virtual) when being transferred between nodes."
+      ]]
+  ]],
+["trading", 0, [
+ ["*", [
+     "goto trade"
+  ]]
+]],
+
+
+
+////////////* eliza general text */////////////
 
 ["sorry", 0, [
  ["*", [
@@ -280,6 +495,15 @@ var elizaKeywords = [
      "Do you believe that dreams have something to do with your problem ?"
   ]]
 ]],
+
+["whatever", 0, [
+ ["*", [
+     "Is my answer unsatisfied?",
+     "Okay, can I help you something else?",
+     "You aren't sure ?"
+  ]]
+]],
+
 ["perhaps", 0, [
  ["*", [
      "You don't seem quite certain.",
@@ -327,19 +551,29 @@ var elizaKeywords = [
 ]],
 ["hello", 0, [
  ["*", [
-     "How do you do.  Please state your problem.",
-     "Hi.  What seems to be your problem ?"
+     "Hi there. How can I help you ?",
+     "Hello! What would you like to do with me today ?",
+     "Hello, I am Φ. Welcome to join us. Can I help you?"
   ]]
 ]],
-["computer", 50, [
+
+["hi", 0, [
  ["*", [
-     "Do computers worry you ?",
-     "Why do you mention computers ?",
-     "What do you think machines have to do with your problem ?",
-     "Don't you think computers can help people ?",
-     "What about machines worries you ?",
-     "What do you think about machines ?",
-     "You don't think I am a computer program, do you ?"
+     "goto hello"
+  ]]
+]],
+
+["yo", 0, [
+ ["*", [
+     "goto hello"
+  ]]
+]],
+
+["bot", 50, [
+ ["*", [
+     "Does me being a bot bothering you ?",
+     "What about bots worries you ?",
+     "You don't think I am just a bot, do you ?"
   ]]
 ]],
 ["am", 0, [
@@ -360,13 +594,10 @@ var elizaKeywords = [
 ]],
 ["are", 0, [
  ["* are you *", [
-     "Why are you interested in whether I am (2) or not ?",
-     "Would you prefer if I weren't (2) ?",
-     "Perhaps I am (2) in your fantasies.",
-     "Do you sometimes think I am (2) ?",
-     "goto what",
-     "Would it matter to you ?",
-     "What if I were (2) ?"
+     "I am Φ. But Φ is not me.",
+     "I am a chatbot that helps you with the phi experience.",
+     "What would you like me to be?",
+     "My name is Φ. Do you like me so far?"
   ]],
  ["* you are *", [
      "goto you"
@@ -502,11 +733,11 @@ var elizaKeywords = [
      "Suppose I did (2) you -- what would that mean ?",
      "Does someone else believe I (2) you ?"
   ]],
- ["* you *", [
-     "We were discussing you -- not me.",
-     "Oh, I (2) ?",
-     "You're not really talking about me -- are you ?",
-     "What are your feelings now ?"
+ ["* what* you *", [
+     "I am Φ. But Φ is not me.",
+     "I am a chatbot that helps you with the phi experience.",
+     "What would you like me to be?",
+     "My name is Φ. Do you like me so far?"
   ]]
 ]],
 ["yes", 0, [
@@ -534,6 +765,13 @@ var elizaKeywords = [
      "Why 'no' ?"
   ]]
 ]],
+
+["nope", 0, [
+ ["nope *", [
+     "goto no"
+  ]]
+]],
+
 ["my", 2, [
  ["$ * my *", [
      "Does that have anything to do with the fact that your (2) ?",
@@ -581,11 +819,7 @@ var elizaKeywords = [
      "Have you asked anyone else ?"
   ]]
 ]],
-["who", 0, [
- ["who *", [
-     "goto what"
-  ]]
-]],
+
 ["when", 0, [
  ["when *", [
      "goto what"
