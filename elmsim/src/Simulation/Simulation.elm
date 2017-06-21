@@ -57,6 +57,38 @@ toPeer { label, id } =
             Nothing
 
 
+networkStoredEnergy : PhiNetwork -> KWHour
+networkStoredEnergy network =
+    let
+        nodeStoredEnergy { label, id } =
+            case label of
+                PeerNode node ->
+                    List.head node.joules.storedJoules
+
+                _ ->
+                    Nothing
+    in
+    Graph.nodes network
+        |> List.filterMap nodeStoredEnergy
+        |> List.sum
+
+
+networkConsumedEnergy : PhiNetwork -> KWHour
+networkConsumedEnergy network =
+    let
+        nodeConsumedEnergy { label, id } =
+            case label of
+                PeerNode node ->
+                    List.head node.joules.actualConsumption
+
+                _ ->
+                    Nothing
+    in
+    Graph.nodes network
+        |> List.filterMap nodeConsumedEnergy
+        |> List.sum
+
+
 networkGeneratedEnergy : PhiNetwork -> KWHour
 networkGeneratedEnergy network =
     let
@@ -115,85 +147,74 @@ setNegawatts newNW peer =
 distributeGeneratedJoules : MapLimit -> ReputationRatio -> PhiNetwork -> PhiNetwork
 distributeGeneratedJoules limit ratio network =
     let
-        negawattsReward peer quotient =
-            quotient * takeFirstElementWithDefault0 peer.negawatts
+        totalGeneratedEnergy =
+            networkGeneratedEnergy network
 
-        seedRating peer quotient =
-            quotient * 0
+        weightedNegawatts peer negawattsFactor =
+            negawattsFactor * takeFirstElementWithDefault0 peer.negawatts
 
-        newReputationRating peer =
-            (takeFirstElementWithDefault0 peer.reputation + negawattsReward peer ratio.a + seedRating peer ratio.b) :: peer.reputation
+        weightedSeed peer seedFactor =
+            seedFactor * 0
 
-        thisDayReputation peer =
-            takeFirstElementWithDefault0 peer.reputation
+        reputationRating peer =
+            1 + weightedNegawatts peer ratio.a + weightedSeed peer ratio.b
 
-        networkTotalReputationRating =
+        weightConstant =
             Graph.nodes network
-                |> List.filterMap (toPeer >> Maybe.map thisDayReputation)
+                |> List.filterMap (toPeer >> Maybe.map (\x -> x.joules.desiredConsumption * reputationRating x))
                 |> List.sum
-
-        weightening networkDesiredEnergy =
-            networkDesiredEnergy / networkTotalReputationRating
+                |> (/) 1
 
         networkDesiredEnergy =
             Graph.nodes network
                 |> List.filterMap (toPeer >> Maybe.map (.joules >> .desiredConsumption))
                 |> List.sum
 
-        newConsumption peer =
-            (peer.joules.desiredConsumption
-                * networkGeneratedEnergy network
-                * takeFirstElementWithDefault1 peer.reputation
-                * weightening networkDesiredEnergy
-                / networkDesiredEnergy
-            )
-                :: peer.joules.actualConsumption
+        allocatedJoules : Peer -> KWHour
+        allocatedJoules peer =
+            weightConstant
+                * peer.joules.desiredConsumption
+                * reputationRating peer
+                * totalGeneratedEnergy
 
-        newStoredJoules : Peer -> List KWHour
-        newStoredJoules peer =
-            takeFirstElementWithDefault0 peer.joules.storedJoules
-                + Basics.max
-                    (takeFirstElementWithDefault0 peer.joules.actualConsumption - peer.joules.desiredConsumption)
-                    0
-                :: peer.joules.storedJoules
-
-        newNegawatts : Peer -> List KWHour
-        newNegawatts peer =
+        updatePeer : Peer -> Peer
+        updatePeer peer =
             let
-                possibleNW =
-                    limit - takeFirstElementWithDefault0 peer.joules.actualConsumption
+                myAllocatedJoules =
+                    allocatedJoules peer
+
+                joulesForStorage =
+                    myAllocatedJoules
+                        - peer.joules.desiredConsumption
+                        |> Basics.max 0
+
+                newStoredJoules =
+                    joulesForStorage + takeFirstElementWithDefault0 peer.joules.storedJoules
+
+                newConsumption =
+                    myAllocatedJoules - joulesForStorage
+
+                negawattAllocation =
+                    (limit - newConsumption)
+                        |> Basics.max 0
             in
-            takeFirstElementWithDefault0 peer.negawatts + Basics.max possibleNW 0 :: peer.negawatts
+            peer.joules
+                |> setActualConsumption (newConsumption :: peer.joules.actualConsumption)
+                |> setStoredJoules (newStoredJoules :: peer.joules.storedJoules)
+                |> asJoulesIn peer
+                |> setNegawatts (negawattAllocation :: peer.negawatts)
 
-        updateNodeActualConsumption node =
+        updateNode : NodeLabel -> NodeLabel
+        updateNode node =
             case node of
-                PeerNode n ->
-                    PeerNode
-                        (n.joules
-                            |> setActualConsumption (newConsumption n)
-                            |> asJoulesIn n
-                        )
-
-                _ ->
-                    node
-
-        updateNodeStoredJoulesAndNegawatts : NodeLabel -> NodeLabel
-        updateNodeStoredJoulesAndNegawatts node =
-            case node of
-                PeerNode n ->
-                    PeerNode
-                        (n.joules
-                            |> setStoredJoules (newStoredJoules n)
-                            |> asJoulesIn n
-                            |> setNegawatts (newNegawatts n)
-                        )
+                PeerNode peer ->
+                    PeerNode <| updatePeer peer
 
                 _ ->
                     node
     in
     network
-        |> Graph.mapNodes updateNodeActualConsumption
-        |> Graph.mapNodes updateNodeStoredJoulesAndNegawatts
+        |> Graph.mapNodes updateNode
 
 
 setNegawattsAndStoredJoules : ( List KWHour, List KWHour ) -> Peer -> Peer

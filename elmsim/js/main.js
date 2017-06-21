@@ -73,13 +73,20 @@ function zoomed() {
     container.attr("transform", transform);
 }
 
-document.addEventListener("DOMContentLoaded", function (event) {
-    var app = Elm.Main.fullscreen();
+$(function () {
+    var node = document.getElementById('elm-node');
+    var app = Elm.Main.embed(node);
 
     d3.select("svg").call(zoom);
 
     var eliza = new ElizaBot();
     var initial = eliza.getInitial();
+
+    $('.chat_wrapper').draggable({
+        containment: "parent",
+        axis: "x",
+        cancel: ".chat_window .message, .input_wrapper"
+    });
 
 
     app.ports.renderPhiNetwork.subscribe(function (model) {
@@ -133,8 +140,9 @@ document.addEventListener("DOMContentLoaded", function (event) {
                 .type(nodeShape);
         }
 
+
         function isGenerator(d) {
-            return d.label.nodeType == "generator" && ["solarPanel", "windTurbine"].includes(d.label.generatorType);
+            return d.label.nodeType == "generator" && ["solarPanel", "windTurbine"].indexOf(d.label.generatorType > -1);
         }
 
         function transactionShadow() {
@@ -149,14 +157,36 @@ document.addEventListener("DOMContentLoaded", function (event) {
                 .type(nodeShape);
         }
 
+        function peerSize(d) {
+            if (d.label.nodeType == "peer") {
+                return 20 + 2 * (d.label.desiredConsumption || 0);
+            }
+        }
+
+        function peerSizeOuter(d) {
+            if (d.label.nodeType == "peer") {
+                return 20 + 2 * (d.label.desiredConsumption || 0);
+            }
+        }
+
         function peerOutline() {
-            return d3.symbol()
-                .size(function (d) {
-                    if (d.label.nodeType == "peer") {
-                        return 70 + 500 * (d.label.desiredConsumption || 0);
-                    }
-                })
-                .type(nodeShape);
+            return d3.arc()
+                .innerRadius(peerSize)
+                .outerRadius(peerSizeOuter)
+                .startAngle(0)
+                .endAngle(function(d){
+                    return d.label.actualConsumption && d.label.actualConsumption.length
+                        ? Math.min(2 * Math.PI, 2 * Math.PI * d.label.actualConsumption[0]/ d.label.desiredConsumption)
+                        : 0
+                } );
+        }
+
+        function peerFullOutline() {
+            return d3.arc()
+                .innerRadius(peerSize)
+                .outerRadius(peerSize)
+                .startAngle(0)
+                .endAngle(2 * Math.PI);
         }
 
         function drawNodes(nodes) {
@@ -178,16 +208,45 @@ document.addEventListener("DOMContentLoaded", function (event) {
                 .attr("class", "baseNode");
 
             nodeEnter.append("path")
-                .attr("d", transactionShadow())
+                .attr("d", function(d) {
+                    return (!isGenerator(d) ? peerFullOutline()(d) : "M0,0");
+                })
+                .attr('transform', function (d) {
+                    return "translate(" + (setX(d)) + "," + (setY(d)) + ")";
+                })
+                .attr("class", "peerFullCircle");
+
+            nodeEnter.append("path")
+                .attr("d", function(d) {
+                    return ((isGenerator(d))? transactionShadow()(d) : peerOutline()(d));
+                })
+                .attr("stroke-opacity", function(d) {
+                    return ((isGenerator(d))? "0.7" : "0");
+                })
                 .attr('transform', function (d) {
                     return "translate(" + (setX(d)) + "," + (setY(d)) + ")";
                 })
                 .attr("class", "energyIndicator");
 
-            nodes.select(".energyIndicator")
+            nodes.select(".peer .energyIndicator")
+                .attr("d", function(d) {
+                    return (peerOutline()(d));
+                })
+                .attr("stroke-opacity", "0")
+                .attr("fill-opacity", "0")
+                .style("opacity", "0")
+                .transition(t)
+                .style("opacity", "1")
+                .attr("stroke-opacity", "1")
+                .attr("fill-opacity", "1")
+                .attr('transform', function (d) {
+                    return "translate(" + (setX(d)) + "," + (setY(d)) + ")";
+                });
+
+            nodes.select(".generator .energyIndicator")
                 .transition(t)
                 .attr("d", function(d) {
-                    return ((isGenerator(d))? transactionShadow()(d) : peerOutline()(d));
+                    return (transactionShadow()(d));
                 })
                 .attr('transform', function (d) {
                     return "translate(" + (setX(d)) + "," + (setY(d)) + ")";
