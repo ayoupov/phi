@@ -12,6 +12,8 @@ import Svg exposing (..)
 import Svg.Attributes as SVG
 import Update.Extra exposing (andThen)
 import Model exposing (Model)
+import Simulation.GraphUpdates exposing (updateNodes)
+
 
 
 -- UPDATE
@@ -45,7 +47,7 @@ joulesToGenerators weather network =
                 _ ->
                     node
     in
-    Graph.mapNodes updateNode network
+        Graph.mapNodes updateNode network
 
 
 toPeer : Node NodeLabel -> Maybe Peer
@@ -430,25 +432,6 @@ tradingPhase network =
 
         supplyNodes =
             List.filter supplyNodesFilter (Graph.nodes network)
-
-        nodeUpdater n foundCtx =
-            case foundCtx of
-                Just ctx ->
-                    Just { ctx | node = n }
-
-                Nothing ->
-                    Nothing
-
-        updateNodes : List (Node NodeLabel) -> PhiNetwork -> PhiNetwork
-        updateNodes updatedNodeList network =
-            case updatedNodeList of
-                [] ->
-                    network
-
-                node :: tail ->
-                    network
-                        |> Graph.update node.id (node |> nodeUpdater)
-                        |> updateNodes tail
 
         updateNetwork =
             let

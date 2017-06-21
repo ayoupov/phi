@@ -10,7 +10,7 @@ import Json.Encode exposing (encode)
 import Material
 import Model exposing (Model)
 import Simulation.Encoding exposing (encodeEdge, encodeGraph, encodeNodeLabel)
-import Simulation.GraphUpdates exposing (addEdge, addNode)
+import Simulation.GraphUpdates exposing (addEdge, addNode, updateNodes)
 import Simulation.Init.Generators as Generators exposing (..)
 import Simulation.Model exposing (..)
 import Simulation.Simulation as Simulation exposing (..)
@@ -178,12 +178,37 @@ handleMultiChoiceMsg action model =
 runDay : Model -> ( Model, Cmd Msg )
 runDay model =
     let
-        newNetwork =
-            model.network
+        applyPhases : PhiNetwork -> PhiNetwork
+        applyPhases network =
+            network
                 |> Simulation.joulesToGenerators model.weather
                 |> Simulation.distributeGeneratedJoules model.negawattLimit model.reputationRatio
                 |> Graph.mapNodes Simulation.consumeFromStorage
                 |> Simulation.tradingPhase
+
+        updateNetwork : PhiNetwork -> PhiNetwork -> PhiNetwork
+        updateNetwork source target =
+            updateNodes (Graph.nodes source) target
+
+        joinNetworks : List PhiNetwork -> PhiNetwork -> PhiNetwork
+        joinNetworks list network =
+            case list of
+
+                [] -> network
+
+                nw::tail ->
+                    joinNetworks tail (updateNetwork nw network)
+
+        newNetworkList nw =
+            nw
+            |> Graph.stronglyConnectedComponents
+            |> List.map applyPhases
+
+--        newNetwork =
+--            applyPhases model.network
+
+        newNetwork =
+            joinNetworks (newNetworkList model.network) model.network
 
         modelWithUpdatedNetwork =
             { model | network = newNetwork}
@@ -191,7 +216,7 @@ runDay model =
         newBudget =
             Simulation.updateBudget modelWithUpdatedNetwork
 
-        newModel = { model | budget = newBudget }
+        newModel = { modelWithUpdatedNetwork | budget = newBudget }
     in
     newModel
         |> generateWeather model.weatherList
