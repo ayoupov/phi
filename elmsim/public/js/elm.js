@@ -20727,14 +20727,11 @@ var _strelka_2017$phi$Simulation_Simulation$networkGeneratedEnergy = function (n
 			return _elm_lang$core$Maybe$Nothing;
 		}
 	};
-	return A2(
-		_elm_lang$core$Debug$log,
-		'nge',
-		_elm_lang$core$List$sum(
-			A2(
-				_elm_lang$core$List$filterMap,
-				nodeGeneratedEnergy,
-				_elm_community$graph$Graph$nodes(network))));
+	return _elm_lang$core$List$sum(
+		A2(
+			_elm_lang$core$List$filterMap,
+			nodeGeneratedEnergy,
+			_elm_community$graph$Graph$nodes(network)));
 };
 var _strelka_2017$phi$Simulation_Simulation$networkTradedEnergy = function (network) {
 	var nodeTradedEnergy = function (_p9) {
