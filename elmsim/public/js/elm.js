@@ -20435,8 +20435,8 @@ var _strelka_2017$phi$Simulation_Init_Generators$generateEdge = A2(
 	A3(
 		_elm_lang$core$Random$map2,
 		_strelka_2017$phi$Simulation_GraphUpdates$createEdge,
-		A2(_elm_lang$core$Random$int, 0, 45),
-		A2(_elm_lang$core$Random$int, 0, 45)));
+		A2(_elm_lang$core$Random$int, 0, 10),
+		A2(_elm_lang$core$Random$int, 0, 10)));
 var _strelka_2017$phi$Simulation_Init_Generators$coordsGenerator = A3(
 	_elm_lang$core$Random$map2,
 	_strelka_2017$phi$Simulation_Model$Coords,
@@ -20514,14 +20514,14 @@ var _strelka_2017$phi$Simulation_Init_Generators$generatePeer = A2(
 
 var _strelka_2017$phi$Model$initGenerators = A2(
 	_elm_lang$core$Basics_ops['++'],
-	A2(_elm_lang$core$List$repeat, 50, _strelka_2017$phi$Simulation_Init_Generators$generateEdge),
+	A2(_elm_lang$core$List$repeat, 12, _strelka_2017$phi$Simulation_Init_Generators$generateEdge),
 	A2(
 		_elm_lang$core$Basics_ops['++'],
-		A2(_elm_lang$core$List$repeat, 8, _strelka_2017$phi$Simulation_Init_Generators$generatePeer),
+		A2(_elm_lang$core$List$repeat, 2, _strelka_2017$phi$Simulation_Init_Generators$generatePeer),
 		A2(
 			_elm_lang$core$Basics_ops['++'],
-			A2(_elm_lang$core$List$repeat, 10, _strelka_2017$phi$Simulation_Init_Generators$generatePVPanel),
-			A2(_elm_lang$core$List$repeat, 10, _strelka_2017$phi$Simulation_Init_Generators$generateWindTurbine))));
+			A2(_elm_lang$core$List$repeat, 4, _strelka_2017$phi$Simulation_Init_Generators$generatePVPanel),
+			A2(_elm_lang$core$List$repeat, 4, _strelka_2017$phi$Simulation_Init_Generators$generateWindTurbine))));
 var _strelka_2017$phi$Model$initNegawattLimit = function (map) {
 	return map.initialNegawattLimit;
 };
@@ -20727,11 +20727,14 @@ var _strelka_2017$phi$Simulation_Simulation$networkGeneratedEnergy = function (n
 			return _elm_lang$core$Maybe$Nothing;
 		}
 	};
-	return _elm_lang$core$List$sum(
-		A2(
-			_elm_lang$core$List$filterMap,
-			nodeGeneratedEnergy,
-			_elm_community$graph$Graph$nodes(network)));
+	return A2(
+		_elm_lang$core$Debug$log,
+		'nge',
+		_elm_lang$core$List$sum(
+			A2(
+				_elm_lang$core$List$filterMap,
+				nodeGeneratedEnergy,
+				_elm_community$graph$Graph$nodes(network))));
 };
 var _strelka_2017$phi$Simulation_Simulation$networkTradedEnergy = function (network) {
 	var nodeTradedEnergy = function (_p9) {
@@ -20831,26 +20834,41 @@ var _strelka_2017$phi$Simulation_Simulation$distributeGeneratedJoules = F3(
 			return (1 + A2(weightedNegawatts, peer, ratio.a)) + A2(weightedSeed, peer, ratio.b);
 		};
 		var weightConstant = A2(
-			F2(
-				function (x, y) {
-					return x / y;
-				}),
-			1,
-			_elm_lang$core$List$sum(
+			_elm_lang$core$Debug$log,
+			'wc',
+			A2(
+				F2(
+					function (x, y) {
+						return x / y;
+					}),
+				1,
 				A2(
-					_elm_lang$core$List$filterMap,
-					function (_p23) {
-						return A2(
-							_elm_lang$core$Maybe$map,
-							function (x) {
-								return x.joules.desiredConsumption * reputationRating(x);
-							},
-							_strelka_2017$phi$Simulation_Simulation$toPeer(_p23));
-					},
-					_elm_community$graph$Graph$nodes(network))));
+					_elm_lang$core$Debug$log,
+					'sum',
+					_elm_lang$core$List$sum(
+						A2(
+							_elm_lang$core$Debug$log,
+							'map',
+							A2(
+								_elm_lang$core$List$filterMap,
+								function (_p23) {
+									return A2(
+										_elm_lang$core$Maybe$map,
+										function (x) {
+											return x.joules.desiredConsumption * reputationRating(x);
+										},
+										_strelka_2017$phi$Simulation_Simulation$toPeer(_p23));
+								},
+								A2(
+									_elm_lang$core$Debug$log,
+									'nodes',
+									_elm_community$graph$Graph$nodes(network))))))));
 		var totalGeneratedEnergy = _strelka_2017$phi$Simulation_Simulation$networkGeneratedEnergy(network);
 		var allocatedJoules = function (peer) {
-			return ((weightConstant * peer.joules.desiredConsumption) * reputationRating(peer)) * totalGeneratedEnergy;
+			return A2(
+				_elm_lang$core$Debug$log,
+				'aj',
+				((weightConstant * peer.joules.desiredConsumption) * reputationRating(peer)) * totalGeneratedEnergy);
 		};
 		var updatePeer = function (peer) {
 			var myAllocatedJoules = allocatedJoules(peer);
@@ -20859,18 +20877,21 @@ var _strelka_2017$phi$Simulation_Simulation$distributeGeneratedJoules = F3(
 			var newConsumption = myAllocatedJoules - joulesForStorage;
 			var negawattAllocation = A2(_elm_lang$core$Basics$max, 0, limit - newConsumption);
 			return A2(
-				_strelka_2017$phi$Simulation_Simulation$setNegawatts,
-				{ctor: '::', _0: negawattAllocation, _1: peer.negawatts},
+				_elm_lang$core$Debug$log,
+				'after allocation ',
 				A2(
-					_strelka_2017$phi$Simulation_Simulation$asJoulesIn,
-					peer,
+					_strelka_2017$phi$Simulation_Simulation$setNegawatts,
+					{ctor: '::', _0: negawattAllocation, _1: peer.negawatts},
 					A2(
-						_strelka_2017$phi$Simulation_Simulation$setStoredJoules,
-						{ctor: '::', _0: newStoredJoules, _1: peer.joules.storedJoules},
+						_strelka_2017$phi$Simulation_Simulation$asJoulesIn,
+						peer,
 						A2(
-							_strelka_2017$phi$Simulation_Simulation$setActualConsumption,
-							{ctor: '::', _0: newConsumption, _1: peer.joules.actualConsumption},
-							peer.joules))));
+							_strelka_2017$phi$Simulation_Simulation$setStoredJoules,
+							{ctor: '::', _0: newStoredJoules, _1: peer.joules.storedJoules},
+							A2(
+								_strelka_2017$phi$Simulation_Simulation$setActualConsumption,
+								{ctor: '::', _0: newConsumption, _1: peer.joules.actualConsumption},
+								peer.joules)))));
 		};
 		var updateNode = function (node) {
 			var _p24 = node;
@@ -21988,7 +22009,10 @@ var _strelka_2017$phi$Update$runDay = function (model) {
 					_strelka_2017$phi$Simulation_Simulation$distributeGeneratedJoules,
 					model.negawattLimit,
 					model.reputationRatio,
-					A2(_strelka_2017$phi$Simulation_Simulation$joulesToGenerators, model.weather, network))));
+					A2(
+						_strelka_2017$phi$Simulation_Simulation$joulesToGenerators,
+						model.weather,
+						A2(_elm_lang$core$Debug$log, 'current nw', network)))));
 	};
 	var newNetworkList = function (nw) {
 		return A2(
