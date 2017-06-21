@@ -20715,6 +20715,9 @@ var _strelka_2017$phi$Simulation_Simulation$networkTradedEnergy = function (netw
 			nodeTradedEnergy,
 			_elm_community$graph$Graph$nodes(network)));
 };
+var _strelka_2017$phi$Simulation_Simulation$updateBudget = function (model) {
+	return (_strelka_2017$phi$Simulation_Simulation$networkTradedEnergy(model.network) * 0.15) + model.budget;
+};
 var _strelka_2017$phi$Simulation_Simulation$networkConsumedEnergy = function (network) {
 	var nodeConsumedEnergy = function (_p12) {
 		var _p13 = _p12;
@@ -21954,9 +21957,13 @@ var _strelka_2017$phi$Update$runDay = function (model) {
 				model.negawattLimit,
 				model.reputationRatio,
 				A2(_strelka_2017$phi$Simulation_Simulation$joulesToGenerators, model.weather, model.network))));
-	var newModel = _elm_lang$core$Native_Utils.update(
+	var modelWithUpdatedNetwork = _elm_lang$core$Native_Utils.update(
 		model,
 		{network: newNetwork});
+	var newBudget = _strelka_2017$phi$Simulation_Simulation$updateBudget(modelWithUpdatedNetwork);
+	var newModel = _elm_lang$core$Native_Utils.update(
+		model,
+		{budget: newBudget});
 	return A3(
 		_ccapndave$elm_update_extra$Update_Extra$andThen,
 		_strelka_2017$phi$Update$update,
