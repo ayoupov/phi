@@ -58,7 +58,7 @@ initSiteInfo map =
 
 initMap : SimMap
 initMap =
-    SimMap "Kolionovo" 5523 Graph.empty {sun = 0.5, wind = 0.5} (restWeather []) initNarrative 10000 { a = 1, b = 0 } 21
+    SimMap "Kolionovo" 5523 Graph.empty {sun = 0.5, wind = 0.5} (restWeather []) initNarrative [ 10000 ] { a = 1, b = 0 } 21
 
 
 initGraph : SimMap -> PhiNetwork

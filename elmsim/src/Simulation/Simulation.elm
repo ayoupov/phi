@@ -476,7 +476,7 @@ tradingPhase network =
 
 updateBudget : Model -> Budget
 updateBudget model =
-     (networkTradedEnergy model.network) * 0.15 + model.budget
+     ((networkTradedEnergy model.network) * 0.15 + (takeFirstElementWithDefault0 model.budget)) :: model.budget
 
 -- PORTS
 
