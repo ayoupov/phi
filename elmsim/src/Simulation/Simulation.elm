@@ -125,6 +125,7 @@ networkGeneratedEnergy network =
     Graph.nodes network
         |> List.filterMap nodeGeneratedEnergy
         |> List.sum
+        |> Debug.log "nge"
 
 
 
@@ -204,9 +205,13 @@ distributeGeneratedJoules limit ratio network =
 
         weightConstant =
             Graph.nodes network
+--                |> Debug.log "nodes"
                 |> List.filterMap (toPeer >> Maybe.map (\x -> x.joules.desiredConsumption * reputationRating x))
+--                |> Debug.log "map"
                 |> List.sum
+--                |> Debug.log "sum"
                 |> (/) 1
+--                |> Debug.log "wc"
 
         networkDesiredEnergy =
             Graph.nodes network
@@ -219,6 +224,7 @@ distributeGeneratedJoules limit ratio network =
                 * peer.joules.desiredConsumption
                 * reputationRating peer
                 * totalGeneratedEnergy
+--                |> Debug.log "aj"
 
         updatePeer : Peer -> Peer
         updatePeer peer =
@@ -246,6 +252,7 @@ distributeGeneratedJoules limit ratio network =
                 |> setStoredJoules (newStoredJoules :: peer.joules.storedJoules)
                 |> asJoulesIn peer
                 |> setNegawatts (negawattAllocation :: peer.negawatts)
+--                |> Debug.log "after allocation "
 
         updateNode : NodeLabel -> NodeLabel
         updateNode node =

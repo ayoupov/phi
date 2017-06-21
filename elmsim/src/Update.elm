@@ -181,6 +181,7 @@ runDay model =
         applyPhases : PhiNetwork -> PhiNetwork
         applyPhases network =
             network
+--                |> Debug.log "current nw"
                 |> Simulation.joulesToGenerators model.weather
                 |> Simulation.distributeGeneratedJoules model.negawattLimit model.reputationRatio
                 |> Graph.mapNodes Simulation.consumeFromStorage
@@ -199,8 +200,13 @@ runDay model =
                 nw::tail ->
                     joinNetworks tail (updateNetwork nw network)
 
+        joinEdges : PhiNetwork -> PhiNetwork -> PhiNetwork
+        joinEdges source target =
+            Graph.fromNodesAndEdges (Graph.nodes target) (List.append (Graph.edges source) (Graph.edges target))
+
         newNetworkList nw =
             nw
+            |> joinEdges (Graph.reverseEdges nw)
             |> Graph.stronglyConnectedComponents
             |> List.map applyPhases
 
