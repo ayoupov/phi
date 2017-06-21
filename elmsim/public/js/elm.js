@@ -20927,14 +20927,11 @@ var _strelka_2017$phi$Simulation_Simulation$networkGeneratedEnergy = function (n
 			return _elm_lang$core$Maybe$Nothing;
 		}
 	};
-	return A2(
-		_elm_lang$core$Debug$log,
-		'nge',
-		_elm_lang$core$List$sum(
-			A2(
-				_elm_lang$core$List$filterMap,
-				nodeGeneratedEnergy,
-				_elm_community$graph$Graph$nodes(network))));
+	return _elm_lang$core$List$sum(
+		A2(
+			_elm_lang$core$List$filterMap,
+			nodeGeneratedEnergy,
+			_elm_community$graph$Graph$nodes(network)));
 };
 var _strelka_2017$phi$Simulation_Simulation$networkTradedEnergy = function (network) {
 	var nodeTradedEnergy = function (_p9) {
@@ -22498,7 +22495,7 @@ var _strelka_2017$phi$View$inputFooter = function (model) {
 			_1: {ctor: '[]'}
 		});
 };
-var _strelka_2017$phi$View$phiCoin = function (num) {
+var _strelka_2017$phi$View$phiCoin = function (budget) {
 	return A2(
 		F2(
 			function (x, y) {
@@ -22508,7 +22505,10 @@ var _strelka_2017$phi$View$phiCoin = function (num) {
 		A2(
 			_cuducos$elm_format_number$FormatNumber$format,
 			{decimals: 0, thousandSeparator: ',', decimalSeparator: '.'},
-			num));
+			A2(
+				_elm_lang$core$Maybe$withDefault,
+				0,
+				_elm_lang$core$List$head(budget))));
 };
 var _strelka_2017$phi$View$intFmt = function (num) {
 	return A2(

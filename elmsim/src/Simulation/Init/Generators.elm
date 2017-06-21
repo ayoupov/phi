@@ -17,6 +17,7 @@ coordsGenerator =
         (Random.float (50.4501 - 0.01) (50.4501 + 0.01))
 
 
+
 --generateWeather : List WeatherTuple -> Cmd Msg
 --generateWeather list =
 --    Random.map2 Weather
@@ -91,8 +92,8 @@ generatePeer =
 generateEdge : Cmd Msg
 generateEdge =
     Random.map2 createEdge
---        (Random.int 0 45)
---        (Random.int 0 45)
+        --        (Random.int 0 45)
+        --        (Random.int 0 45)
         (Random.int 0 10)
         (Random.int 0 10)
         |> Random.generate AddEdge
