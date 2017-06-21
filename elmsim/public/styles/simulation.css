@@ -46,7 +46,13 @@ line.link {
 }
 
 .gridlines line {
-  stroke-opacity: 0.3;
+  stroke-opacity: 0.2;
+  stroke-width: 0.7px;
+  stroke: #FFF;
+}
+
+.corner_gridlines line {
+  stroke-opacity: 0.5;
   stroke-width: 0.7px;
   stroke: #FFF;
 }
