@@ -74,7 +74,7 @@ type alias Narrative =
 
 
 type alias Budget =
-    Float
+    List Phicoin
 
 
 type alias SiteInfo =
