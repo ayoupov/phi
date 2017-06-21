@@ -20834,41 +20834,26 @@ var _strelka_2017$phi$Simulation_Simulation$distributeGeneratedJoules = F3(
 			return (1 + A2(weightedNegawatts, peer, ratio.a)) + A2(weightedSeed, peer, ratio.b);
 		};
 		var weightConstant = A2(
-			_elm_lang$core$Debug$log,
-			'wc',
-			A2(
-				F2(
-					function (x, y) {
-						return x / y;
-					}),
-				1,
+			F2(
+				function (x, y) {
+					return x / y;
+				}),
+			1,
+			_elm_lang$core$List$sum(
 				A2(
-					_elm_lang$core$Debug$log,
-					'sum',
-					_elm_lang$core$List$sum(
-						A2(
-							_elm_lang$core$Debug$log,
-							'map',
-							A2(
-								_elm_lang$core$List$filterMap,
-								function (_p23) {
-									return A2(
-										_elm_lang$core$Maybe$map,
-										function (x) {
-											return x.joules.desiredConsumption * reputationRating(x);
-										},
-										_strelka_2017$phi$Simulation_Simulation$toPeer(_p23));
-								},
-								A2(
-									_elm_lang$core$Debug$log,
-									'nodes',
-									_elm_community$graph$Graph$nodes(network))))))));
+					_elm_lang$core$List$filterMap,
+					function (_p23) {
+						return A2(
+							_elm_lang$core$Maybe$map,
+							function (x) {
+								return x.joules.desiredConsumption * reputationRating(x);
+							},
+							_strelka_2017$phi$Simulation_Simulation$toPeer(_p23));
+					},
+					_elm_community$graph$Graph$nodes(network))));
 		var totalGeneratedEnergy = _strelka_2017$phi$Simulation_Simulation$networkGeneratedEnergy(network);
 		var allocatedJoules = function (peer) {
-			return A2(
-				_elm_lang$core$Debug$log,
-				'aj',
-				((weightConstant * peer.joules.desiredConsumption) * reputationRating(peer)) * totalGeneratedEnergy);
+			return ((weightConstant * peer.joules.desiredConsumption) * reputationRating(peer)) * totalGeneratedEnergy;
 		};
 		var updatePeer = function (peer) {
 			var myAllocatedJoules = allocatedJoules(peer);
@@ -20877,21 +20862,18 @@ var _strelka_2017$phi$Simulation_Simulation$distributeGeneratedJoules = F3(
 			var newConsumption = myAllocatedJoules - joulesForStorage;
 			var negawattAllocation = A2(_elm_lang$core$Basics$max, 0, limit - newConsumption);
 			return A2(
-				_elm_lang$core$Debug$log,
-				'after allocation ',
+				_strelka_2017$phi$Simulation_Simulation$setNegawatts,
+				{ctor: '::', _0: negawattAllocation, _1: peer.negawatts},
 				A2(
-					_strelka_2017$phi$Simulation_Simulation$setNegawatts,
-					{ctor: '::', _0: negawattAllocation, _1: peer.negawatts},
+					_strelka_2017$phi$Simulation_Simulation$asJoulesIn,
+					peer,
 					A2(
-						_strelka_2017$phi$Simulation_Simulation$asJoulesIn,
-						peer,
+						_strelka_2017$phi$Simulation_Simulation$setStoredJoules,
+						{ctor: '::', _0: newStoredJoules, _1: peer.joules.storedJoules},
 						A2(
-							_strelka_2017$phi$Simulation_Simulation$setStoredJoules,
-							{ctor: '::', _0: newStoredJoules, _1: peer.joules.storedJoules},
-							A2(
-								_strelka_2017$phi$Simulation_Simulation$setActualConsumption,
-								{ctor: '::', _0: newConsumption, _1: peer.joules.actualConsumption},
-								peer.joules)))));
+							_strelka_2017$phi$Simulation_Simulation$setActualConsumption,
+							{ctor: '::', _0: newConsumption, _1: peer.joules.actualConsumption},
+							peer.joules))));
 		};
 		var updateNode = function (node) {
 			var _p24 = node;
@@ -21977,6 +21959,16 @@ var _strelka_2017$phi$Update$changeDesign = function (model) {
 		model);
 };
 var _strelka_2017$phi$Update$runDay = function (model) {
+	var joinEdges = F2(
+		function (source, target) {
+			return A2(
+				_elm_community$graph$Graph$fromNodesAndEdges,
+				_elm_community$graph$Graph$nodes(target),
+				A2(
+					_elm_lang$core$List$append,
+					_elm_community$graph$Graph$edges(source),
+					_elm_community$graph$Graph$edges(target)));
+		});
 	var updateNetwork = F2(
 		function (source, target) {
 			return A2(
@@ -22009,16 +22001,17 @@ var _strelka_2017$phi$Update$runDay = function (model) {
 					_strelka_2017$phi$Simulation_Simulation$distributeGeneratedJoules,
 					model.negawattLimit,
 					model.reputationRatio,
-					A2(
-						_strelka_2017$phi$Simulation_Simulation$joulesToGenerators,
-						model.weather,
-						A2(_elm_lang$core$Debug$log, 'current nw', network)))));
+					A2(_strelka_2017$phi$Simulation_Simulation$joulesToGenerators, model.weather, network))));
 	};
 	var newNetworkList = function (nw) {
 		return A2(
 			_elm_lang$core$List$map,
 			applyPhases,
-			_elm_community$graph$Graph$stronglyConnectedComponents(nw));
+			_elm_community$graph$Graph$stronglyConnectedComponents(
+				A2(
+					joinEdges,
+					_elm_community$graph$Graph$reverseEdges(nw),
+					nw)));
 	};
 	var newNetwork = A2(
 		joinNetworks,
