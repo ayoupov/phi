@@ -11,6 +11,7 @@ import Simulation.SimulationHelpers exposing (takeFirstElementWithDefault0, take
 import Svg exposing (..)
 import Svg.Attributes as SVG
 import Update.Extra exposing (andThen)
+import Model exposing (Model)
 
 
 -- UPDATE
@@ -473,7 +474,9 @@ tradingPhase network =
     in
     updateNetwork
 
-
+updateBudget : Model -> Budget
+updateBudget model =
+     (networkTradedEnergy model.network) * 0.15 + model.budget
 
 -- PORTS
 

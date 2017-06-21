@@ -185,8 +185,13 @@ runDay model =
                 |> Graph.mapNodes Simulation.consumeFromStorage
                 |> Simulation.tradingPhase
 
-        newModel =
-            { model | network = newNetwork }
+        modelWithUpdatedNetwork =
+            { model | network = newNetwork}
+
+        newBudget =
+            Simulation.updateBudget modelWithUpdatedNetwork
+
+        newModel = { model | budget = newBudget }
     in
     newModel
         |> generateWeather model.weatherList
