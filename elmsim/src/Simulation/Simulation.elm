@@ -125,7 +125,7 @@ networkGeneratedEnergy network =
     Graph.nodes network
         |> List.filterMap nodeGeneratedEnergy
         |> List.sum
-        |> Debug.log "nge"
+--        |> Debug.log "nge"
 
 
 
