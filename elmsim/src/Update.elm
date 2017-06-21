@@ -68,7 +68,7 @@ update msg model =
             weatherForecast model
 
         DaySummary ->
---            update (SendBotChatItem <| Narrative.daySummary model) model
+            --            update (SendBotChatItem <| Narrative.daySummary model) model
             update (SendBotChatItem <| Narrative.dayBeginning model) model
 
         CallTurn ->
@@ -118,13 +118,15 @@ update msg model =
 
                 "generatorsAnimated" ->
                     update (SendBotChatItem <| Narrative.dayGenerated model) model
-                    |> andThen
-                       update AnimatePeerConsumption
+                        |> andThen
+                            update
+                            AnimatePeerConsumption
 
                 "consumptionAnimated" ->
                     update (SendBotChatItem <| Narrative.dayConsumed model) model
-                    |> andThen
-                       update AnimateTrade
+                        |> andThen
+                            update
+                            AnimateTrade
 
                 "tradeAnimated" ->
                     update (SendBotChatItem <| Narrative.dayTraded model) model
@@ -166,8 +168,8 @@ handleMultiChoiceMsg action model =
 
         McaRunDay ->
             runDay model
---                |> andThen update DaySummary
 
+        --                |> andThen update DaySummary
         McaSelectLocation _ ->
             model ! []
 

@@ -1,6 +1,7 @@
 module View exposing (view)
 
 import Action exposing (Msg(..))
+import Charts
 import Chat.Model
     exposing
         ( BotChatItem(..)
@@ -21,7 +22,7 @@ import Material.Elevation as Elevation
 import Material.Icon as Icon
 import Material.Options as Options
 import Model exposing (Model)
-import Svg exposing (g, svg)
+import Svg exposing (circle, g, svg)
 import Svg.Attributes as SVG
 
 
@@ -33,6 +34,17 @@ intFmt num =
         , decimalSeparator = "."
         }
         (toFloat num)
+
+
+phiCoin : Float -> String
+phiCoin num =
+    num
+        |> format
+            { decimals = 0
+            , thousandSeparator = ","
+            , decimalSeparator = "."
+            }
+        |> (++) "Φ"
 
 
 view : Model -> Html Msg
@@ -50,6 +62,20 @@ chatHeader model =
     let
         pt theText =
             p [] [ text theText ]
+
+        phText =
+            div [ class "ph_text" ]
+                [ b [] [ text "PHI" ]
+                , br [] []
+                , text "health"
+                ]
+
+        ccText =
+            div [ class "cc_text" ]
+                [ b [] [ text "COMMUNITY" ]
+                , br [] []
+                , text "coverage"
+                ]
 
         statusTitle className iconName txt =
             span [ class className ]
@@ -71,9 +97,18 @@ chatHeader model =
                 , statusTitle "week_no" "today" "Week 20"
                 ]
             , div [ class "status_body" ]
-                [ div [ class "status_left" ] []
+                [ div [ class "status_section" ]
+                    [ div [ class "donut_legend" ] [ phText, Charts.donutWithPct 50 10 0.5 ]
+                    , div [ class "donut_legend" ] [ ccText, Charts.donutWithPct 50 10 0.3 ]
+                    ]
                 , div [ class "hline" ] []
-                , div [ class "status_right" ] []
+                , div [ class "status_section" ]
+                    [ div [ class "budget_status" ]
+                        [ b [] [ text "BUDGET" ]
+                        , br [] []
+                        , span [ class "budget_coin" ] [ text <| phiCoin model.budget ]
+                        ]
+                    ]
                 ]
             ]
         ]
@@ -156,6 +191,7 @@ freeTextFooter model =
     div [ class "input_container" ]
         [ input
             [ class "message_input"
+            , autofocus True
             , onEnter
             , onInput Input
             , value model.input

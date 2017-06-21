@@ -16703,8 +16703,8 @@ var _elm_community$graph$Graph$ignorePath = F4(
 			return _elm_lang$core$Native_Utils.crashCase(
 				'Graph',
 				{
-					start: {line: 885, column: 3},
-					end: {line: 889, column: 20}
+					start: {line: 1017, column: 5},
+					end: {line: 1022, column: 26}
 				},
 				_p1)('Graph.ignorePath: No algorithm should ever pass an empty path into this BfsNodeVisitor.');
 		} else {
@@ -17049,8 +17049,8 @@ var _elm_community$graph$Graph$computeEdgeDiff = F2(
 								return _elm_lang$core$Native_Utils.crashCase(
 									'Graph',
 									{
-										start: {line: 189, column: 11},
-										end: {line: 199, column: 22}
+										start: {line: 255, column: 21},
+										end: {line: 269, column: 36}
 									},
 									_p21)('Graph.computeEdgeDiff: Collected two removals for the same edge. This is an error in the implementation of Graph and you should file a bug report!');
 							}
@@ -17058,8 +17058,8 @@ var _elm_community$graph$Graph$computeEdgeDiff = F2(
 							return _elm_lang$core$Native_Utils.crashCase(
 								'Graph',
 								{
-									start: {line: 189, column: 11},
-									end: {line: 199, column: 22}
+									start: {line: 255, column: 21},
+									end: {line: 269, column: 36}
 								},
 								_p21)('Graph.computeEdgeDiff: Collected inserts before removals. This is an error in the implementation of Graph and you should file a bug report!');
 						}
@@ -17363,8 +17363,8 @@ var _elm_community$graph$Graph$dfsTree = F2(
 				return _elm_lang$core$Native_Utils.crashCase(
 					'Graph',
 					{
-						start: {line: 827, column: 3},
-						end: {line: 833, column: 120}
+						start: {line: 953, column: 5},
+						end: {line: 961, column: 126}
 					},
 					_p42)('dfsTree: There can\'t be more than one DFS tree. This invariant is violated, please report this bug.');
 			}
@@ -17412,8 +17412,8 @@ var _elm_community$graph$Graph$topologicalSort = function (graph) {
 			return _elm_lang$core$Native_Utils.crashCase(
 				'Graph',
 				{
-					start: {line: 1046, column: 7},
-					end: {line: 1054, column: 18}
+					start: {line: 1198, column: 13},
+					end: {line: 1208, column: 32}
 				},
 				_p46)('Invariant hurt in Graph.topologicalSort: No strongly connected component should be empty');
 		} else {
@@ -17422,8 +17422,8 @@ var _elm_community$graph$Graph$topologicalSort = function (graph) {
 				return _elm_lang$core$Native_Utils.crashCase(
 					'Graph',
 					{
-						start: {line: 1050, column: 11},
-						end: {line: 1054, column: 18}
+						start: {line: 1203, column: 21},
+						end: {line: 1208, column: 32}
 					},
 					_p48)('Invariant hurt in Graph.topologicalSort: nodeId in nodeIdRange of the strongly connected component should be present in the original graph');
 			} else {
@@ -17563,8 +17563,8 @@ var _elm_community$graph$Graph$heightLevels = function (graph) {
 					return _elm_lang$core$Native_Utils.crashCase(
 						'Graph',
 						{
-							start: {line: 1006, column: 13},
-							end: {line: 1008, column: 154}
+							start: {line: 1150, column: 21},
+							end: {line: 1155, column: 157}
 						},
 						_p62)('Graph.heightLevels: Could not get a node of a graph which should be there by invariants. Please file a bug report!');
 				}
@@ -17617,8 +17617,8 @@ var _elm_community$graph$Graph$heightLevels = function (graph) {
 					return _elm_lang$core$Native_Utils.crashCase(
 						'Graph',
 						{
-							start: {line: 1025, column: 13},
-							end: {line: 1029, column: 44}
+							start: {line: 1176, column: 21},
+							end: {line: 1181, column: 56}
 						},
 						_p67)('Graph.heightLevels: Reached a branch which is impossible by invariants. Please file a bug report!');
 				} else {
@@ -18854,6 +18854,206 @@ var _strelka_2017$phi$Action$SendUserChatMsg = {ctor: 'SendUserChatMsg'};
 var _strelka_2017$phi$Action$Input = function (a) {
 	return {ctor: 'Input', _0: a};
 };
+
+var _strelka_2017$phi$Charts$percentFormat = function (percent) {
+	return function (x) {
+		return A2(_elm_lang$core$Basics_ops['++'], x, '%');
+	}(
+		A2(
+			_cuducos$elm_format_number$FormatNumber$format,
+			{decimals: 0, thousandSeparator: ',', decimalSeparator: '.'},
+			100 * percent));
+};
+var _strelka_2017$phi$Charts$donutChart = F3(
+	function (size, thickness, percent) {
+		var radius = _elm_lang$core$Basics$toFloat((size - thickness) - 1) / 2.0;
+		var radiusStr = _elm_lang$core$Basics$toString(radius);
+		var circumference = (2 * _elm_lang$core$Basics$pi) * radius;
+		var center = _elm_lang$core$Basics$toString(
+			_elm_lang$core$Basics$toFloat(size) / 2.0);
+		var viewbox = _elm_lang$svg$Svg_Attributes$viewBox(
+			A2(
+				_elm_lang$core$Basics_ops['++'],
+				'0 0 ',
+				A2(
+					_elm_lang$core$Basics_ops['++'],
+					_elm_lang$core$Basics$toString(size),
+					A2(
+						_elm_lang$core$Basics_ops['++'],
+						' ',
+						_elm_lang$core$Basics$toString(size)))));
+		return A2(
+			_elm_lang$svg$Svg$svg,
+			{
+				ctor: '::',
+				_0: _elm_lang$svg$Svg_Attributes$width(
+					_elm_lang$core$Basics$toString(size)),
+				_1: {
+					ctor: '::',
+					_0: _elm_lang$svg$Svg_Attributes$height(
+						_elm_lang$core$Basics$toString(size)),
+					_1: {
+						ctor: '::',
+						_0: viewbox,
+						_1: {
+							ctor: '::',
+							_0: _elm_lang$svg$Svg_Attributes$class('donut'),
+							_1: {ctor: '[]'}
+						}
+					}
+				}
+			},
+			{
+				ctor: '::',
+				_0: A2(
+					_elm_lang$svg$Svg$circle,
+					{
+						ctor: '::',
+						_0: _elm_lang$svg$Svg_Attributes$class('donut-hole'),
+						_1: {
+							ctor: '::',
+							_0: _elm_lang$svg$Svg_Attributes$cx(center),
+							_1: {
+								ctor: '::',
+								_0: _elm_lang$svg$Svg_Attributes$cy(center),
+								_1: {
+									ctor: '::',
+									_0: _elm_lang$svg$Svg_Attributes$r(radiusStr),
+									_1: {
+										ctor: '::',
+										_0: _elm_lang$svg$Svg_Attributes$fill('#fff'),
+										_1: {ctor: '[]'}
+									}
+								}
+							}
+						}
+					},
+					{ctor: '[]'}),
+				_1: {
+					ctor: '::',
+					_0: A2(
+						_elm_lang$svg$Svg$circle,
+						{
+							ctor: '::',
+							_0: _elm_lang$svg$Svg_Attributes$class('donut-ring'),
+							_1: {
+								ctor: '::',
+								_0: _elm_lang$svg$Svg_Attributes$cx(center),
+								_1: {
+									ctor: '::',
+									_0: _elm_lang$svg$Svg_Attributes$cy(center),
+									_1: {
+										ctor: '::',
+										_0: _elm_lang$svg$Svg_Attributes$r(radiusStr),
+										_1: {
+											ctor: '::',
+											_0: _elm_lang$svg$Svg_Attributes$fill('transparent'),
+											_1: {
+												ctor: '::',
+												_0: _elm_lang$svg$Svg_Attributes$stroke('#d2d3d4'),
+												_1: {
+													ctor: '::',
+													_0: _elm_lang$svg$Svg_Attributes$strokeWidth(
+														_elm_lang$core$Basics$toString(thickness)),
+													_1: {ctor: '[]'}
+												}
+											}
+										}
+									}
+								}
+							}
+						},
+						{ctor: '[]'}),
+					_1: {
+						ctor: '::',
+						_0: A2(
+							_elm_lang$svg$Svg$circle,
+							{
+								ctor: '::',
+								_0: _elm_lang$svg$Svg_Attributes$class('donut-segment'),
+								_1: {
+									ctor: '::',
+									_0: _elm_lang$svg$Svg_Attributes$cx(center),
+									_1: {
+										ctor: '::',
+										_0: _elm_lang$svg$Svg_Attributes$cy(center),
+										_1: {
+											ctor: '::',
+											_0: _elm_lang$svg$Svg_Attributes$r(radiusStr),
+											_1: {
+												ctor: '::',
+												_0: _elm_lang$svg$Svg_Attributes$fill('transparent'),
+												_1: {
+													ctor: '::',
+													_0: _elm_lang$svg$Svg_Attributes$strokeWidth(
+														_elm_lang$core$Basics$toString(thickness)),
+													_1: {
+														ctor: '::',
+														_0: _elm_lang$svg$Svg_Attributes$strokeDasharray(
+															A2(
+																_elm_lang$core$Basics_ops['++'],
+																_elm_lang$core$Basics$toString(percent * circumference),
+																A2(
+																	_elm_lang$core$Basics_ops['++'],
+																	' ',
+																	_elm_lang$core$Basics$toString((1 - percent) * circumference)))),
+														_1: {
+															ctor: '::',
+															_0: _elm_lang$svg$Svg_Attributes$strokeDashoffset(
+																_elm_lang$core$Basics$toString(circumference / 4)),
+															_1: {ctor: '[]'}
+														}
+													}
+												}
+											}
+										}
+									}
+								}
+							},
+							{ctor: '[]'}),
+						_1: {ctor: '[]'}
+					}
+				}
+			});
+	});
+var _strelka_2017$phi$Charts$donutWithPct = F3(
+	function (size, thickness, percent) {
+		var displayPct = percent * 100;
+		return A2(
+			_elm_lang$html$Html$div,
+			{
+				ctor: '::',
+				_0: _elm_lang$svg$Svg_Attributes$class('donut_chart'),
+				_1: {
+					ctor: '::',
+					_0: _elm_lang$svg$Svg_Attributes$width(
+						_elm_lang$core$Basics$toString(size)),
+					_1: {
+						ctor: '::',
+						_0: _elm_lang$svg$Svg_Attributes$height(
+							_elm_lang$core$Basics$toString(size)),
+						_1: {ctor: '[]'}
+					}
+				}
+			},
+			{
+				ctor: '::',
+				_0: A3(_strelka_2017$phi$Charts$donutChart, size, thickness, percent),
+				_1: {
+					ctor: '::',
+					_0: A2(
+						_elm_lang$html$Html$span,
+						{ctor: '[]'},
+						{
+							ctor: '::',
+							_0: _elm_lang$html$Html$text(
+								_strelka_2017$phi$Charts$percentFormat(percent)),
+							_1: {ctor: '[]'}
+						}),
+					_1: {ctor: '[]'}
+				}
+			});
+	});
 
 var _strelka_2017$phi$Chat_Chat$parseUserMessage = function (chatMsg) {
 	return (!A2(_elm_lang$core$String$startsWith, '/', chatMsg)) ? _strelka_2017$phi$Action$SendToEliza(chatMsg) : (_elm_lang$core$Native_Utils.eq(chatMsg, '/weather') ? _strelka_2017$phi$Action$CheckWeather : (_elm_lang$core$Native_Utils.eq(chatMsg, '/turn') ? _strelka_2017$phi$Action$CallTurn : (A2(_elm_lang$core$String$startsWith, '/describe', chatMsg) ? A2(
@@ -22116,14 +22316,18 @@ var _strelka_2017$phi$View$freeTextFooter = function (model) {
 					_0: _elm_lang$html$Html_Attributes$class('message_input'),
 					_1: {
 						ctor: '::',
-						_0: onEnter,
+						_0: _elm_lang$html$Html_Attributes$autofocus(true),
 						_1: {
 							ctor: '::',
-							_0: _elm_lang$html$Html_Events$onInput(_strelka_2017$phi$Action$Input),
+							_0: onEnter,
 							_1: {
 								ctor: '::',
-								_0: _elm_lang$html$Html_Attributes$value(model.input),
-								_1: {ctor: '[]'}
+								_0: _elm_lang$html$Html_Events$onInput(_strelka_2017$phi$Action$Input),
+								_1: {
+									ctor: '::',
+									_0: _elm_lang$html$Html_Attributes$value(model.input),
+									_1: {ctor: '[]'}
+								}
 							}
 						}
 					}
@@ -22291,6 +22495,18 @@ var _strelka_2017$phi$View$inputFooter = function (model) {
 			_1: {ctor: '[]'}
 		});
 };
+var _strelka_2017$phi$View$phiCoin = function (num) {
+	return A2(
+		F2(
+			function (x, y) {
+				return A2(_elm_lang$core$Basics_ops['++'], x, y);
+			}),
+		'Φ',
+		A2(
+			_cuducos$elm_format_number$FormatNumber$format,
+			{decimals: 0, thousandSeparator: ',', decimalSeparator: '.'},
+			num));
+};
 var _strelka_2017$phi$View$intFmt = function (num) {
 	return A2(
 		_cuducos$elm_format_number$FormatNumber$format,
@@ -22300,6 +22516,66 @@ var _strelka_2017$phi$View$intFmt = function (num) {
 var _strelka_2017$phi$View$chatHeader = function (model) {
 	var siteName = model.siteInfo.name;
 	var sitePop = _strelka_2017$phi$View$intFmt(model.siteInfo.population);
+	var ccText = A2(
+		_elm_lang$html$Html$div,
+		{
+			ctor: '::',
+			_0: _elm_lang$html$Html_Attributes$class('cc_text'),
+			_1: {ctor: '[]'}
+		},
+		{
+			ctor: '::',
+			_0: A2(
+				_elm_lang$html$Html$b,
+				{ctor: '[]'},
+				{
+					ctor: '::',
+					_0: _elm_lang$html$Html$text('COMMUNITY'),
+					_1: {ctor: '[]'}
+				}),
+			_1: {
+				ctor: '::',
+				_0: A2(
+					_elm_lang$html$Html$br,
+					{ctor: '[]'},
+					{ctor: '[]'}),
+				_1: {
+					ctor: '::',
+					_0: _elm_lang$html$Html$text('coverage'),
+					_1: {ctor: '[]'}
+				}
+			}
+		});
+	var phText = A2(
+		_elm_lang$html$Html$div,
+		{
+			ctor: '::',
+			_0: _elm_lang$html$Html_Attributes$class('ph_text'),
+			_1: {ctor: '[]'}
+		},
+		{
+			ctor: '::',
+			_0: A2(
+				_elm_lang$html$Html$b,
+				{ctor: '[]'},
+				{
+					ctor: '::',
+					_0: _elm_lang$html$Html$text('PHI'),
+					_1: {ctor: '[]'}
+				}),
+			_1: {
+				ctor: '::',
+				_0: A2(
+					_elm_lang$html$Html$br,
+					{ctor: '[]'},
+					{ctor: '[]'}),
+				_1: {
+					ctor: '::',
+					_0: _elm_lang$html$Html$text('health'),
+					_1: {ctor: '[]'}
+				}
+			}
+		});
 	var pt = function (theText) {
 		return A2(
 			_elm_lang$html$Html$p,
@@ -22389,10 +22665,48 @@ var _strelka_2017$phi$View$chatHeader = function (model) {
 									_elm_lang$html$Html$div,
 									{
 										ctor: '::',
-										_0: _elm_lang$html$Html_Attributes$class('status_left'),
+										_0: _elm_lang$html$Html_Attributes$class('status_section'),
 										_1: {ctor: '[]'}
 									},
-									{ctor: '[]'}),
+									{
+										ctor: '::',
+										_0: A2(
+											_elm_lang$html$Html$div,
+											{
+												ctor: '::',
+												_0: _elm_lang$html$Html_Attributes$class('donut_legend'),
+												_1: {ctor: '[]'}
+											},
+											{
+												ctor: '::',
+												_0: phText,
+												_1: {
+													ctor: '::',
+													_0: A3(_strelka_2017$phi$Charts$donutWithPct, 50, 10, 0.5),
+													_1: {ctor: '[]'}
+												}
+											}),
+										_1: {
+											ctor: '::',
+											_0: A2(
+												_elm_lang$html$Html$div,
+												{
+													ctor: '::',
+													_0: _elm_lang$html$Html_Attributes$class('donut_legend'),
+													_1: {ctor: '[]'}
+												},
+												{
+													ctor: '::',
+													_0: ccText,
+													_1: {
+														ctor: '::',
+														_0: A3(_strelka_2017$phi$Charts$donutWithPct, 50, 10, 0.3),
+														_1: {ctor: '[]'}
+													}
+												}),
+											_1: {ctor: '[]'}
+										}
+									}),
 								_1: {
 									ctor: '::',
 									_0: A2(
@@ -22409,10 +22723,55 @@ var _strelka_2017$phi$View$chatHeader = function (model) {
 											_elm_lang$html$Html$div,
 											{
 												ctor: '::',
-												_0: _elm_lang$html$Html_Attributes$class('status_right'),
+												_0: _elm_lang$html$Html_Attributes$class('status_section'),
 												_1: {ctor: '[]'}
 											},
-											{ctor: '[]'}),
+											{
+												ctor: '::',
+												_0: A2(
+													_elm_lang$html$Html$div,
+													{
+														ctor: '::',
+														_0: _elm_lang$html$Html_Attributes$class('budget_status'),
+														_1: {ctor: '[]'}
+													},
+													{
+														ctor: '::',
+														_0: A2(
+															_elm_lang$html$Html$b,
+															{ctor: '[]'},
+															{
+																ctor: '::',
+																_0: _elm_lang$html$Html$text('BUDGET'),
+																_1: {ctor: '[]'}
+															}),
+														_1: {
+															ctor: '::',
+															_0: A2(
+																_elm_lang$html$Html$br,
+																{ctor: '[]'},
+																{ctor: '[]'}),
+															_1: {
+																ctor: '::',
+																_0: A2(
+																	_elm_lang$html$Html$span,
+																	{
+																		ctor: '::',
+																		_0: _elm_lang$html$Html_Attributes$class('budget_coin'),
+																		_1: {ctor: '[]'}
+																	},
+																	{
+																		ctor: '::',
+																		_0: _elm_lang$html$Html$text(
+																			_strelka_2017$phi$View$phiCoin(model.budget)),
+																		_1: {ctor: '[]'}
+																	}),
+																_1: {ctor: '[]'}
+															}
+														}
+													}),
+												_1: {ctor: '[]'}
+											}),
 										_1: {ctor: '[]'}
 									}
 								}
