@@ -8,10 +8,8 @@
 }
 
 body {
-  background: #FFF;
   background-size: cover;
   font-family: "OpenSans Light", monospace;
-  color: white;
 }
 
 .chat_wrapper {
@@ -70,21 +68,66 @@ body {
   display: flex;
 }
 
-.status_body div {
-  flex: 100%;
-}
-
 .chat_header .status_body .hline {
   height: 80%;
   flex: 0;
 }
-
-.status_body p {
-  color: #000;
-}
-.chat_header .status_body .status_left {
+.status_section {
   display: flex;
-  flex-flow: "row";
+  justify-content: space-around;
+  align-items: center;
+}
+
+.status_section .budget_status {
+  color: #338;
+  text-align: center;
+  display: inline-block;
+}
+
+.status_section .budget_coin {
+  font-size: 1.5em;
+}
+
+.donut_legend {
+  display: flex;
+  align-items: center;
+  color: #338;
+  stroke: #338;
+  font-size: 12px;
+}
+
+.donut_legend .ph_text, .cc_text {
+  line-height: 1.2em;
+  float: left;
+  display: inline-block;
+  text-align: center;
+  margin-right: 5px;
+}
+
+
+.ph_text b {
+  font-size: 1.95em
+}
+
+.cc_text b {
+  font-size: 0.7em
+}
+
+.donut_legend .donut_chart {
+  position: relative;
+  display: inline-block;
+}
+
+.donut_chart span {
+  font-size: 0.9em;
+  position: absolute;
+  top: 50%; left: 50%;
+  transform: translate(-50%,-50%);
+}
+
+.chat_header .status_body .status_section {
+  flex: 100%;
+  display: flex;
 }
 
 .title_bar span {

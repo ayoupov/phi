@@ -1,53 +1,74 @@
 var phiNetwork;
 
 var svg = d3.select("body")
-    .insert("div", ":first-child")
-    .attr("class", "simulation")
-    .append("svg");
+            .insert("div", ":first-child")
+            .attr("class", "simulation")
+            .append("svg");
 
 var svg = d3.select("svg")
-    .attr("height", window.innerHeight)
-    .attr("width", window.innerWidth);
-
-var simHeight = Number(svg.attr("height"));
-var simWidth = Number(svg.attr("width"));
-
+            .attr("height", window.innerHeight)
+            .attr("width", window.innerWidth);
 
 var zoom = d3.zoom()
-    .scaleExtent([1, 40])
-    .on("zoom", zoomed);
+             .scaleExtent([1, 40])
+             .on("zoom", zoomed);
 
-// All the axis goodies!
-var xGridScale = d3.scaleLinear()
-    .domain([0, 300])
-    .range([0, simWidth - 20]);
+function drawGridlines(svgElt, size) {
+    var cornerSize = size/20;
+    var simHeight = Number(svgElt.attr("height"));
+    var simWidth = Number(svgElt.attr("width"));
 
-var yGridScale = d3.scaleLinear()
-    .domain([0, 800])
-    .range([0, simHeight - 20]);
+    var xTickValues = d3.range(0, simWidth*2, size);
+    var yTickValues = d3.range(0, simHeight*2, size);
 
-var xGridlines = d3.axisTop()
-    .tickFormat("")
-    .tickSize(-simHeight)
-    .scale(xGridScale);
+    var xGridScale = d3.scaleLinear()
+                       .domain([0, simWidth])
+                       .range([0, simWidth]);
 
-var yGridlines = d3.axisLeft()
-    .tickFormat("")
-    .tickSize(-simWidth)
-    .scale(yGridScale);
+    var yGridScale = d3.scaleLinear()
+                       .domain([0, simHeight])
+                       .range([0, simHeight]);
 
-svg.append("g")
-    .attr("class", "gridlines")
-    .call(xGridlines);
+    var xGridlines = d3.axisTop(xGridScale)
+                       .tickFormat("")
+                       .tickValues(xTickValues)
+                       .tickSize(-simHeight*2)
+                       .tickSizeOuter(0);
 
-svg.append("g")
-    .attr("class", "gridlines")
-    .call(yGridlines);
+    var yGridlines = d3.axisLeft(yGridScale)
+                       .tickFormat("")
+                       .tickValues(yTickValues)
+                       .tickSize(-simWidth*2)
+                       .tickSizeOuter(0);
+
+
+    svgElt.append("g")
+          .attr("class", "gridlines")
+          .call(xGridlines);
+
+    svgElt.append("g")
+          .attr("class", "gridlines")
+          .call(yGridlines);
+
+    svgElt.append("g")
+          .attr("class", "corner_gridlines")
+          .call(xGridlines);
+
+    svgElt.append("g")
+          .attr("class", "corner_gridlines")
+          .call(yGridlines);
+
+    var cornerLength = size/10;
+    svgElt.selectAll(".corner_gridlines .tick line")
+          .attr("stroke-dasharray", cornerLength + "," + (size-cornerLength))
+          .attr("stroke-dashoffset", cornerLength/2);
+}
 
 
 var container = svg.append("g")
     .attr("class", "container");
 
+drawGridlines(svg,95);
 
 // Load SVG Map from file, append to container
 // and set container with graph elements
