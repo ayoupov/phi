@@ -18924,6 +18924,43 @@ var _strelka_2017$phi$Simulation_Model$PeerJoules = F5(
 	function (a, b, c, d, e) {
 		return {storedJoules: a, actualConsumption: b, desiredConsumption: c, seedRatingJoules: d, tradeBalance: e};
 	});
+var _strelka_2017$phi$Simulation_Model$defaultPeerJoules = A5(
+	_strelka_2017$phi$Simulation_Model$PeerJoules,
+	{
+		ctor: '::',
+		_0: 0,
+		_1: {ctor: '[]'}
+	},
+	{
+		ctor: '::',
+		_0: 0,
+		_1: {ctor: '[]'}
+	},
+	0.8,
+	{
+		ctor: '::',
+		_0: 0,
+		_1: {ctor: '[]'}
+	},
+	{
+		ctor: '::',
+		_0: 0,
+		_1: {ctor: '[]'}
+	});
+var _strelka_2017$phi$Simulation_Model$defaultPeer = {
+	joules: _strelka_2017$phi$Simulation_Model$defaultPeerJoules,
+	negawatts: {
+		ctor: '::',
+		_0: 0,
+		_1: {ctor: '[]'}
+	},
+	reputation: {
+		ctor: '::',
+		_0: 0,
+		_1: {ctor: '[]'}
+	},
+	pos: {x: 0, y: 0}
+};
 var _strelka_2017$phi$Simulation_Model$Peer = F4(
 	function (a, b, c, d) {
 		return {joules: a, negawatts: b, reputation: c, pos: d};
@@ -18947,6 +18984,16 @@ var _strelka_2017$phi$Simulation_Model$GeneratorNode = function (a) {
 var _strelka_2017$phi$Simulation_Model$PotentialGenerator = {ctor: 'PotentialGenerator'};
 var _strelka_2017$phi$Simulation_Model$PotentialPeer = {ctor: 'PotentialPeer'};
 var _strelka_2017$phi$Simulation_Model$SolarPanel = {ctor: 'SolarPanel'};
+var _strelka_2017$phi$Simulation_Model$defaultGenerator = {
+	dailyGeneration: {
+		ctor: '::',
+		_0: 0,
+		_1: {ctor: '[]'}
+	},
+	maxGeneration: 0.7,
+	pos: {x: 0, y: 0},
+	generatorType: _strelka_2017$phi$Simulation_Model$SolarPanel
+};
 var _strelka_2017$phi$Simulation_Model$WindTurbine = {ctor: 'WindTurbine'};
 
 var _strelka_2017$phi$Simulation_SimulationInterop$animationFinished = _elm_lang$core$Native_Platform.incomingPort('animationFinished', _elm_lang$core$Json_Decode$string);
@@ -18984,6 +19031,9 @@ var _strelka_2017$phi$Action$AddPeer = function (a) {
 };
 var _strelka_2017$phi$Action$AddGenerator = function (a) {
 	return {ctor: 'AddGenerator', _0: a};
+};
+var _strelka_2017$phi$Action$RequestConvertNode = function (a) {
+	return {ctor: 'RequestConvertNode', _0: a};
 };
 var _strelka_2017$phi$Action$DescribeNode = function (a) {
 	return {ctor: 'DescribeNode', _0: a};
@@ -23147,11 +23197,63 @@ var _strelka_2017$phi$Chat_Narrative$daySummary = function (model) {
 			}));
 };
 
+var _strelka_2017$phi$Simulation_BuildingMode$handleConvertNodeRequest = F2(
+	function (nodeId, phiNetwork) {
+		var convertNodeLabel = function (label) {
+			var _p0 = label;
+			if (_p0.ctor === 'PotentialNode') {
+				var _p1 = _p0._0.nodeType;
+				if (_p1.ctor === 'PotentialGenerator') {
+					return _strelka_2017$phi$Simulation_Model$GeneratorNode(_strelka_2017$phi$Simulation_Model$defaultGenerator);
+				} else {
+					return _strelka_2017$phi$Simulation_Model$PeerNode(_strelka_2017$phi$Simulation_Model$defaultPeer);
+				}
+			} else {
+				return label;
+			}
+		};
+		var convertNode = function (node) {
+			return _elm_lang$core$Native_Utils.update(
+				node,
+				{
+					label: convertNodeLabel(node.label)
+				});
+		};
+		var convertNodeContext = function (nodeContext) {
+			return _elm_lang$core$Native_Utils.update(
+				nodeContext,
+				{
+					node: convertNode(nodeContext.node)
+				});
+		};
+		return A2(
+			_elm_lang$core$Maybe$withDefault,
+			phiNetwork,
+			A2(
+				_elm_lang$core$Maybe$map,
+				function (_p2) {
+					return function (nc) {
+						return A2(_elm_community$graph$Graph$insert, nc, phiNetwork);
+					}(
+						convertNodeContext(_p2));
+				},
+				A2(_elm_community$graph$Graph$get, nodeId, phiNetwork)));
+	});
+var _strelka_2017$phi$Simulation_BuildingMode$parseConvertNodeRequest = function (x) {
+	var result = A2(_elm_lang$core$Json_Decode$decodeValue, _elm_lang$core$Json_Decode$int, x);
+	var _p3 = result;
+	if (_p3.ctor === 'Ok') {
+		return _strelka_2017$phi$Action$RequestConvertNode(_p3._0);
+	} else {
+		return _strelka_2017$phi$Action$NoOp;
+	}
+};
 var _strelka_2017$phi$Simulation_BuildingMode$toggleBuildMode = _elm_lang$core$Native_Platform.outgoingPort(
 	'toggleBuildMode',
 	function (v) {
 		return v;
 	});
+var _strelka_2017$phi$Simulation_BuildingMode$requestConvertNode = _elm_lang$core$Native_Platform.incomingPort('requestConvertNode', _elm_lang$core$Json_Decode$value);
 
 var _strelka_2017$phi$Simulation_Encoding$pos = function (nodeLabel) {
 	var _p0 = nodeLabel;
@@ -23552,9 +23654,19 @@ var _strelka_2017$phi$Update$update = F2(
 													}(_p2))));
 									},
 									A2(_elm_community$graph$Graph$get, _p0._0, model.network)))))(model);
-				case 'AddGenerator':
+				case 'RequestConvertNode':
 					var _v5 = _strelka_2017$phi$Action$RenderPhiNetwork,
 						_v6 = _elm_lang$core$Native_Utils.update(
+						model,
+						{
+							network: A2(_strelka_2017$phi$Simulation_BuildingMode$handleConvertNodeRequest, _p0._0, model.network)
+						});
+					msg = _v5;
+					model = _v6;
+					continue update;
+				case 'AddGenerator':
+					var _v7 = _strelka_2017$phi$Action$RenderPhiNetwork,
+						_v8 = _elm_lang$core$Native_Utils.update(
 						model,
 						{
 							network: A2(
@@ -23562,12 +23674,12 @@ var _strelka_2017$phi$Update$update = F2(
 								_strelka_2017$phi$Simulation_Model$GeneratorNode(_p0._0),
 								model.network)
 						});
-					msg = _v5;
-					model = _v6;
+					msg = _v7;
+					model = _v8;
 					continue update;
 				case 'AddPeer':
-					var _v7 = _strelka_2017$phi$Action$RenderPhiNetwork,
-						_v8 = _elm_lang$core$Native_Utils.update(
+					var _v9 = _strelka_2017$phi$Action$RenderPhiNetwork,
+						_v10 = _elm_lang$core$Native_Utils.update(
 						model,
 						{
 							network: A2(
@@ -23575,29 +23687,29 @@ var _strelka_2017$phi$Update$update = F2(
 								_strelka_2017$phi$Simulation_Model$PeerNode(_p0._0),
 								model.network)
 						});
-					msg = _v7;
-					model = _v8;
+					msg = _v9;
+					model = _v10;
 					continue update;
 				case 'AddEdge':
-					var _v9 = _strelka_2017$phi$Action$RenderPhiNetwork,
-						_v10 = _elm_lang$core$Native_Utils.update(
+					var _v11 = _strelka_2017$phi$Action$RenderPhiNetwork,
+						_v12 = _elm_lang$core$Native_Utils.update(
 						model,
 						{
 							network: A2(_strelka_2017$phi$Simulation_GraphUpdates$addEdge, _p0._0, model.network)
 						});
-					msg = _v9;
-					model = _v10;
+					msg = _v11;
+					model = _v12;
 					continue update;
 				case 'UpdateWeather':
-					var _v11 = _strelka_2017$phi$Action$RenderPhiNetwork,
-						_v12 = _elm_lang$core$Native_Utils.update(
+					var _v13 = _strelka_2017$phi$Action$RenderPhiNetwork,
+						_v14 = _elm_lang$core$Native_Utils.update(
 						model,
 						{
 							weather: _p0._0,
 							weatherList: _strelka_2017$phi$Simulation_WeatherList$restWeather(model.weatherList)
 						});
-					msg = _v11;
-					model = _v12;
+					msg = _v13;
+					model = _v14;
 					continue update;
 				case 'RenderPhiNetwork':
 					return {
@@ -23631,10 +23743,10 @@ var _strelka_2017$phi$Update$update = F2(
 					var _p3 = _p0._0;
 					switch (_p3) {
 						case 'layoutRendered':
-							var _v14 = _strelka_2017$phi$Action$AnimateGeneration,
-								_v15 = model;
-							msg = _v14;
-							model = _v15;
+							var _v16 = _strelka_2017$phi$Action$AnimateGeneration,
+								_v17 = model;
+							msg = _v16;
+							model = _v17;
 							continue update;
 						case 'generatorsAnimated':
 							return A3(
@@ -23657,31 +23769,31 @@ var _strelka_2017$phi$Update$update = F2(
 										_strelka_2017$phi$Chat_Narrative$dayConsumed(model)),
 									model));
 						case 'tradeAnimated':
-							var _v16 = _strelka_2017$phi$Action$SendBotChatItem(
-								_strelka_2017$phi$Chat_Narrative$dayTraded(model)),
-								_v17 = model;
-							msg = _v16;
-							model = _v17;
-							continue update;
-						case 'enterBuildModeAnimated':
 							var _v18 = _strelka_2017$phi$Action$SendBotChatItem(
-								_strelka_2017$phi$Chat_Model$BotMessage('You\'ve entered building mode')),
+								_strelka_2017$phi$Chat_Narrative$dayTraded(model)),
 								_v19 = model;
 							msg = _v18;
 							model = _v19;
 							continue update;
-						case 'exitBuildModeAnimated':
+						case 'enterBuildModeAnimated':
 							var _v20 = _strelka_2017$phi$Action$SendBotChatItem(
-								_strelka_2017$phi$Chat_Model$BotMessage('You\'ve exited building mode')),
+								_strelka_2017$phi$Chat_Model$BotMessage('You\'ve entered building mode')),
 								_v21 = model;
 							msg = _v20;
 							model = _v21;
 							continue update;
-						default:
-							var _v22 = _strelka_2017$phi$Action$NoOp,
+						case 'exitBuildModeAnimated':
+							var _v22 = _strelka_2017$phi$Action$SendBotChatItem(
+								_strelka_2017$phi$Chat_Model$BotMessage('You\'ve exited building mode')),
 								_v23 = model;
 							msg = _v22;
 							model = _v23;
+							continue update;
+						default:
+							var _v24 = _strelka_2017$phi$Action$NoOp,
+								_v25 = model;
+							msg = _v24;
+							model = _v25;
 							continue update;
 					}
 				case 'ToggleBuildMode':
@@ -23778,10 +23890,10 @@ var _strelka_2017$phi$Update$runDay = function (model) {
 				if (_p7.ctor === '[]') {
 					return network;
 				} else {
-					var _v27 = _p7._1,
-						_v28 = A2(updateNetwork, _p7._0, network);
-					list = _v27;
-					network = _v28;
+					var _v29 = _p7._1,
+						_v30 = A2(updateNetwork, _p7._0, network);
+					list = _v29;
+					network = _v30;
 					continue joinNetworks;
 				}
 			}
@@ -24060,7 +24172,7 @@ var _strelka_2017$phi$View_ChatHeader$viewChatHeader = function (model) {
 												_0: phText,
 												_1: {
 													ctor: '::',
-													_0: A3(_strelka_2017$phi$Charts$donutWithPct, 50, 10, 0.5),
+													_0: A3(_strelka_2017$phi$Charts$donutWithPct, 45, 3, 0.5),
 													_1: {ctor: '[]'}
 												}
 											}),
@@ -24078,7 +24190,7 @@ var _strelka_2017$phi$View_ChatHeader$viewChatHeader = function (model) {
 													_0: ccText,
 													_1: {
 														ctor: '::',
-														_0: A3(_strelka_2017$phi$Charts$donutWithPct, 50, 10, 0.3),
+														_0: A3(_strelka_2017$phi$Charts$donutWithPct, 45, 3, 0.3),
 														_1: {ctor: '[]'}
 													}
 												}),
@@ -24552,7 +24664,11 @@ var _strelka_2017$phi$Main$subscriptions = function (model) {
 			_1: {
 				ctor: '::',
 				_0: _strelka_2017$phi$Simulation_SimulationInterop$animationFinished(_strelka_2017$phi$Action$AnimationFinished),
-				_1: {ctor: '[]'}
+				_1: {
+					ctor: '::',
+					_0: _strelka_2017$phi$Simulation_BuildingMode$requestConvertNode(_strelka_2017$phi$Simulation_BuildingMode$parseConvertNodeRequest),
+					_1: {ctor: '[]'}
+				}
 			}
 		});
 };
