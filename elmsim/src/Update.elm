@@ -133,19 +133,19 @@ update msg model =
                     update (SendBotChatItem <| Narrative.dayTraded model) model
 
                 "enterBuildModeAnimated" ->
-                    update (SendBotChatItem <| BotMessage "You've entered building mode" ) model
+                    update (SendBotChatItem <| BotMessage "You've entered building mode") model
 
                 "exitBuildModeAnimated" ->
-                    update (SendBotChatItem <| BotMessage "You've exited building mode" ) model
+                    update (SendBotChatItem <| BotMessage "You've exited building mode") model
 
                 _ ->
                     update NoOp model
 
         EnterBuildMode ->
-            ( model, enterBuildMode <| (encodeGraph model.network))
+            ( model, enterBuildMode () )
 
         ExitBuildMode ->
-            ( model, exitBuildMode <| (encodeGraph model.network))
+            ( model, exitBuildMode () )
 
         MultiChoiceMsg multiChoiceAction ->
             let

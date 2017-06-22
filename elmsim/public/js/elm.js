@@ -16703,8 +16703,8 @@ var _elm_community$graph$Graph$ignorePath = F4(
 			return _elm_lang$core$Native_Utils.crashCase(
 				'Graph',
 				{
-					start: {line: 885, column: 3},
-					end: {line: 889, column: 20}
+					start: {line: 1017, column: 5},
+					end: {line: 1022, column: 26}
 				},
 				_p1)('Graph.ignorePath: No algorithm should ever pass an empty path into this BfsNodeVisitor.');
 		} else {
@@ -17049,8 +17049,8 @@ var _elm_community$graph$Graph$computeEdgeDiff = F2(
 								return _elm_lang$core$Native_Utils.crashCase(
 									'Graph',
 									{
-										start: {line: 189, column: 11},
-										end: {line: 199, column: 22}
+										start: {line: 255, column: 21},
+										end: {line: 269, column: 36}
 									},
 									_p21)('Graph.computeEdgeDiff: Collected two removals for the same edge. This is an error in the implementation of Graph and you should file a bug report!');
 							}
@@ -17058,8 +17058,8 @@ var _elm_community$graph$Graph$computeEdgeDiff = F2(
 							return _elm_lang$core$Native_Utils.crashCase(
 								'Graph',
 								{
-									start: {line: 189, column: 11},
-									end: {line: 199, column: 22}
+									start: {line: 255, column: 21},
+									end: {line: 269, column: 36}
 								},
 								_p21)('Graph.computeEdgeDiff: Collected inserts before removals. This is an error in the implementation of Graph and you should file a bug report!');
 						}
@@ -17363,8 +17363,8 @@ var _elm_community$graph$Graph$dfsTree = F2(
 				return _elm_lang$core$Native_Utils.crashCase(
 					'Graph',
 					{
-						start: {line: 827, column: 3},
-						end: {line: 833, column: 120}
+						start: {line: 953, column: 5},
+						end: {line: 961, column: 126}
 					},
 					_p42)('dfsTree: There can\'t be more than one DFS tree. This invariant is violated, please report this bug.');
 			}
@@ -17412,8 +17412,8 @@ var _elm_community$graph$Graph$topologicalSort = function (graph) {
 			return _elm_lang$core$Native_Utils.crashCase(
 				'Graph',
 				{
-					start: {line: 1046, column: 7},
-					end: {line: 1054, column: 18}
+					start: {line: 1198, column: 13},
+					end: {line: 1208, column: 32}
 				},
 				_p46)('Invariant hurt in Graph.topologicalSort: No strongly connected component should be empty');
 		} else {
@@ -17422,8 +17422,8 @@ var _elm_community$graph$Graph$topologicalSort = function (graph) {
 				return _elm_lang$core$Native_Utils.crashCase(
 					'Graph',
 					{
-						start: {line: 1050, column: 11},
-						end: {line: 1054, column: 18}
+						start: {line: 1203, column: 21},
+						end: {line: 1208, column: 32}
 					},
 					_p48)('Invariant hurt in Graph.topologicalSort: nodeId in nodeIdRange of the strongly connected component should be present in the original graph');
 			} else {
@@ -17563,8 +17563,8 @@ var _elm_community$graph$Graph$heightLevels = function (graph) {
 					return _elm_lang$core$Native_Utils.crashCase(
 						'Graph',
 						{
-							start: {line: 1006, column: 13},
-							end: {line: 1008, column: 154}
+							start: {line: 1150, column: 21},
+							end: {line: 1155, column: 157}
 						},
 						_p62)('Graph.heightLevels: Could not get a node of a graph which should be there by invariants. Please file a bug report!');
 				}
@@ -17617,8 +17617,8 @@ var _elm_community$graph$Graph$heightLevels = function (graph) {
 					return _elm_lang$core$Native_Utils.crashCase(
 						'Graph',
 						{
-							start: {line: 1025, column: 13},
-							end: {line: 1029, column: 44}
+							start: {line: 1176, column: 21},
+							end: {line: 1181, column: 56}
 						},
 						_p67)('Graph.heightLevels: Reached a branch which is impossible by invariants. Please file a bug report!');
 				} else {
@@ -23139,42 +23139,12 @@ var _strelka_2017$phi$Chat_Narrative$daySummary = function (model) {
 var _strelka_2017$phi$Simulation_BuildingMode$enterBuildMode = _elm_lang$core$Native_Platform.outgoingPort(
 	'enterBuildMode',
 	function (v) {
-		return [
-			_elm_lang$core$Native_List.toArray(v._0).map(
-			function (v) {
-				return {id: v.id, label: v.label};
-			}),
-			_elm_lang$core$Native_List.toArray(v._1).map(
-			function (v) {
-				return {
-					transmissionLine: {from: v.transmissionLine.from, to: v.transmissionLine.to, label: v.transmissionLine.label},
-					pos: {
-						from: {x: v.pos.from.x, y: v.pos.from.y},
-						to: {x: v.pos.to.x, y: v.pos.to.y}
-					}
-				};
-			})
-		];
+		return null;
 	});
 var _strelka_2017$phi$Simulation_BuildingMode$exitBuildMode = _elm_lang$core$Native_Platform.outgoingPort(
 	'exitBuildMode',
 	function (v) {
-		return [
-			_elm_lang$core$Native_List.toArray(v._0).map(
-			function (v) {
-				return {id: v.id, label: v.label};
-			}),
-			_elm_lang$core$Native_List.toArray(v._1).map(
-			function (v) {
-				return {
-					transmissionLine: {from: v.transmissionLine.from, to: v.transmissionLine.to, label: v.transmissionLine.label},
-					pos: {
-						from: {x: v.pos.from.x, y: v.pos.from.y},
-						to: {x: v.pos.to.x, y: v.pos.to.y}
-					}
-				};
-			})
-		];
+		return null;
 	});
 
 var _strelka_2017$phi$Simulation_Encoding$pos = function (nodeLabel) {
@@ -23667,14 +23637,14 @@ var _strelka_2017$phi$Update$update = F2(
 						ctor: '_Tuple2',
 						_0: model,
 						_1: _strelka_2017$phi$Simulation_BuildingMode$enterBuildMode(
-							_strelka_2017$phi$Simulation_Encoding$encodeGraph(model.network))
+							{ctor: '_Tuple0'})
 					};
 				case 'ExitBuildMode':
 					return {
 						ctor: '_Tuple2',
 						_0: model,
 						_1: _strelka_2017$phi$Simulation_BuildingMode$exitBuildMode(
-							_strelka_2017$phi$Simulation_Encoding$encodeGraph(model.network))
+							{ctor: '_Tuple0'})
 					};
 				case 'MultiChoiceMsg':
 					var _p4 = _p0._0;
