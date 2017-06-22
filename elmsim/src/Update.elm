@@ -9,6 +9,7 @@ import Graph
 import Json.Encode exposing (encode)
 import Material
 import Model exposing (Model)
+import Simulation.BuildingMode exposing (enterBuildMode, exitBuildMode)
 import Simulation.Encoding exposing (encodeEdge, encodeGraph, encodeNodeLabel)
 import Simulation.GraphUpdates exposing (addEdge, addNode, updateNodes)
 import Simulation.Init.Generators as Generators exposing (..)
@@ -131,8 +132,20 @@ update msg model =
                 "tradeAnimated" ->
                     update (SendBotChatItem <| Narrative.dayTraded model) model
 
+                "enterBuildModeAnimated" ->
+                    update (SendBotChatItem <| BotMessage "You've entered building mode" ) model
+
+                "exitBuildModeAnimated" ->
+                    update (SendBotChatItem <| BotMessage "You've exited building mode" ) model
+
                 _ ->
                     update NoOp model
+
+        EnterBuildMode ->
+            ( model, enterBuildMode <| (encodeGraph model.network))
+
+        ExitBuildMode ->
+            ( model, exitBuildMode <| (encodeGraph model.network))
 
         MultiChoiceMsg multiChoiceAction ->
             let

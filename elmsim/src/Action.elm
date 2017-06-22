@@ -21,6 +21,8 @@ type Msg
     | AnimatePeerConsumption
     | AnimateTrade
     | AnimationFinished AnimationPhase
+    | EnterBuildMode
+    | ExitBuildMode
     | UpdateWeather Weather
     | CallTurn
     | DaySummary
