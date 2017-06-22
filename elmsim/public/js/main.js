@@ -13,27 +13,27 @@ var xZoomScale = d3.scaleLinear()
     .domain([0,1920])
     .range([0, 100]);
 
-var zoomLine = d3.line()
-    .x(function(d) { return xZoomScale(d.zoom); })
-    .y(0);
-
 var zoom = d3.zoom()
              //.extent([[0,0],[1920,1080]])
              .scaleExtent([0.75, 40])
              .translateExtent([[0,0],[1920,1080]])
              .on("zoom", zoomed);
 
-function attachZoomAxis(svgElt) {
-    var simHeight = Number(svgElt.attr("height"));
-    var simWidth = Number(svgElt.attr("width"));
-
-    svgElt.append("g")
-        .attr("class", "zoom-line")
-        .attr("transform", "translate(" + (simWidth - 100) + ", " + (simHeight - 100) + ")")
-        .call(zoomLine);
-}
-
 var GRIDLINE_SIZE = 100;
+
+//function attachZoomLine(svgElt) {
+//    var simHeight = Number(svgElt.attr("height"));
+//    var simWidth = Number(svgElt.attr("width"));
+//
+//    var line = svgElt.append("g")
+//        .attr("class", "zoom-line")
+//        .attr("transform", "translate(" + (simWidth - 100) + ", " + (simHeight - 100) + ")")
+//        .call(zoomLine);
+//
+//    line.enter().append('path')
+//        .attr('class', 'line');
+//
+//}
 
 function drawGridlines(svgElt, size) {
     var cornerSize = size/20;
@@ -96,7 +96,7 @@ var container = svg.append("g")
 
 drawGridlines(svg,GRIDLINE_SIZE);
 
-attachZoomAxis(svg);
+//attachZoomLine(svg);
 
 // Load SVG Map from file, append to container
 // and set container with graph elements
@@ -117,10 +117,40 @@ d3.xml("assets/map_v3.svg").get(function (error, documentFragment) {
 });
 
 
+function updateZoomPos()
+{
+    var $zoomCont = $(".zoom-container");
+    var r = (Math.floor($(window).width() / GRIDLINE_SIZE) - 1 ) * GRIDLINE_SIZE;
+    var b = (Math.floor($(window).height() / GRIDLINE_SIZE) ) * GRIDLINE_SIZE - $zoomCont.height();
+    $zoomCont.css({
+        'left': r,
+        'top': b
+    });
+    console.log(r,b);
+}
+
+function updateZoom(scale)
+{
+    // update position
+    var $zoomCont = $(".zoom-container");
+    updateZoomPos();
+    var step = 10;
+    var meters = Math.max(step, Math.round(250 / (step /*step*/) * (1/scale)) * step);
+    $zoomCont.html(meters + " m");
+}
+
+function zoomInit()
+{
+    updateZoomPos();
+    $(window).on('resize', updateZoomPos);
+}
+
+
 function zoomed() {
     var transform = d3.zoomTransform(this);
     container.attr("transform", transform);
-    container.select('.zoom-line').call(zoomLine);
+    //container.select('.zoom-line').call(zoomLine);
+    updateZoom(transform.k);
 }
 
 function endall(transition, callback) {
@@ -155,6 +185,8 @@ $(function () {
         axis: "x",
         cancel: ".chat_window .message, .input_wrapper"
     });
+
+    zoomInit();
 
     app.ports.animateTrade.subscribe(function (model) {
         var t = d3.transition().duration(1500);

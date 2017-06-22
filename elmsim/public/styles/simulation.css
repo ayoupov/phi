@@ -67,6 +67,16 @@ line.link {
   stroke: #FFF;
 }
 
+.zoom-container {
+  position: fixed;
+  /*right: 100px;*/
+  /*bottom: 100px;*/
+  border-bottom: 1px solid white;
+  width: 100px;
+  color: white;
+  text-align: center;
+}
+
 .scaleText {
   font-size: 10px;
 }
