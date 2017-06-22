@@ -14,6 +14,7 @@ type Msg
     | CheckWeather
     | CheckBudget
     | DescribeNode Int
+    | RequestConvertNode Int
     | AddGenerator SimGenerator
     | AddPeer Peer
     | AddEdge TransmissionLine

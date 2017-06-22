@@ -149,6 +149,15 @@ type alias SimGenerator =
     }
 
 
+defaultGenerator : SimGenerator
+defaultGenerator =
+    { dailyGeneration = [ 0 ]
+    , maxGeneration = 0.7
+    , pos = { x = 0, y = 0 }
+    , generatorType = SolarPanel
+    }
+
+
 type alias Battery =
     { capacity : KWHour
     , storage : KWHour
@@ -165,11 +174,25 @@ type alias PeerJoules =
     }
 
 
+defaultPeerJoules : PeerJoules
+defaultPeerJoules =
+    PeerJoules [ 0 ] [ 0 ] 0.8 [ 0 ] [ 0 ]
+
+
 type alias Peer =
     { joules : PeerJoules
     , negawatts : List Negawatts
     , reputation : List ReputationRating
     , pos : Coords
+    }
+
+
+defaultPeer : Peer
+defaultPeer =
+    { joules = defaultPeerJoules
+    , negawatts = [ 0 ]
+    , reputation = [ 0 ]
+    , pos = { x = 0, y = 0 }
     }
 
 
