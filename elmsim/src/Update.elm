@@ -9,7 +9,7 @@ import Graph
 import Json.Encode exposing (encode)
 import Material
 import Model exposing (Model)
-import Simulation.BuildingMode exposing (enterBuildMode, exitBuildMode)
+import Simulation.BuildingMode exposing (toggleBuildMode)
 import Simulation.Encoding exposing (encodeEdge, encodeGraph, encodeNodeLabel)
 import Simulation.GraphUpdates exposing (addEdge, addNode, updateNodes)
 import Simulation.Init.Generators as Generators exposing (..)
@@ -141,11 +141,8 @@ update msg model =
                 _ ->
                     update NoOp model
 
-        EnterBuildMode ->
-            ( model, enterBuildMode () )
-
-        ExitBuildMode ->
-            ( model, exitBuildMode () )
+        ToggleBuildMode isEnteringBuildMode ->
+            ( model, toggleBuildMode isEnteringBuildMode )
 
         MultiChoiceMsg multiChoiceAction ->
             let
@@ -177,7 +174,8 @@ handleMultiChoiceMsg action model =
             weatherForecast model
 
         McaChangeDesign ->
-            changeDesign model
+--            changeDesign model
+            update (ToggleBuildMode True) model
 
         McaRunDay ->
             runDay model

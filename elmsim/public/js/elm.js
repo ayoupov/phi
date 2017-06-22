@@ -16703,8 +16703,8 @@ var _elm_community$graph$Graph$ignorePath = F4(
 			return _elm_lang$core$Native_Utils.crashCase(
 				'Graph',
 				{
-					start: {line: 1017, column: 5},
-					end: {line: 1022, column: 26}
+					start: {line: 885, column: 3},
+					end: {line: 889, column: 20}
 				},
 				_p1)('Graph.ignorePath: No algorithm should ever pass an empty path into this BfsNodeVisitor.');
 		} else {
@@ -17049,8 +17049,8 @@ var _elm_community$graph$Graph$computeEdgeDiff = F2(
 								return _elm_lang$core$Native_Utils.crashCase(
 									'Graph',
 									{
-										start: {line: 255, column: 21},
-										end: {line: 269, column: 36}
+										start: {line: 189, column: 11},
+										end: {line: 199, column: 22}
 									},
 									_p21)('Graph.computeEdgeDiff: Collected two removals for the same edge. This is an error in the implementation of Graph and you should file a bug report!');
 							}
@@ -17058,8 +17058,8 @@ var _elm_community$graph$Graph$computeEdgeDiff = F2(
 							return _elm_lang$core$Native_Utils.crashCase(
 								'Graph',
 								{
-									start: {line: 255, column: 21},
-									end: {line: 269, column: 36}
+									start: {line: 189, column: 11},
+									end: {line: 199, column: 22}
 								},
 								_p21)('Graph.computeEdgeDiff: Collected inserts before removals. This is an error in the implementation of Graph and you should file a bug report!');
 						}
@@ -17363,8 +17363,8 @@ var _elm_community$graph$Graph$dfsTree = F2(
 				return _elm_lang$core$Native_Utils.crashCase(
 					'Graph',
 					{
-						start: {line: 953, column: 5},
-						end: {line: 961, column: 126}
+						start: {line: 827, column: 3},
+						end: {line: 833, column: 120}
 					},
 					_p42)('dfsTree: There can\'t be more than one DFS tree. This invariant is violated, please report this bug.');
 			}
@@ -17412,8 +17412,8 @@ var _elm_community$graph$Graph$topologicalSort = function (graph) {
 			return _elm_lang$core$Native_Utils.crashCase(
 				'Graph',
 				{
-					start: {line: 1198, column: 13},
-					end: {line: 1208, column: 32}
+					start: {line: 1046, column: 7},
+					end: {line: 1054, column: 18}
 				},
 				_p46)('Invariant hurt in Graph.topologicalSort: No strongly connected component should be empty');
 		} else {
@@ -17422,8 +17422,8 @@ var _elm_community$graph$Graph$topologicalSort = function (graph) {
 				return _elm_lang$core$Native_Utils.crashCase(
 					'Graph',
 					{
-						start: {line: 1203, column: 21},
-						end: {line: 1208, column: 32}
+						start: {line: 1050, column: 11},
+						end: {line: 1054, column: 18}
 					},
 					_p48)('Invariant hurt in Graph.topologicalSort: nodeId in nodeIdRange of the strongly connected component should be present in the original graph');
 			} else {
@@ -17563,8 +17563,8 @@ var _elm_community$graph$Graph$heightLevels = function (graph) {
 					return _elm_lang$core$Native_Utils.crashCase(
 						'Graph',
 						{
-							start: {line: 1150, column: 21},
-							end: {line: 1155, column: 157}
+							start: {line: 1006, column: 13},
+							end: {line: 1008, column: 154}
 						},
 						_p62)('Graph.heightLevels: Could not get a node of a graph which should be there by invariants. Please file a bug report!');
 				}
@@ -17617,8 +17617,8 @@ var _elm_community$graph$Graph$heightLevels = function (graph) {
 					return _elm_lang$core$Native_Utils.crashCase(
 						'Graph',
 						{
-							start: {line: 1176, column: 21},
-							end: {line: 1181, column: 56}
+							start: {line: 1025, column: 13},
+							end: {line: 1029, column: 44}
 						},
 						_p67)('Graph.heightLevels: Reached a branch which is impossible by invariants. Please file a bug report!');
 				} else {
@@ -18957,8 +18957,9 @@ var _strelka_2017$phi$Action$CallTurn = {ctor: 'CallTurn'};
 var _strelka_2017$phi$Action$UpdateWeather = function (a) {
 	return {ctor: 'UpdateWeather', _0: a};
 };
-var _strelka_2017$phi$Action$ExitBuildMode = {ctor: 'ExitBuildMode'};
-var _strelka_2017$phi$Action$EnterBuildMode = {ctor: 'EnterBuildMode'};
+var _strelka_2017$phi$Action$ToggleBuildMode = function (a) {
+	return {ctor: 'ToggleBuildMode', _0: a};
+};
 var _strelka_2017$phi$Action$AnimationFinished = function (a) {
 	return {ctor: 'AnimationFinished', _0: a};
 };
@@ -23136,15 +23137,10 @@ var _strelka_2017$phi$Chat_Narrative$daySummary = function (model) {
 			}));
 };
 
-var _strelka_2017$phi$Simulation_BuildingMode$enterBuildMode = _elm_lang$core$Native_Platform.outgoingPort(
-	'enterBuildMode',
+var _strelka_2017$phi$Simulation_BuildingMode$toggleBuildMode = _elm_lang$core$Native_Platform.outgoingPort(
+	'toggleBuildMode',
 	function (v) {
-		return null;
-	});
-var _strelka_2017$phi$Simulation_BuildingMode$exitBuildMode = _elm_lang$core$Native_Platform.outgoingPort(
-	'exitBuildMode',
-	function (v) {
-		return null;
+		return v;
 	});
 
 var _strelka_2017$phi$Simulation_Encoding$pos = function (nodeLabel) {
@@ -23632,19 +23628,11 @@ var _strelka_2017$phi$Update$update = F2(
 							model = _v21;
 							continue update;
 					}
-				case 'EnterBuildMode':
+				case 'ToggleBuildMode':
 					return {
 						ctor: '_Tuple2',
 						_0: model,
-						_1: _strelka_2017$phi$Simulation_BuildingMode$enterBuildMode(
-							{ctor: '_Tuple0'})
-					};
-				case 'ExitBuildMode':
-					return {
-						ctor: '_Tuple2',
-						_0: model,
-						_1: _strelka_2017$phi$Simulation_BuildingMode$exitBuildMode(
-							{ctor: '_Tuple0'})
+						_1: _strelka_2017$phi$Simulation_BuildingMode$toggleBuildMode(_p0._0)
 					};
 				case 'MultiChoiceMsg':
 					var _p4 = _p0._0;
@@ -23690,7 +23678,10 @@ var _strelka_2017$phi$Update$handleMultiChoiceMsg = F2(
 			case 'McaWeatherForecast':
 				return _strelka_2017$phi$Update$weatherForecast(model);
 			case 'McaChangeDesign':
-				return _strelka_2017$phi$Update$changeDesign(model);
+				return A2(
+					_strelka_2017$phi$Update$update,
+					_strelka_2017$phi$Action$ToggleBuildMode(true),
+					model);
 			case 'McaRunDay':
 				return _strelka_2017$phi$Update$runDay(model);
 			case 'McaSelectLocation':
@@ -23705,13 +23696,6 @@ var _strelka_2017$phi$Update$handleMultiChoiceMsg = F2(
 					{ctor: '[]'});
 		}
 	});
-var _strelka_2017$phi$Update$changeDesign = function (model) {
-	var chatMsg = _strelka_2017$phi$Chat_Model$BotMessage('Sorry that\'s not available yet!');
-	return A2(
-		_strelka_2017$phi$Update$update,
-		_strelka_2017$phi$Action$SendBotChatItem(chatMsg),
-		model);
-};
 var _strelka_2017$phi$Update$runDay = function (model) {
 	var joinEdges = F2(
 		function (source, target) {
@@ -23820,6 +23804,13 @@ var _strelka_2017$phi$Update$weatherForecast = function (model) {
 			_strelka_2017$phi$Update$update,
 			_strelka_2017$phi$Action$SendBotChatItem(chatMsg),
 			model));
+};
+var _strelka_2017$phi$Update$changeDesign = function (model) {
+	var chatMsg = _strelka_2017$phi$Chat_Model$BotMessage('Sorry that\'s not available yet!');
+	return A2(
+		_strelka_2017$phi$Update$update,
+		_strelka_2017$phi$Action$SendBotChatItem(chatMsg),
+		model);
 };
 
 var _strelka_2017$phi$View_Helpers$phiCoin = function (budget) {

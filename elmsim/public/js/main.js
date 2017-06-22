@@ -189,64 +189,50 @@ $(function () {
 
     });
 
-    app.ports.enterBuildMode.subscribe(function (model, potentials) {
+    app.ports.toggleBuildMode.subscribe(function (isEnteringBuildMode) {
         var t = d3.transition().duration(1000);
 
-        phiNetwork = model;
-        var phiPotentialNodes = potentials;
+        //phiNetwork = model;
+        //var phiPotentialNodes = potentials;
+        //
+        //var nodes = svg.select(".nodes").selectAll(".potential")
+        //    .data(phiPotentialNodes, function (d) {
+        //        return d.id;
+        //    });
 
-        var nodes = svg.select(".nodes").selectAll(".potential")
-            .data(phiPotentialNodes, function (d) {
-                return d.id;
-            });
-
-        nodes.select(".potential")
-            .attr("d", function (d) {
-                return (peerOutline()(d));
-            })
-            .attr("stroke-opacity", "0")
-            .attr("fill-opacity", "0")
-            .style("opacity", "0")
-            .transition(t)
-            .style("opacity", "1")
-            .attr("stroke-opacity", "1")
-            .attr("fill-opacity", "1")
-            .attr('transform', function (d) {
-                return "translate(" + (setX(d)) + "," + (setY(d)) + ")";
-            })
-            .call(endall, function () {
-                app.ports.animationFinished.send("enterBuildModeAnimated");
-            });
-
-
-    });
-
-    app.ports.exitBuildMode.subscribe(function (model, potentials) {
-        var t = d3.transition().duration(1000);
-
-        phiNetwork = model;
-        var phiPotentialNodes = potentials;
-
-        var nodes = svg.select(".nodes").selectAll(".potential")
-            .data(phiPotentialNodes, function (d) {
-                return d.id;
-            });
-
-        nodes.select(".potential")
-            .attr("d", function (d) {
-                return (peerOutline()(d));
-            })
-            .transition(t)
-            .style("opacity", "0")
-            .attr("stroke-opacity", "0")
-            .attr("fill-opacity", "0")
-            .attr('transform', function (d) {
-                return "translate(" + (setX(d)) + "," + (setY(d)) + ")";
-            })
-            .call(endall, function () {
-                app.ports.animationFinished.send("exitBuildModeAnimated");
-            });
-
+        if (isEnteringBuildMode)
+            d3.select(".potential")
+                .attr("d", function (d) {
+                    return (peerOutline()(d));
+                })
+                .attr("stroke-opacity", "0")
+                .attr("fill-opacity", "0")
+                .style("opacity", "0")
+                .transition(t)
+                .style("opacity", "1")
+                .attr("stroke-opacity", "1")
+                .attr("fill-opacity", "1")
+                .attr('transform', function (d) {
+                    return "translate(" + (setX(d)) + "," + (setY(d)) + ")";
+                })
+                .call(endall, function () {
+                    app.ports.animationFinished.send("enterBuildModeAnimated");
+                });
+        else
+            d3.select(".potential")
+                .attr("d", function (d) {
+                    return (peerOutline()(d));
+                })
+                .transition(t)
+                .style("opacity", "0")
+                .attr("stroke-opacity", "0")
+                .attr("fill-opacity", "0")
+                .attr('transform', function (d) {
+                    return "translate(" + (setX(d)) + "," + (setY(d)) + ")";
+                })
+                .call(endall, function () {
+                    app.ports.animationFinished.send("exitBuildModeAnimated");
+                });
 
     });
 

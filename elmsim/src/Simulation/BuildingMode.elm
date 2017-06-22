@@ -8,7 +8,4 @@ import Simulation.Model exposing (..)
 -- PORTS
 
 
-port enterBuildMode : () -> Cmd msg
-
-
-port exitBuildMode : () -> Cmd msg
+port toggleBuildMode : Bool -> Cmd msg
