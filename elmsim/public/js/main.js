@@ -10,7 +10,9 @@ var svg = d3.select("svg")
             .attr("width", window.innerWidth);
 
 var zoom = d3.zoom()
+             //.extent([[0,0],[1920,1080]])
              .scaleExtent([1, 40])
+             .translateExtent([[0,0],[1920,1080]])
              .on("zoom", zoomed);
 
 function drawGridlines(svgElt, size) {
@@ -66,13 +68,17 @@ function drawGridlines(svgElt, size) {
 
 
 var container = svg.append("g")
+    .attr("x", 0)
+    .attr("y", 0)
+    .attr("width", 1920)
+    .attr("height", 1080)
     .attr("class", "container");
 
-drawGridlines(svg,95);
+drawGridlines(svg,100);
 
 // Load SVG Map from file, append to container
 // and set container with graph elements
-d3.xml("assets/map.svg").get(function (error, documentFragment) {
+d3.xml("assets/map_v3.svg").get(function (error, documentFragment) {
     if (error) throw error;
     var svgNode = documentFragment.getElementsByTagName("svg")[0];
 
@@ -113,7 +119,10 @@ $(function () {
     var node = document.getElementById('elm-node');
     var app = Elm.Main.embed(node);
 
-    d3.select("svg").call(zoom);
+    d3.select("svg")
+      .attr("x", 0)
+      .attr("y", 0)
+      .call(zoom);
 
     var eliza = new ElizaBot();
     var initial = eliza.getInitial();
