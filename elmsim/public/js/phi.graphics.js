@@ -1,9 +1,9 @@
 var xScale = d3.scaleLinear()
-    .domain([30.5234 - 0.01, 30.5234 + 0.01])
+    .domain([0, 1920])
     .range([100, window.innerWidth - 100]);
 
 var yScale = d3.scaleLinear()
-    .domain([50.4501 - 0.01, 50.4501 + 0.01])
+    .domain([0,1080])
     .range([100, window.innerHeight - 100]);
 
 function setX(node) {
