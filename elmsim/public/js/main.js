@@ -298,7 +298,11 @@ $(function () {
 
             var nodeEnter = nodes.enter().append("g")
                 .attr("class", function (d) {
-                    return "node " + d.label.nodeType;
+                    var classStr = "node " + d.label.nodeType;
+                    if (d.label.nodeType == "generator") {
+                        classStr += (" " + d.label.generatorType);
+                    }
+                    return classStr;
                 });
 
             nodeEnter.append("path")
