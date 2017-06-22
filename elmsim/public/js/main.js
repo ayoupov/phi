@@ -9,11 +9,31 @@ var svg = d3.select("svg")
             .attr("height", window.innerHeight)
             .attr("width", window.innerWidth);
 
+var xZoomScale = d3.scaleLinear()
+    .domain([0,1920])
+    .range([0, 100]);
+
+var zoomLine = d3.line()
+    .x(function(d) { return xZoomScale(d.zoom); })
+    .y(0);
+
 var zoom = d3.zoom()
              //.extent([[0,0],[1920,1080]])
              .scaleExtent([0.75, 40])
              .translateExtent([[0,0],[1920,1080]])
              .on("zoom", zoomed);
+
+function attachZoomAxis(svgElt) {
+    var simHeight = Number(svgElt.attr("height"));
+    var simWidth = Number(svgElt.attr("width"));
+
+    svgElt.append("g")
+        .attr("class", "zoom-line")
+        .attr("transform", "translate(" + (simWidth - 100) + ", " + (simHeight - 100) + ")")
+        .call(zoomLine);
+}
+
+var GRIDLINE_SIZE = 100;
 
 function drawGridlines(svgElt, size) {
     var cornerSize = size/20;
@@ -74,7 +94,9 @@ var container = svg.append("g")
     .attr("height", 1080)
     .attr("class", "container");
 
-drawGridlines(svg,100);
+drawGridlines(svg,GRIDLINE_SIZE);
+
+attachZoomAxis(svg);
 
 // Load SVG Map from file, append to container
 // and set container with graph elements
@@ -98,6 +120,7 @@ d3.xml("assets/map_v3.svg").get(function (error, documentFragment) {
 function zoomed() {
     var transform = d3.zoomTransform(this);
     container.attr("transform", transform);
+    container.select('.zoom-line').call(zoomLine);
 }
 
 function endall(transition, callback) {

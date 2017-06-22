@@ -56,3 +56,7 @@ line.link {
   stroke-width: 0.7px;
   stroke: #FFF;
 }
+
+.scaleText {
+  font-size: 10px;
+}

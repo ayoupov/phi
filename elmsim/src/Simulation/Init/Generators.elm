@@ -108,6 +108,6 @@ generateEdge =
     Random.map2 createEdge
         --        (Random.int 0 45)
         --        (Random.int 0 45)
-        (Random.int 0 10)
-        (Random.int 0 10)
+        (Random.int 0 20)
+        (Random.int 0 20)
         |> Random.generate AddEdge
