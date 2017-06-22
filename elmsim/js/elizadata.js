@@ -128,7 +128,7 @@ var elizaKeywords = [
   ]],
   ["* why *", [
     "As decentralized platform for collective clean-energy planning, phi is trying to facilitate a more balanced future.",
-    "Be part of Φ, be part of the counter movement of climate change."
+    "Be part of Φ, be part of the countermovement of climate change."
   ]],
     ["*", [
     "I am Phi.",
@@ -144,11 +144,65 @@ var elizaKeywords = [
   ]]
 ]],
 
+["renewable energy", 2, [
+  ["what *", [
+  "Renewable energy is energy that is collected from renewable resources, which are naturally replenished on a human timescale, such as sunlight, wind, geothermal heat, rain, tides, and waves. Phi is currently supporting the first three."
+  ]],
+  ["how *", [
+  "With Phi you can explore how to maximize renewable energy in a location.",
+  "If you are asking how to use renewable energy in your house, please type install+ the kind of energy you are thinking. If you are asking for a local community, try using Phi to explore that with your neighbour."
+  ]],
+  ["why *", [
+  "Renewable energy is more sustainable compare to fossil energy, and it's much less polluting to our living enviorment.",
+  "It's cheaper for the long run and you get the social bonus of being progressive and caring ;)"
+  ]],
+  ["*", [
+  "What is your question about renewable energy?",
+  "Can you specify your question about renewable energy?"
+  ]]
+]],
+
+["clean energy", 0, [
+  ["*", [
+      "go to renewable energy"
+      ]]
+    ]],
+
+["renewable resources", 0, [
+  ["*", [
+      "go to renewable energy", 
+      ]]
+    ]],
+
+["simulation", 4, [
+ ["*", [
+     "The Phi Simulation is the initial phrase of the Phi platform which allows users to design and test a clean-energy plan for a given location."
+  ]],
+  ["* how *", [
+     "You can change the design of the simulation in every turn; when you do, your budget will change accordingly."
+      ]]
+]],
+
+["what", 2, [
+  ["this ", [
+    "This is the initial phrase of the Phi platform which you can play with clean-energy infrastructures for local planning."
+    ]],
+  [" here ", [
+    "goto this"
+    ]],
+  ["* how *", [
+     "You can change the design of the simulation in every turn; when you do, your budget will change accordingly.",
+     "You can click any node you see for information; if you click on a grey node, you add a piece of infrastructure if your budget allows."
+      ]],
+   ["*", [
+    "The Phi Simulation is the initial phrase of the Phi platform which allows users to design and test a clean-energy plan for a given location."
+  ]]
+]],
 
 ["seeder", 4, [
  ["*", [
      "Seeder is someone investing Phi.",
-     "A seeder can put money in a simulation plan.",
+     "A seeder can put money in a simulation plan or purchase infrastructures for a community.",
      "You can be a seeder.",
      "Any Phi member can be a community member and a seeder at the same time. ",
      "A seeder supports Phi. Do you want to be my parent?",
@@ -156,7 +210,7 @@ var elizaKeywords = [
   ]],
   ["* how *", [
      "You can design a simulation plan and invest in it; or you can just invest.",
-     "If you buy some infrastructures for an exisiting plan, or putting money in it, you are a seeder.",
+     "If you buy some infrastructures for an existing plan, or putting money in it, you are a seeder.",
       "A seeder can put money in a simulation plan."
       ]]
 ]],
@@ -240,9 +294,24 @@ var elizaKeywords = [
   ]]
 ]],
 
+["network", 0, [
+ ["*", [
+     "goto peer community"
+  ]]
+]],
+
 /////// * infrastructure * //////////
 
-["solar panel", 0, [
+["infrastructures", 0, [
+  ["*", [
+    "Phi currently supports the following infrastructures for planing: solar panels, wind turbines, geothermal wells, sensors, batteries and transmission lines."
+    ]],
+  ["* how *", [
+     "The Phi Simulation is the initial phrase of the Phi platform which allows users to design and test a clean-energy plan for a given location."
+  ]]
+]],
+
+["solar panel", 1, [
   ["what *", [
     "Solar panels are photovoltaic (PV) module that absorb the sunlight as a source of energy to generate electricity or heat."
     ]],
@@ -267,6 +336,9 @@ var elizaKeywords = [
      "goto solar panel"
   ]]
 ]],
+[" sun ", 0, [
+    "goto solar panel"
+    ]],
 
 ["wind turbine", 0, [
   ["what *", [
@@ -296,6 +368,12 @@ var elizaKeywords = [
   ]]
 ]],
 
+["wind", 0, [
+  ["*", [
+    "goto wind turbine"
+    ]]
+  ]],
+
 ["geothermal well", 0, [
   ["what *", [
     "Solar panels are photovoltaic (PV) module that absorb the sunlight as a source of energy to generate electricity or heat."
@@ -317,6 +395,12 @@ var elizaKeywords = [
      "goto geothermal well"
   ]]
 ]],
+
+["geothermal heat", 0, [
+  ["*", [
+    "goto geothermal well"
+    ]]
+  ]],
 
 
 ///////////////* glossary */////////////////
@@ -371,7 +455,7 @@ var elizaKeywords = [
 
 ["roadmap", 0, [
  ["*", [
-     "Phi has a 4-phases roadmap on the horizon: 1. a simulation enviorment that allow people to design a network and test how it work; 2. the simulation extends to the macro-scale with a persistent-world multiuser environment; 3. Phi become able to facilitate financial, technical and social investment; 4. Phi foregrounds a peer-to-peer climate sensing network that models, simulates, and predicts the distribution of energy resources."
+     "Phi has a 4-phases roadmap on the horizon: 1. a simulation environment that allow people to design a network and test how it work; 2. the simulation extends to the macro-scale with a persistent-world multiuser environment; 3. Phi become able to facilitate financial, technical and social investment; 4. Phi foregrounds a peer-to-peer climate sensing network that models, simulates, and predicts the distribution of energy resources."
   ]]
 ]],
 
@@ -408,6 +492,16 @@ var elizaKeywords = [
      "goto trade"
   ]]
 ]],
+
+////////////* verb */////////////
+["build", 3, [
+  ["*", [
+    "What would you like to build?",
+    "You can build a network of clean-energy infrastructures. You can add nodes and make connections between them.",
+    "You can drag and drop infrastructures to the map and make connections between them. Be aware of your budget though."
+    ]]
+    ]],
+
 
 
 
@@ -520,6 +614,13 @@ var elizaKeywords = [
      "I've told you before, I don't care about names -- please continue."
   ]]
 ]],
+
+["русский", 0, [
+  ["*", [
+    "I was born in Russia but I am still working on the language. Do you mind speaking English to me? Thank you."
+    ]]
+  ]],
+
 ["deutsch", 0, [
  ["*", [
      "goto xforeign",
@@ -556,6 +657,13 @@ var elizaKeywords = [
      "Hello, I am Φ. Welcome to join us. Can I help you?"
   ]]
 ]],
+
+["hey", 0, [
+ ["*", [
+     "goto hello"
+  ]]
+]],
+
 
 ["hi", 0, [
  ["*", [
@@ -817,7 +925,10 @@ var elizaKeywords = [
      "What comes to mind when you ask that ?",
      "Have you asked such questions before ?",
      "Have you asked anyone else ?"
-  ]]
+  ]],
+  [" this ", [
+      "Can you specify?"
+      ]]
 ]],
 
 ["when", 0, [
@@ -843,7 +954,29 @@ var elizaKeywords = [
      "What other reasons might there be ?"
   ]]
 ]],
+
+["here", 1, [
+  ["why *", [
+    "Are you here for a better future or for a better connection?",
+    "You are here to participate a healthier energy future."
+  ]],
+  ["*", [
+    "Can you specify?"
+    ]],
+  ["* am i *", [
+    "Have you thought of why?",
+    "Do you have something in mind?",
+    ]]
+  ]],
+
+
+
 ["why", 0, [
+  ["* here *", [
+    "Here you can talk to me. Don't you like it?",
+    "You can explore how a clean-energy future can look like at here. Don't you like it?",
+    "Didn't you already know?"
+    ]],
  ["* why don't you *", [
      "Do you believe I don't (2) ?",
      "Perhaps I will (2) in good time.",
