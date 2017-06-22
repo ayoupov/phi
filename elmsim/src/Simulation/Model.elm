@@ -96,6 +96,11 @@ type alias SimMap =
     }
 
 
+tupleToCoords : ( Int, Int ) -> Coords
+tupleToCoords ( x, y ) =
+    { x = toFloat x, y = toFloat y }
+
+
 
 -- Graph
 

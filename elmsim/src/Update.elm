@@ -11,7 +11,7 @@ import Material
 import Model exposing (Model)
 import Simulation.BuildingMode exposing (handleConvertNodeRequest, toggleBuildMode)
 import Simulation.Encoding exposing (encodeEdge, encodeGraph, encodeNodeLabel)
-import Simulation.GraphUpdates exposing (addEdge, addNode, updateNodes)
+import Simulation.GraphUpdates exposing (addEdge, addNodeWithEdges, updateNodes)
 import Simulation.Init.Generators as Generators exposing (..)
 import Simulation.Model exposing (..)
 import Simulation.Simulation as Simulation exposing (..)
@@ -94,11 +94,11 @@ update msg model =
                 |> update RenderPhiNetwork
 
         AddGenerator node ->
-            { model | network = addNode (GeneratorNode node) model.network }
+            { model | network = addNodeWithEdges 1 (GeneratorNode node) model.network }
                 |> update RenderPhiNetwork
 
         AddPeer node ->
-            { model | network = addNode (PeerNode node) model.network }
+            { model | network = addNodeWithEdges 1 (PeerNode node) model.network }
                 |> update RenderPhiNetwork
 
         AddEdge edge ->

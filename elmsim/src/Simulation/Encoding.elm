@@ -2,6 +2,7 @@ module Simulation.Encoding exposing (..)
 
 import Graph exposing (Edge, Graph, Node)
 import Json.Encode as Json
+import Simulation.Helpers exposing (getCoords)
 import Simulation.Model exposing (..)
 
 
@@ -86,30 +87,14 @@ encodeCoords pos =
         ]
 
 
-pos : NodeLabel -> Coords
-pos nodeLabel =
-    case nodeLabel of
-        GeneratorNode n ->
-            n.pos
-
-        BatNode n ->
-            n.pos
-
-        PeerNode n ->
-            n.pos
-
-        PotentialNode n ->
-            n.pos
-
-
 encodeEdge : PhiNetwork -> TransmissionLine -> Maybe EncodedEdge
 encodeEdge graph tLine =
     let
         maybeFrom =
-            Maybe.map (pos << .label << .node) (Graph.get tLine.from graph)
+            Maybe.map (getCoords << .label << .node) (Graph.get tLine.from graph)
 
         maybeTo =
-            Maybe.map (pos << .label << .node) (Graph.get tLine.to graph)
+            Maybe.map (getCoords << .label << .node) (Graph.get tLine.to graph)
 
         maybeLine =
             Maybe.map2 Line maybeFrom maybeTo

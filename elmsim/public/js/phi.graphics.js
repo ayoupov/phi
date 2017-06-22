@@ -60,13 +60,13 @@ function nodeShape(d) {
 
 function peerSize(d) {
     if (d.label.nodeType == "peer") {
-        return 20 + 2 * (d.label.desiredConsumption || 0);
+        return 8 + 2 * (d.label.desiredConsumption || 0);
     }
 }
 
 function peerSizeOuter(d) {
     if (d.label.nodeType == "peer") {
-        return 20 + 2 * (d.label.desiredConsumption || 0);
+        return 8 + 2 * (d.label.desiredConsumption || 0);
     }
 }
 
