@@ -63,7 +63,7 @@ initMap : SimMap
 initMap =
     { name = "Kolionovo"
     , population = 5523
-    , initialNetwork = Graph.empty --graphFromNodeList potentialNodesList
+    , initialNetwork = graphFromNodeList potentialNodesList
     , initialWeather =
         { sun = 0.5
         , wind = 0.5

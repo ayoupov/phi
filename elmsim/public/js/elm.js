@@ -21925,7 +21925,7 @@ var _strelka_2017$phi$Model$initGraph = function (map) {
 var _strelka_2017$phi$Model$initMap = {
 	name: 'Kolionovo',
 	population: 5523,
-	initialNetwork: _elm_community$graph$Graph$empty,
+	initialNetwork: _strelka_2017$phi$Simulation_GraphUpdates$graphFromNodeList(_strelka_2017$phi$Simulation_GraphUpdates$potentialNodesList),
 	initialWeather: {sun: 0.5, wind: 0.5},
 	initialWeatherList: _strelka_2017$phi$Simulation_WeatherList$restWeather(
 		{ctor: '[]'}),
