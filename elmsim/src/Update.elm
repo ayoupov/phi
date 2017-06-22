@@ -68,6 +68,9 @@ update msg model =
         CheckWeather ->
             weatherForecast model
 
+        CheckBudget ->
+            update (SendBotChatItem <| BotMessage (toString model.budget)) model
+
         DaySummary ->
             --            update (SendBotChatItem <| Narrative.daySummary model) model
             update (SendBotChatItem <| Narrative.dayBeginning model) model
@@ -174,7 +177,7 @@ handleMultiChoiceMsg action model =
             weatherForecast model
 
         McaChangeDesign ->
---            changeDesign model
+            --            changeDesign model
             update (ToggleBuildMode True) model
 
         McaRunDay ->

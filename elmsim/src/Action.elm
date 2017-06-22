@@ -12,6 +12,7 @@ type Msg
     | SendBotChatItem BotChatItem
     | NoOp
     | CheckWeather
+    | CheckBudget
     | DescribeNode Int
     | AddGenerator SimGenerator
     | AddPeer Peer

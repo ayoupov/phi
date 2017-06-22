@@ -92,6 +92,6 @@ function peerOutline() {
 
 function addBaseNode() {
     return d3.symbol()
-        .size(70)
+        .size(100)
         .type(nodeShape);
 }

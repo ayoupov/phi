@@ -16703,8 +16703,8 @@ var _elm_community$graph$Graph$ignorePath = F4(
 			return _elm_lang$core$Native_Utils.crashCase(
 				'Graph',
 				{
-					start: {line: 885, column: 3},
-					end: {line: 889, column: 20}
+					start: {line: 1017, column: 5},
+					end: {line: 1022, column: 26}
 				},
 				_p1)('Graph.ignorePath: No algorithm should ever pass an empty path into this BfsNodeVisitor.');
 		} else {
@@ -17049,8 +17049,8 @@ var _elm_community$graph$Graph$computeEdgeDiff = F2(
 								return _elm_lang$core$Native_Utils.crashCase(
 									'Graph',
 									{
-										start: {line: 189, column: 11},
-										end: {line: 199, column: 22}
+										start: {line: 255, column: 21},
+										end: {line: 269, column: 36}
 									},
 									_p21)('Graph.computeEdgeDiff: Collected two removals for the same edge. This is an error in the implementation of Graph and you should file a bug report!');
 							}
@@ -17058,8 +17058,8 @@ var _elm_community$graph$Graph$computeEdgeDiff = F2(
 							return _elm_lang$core$Native_Utils.crashCase(
 								'Graph',
 								{
-									start: {line: 189, column: 11},
-									end: {line: 199, column: 22}
+									start: {line: 255, column: 21},
+									end: {line: 269, column: 36}
 								},
 								_p21)('Graph.computeEdgeDiff: Collected inserts before removals. This is an error in the implementation of Graph and you should file a bug report!');
 						}
@@ -17363,8 +17363,8 @@ var _elm_community$graph$Graph$dfsTree = F2(
 				return _elm_lang$core$Native_Utils.crashCase(
 					'Graph',
 					{
-						start: {line: 827, column: 3},
-						end: {line: 833, column: 120}
+						start: {line: 953, column: 5},
+						end: {line: 961, column: 126}
 					},
 					_p42)('dfsTree: There can\'t be more than one DFS tree. This invariant is violated, please report this bug.');
 			}
@@ -17412,8 +17412,8 @@ var _elm_community$graph$Graph$topologicalSort = function (graph) {
 			return _elm_lang$core$Native_Utils.crashCase(
 				'Graph',
 				{
-					start: {line: 1046, column: 7},
-					end: {line: 1054, column: 18}
+					start: {line: 1198, column: 13},
+					end: {line: 1208, column: 32}
 				},
 				_p46)('Invariant hurt in Graph.topologicalSort: No strongly connected component should be empty');
 		} else {
@@ -17422,8 +17422,8 @@ var _elm_community$graph$Graph$topologicalSort = function (graph) {
 				return _elm_lang$core$Native_Utils.crashCase(
 					'Graph',
 					{
-						start: {line: 1050, column: 11},
-						end: {line: 1054, column: 18}
+						start: {line: 1203, column: 21},
+						end: {line: 1208, column: 32}
 					},
 					_p48)('Invariant hurt in Graph.topologicalSort: nodeId in nodeIdRange of the strongly connected component should be present in the original graph');
 			} else {
@@ -17563,8 +17563,8 @@ var _elm_community$graph$Graph$heightLevels = function (graph) {
 					return _elm_lang$core$Native_Utils.crashCase(
 						'Graph',
 						{
-							start: {line: 1006, column: 13},
-							end: {line: 1008, column: 154}
+							start: {line: 1150, column: 21},
+							end: {line: 1155, column: 157}
 						},
 						_p62)('Graph.heightLevels: Could not get a node of a graph which should be there by invariants. Please file a bug report!');
 				}
@@ -17617,8 +17617,8 @@ var _elm_community$graph$Graph$heightLevels = function (graph) {
 					return _elm_lang$core$Native_Utils.crashCase(
 						'Graph',
 						{
-							start: {line: 1025, column: 13},
-							end: {line: 1029, column: 44}
+							start: {line: 1176, column: 21},
+							end: {line: 1181, column: 56}
 						},
 						_p67)('Graph.heightLevels: Reached a branch which is impossible by invariants. Please file a bug report!');
 				} else {
@@ -18979,6 +18979,7 @@ var _strelka_2017$phi$Action$AddGenerator = function (a) {
 var _strelka_2017$phi$Action$DescribeNode = function (a) {
 	return {ctor: 'DescribeNode', _0: a};
 };
+var _strelka_2017$phi$Action$CheckBudget = {ctor: 'CheckBudget'};
 var _strelka_2017$phi$Action$CheckWeather = {ctor: 'CheckWeather'};
 var _strelka_2017$phi$Action$NoOp = {ctor: 'NoOp'};
 var _strelka_2017$phi$Action$SendBotChatItem = function (a) {
@@ -19190,7 +19191,7 @@ var _strelka_2017$phi$Charts$donutWithPct = F3(
 	});
 
 var _strelka_2017$phi$Chat_Chat$parseUserMessage = function (chatMsg) {
-	return (!A2(_elm_lang$core$String$startsWith, '/', chatMsg)) ? _strelka_2017$phi$Action$SendToEliza(chatMsg) : (_elm_lang$core$Native_Utils.eq(chatMsg, '/weather') ? _strelka_2017$phi$Action$CheckWeather : (_elm_lang$core$Native_Utils.eq(chatMsg, '/turn') ? _strelka_2017$phi$Action$CallTurn : (A2(_elm_lang$core$String$startsWith, '/describe', chatMsg) ? A2(
+	return (!A2(_elm_lang$core$String$startsWith, '/', chatMsg)) ? _strelka_2017$phi$Action$SendToEliza(chatMsg) : (_elm_lang$core$Native_Utils.eq(chatMsg, '/weather') ? _strelka_2017$phi$Action$CheckWeather : (_elm_lang$core$Native_Utils.eq(chatMsg, '/turn') ? _strelka_2017$phi$Action$CallTurn : (_elm_lang$core$Native_Utils.eq(chatMsg, '/budget') ? _strelka_2017$phi$Action$CheckBudget : (A2(_elm_lang$core$String$startsWith, '/describe', chatMsg) ? A2(
 		_elm_lang$core$Maybe$withDefault,
 		_strelka_2017$phi$Action$SendBotChatItem(
 			_strelka_2017$phi$Chat_Model$BotMessage('I can\'t find that node!')),
@@ -19208,7 +19209,7 @@ var _strelka_2017$phi$Chat_Chat$parseUserMessage = function (chatMsg) {
 						A2(_elm_lang$core$List$drop, 1, _p1));
 				}(
 					A2(_elm_lang$core$String$split, ' ', chatMsg))))) : _strelka_2017$phi$Action$SendBotChatItem(
-		_strelka_2017$phi$Chat_Model$BotMessage('Sorry, I only respond to a few commands! Current available ones are:\n\n/weather (i tell you abt the weather today)\n/turn (i move to the next day)\n/describe [nodeId] (i tell you some info about a specific node)\n')))));
+		_strelka_2017$phi$Chat_Model$BotMessage('Sorry, I only respond to a few commands! Current available ones are:\n\n/weather (i tell you abt the weather today)\n/turn (i move to the next day)\n/describe [nodeId] (i tell you some info about a specific node)\n'))))));
 };
 var _strelka_2017$phi$Chat_Chat$sendToEliza = _elm_lang$core$Native_Platform.outgoingPort(
 	'sendToEliza',
@@ -22324,11 +22325,11 @@ var _strelka_2017$phi$Model$initGenerators = A2(
 	A2(_elm_lang$core$List$repeat, 12, _strelka_2017$phi$Simulation_Init_Generators$generateEdge),
 	A2(
 		_elm_lang$core$Basics_ops['++'],
-		A2(_elm_lang$core$List$repeat, 50, _strelka_2017$phi$Simulation_Init_Generators$generatePeer),
+		A2(_elm_lang$core$List$repeat, 5, _strelka_2017$phi$Simulation_Init_Generators$generatePeer),
 		A2(
 			_elm_lang$core$Basics_ops['++'],
-			A2(_elm_lang$core$List$repeat, 20, _strelka_2017$phi$Simulation_Init_Generators$generatePVPanel),
-			A2(_elm_lang$core$List$repeat, 20, _strelka_2017$phi$Simulation_Init_Generators$generateWindTurbine))));
+			A2(_elm_lang$core$List$repeat, 2, _strelka_2017$phi$Simulation_Init_Generators$generatePVPanel),
+			A2(_elm_lang$core$List$repeat, 2, _strelka_2017$phi$Simulation_Init_Generators$generateWindTurbine))));
 var _strelka_2017$phi$Model$initNegawattLimit = function (map) {
 	return map.initialNegawattLimit;
 };
@@ -23459,12 +23460,20 @@ var _strelka_2017$phi$Update$update = F2(
 					};
 				case 'CheckWeather':
 					return _strelka_2017$phi$Update$weatherForecast(model);
-				case 'DaySummary':
+				case 'CheckBudget':
 					var _v1 = _strelka_2017$phi$Action$SendBotChatItem(
-						_strelka_2017$phi$Chat_Narrative$dayBeginning(model)),
+						_strelka_2017$phi$Chat_Model$BotMessage(
+							_elm_lang$core$Basics$toString(model.budget))),
 						_v2 = model;
 					msg = _v1;
 					model = _v2;
+					continue update;
+				case 'DaySummary':
+					var _v3 = _strelka_2017$phi$Action$SendBotChatItem(
+						_strelka_2017$phi$Chat_Narrative$dayBeginning(model)),
+						_v4 = model;
+					msg = _v3;
+					model = _v4;
 					continue update;
 				case 'CallTurn':
 					return A3(
@@ -23497,8 +23506,8 @@ var _strelka_2017$phi$Update$update = F2(
 									},
 									A2(_elm_community$graph$Graph$get, _p0._0, model.network)))))(model);
 				case 'AddGenerator':
-					var _v3 = _strelka_2017$phi$Action$RenderPhiNetwork,
-						_v4 = _elm_lang$core$Native_Utils.update(
+					var _v5 = _strelka_2017$phi$Action$RenderPhiNetwork,
+						_v6 = _elm_lang$core$Native_Utils.update(
 						model,
 						{
 							network: A2(
@@ -23506,12 +23515,12 @@ var _strelka_2017$phi$Update$update = F2(
 								_strelka_2017$phi$Simulation_Model$GeneratorNode(_p0._0),
 								model.network)
 						});
-					msg = _v3;
-					model = _v4;
+					msg = _v5;
+					model = _v6;
 					continue update;
 				case 'AddPeer':
-					var _v5 = _strelka_2017$phi$Action$RenderPhiNetwork,
-						_v6 = _elm_lang$core$Native_Utils.update(
+					var _v7 = _strelka_2017$phi$Action$RenderPhiNetwork,
+						_v8 = _elm_lang$core$Native_Utils.update(
 						model,
 						{
 							network: A2(
@@ -23519,29 +23528,29 @@ var _strelka_2017$phi$Update$update = F2(
 								_strelka_2017$phi$Simulation_Model$PeerNode(_p0._0),
 								model.network)
 						});
-					msg = _v5;
-					model = _v6;
+					msg = _v7;
+					model = _v8;
 					continue update;
 				case 'AddEdge':
-					var _v7 = _strelka_2017$phi$Action$RenderPhiNetwork,
-						_v8 = _elm_lang$core$Native_Utils.update(
+					var _v9 = _strelka_2017$phi$Action$RenderPhiNetwork,
+						_v10 = _elm_lang$core$Native_Utils.update(
 						model,
 						{
 							network: A2(_strelka_2017$phi$Simulation_GraphUpdates$addEdge, _p0._0, model.network)
 						});
-					msg = _v7;
-					model = _v8;
+					msg = _v9;
+					model = _v10;
 					continue update;
 				case 'UpdateWeather':
-					var _v9 = _strelka_2017$phi$Action$RenderPhiNetwork,
-						_v10 = _elm_lang$core$Native_Utils.update(
+					var _v11 = _strelka_2017$phi$Action$RenderPhiNetwork,
+						_v12 = _elm_lang$core$Native_Utils.update(
 						model,
 						{
 							weather: _p0._0,
 							weatherList: _strelka_2017$phi$Simulation_WeatherList$restWeather(model.weatherList)
 						});
-					msg = _v9;
-					model = _v10;
+					msg = _v11;
+					model = _v12;
 					continue update;
 				case 'RenderPhiNetwork':
 					return {
@@ -23575,10 +23584,10 @@ var _strelka_2017$phi$Update$update = F2(
 					var _p3 = _p0._0;
 					switch (_p3) {
 						case 'layoutRendered':
-							var _v12 = _strelka_2017$phi$Action$AnimateGeneration,
-								_v13 = model;
-							msg = _v12;
-							model = _v13;
+							var _v14 = _strelka_2017$phi$Action$AnimateGeneration,
+								_v15 = model;
+							msg = _v14;
+							model = _v15;
 							continue update;
 						case 'generatorsAnimated':
 							return A3(
@@ -23601,31 +23610,31 @@ var _strelka_2017$phi$Update$update = F2(
 										_strelka_2017$phi$Chat_Narrative$dayConsumed(model)),
 									model));
 						case 'tradeAnimated':
-							var _v14 = _strelka_2017$phi$Action$SendBotChatItem(
-								_strelka_2017$phi$Chat_Narrative$dayTraded(model)),
-								_v15 = model;
-							msg = _v14;
-							model = _v15;
-							continue update;
-						case 'enterBuildModeAnimated':
 							var _v16 = _strelka_2017$phi$Action$SendBotChatItem(
-								_strelka_2017$phi$Chat_Model$BotMessage('You\'ve entered building mode')),
+								_strelka_2017$phi$Chat_Narrative$dayTraded(model)),
 								_v17 = model;
 							msg = _v16;
 							model = _v17;
 							continue update;
-						case 'exitBuildModeAnimated':
+						case 'enterBuildModeAnimated':
 							var _v18 = _strelka_2017$phi$Action$SendBotChatItem(
-								_strelka_2017$phi$Chat_Model$BotMessage('You\'ve exited building mode')),
+								_strelka_2017$phi$Chat_Model$BotMessage('You\'ve entered building mode')),
 								_v19 = model;
 							msg = _v18;
 							model = _v19;
 							continue update;
-						default:
-							var _v20 = _strelka_2017$phi$Action$NoOp,
+						case 'exitBuildModeAnimated':
+							var _v20 = _strelka_2017$phi$Action$SendBotChatItem(
+								_strelka_2017$phi$Chat_Model$BotMessage('You\'ve exited building mode')),
 								_v21 = model;
 							msg = _v20;
 							model = _v21;
+							continue update;
+						default:
+							var _v22 = _strelka_2017$phi$Action$NoOp,
+								_v23 = model;
+							msg = _v22;
+							model = _v23;
 							continue update;
 					}
 				case 'ToggleBuildMode':
@@ -23722,10 +23731,10 @@ var _strelka_2017$phi$Update$runDay = function (model) {
 				if (_p7.ctor === '[]') {
 					return network;
 				} else {
-					var _v25 = _p7._1,
-						_v26 = A2(updateNetwork, _p7._0, network);
-					list = _v25;
-					network = _v26;
+					var _v27 = _p7._1,
+						_v28 = A2(updateNetwork, _p7._0, network);
+					list = _v27;
+					network = _v28;
 					continue joinNetworks;
 				}
 			}
