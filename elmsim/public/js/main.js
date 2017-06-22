@@ -126,7 +126,6 @@ function updateZoomPos()
         'left': r,
         'top': b
     });
-    console.log(r,b);
 }
 
 function updateZoom(scale)
@@ -244,6 +243,10 @@ $(function () {
 
     });
 
+    var clickOnPotential = function(d){
+        app.ports.requestConvertNode.send(d.label.nodeId);
+    };
+
     app.ports.toggleBuildMode.subscribe(function (isEnteringBuildMode) {
         var t = d3.transition().duration(1000);
 
@@ -257,6 +260,7 @@ $(function () {
 
         if (isEnteringBuildMode)
             d3.select(".potential")
+                .on('click', clickOnPotential)
                 .attr("d", function (d) {
                     return (peerOutline()(d));
                 })
@@ -275,6 +279,7 @@ $(function () {
                 });
         else
             d3.select(".potential")
+                .on('click', null)
                 .attr("d", function (d) {
                     return (peerOutline()(d));
                 })

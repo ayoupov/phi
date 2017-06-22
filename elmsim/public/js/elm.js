@@ -22620,9 +22620,10 @@ var _strelka_2017$phi$Simulation_Simulation$networkTradedEnergy = function (netw
 			_elm_community$graph$Graph$nodes(network)));
 };
 var _strelka_2017$phi$Simulation_Simulation$updateBudget = function (model) {
+	var joulesToPhiQuotient = 15;
 	return {
 		ctor: '::',
-		_0: (_strelka_2017$phi$Simulation_Simulation$networkTradedEnergy(model.network) * 0.15) + _strelka_2017$phi$ListHelpers$takeFirstElementWithDefault0(model.budget),
+		_0: (_strelka_2017$phi$Simulation_Simulation$networkTradedEnergy(model.network) * joulesToPhiQuotient) + _strelka_2017$phi$ListHelpers$takeFirstElementWithDefault0(model.budget),
 		_1: model.budget
 	};
 };
