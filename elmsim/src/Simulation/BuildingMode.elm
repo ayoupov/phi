@@ -41,10 +41,10 @@ handleConvertNodeRequest nodeId phiNetwork =
                 PotentialNode { nodeType, pos } ->
                     case nodeType of
                         PotentialGenerator ->
-                            GeneratorNode defaultGenerator
+                            GeneratorNode { defaultGenerator | pos = pos }
 
                         PotentialPeer ->
-                            PeerNode defaultPeer
+                            PeerNode { defaultPeer | pos = pos }
 
                 _ ->
                     label

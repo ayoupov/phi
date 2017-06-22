@@ -2,7 +2,9 @@ module Simulation.GraphUpdates exposing (..)
 
 import Graph exposing (Edge, Node, NodeContext, NodeId)
 import IntDict
-import Simulation.Model exposing (NodeLabel, PhiNetwork, TransmissionLine)
+import Set
+import Simulation.Model exposing (NodeLabel(PotentialNode), PhiNetwork, Potential, PotentialNodeType(PotentialGenerator, PotentialPeer), TransmissionLine, tupleToCoords)
+import Simulation.NodeList exposing (potentialGeneratorList, potentialPeerList)
 
 
 addNode : NodeLabel -> PhiNetwork -> PhiNetwork
@@ -47,3 +49,31 @@ updateNodes updatedNodeList network =
             network
                 |> Graph.update node.id (node |> nodeUpdater)
                 |> updateNodes tail
+
+
+graphFromNodeList : List NodeLabel -> PhiNetwork
+graphFromNodeList nodes =
+    case nodes of
+        [] ->
+            Graph.empty
+
+        x :: xs ->
+            addNode x (graphFromNodeList xs)
+
+
+potentialNodesList : List NodeLabel
+potentialNodesList =
+    let
+        genList =
+            potentialGeneratorList
+                |> Set.toList
+                |> List.map
+                    (PotentialNode << Potential PotentialGenerator << tupleToCoords)
+
+        peerList =
+            potentialPeerList
+                |> Set.toList
+                |> List.map
+                    (PotentialNode << Potential PotentialPeer << tupleToCoords)
+    in
+    genList ++ peerList

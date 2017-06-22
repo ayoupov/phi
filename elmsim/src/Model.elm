@@ -4,8 +4,11 @@ import Action exposing (Msg)
 import Chat.Model exposing (ChatItem, InputType(..), initChat)
 import Graph
 import Material
+import Set exposing (Set)
+import Simulation.GraphUpdates exposing (graphFromNodeList, potentialNodesList)
 import Simulation.Init.Generators as Generators
-import Simulation.Model exposing (Budget, MapLimit, Narrative, NarrativeItem, PhiNetwork, ReputationRatio, SimMap, SiteInfo, Weather, WeatherTuple)
+import Simulation.Model exposing (Budget, MapLimit, Narrative, NarrativeItem, PhiNetwork, ReputationRatio, SimMap, SiteInfo, Weather, WeatherTuple, tupleToCoords)
+import Simulation.NodeList exposing (initialPVNodeList, initialPeerList, initialWTNodeList)
 import Simulation.WeatherList exposing (restWeather)
 
 
@@ -58,7 +61,19 @@ initSiteInfo map =
 
 initMap : SimMap
 initMap =
-    SimMap "Kolionovo" 5523 Graph.empty { sun = 0.5, wind = 0.5 } (restWeather []) initNarrative [ 10000 ] { a = 1, b = 0 } 21
+    { name = "Kolionovo"
+    , population = 5523
+    , initialNetwork = graphFromNodeList potentialNodesList
+    , initialWeather =
+        { sun = 0.5
+        , wind = 0.5
+        }
+    , initialWeatherList = restWeather []
+    , narrative = initNarrative
+    , initialBudget = [ 10000 ]
+    , initialReputationRatio = { a = 1, b = 0 }
+    , initialNegawattLimit = 21
+    }
 
 
 initGraph : SimMap -> PhiNetwork
@@ -98,7 +113,11 @@ initNegawattLimit map =
 
 initGenerators : List (Cmd Msg)
 initGenerators =
-    List.repeat 16 Generators.generateEdge
-        ++ List.repeat 2 Generators.generatePeer
-        ++ List.repeat 6 Generators.generatePVPanel
-        ++ List.repeat 6 Generators.generateWindTurbine
+    let
+        asCoordsList =
+            List.map tupleToCoords << Set.toList
+    in
+    List.repeat 12 Generators.generateEdge
+        ++ List.map Generators.generatePeer (asCoordsList initialPeerList)
+        ++ List.map Generators.generatePVPanel (asCoordsList initialPVNodeList)
+        ++ List.map Generators.generateWindTurbine (asCoordsList initialWTNodeList)

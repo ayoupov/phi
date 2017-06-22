@@ -12,26 +12,6 @@ import Simulation.NodeList as NodeList
 import Simulation.WeatherList exposing (restWeather, weatherTupleToWeather)
 
 
-coordsGenerator : Random.Generator Coords
-coordsGenerator =
-    let
-        coordsFunc =
-            (NodeList.initialPeerList
-                |> Set.toList
-                |> Array.fromList
-                |> flip Array.get
-            )
-                >> Maybe.map NodeList.tupleToCoords
-                >> Maybe.withDefault (Coords 0 0)
-
-        coordsLimit =
-            Set.size NodeList.initialPeerList - 1
-    in
-    Random.map coordsFunc
-        (Random.int 0 coordsLimit)
-
-
-
 --generateWeather : List WeatherTuple -> Cmd Msg
 --generateWeather list =
 --    Random.map2 Weather
@@ -40,48 +20,33 @@ coordsGenerator =
 --        |> Random.generate UpdateWeather
 
 
-generatePVPanel : Cmd Msg
-generatePVPanel =
+generatePVPanel : Coords -> Cmd Msg
+generatePVPanel coords =
     Random.map4 SimGenerator
         (Random.constant [])
         -- dailyConsumption
         (Random.float 0 10)
         -- maxGeneration
-        coordsGenerator
+        (Random.constant coords)
         -- xy coordinates
         (Random.constant SolarPanel)
         -- generator type
         |> Random.generate AddGenerator
 
 
-generateWindTurbine : Cmd Msg
-generateWindTurbine =
+generateWindTurbine : Coords -> Cmd Msg
+generateWindTurbine coords =
     Random.map4 SimGenerator
         (Random.constant [])
         (Random.float 0 10)
         -- capacity
-        coordsGenerator
+        (Random.constant coords)
         (Random.constant WindTurbine)
         |> Random.generate AddGenerator
 
 
-
---generatePeerJoules : PeerJoules
---generatePeerJoules =
---    Random.map4 PeerJoules
---        -- stored
---        (Random.constant [0])
---        -- actual consumption
---        (Random.constant [0])
---        -- desired consumption
---        (Random.float 7 10)
---        -- seedRating in joules?
---        (Random.constant [0])
---        |> Random.generate
-
-
-generatePeer : Cmd Msg
-generatePeer =
+generatePeer : Coords -> Cmd Msg
+generatePeer coords =
     Random.map4 Peer
         --        generatePeerJoules
         (Random.map5 PeerJoules
@@ -99,7 +64,7 @@ generatePeer =
         (Random.constant [ 0 ])
         -- initial reputation
         (Random.constant [ 1 ])
-        coordsGenerator
+        (Random.constant coords)
         |> Random.generate AddPeer
 
 

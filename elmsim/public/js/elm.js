@@ -16703,8 +16703,8 @@ var _elm_community$graph$Graph$ignorePath = F4(
 			return _elm_lang$core$Native_Utils.crashCase(
 				'Graph',
 				{
-					start: {line: 885, column: 3},
-					end: {line: 889, column: 20}
+					start: {line: 1017, column: 5},
+					end: {line: 1022, column: 26}
 				},
 				_p1)('Graph.ignorePath: No algorithm should ever pass an empty path into this BfsNodeVisitor.');
 		} else {
@@ -17049,8 +17049,8 @@ var _elm_community$graph$Graph$computeEdgeDiff = F2(
 								return _elm_lang$core$Native_Utils.crashCase(
 									'Graph',
 									{
-										start: {line: 189, column: 11},
-										end: {line: 199, column: 22}
+										start: {line: 255, column: 21},
+										end: {line: 269, column: 36}
 									},
 									_p21)('Graph.computeEdgeDiff: Collected two removals for the same edge. This is an error in the implementation of Graph and you should file a bug report!');
 							}
@@ -17058,8 +17058,8 @@ var _elm_community$graph$Graph$computeEdgeDiff = F2(
 							return _elm_lang$core$Native_Utils.crashCase(
 								'Graph',
 								{
-									start: {line: 189, column: 11},
-									end: {line: 199, column: 22}
+									start: {line: 255, column: 21},
+									end: {line: 269, column: 36}
 								},
 								_p21)('Graph.computeEdgeDiff: Collected inserts before removals. This is an error in the implementation of Graph and you should file a bug report!');
 						}
@@ -17363,8 +17363,8 @@ var _elm_community$graph$Graph$dfsTree = F2(
 				return _elm_lang$core$Native_Utils.crashCase(
 					'Graph',
 					{
-						start: {line: 827, column: 3},
-						end: {line: 833, column: 120}
+						start: {line: 953, column: 5},
+						end: {line: 961, column: 126}
 					},
 					_p42)('dfsTree: There can\'t be more than one DFS tree. This invariant is violated, please report this bug.');
 			}
@@ -17412,8 +17412,8 @@ var _elm_community$graph$Graph$topologicalSort = function (graph) {
 			return _elm_lang$core$Native_Utils.crashCase(
 				'Graph',
 				{
-					start: {line: 1046, column: 7},
-					end: {line: 1054, column: 18}
+					start: {line: 1198, column: 13},
+					end: {line: 1208, column: 32}
 				},
 				_p46)('Invariant hurt in Graph.topologicalSort: No strongly connected component should be empty');
 		} else {
@@ -17422,8 +17422,8 @@ var _elm_community$graph$Graph$topologicalSort = function (graph) {
 				return _elm_lang$core$Native_Utils.crashCase(
 					'Graph',
 					{
-						start: {line: 1050, column: 11},
-						end: {line: 1054, column: 18}
+						start: {line: 1203, column: 21},
+						end: {line: 1208, column: 32}
 					},
 					_p48)('Invariant hurt in Graph.topologicalSort: nodeId in nodeIdRange of the strongly connected component should be present in the original graph');
 			} else {
@@ -17563,8 +17563,8 @@ var _elm_community$graph$Graph$heightLevels = function (graph) {
 					return _elm_lang$core$Native_Utils.crashCase(
 						'Graph',
 						{
-							start: {line: 1006, column: 13},
-							end: {line: 1008, column: 154}
+							start: {line: 1150, column: 21},
+							end: {line: 1155, column: 157}
 						},
 						_p62)('Graph.heightLevels: Could not get a node of a graph which should be there by invariants. Please file a bug report!');
 				}
@@ -17617,8 +17617,8 @@ var _elm_community$graph$Graph$heightLevels = function (graph) {
 					return _elm_lang$core$Native_Utils.crashCase(
 						'Graph',
 						{
-							start: {line: 1025, column: 13},
-							end: {line: 1029, column: 44}
+							start: {line: 1176, column: 21},
+							end: {line: 1181, column: 56}
 						},
 						_p67)('Graph.heightLevels: Reached a branch which is impossible by invariants. Please file a bug report!');
 				} else {
@@ -18880,6 +18880,13 @@ var _strelka_2017$phi$Chat_Model$McaRunDay = {ctor: 'McaRunDay'};
 var _strelka_2017$phi$Chat_Model$BotMultiQuestion = {ctor: 'BotMultiQuestion'};
 var _strelka_2017$phi$Chat_Model$WeatherWidget = {ctor: 'WeatherWidget'};
 
+var _strelka_2017$phi$Simulation_Model$tupleToCoords = function (_p0) {
+	var _p1 = _p0;
+	return {
+		x: _elm_lang$core$Basics$toFloat(_p1._0),
+		y: _elm_lang$core$Basics$toFloat(_p1._1)
+	};
+};
 var _strelka_2017$phi$Simulation_Model$Coords = F2(
 	function (a, b) {
 		return {x: a, y: b};
@@ -19277,88 +19284,6 @@ var _strelka_2017$phi$Chat_Chat$sendToEliza = _elm_lang$core$Native_Platform.out
 	});
 var _strelka_2017$phi$Chat_Chat$elizaReply = _elm_lang$core$Native_Platform.incomingPort('elizaReply', _elm_lang$core$Json_Decode$string);
 
-var _strelka_2017$phi$Simulation_GraphUpdates$nodeUpdater = F2(
-	function (n, foundCtx) {
-		var _p0 = foundCtx;
-		if (_p0.ctor === 'Just') {
-			return _elm_lang$core$Maybe$Just(
-				_elm_lang$core$Native_Utils.update(
-					_p0._0,
-					{node: n}));
-		} else {
-			return _elm_lang$core$Maybe$Nothing;
-		}
-	});
-var _strelka_2017$phi$Simulation_GraphUpdates$updateNodes = F2(
-	function (updatedNodeList, network) {
-		updateNodes:
-		while (true) {
-			var _p1 = updatedNodeList;
-			if (_p1.ctor === '[]') {
-				return network;
-			} else {
-				var _p2 = _p1._0;
-				var _v2 = _p1._1,
-					_v3 = A3(
-					_elm_community$graph$Graph$update,
-					_p2.id,
-					_strelka_2017$phi$Simulation_GraphUpdates$nodeUpdater(_p2),
-					network);
-				updatedNodeList = _v2;
-				network = _v3;
-				continue updateNodes;
-			}
-		}
-	});
-var _strelka_2017$phi$Simulation_GraphUpdates$createEdge = F2(
-	function (a, b) {
-		return A3(
-			_elm_community$graph$Graph$Edge,
-			a,
-			b,
-			A2(
-				_elm_lang$core$Basics_ops['++'],
-				_elm_lang$core$Basics$toString(a),
-				A2(
-					_elm_lang$core$Basics_ops['++'],
-					'-',
-					_elm_lang$core$Basics$toString(b))));
-	});
-var _strelka_2017$phi$Simulation_GraphUpdates$addEdge = F2(
-	function (edge, network) {
-		return A2(
-			_elm_community$graph$Graph$fromNodesAndEdges,
-			_elm_community$graph$Graph$nodes(network),
-			{
-				ctor: '::',
-				_0: edge,
-				_1: _elm_community$graph$Graph$edges(network)
-			});
-	});
-var _strelka_2017$phi$Simulation_GraphUpdates$addNode = F2(
-	function (nodeLabel, network) {
-		var nodeId = A2(
-			_elm_lang$core$Maybe$withDefault,
-			0,
-			A2(
-				_elm_lang$core$Maybe$map,
-				function (_p3) {
-					return A2(
-						F2(
-							function (x, y) {
-								return x + y;
-							}),
-						1,
-						_elm_lang$core$Tuple$second(_p3));
-				},
-				_elm_community$graph$Graph$nodeIdRange(network)));
-		var node = A2(_elm_community$graph$Graph$Node, nodeId, nodeLabel);
-		return A2(
-			_elm_community$graph$Graph$insert,
-			A3(_elm_community$graph$Graph$NodeContext, node, _elm_community$intdict$IntDict$empty, _elm_community$intdict$IntDict$empty),
-			network);
-	});
-
 var _strelka_2017$phi$Simulation_NodeList$potentialGeneratorList = _elm_lang$core$Set$fromList(
 	{
 		ctor: '::',
@@ -19517,226 +19442,6 @@ var _strelka_2017$phi$Simulation_NodeList$potentialGeneratorList = _elm_lang$cor
 															}
 														}
 													}
-												}
-											}
-										}
-									}
-								}
-							}
-						}
-					}
-				}
-			}
-		}
-	});
-var _strelka_2017$phi$Simulation_NodeList$initialPVNodeList = _elm_lang$core$Set$fromList(
-	{
-		ctor: '::',
-		_0: {ctor: '_Tuple2', _0: 136, _1: 600},
-		_1: {
-			ctor: '::',
-			_0: {ctor: '_Tuple2', _0: 116, _1: 670},
-			_1: {
-				ctor: '::',
-				_0: {ctor: '_Tuple2', _0: 237, _1: 675},
-				_1: {
-					ctor: '::',
-					_0: {ctor: '_Tuple2', _0: 350, _1: 709},
-					_1: {
-						ctor: '::',
-						_0: {ctor: '_Tuple2', _0: 317, _1: 570},
-						_1: {
-							ctor: '::',
-							_0: {ctor: '_Tuple2', _0: 518, _1: 642},
-							_1: {
-								ctor: '::',
-								_0: {ctor: '_Tuple2', _0: 585, _1: 460},
-								_1: {
-									ctor: '::',
-									_0: {ctor: '_Tuple2', _0: 605, _1: 620},
-									_1: {
-										ctor: '::',
-										_0: {ctor: '_Tuple2', _0: 556, _1: 747},
-										_1: {
-											ctor: '::',
-											_0: {ctor: '_Tuple2', _0: 667, _1: 779},
-											_1: {
-												ctor: '::',
-												_0: {ctor: '_Tuple2', _0: 708, _1: 739},
-												_1: {
-													ctor: '::',
-													_0: {ctor: '_Tuple2', _0: 742, _1: 627},
-													_1: {
-														ctor: '::',
-														_0: {ctor: '_Tuple2', _0: 847, _1: 707},
-														_1: {
-															ctor: '::',
-															_0: {ctor: '_Tuple2', _0: 747, _1: 506},
-															_1: {
-																ctor: '::',
-																_0: {ctor: '_Tuple2', _0: 817, _1: 526},
-																_1: {
-																	ctor: '::',
-																	_0: {ctor: '_Tuple2', _0: 852, _1: 427},
-																	_1: {
-																		ctor: '::',
-																		_0: {ctor: '_Tuple2', _0: 965, _1: 461},
-																		_1: {
-																			ctor: '::',
-																			_0: {ctor: '_Tuple2', _0: 1005, _1: 502},
-																			_1: {
-																				ctor: '::',
-																				_0: {ctor: '_Tuple2', _0: 1062, _1: 410},
-																				_1: {
-																					ctor: '::',
-																					_0: {ctor: '_Tuple2', _0: 932, _1: 322},
-																					_1: {
-																						ctor: '::',
-																						_0: {ctor: '_Tuple2', _0: 995, _1: 273},
-																						_1: {
-																							ctor: '::',
-																							_0: {ctor: '_Tuple2', _0: 975, _1: 202},
-																							_1: {
-																								ctor: '::',
-																								_0: {ctor: '_Tuple2', _0: 1096, _1: 197},
-																								_1: {
-																									ctor: '::',
-																									_0: {ctor: '_Tuple2', _0: 1176, _1: 302},
-																									_1: {
-																										ctor: '::',
-																										_0: {ctor: '_Tuple2', _0: 1208, _1: 164},
-																										_1: {
-																											ctor: '::',
-																											_0: {ctor: '_Tuple2', _0: 1248, _1: 123},
-																											_1: {
-																												ctor: '::',
-																												_0: {ctor: '_Tuple2', _0: 1063, _1: 834},
-																												_1: {
-																													ctor: '::',
-																													_0: {ctor: '_Tuple2', _0: 1117, _1: 897},
-																													_1: {
-																														ctor: '::',
-																														_0: {ctor: '_Tuple2', _0: 1299, _1: 1052},
-																														_1: {
-																															ctor: '::',
-																															_0: {ctor: '_Tuple2', _0: 1687, _1: 41},
-																															_1: {
-																																ctor: '::',
-																																_0: {ctor: '_Tuple2', _0: 1581, _1: 120},
-																																_1: {
-																																	ctor: '::',
-																																	_0: {ctor: '_Tuple2', _0: 1652, _1: 140},
-																																	_1: {
-																																		ctor: '::',
-																																		_0: {ctor: '_Tuple2', _0: 1799, _1: 74},
-																																		_1: {
-																																			ctor: '::',
-																																			_0: {ctor: '_Tuple2', _0: 1470, _1: 233},
-																																			_1: {
-																																				ctor: '::',
-																																				_0: {ctor: '_Tuple2', _0: 1367, _1: 309},
-																																				_1: {
-																																					ctor: '::',
-																																					_0: {ctor: '_Tuple2', _0: 1576, _1: 241},
-																																					_1: {
-																																						ctor: '::',
-																																						_0: {ctor: '_Tuple2', _0: 1682, _1: 255},
-																																						_1: {
-																																							ctor: '::',
-																																							_0: {ctor: '_Tuple2', _0: 1708, _1: 366},
-																																							_1: {
-																																								ctor: '::',
-																																								_0: {ctor: '_Tuple2', _0: 1728, _1: 437},
-																																								_1: {
-																																									ctor: '::',
-																																									_0: {ctor: '_Tuple2', _0: 1837, _1: 475},
-																																									_1: {
-																																										ctor: '::',
-																																										_0: {ctor: '_Tuple2', _0: 1869, _1: 577},
-																																										_1: {
-																																											ctor: '::',
-																																											_0: {ctor: '_Tuple2', _0: 1901, _1: 668},
-																																											_1: {ctor: '[]'}
-																																										}
-																																									}
-																																								}
-																																							}
-																																						}
-																																					}
-																																				}
-																																			}
-																																		}
-																																	}
-																																}
-																															}
-																														}
-																													}
-																												}
-																											}
-																										}
-																									}
-																								}
-																							}
-																						}
-																					}
-																				}
-																			}
-																		}
-																	}
-																}
-															}
-														}
-													}
-												}
-											}
-										}
-									}
-								}
-							}
-						}
-					}
-				}
-			}
-		}
-	});
-var _strelka_2017$phi$Simulation_NodeList$initialWTNodeList = _elm_lang$core$Set$fromList(
-	{
-		ctor: '::',
-		_0: {ctor: '_Tuple2', _0: 136, _1: 600},
-		_1: {
-			ctor: '::',
-			_0: {ctor: '_Tuple2', _0: 116, _1: 670},
-			_1: {
-				ctor: '::',
-				_0: {ctor: '_Tuple2', _0: 237, _1: 675},
-				_1: {
-					ctor: '::',
-					_0: {ctor: '_Tuple2', _0: 350, _1: 709},
-					_1: {
-						ctor: '::',
-						_0: {ctor: '_Tuple2', _0: 317, _1: 570},
-						_1: {
-							ctor: '::',
-							_0: {ctor: '_Tuple2', _0: 518, _1: 642},
-							_1: {
-								ctor: '::',
-								_0: {ctor: '_Tuple2', _0: 585, _1: 460},
-								_1: {
-									ctor: '::',
-									_0: {ctor: '_Tuple2', _0: 605, _1: 620},
-									_1: {
-										ctor: '::',
-										_0: {ctor: '_Tuple2', _0: 556, _1: 747},
-										_1: {
-											ctor: '::',
-											_0: {ctor: '_Tuple2', _0: 667, _1: 779},
-											_1: {
-												ctor: '::',
-												_0: {ctor: '_Tuple2', _0: 708, _1: 739},
-												_1: {
-													ctor: '::',
-													_0: {ctor: '_Tuple2', _0: 742, _1: 627},
-													_1: {ctor: '[]'}
 												}
 											}
 										}
@@ -20279,516 +19984,140 @@ var _strelka_2017$phi$Simulation_NodeList$potentialPeerList = _elm_lang$core$Set
 			}
 		}
 	});
+var _strelka_2017$phi$Simulation_NodeList$initialPVNodeList = _elm_lang$core$Set$fromList(
+	{
+		ctor: '::',
+		_0: {ctor: '_Tuple2', _0: 817, _1: 526},
+		_1: {
+			ctor: '::',
+			_0: {ctor: '_Tuple2', _0: 995, _1: 273},
+			_1: {
+				ctor: '::',
+				_0: {ctor: '_Tuple2', _0: 1176, _1: 302},
+				_1: {
+					ctor: '::',
+					_0: {ctor: '_Tuple2', _0: 747, _1: 506},
+					_1: {
+						ctor: '::',
+						_0: {ctor: '_Tuple2', _0: 965, _1: 461},
+						_1: {
+							ctor: '::',
+							_0: {ctor: '_Tuple2', _0: 1062, _1: 410},
+							_1: {ctor: '[]'}
+						}
+					}
+				}
+			}
+		}
+	});
+var _strelka_2017$phi$Simulation_NodeList$initialWTNodeList = _elm_lang$core$Set$fromList(
+	{
+		ctor: '::',
+		_0: {ctor: '_Tuple2', _0: 847, _1: 707},
+		_1: {
+			ctor: '::',
+			_0: {ctor: '_Tuple2', _0: 747, _1: 506},
+			_1: {
+				ctor: '::',
+				_0: {ctor: '_Tuple2', _0: 852, _1: 427},
+				_1: {
+					ctor: '::',
+					_0: {ctor: '_Tuple2', _0: 965, _1: 461},
+					_1: {
+						ctor: '::',
+						_0: {ctor: '_Tuple2', _0: 1005, _1: 502},
+						_1: {
+							ctor: '::',
+							_0: {ctor: '_Tuple2', _0: 1062, _1: 410},
+							_1: {
+								ctor: '::',
+								_0: {ctor: '_Tuple2', _0: 932, _1: 322},
+								_1: {
+									ctor: '::',
+									_0: {ctor: '_Tuple2', _0: 975, _1: 202},
+									_1: {
+										ctor: '::',
+										_0: {ctor: '_Tuple2', _0: 1096, _1: 197},
+										_1: {
+											ctor: '::',
+											_0: {ctor: '_Tuple2', _0: 1208, _1: 164},
+											_1: {
+												ctor: '::',
+												_0: {ctor: '_Tuple2', _0: 1248, _1: 123},
+												_1: {ctor: '[]'}
+											}
+										}
+									}
+								}
+							}
+						}
+					}
+				}
+			}
+		}
+	});
 var _strelka_2017$phi$Simulation_NodeList$initialPeerList = _elm_lang$core$Set$fromList(
 	{
 		ctor: '::',
-		_0: {ctor: '_Tuple2', _0: 12, _1: 653},
+		_0: {ctor: '_Tuple2', _0: 887, _1: 468},
 		_1: {
 			ctor: '::',
-			_0: {ctor: '_Tuple2', _0: 62, _1: 632},
+			_0: {ctor: '_Tuple2', _0: 913, _1: 472},
 			_1: {
 				ctor: '::',
-				_0: {ctor: '_Tuple2', _0: 98, _1: 574},
+				_0: {ctor: '_Tuple2', _0: 955, _1: 494},
 				_1: {
 					ctor: '::',
-					_0: {ctor: '_Tuple2', _0: 98, _1: 652},
+					_0: {ctor: '_Tuple2', _0: 1035, _1: 534},
 					_1: {
 						ctor: '::',
-						_0: {ctor: '_Tuple2', _0: 94, _1: 688},
+						_0: {ctor: '_Tuple2', _0: 832, _1: 375},
 						_1: {
 							ctor: '::',
-							_0: {ctor: '_Tuple2', _0: 170, _1: 678},
+							_0: {ctor: '_Tuple2', _0: 880, _1: 410},
 							_1: {
 								ctor: '::',
-								_0: {ctor: '_Tuple2', _0: 146, _1: 655},
+								_0: {ctor: '_Tuple2', _0: 916, _1: 435},
 								_1: {
 									ctor: '::',
-									_0: {ctor: '_Tuple2', _0: 217, _1: 623},
+									_0: {ctor: '_Tuple2', _0: 1035, _1: 441},
 									_1: {
 										ctor: '::',
-										_0: {ctor: '_Tuple2', _0: 227, _1: 714},
+										_0: {ctor: '_Tuple2', _0: 891, _1: 355},
 										_1: {
 											ctor: '::',
-											_0: {ctor: '_Tuple2', _0: 265, _1: 659},
+											_0: {ctor: '_Tuple2', _0: 955, _1: 366},
 											_1: {
 												ctor: '::',
-												_0: {ctor: '_Tuple2', _0: 276, _1: 603},
+												_0: {ctor: '_Tuple2', _0: 990, _1: 380},
 												_1: {
 													ctor: '::',
-													_0: {ctor: '_Tuple2', _0: 285, _1: 528},
+													_0: {ctor: '_Tuple2', _0: 898, _1: 330},
 													_1: {
 														ctor: '::',
-														_0: {ctor: '_Tuple2', _0: 301, _1: 683},
+														_0: {ctor: '_Tuple2', _0: 900, _1: 280},
 														_1: {
 															ctor: '::',
-															_0: {ctor: '_Tuple2', _0: 420, _1: 690},
+															_0: {ctor: '_Tuple2', _0: 957, _1: 298},
 															_1: {
 																ctor: '::',
-																_0: {ctor: '_Tuple2', _0: 503, _1: 700},
+																_0: {ctor: '_Tuple2', _0: 1034, _1: 310},
 																_1: {
 																	ctor: '::',
-																	_0: {ctor: '_Tuple2', _0: 528, _1: 775},
+																	_0: {ctor: '_Tuple2', _0: 1074, _1: 342},
 																	_1: {
 																		ctor: '::',
-																		_0: {ctor: '_Tuple2', _0: 551, _1: 710},
+																		_0: {ctor: '_Tuple2', _0: 1144, _1: 345},
 																		_1: {
 																			ctor: '::',
-																			_0: {ctor: '_Tuple2', _0: 588, _1: 714},
+																			_0: {ctor: '_Tuple2', _0: 871, _1: 219},
 																			_1: {
 																				ctor: '::',
-																				_0: {ctor: '_Tuple2', _0: 613, _1: 678},
+																				_0: {ctor: '_Tuple2', _0: 956, _1: 221},
 																				_1: {
 																					ctor: '::',
-																					_0: {ctor: '_Tuple2', _0: 571, _1: 633},
-																					_1: {
-																						ctor: '::',
-																						_0: {ctor: '_Tuple2', _0: 631, _1: 717},
-																						_1: {
-																							ctor: '::',
-																							_0: {ctor: '_Tuple2', _0: 582, _1: 838},
-																							_1: {
-																								ctor: '::',
-																								_0: {ctor: '_Tuple2', _0: 728, _1: 809},
-																								_1: {
-																									ctor: '::',
-																									_0: {ctor: '_Tuple2', _0: 697, _1: 688},
-																									_1: {
-																										ctor: '::',
-																										_0: {ctor: '_Tuple2', _0: 701, _1: 662},
-																										_1: {
-																											ctor: '::',
-																											_0: {ctor: '_Tuple2', _0: 734, _1: 691},
-																											_1: {
-																												ctor: '::',
-																												_0: {ctor: '_Tuple2', _0: 703, _1: 617},
-																												_1: {
-																													ctor: '::',
-																													_0: {ctor: '_Tuple2', _0: 759, _1: 655},
-																													_1: {
-																														ctor: '::',
-																														_0: {ctor: '_Tuple2', _0: 814, _1: 666},
-																														_1: {
-																															ctor: '::',
-																															_0: {ctor: '_Tuple2', _0: 839, _1: 672},
-																															_1: {
-																																ctor: '::',
-																																_0: {ctor: '_Tuple2', _0: 803, _1: 729},
-																																_1: {
-																																	ctor: '::',
-																																	_0: {ctor: '_Tuple2', _0: 889, _1: 675},
-																																	_1: {
-																																		ctor: '::',
-																																		_0: {ctor: '_Tuple2', _0: 794, _1: 607},
-																																		_1: {
-																																			ctor: '::',
-																																			_0: {ctor: '_Tuple2', _0: 704, _1: 540},
-																																			_1: {
-																																				ctor: '::',
-																																				_0: {ctor: '_Tuple2', _0: 739, _1: 560},
-																																				_1: {
-																																					ctor: '::',
-																																					_0: {ctor: '_Tuple2', _0: 763, _1: 537},
-																																					_1: {
-																																						ctor: '::',
-																																						_0: {ctor: '_Tuple2', _0: 729, _1: 484},
-																																						_1: {
-																																							ctor: '::',
-																																							_0: {ctor: '_Tuple2', _0: 766, _1: 488},
-																																							_1: {
-																																								ctor: '::',
-																																								_0: {ctor: '_Tuple2', _0: 764, _1: 402},
-																																								_1: {
-																																									ctor: '::',
-																																									_0: {ctor: '_Tuple2', _0: 785, _1: 452},
-																																									_1: {
-																																										ctor: '::',
-																																										_0: {ctor: '_Tuple2', _0: 811, _1: 473},
-																																										_1: {
-																																											ctor: '::',
-																																											_0: {ctor: '_Tuple2', _0: 843, _1: 488},
-																																											_1: {
-																																												ctor: '::',
-																																												_0: {ctor: '_Tuple2', _0: 887, _1: 468},
-																																												_1: {
-																																													ctor: '::',
-																																													_0: {ctor: '_Tuple2', _0: 913, _1: 472},
-																																													_1: {
-																																														ctor: '::',
-																																														_0: {ctor: '_Tuple2', _0: 955, _1: 494},
-																																														_1: {
-																																															ctor: '::',
-																																															_0: {ctor: '_Tuple2', _0: 1035, _1: 534},
-																																															_1: {
-																																																ctor: '::',
-																																																_0: {ctor: '_Tuple2', _0: 832, _1: 375},
-																																																_1: {
-																																																	ctor: '::',
-																																																	_0: {ctor: '_Tuple2', _0: 880, _1: 410},
-																																																	_1: {
-																																																		ctor: '::',
-																																																		_0: {ctor: '_Tuple2', _0: 916, _1: 435},
-																																																		_1: {
-																																																			ctor: '::',
-																																																			_0: {ctor: '_Tuple2', _0: 1035, _1: 441},
-																																																			_1: {
-																																																				ctor: '::',
-																																																				_0: {ctor: '_Tuple2', _0: 891, _1: 355},
-																																																				_1: {
-																																																					ctor: '::',
-																																																					_0: {ctor: '_Tuple2', _0: 955, _1: 366},
-																																																					_1: {
-																																																						ctor: '::',
-																																																						_0: {ctor: '_Tuple2', _0: 990, _1: 380},
-																																																						_1: {
-																																																							ctor: '::',
-																																																							_0: {ctor: '_Tuple2', _0: 898, _1: 330},
-																																																							_1: {
-																																																								ctor: '::',
-																																																								_0: {ctor: '_Tuple2', _0: 900, _1: 280},
-																																																								_1: {
-																																																									ctor: '::',
-																																																									_0: {ctor: '_Tuple2', _0: 957, _1: 298},
-																																																									_1: {
-																																																										ctor: '::',
-																																																										_0: {ctor: '_Tuple2', _0: 1034, _1: 310},
-																																																										_1: {
-																																																											ctor: '::',
-																																																											_0: {ctor: '_Tuple2', _0: 1074, _1: 342},
-																																																											_1: {
-																																																												ctor: '::',
-																																																												_0: {ctor: '_Tuple2', _0: 1144, _1: 345},
-																																																												_1: {
-																																																													ctor: '::',
-																																																													_0: {ctor: '_Tuple2', _0: 871, _1: 219},
-																																																													_1: {
-																																																														ctor: '::',
-																																																														_0: {ctor: '_Tuple2', _0: 956, _1: 221},
-																																																														_1: {
-																																																															ctor: '::',
-																																																															_0: {ctor: '_Tuple2', _0: 1006, _1: 218},
-																																																															_1: {
-																																																																ctor: '::',
-																																																																_0: {ctor: '_Tuple2', _0: 1076, _1: 250},
-																																																																_1: {
-																																																																	ctor: '::',
-																																																																	_0: {ctor: '_Tuple2', _0: 1135, _1: 270},
-																																																																	_1: {
-																																																																		ctor: '::',
-																																																																		_0: {ctor: '_Tuple2', _0: 1141, _1: 294},
-																																																																		_1: {
-																																																																			ctor: '::',
-																																																																			_0: {ctor: '_Tuple2', _0: 1198, _1: 258},
-																																																																			_1: {
-																																																																				ctor: '::',
-																																																																				_0: {ctor: '_Tuple2', _0: 1029, _1: 194},
-																																																																				_1: {
-																																																																					ctor: '::',
-																																																																					_0: {ctor: '_Tuple2', _0: 953, _1: 184},
-																																																																					_1: {
-																																																																						ctor: '::',
-																																																																						_0: {ctor: '_Tuple2', _0: 1009, _1: 159},
-																																																																						_1: {
-																																																																							ctor: '::',
-																																																																							_0: {ctor: '_Tuple2', _0: 1124, _1: 215},
-																																																																							_1: {
-																																																																								ctor: '::',
-																																																																								_0: {ctor: '_Tuple2', _0: 1160, _1: 189},
-																																																																								_1: {
-																																																																									ctor: '::',
-																																																																									_0: {ctor: '_Tuple2', _0: 1096, _1: 54},
-																																																																									_1: {
-																																																																										ctor: '::',
-																																																																										_0: {ctor: '_Tuple2', _0: 1157, _1: 152},
-																																																																										_1: {
-																																																																											ctor: '::',
-																																																																											_0: {ctor: '_Tuple2', _0: 1186, _1: 86},
-																																																																											_1: {
-																																																																												ctor: '::',
-																																																																												_0: {ctor: '_Tuple2', _0: 1307, _1: 37},
-																																																																												_1: {
-																																																																													ctor: '::',
-																																																																													_0: {ctor: '_Tuple2', _0: 1040, _1: 831},
-																																																																													_1: {
-																																																																														ctor: '::',
-																																																																														_0: {ctor: '_Tuple2', _0: 1035, _1: 841},
-																																																																														_1: {
-																																																																															ctor: '::',
-																																																																															_0: {ctor: '_Tuple2', _0: 1080, _1: 850},
-																																																																															_1: {
-																																																																																ctor: '::',
-																																																																																_0: {ctor: '_Tuple2', _0: 1083, _1: 886},
-																																																																																_1: {
-																																																																																	ctor: '::',
-																																																																																	_0: {ctor: '_Tuple2', _0: 1142, _1: 943},
-																																																																																	_1: {
-																																																																																		ctor: '::',
-																																																																																		_0: {ctor: '_Tuple2', _0: 1186, _1: 1013},
-																																																																																		_1: {
-																																																																																			ctor: '::',
-																																																																																			_0: {ctor: '_Tuple2', _0: 1203, _1: 1003},
-																																																																																			_1: {
-																																																																																				ctor: '::',
-																																																																																				_0: {ctor: '_Tuple2', _0: 1216, _1: 1030},
-																																																																																				_1: {
-																																																																																					ctor: '::',
-																																																																																					_0: {ctor: '_Tuple2', _0: 1235, _1: 1060},
-																																																																																					_1: {
-																																																																																						ctor: '::',
-																																																																																						_0: {ctor: '_Tuple2', _0: 1271, _1: 1035},
-																																																																																						_1: {
-																																																																																							ctor: '::',
-																																																																																							_0: {ctor: '_Tuple2', _0: 1299, _1: 1016},
-																																																																																							_1: {
-																																																																																								ctor: '::',
-																																																																																								_0: {ctor: '_Tuple2', _0: 1370, _1: 1065},
-																																																																																								_1: {
-																																																																																									ctor: '::',
-																																																																																									_0: {ctor: '_Tuple2', _0: 1629, _1: 20},
-																																																																																									_1: {
-																																																																																										ctor: '::',
-																																																																																										_0: {ctor: '_Tuple2', _0: 1715, _1: 24},
-																																																																																										_1: {
-																																																																																											ctor: '::',
-																																																																																											_0: {ctor: '_Tuple2', _0: 1751, _1: 49},
-																																																																																											_1: {
-																																																																																												ctor: '::',
-																																																																																												_0: {ctor: '_Tuple2', _0: 1826, _1: 7},
-																																																																																												_1: {
-																																																																																													ctor: '::',
-																																																																																													_0: {ctor: '_Tuple2', _0: 1620, _1: 66},
-																																																																																													_1: {
-																																																																																														ctor: '::',
-																																																																																														_0: {ctor: '_Tuple2', _0: 1645, _1: 86},
-																																																																																														_1: {
-																																																																																															ctor: '::',
-																																																																																															_0: {ctor: '_Tuple2', _0: 1677, _1: 79},
-																																																																																															_1: {
-																																																																																																ctor: '::',
-																																																																																																_0: {ctor: '_Tuple2', _0: 1722, _1: 82},
-																																																																																																_1: {
-																																																																																																	ctor: '::',
-																																																																																																	_0: {ctor: '_Tuple2', _0: 1748, _1: 86},
-																																																																																																	_1: {
-																																																																																																		ctor: '::',
-																																																																																																		_0: {ctor: '_Tuple2', _0: 1790, _1: 108},
-																																																																																																		_1: {
-																																																																																																			ctor: '::',
-																																																																																																			_0: {ctor: '_Tuple2', _0: 1563, _1: 98},
-																																																																																																			_1: {
-																																																																																																				ctor: '::',
-																																																																																																				_0: {ctor: '_Tuple2', _0: 1600, _1: 101},
-																																																																																																				_1: {
-																																																																																																					ctor: '::',
-																																																																																																					_0: {ctor: '_Tuple2', _0: 1677, _1: 102},
-																																																																																																					_1: {
-																																																																																																						ctor: '::',
-																																																																																																						_0: {ctor: '_Tuple2', _0: 1597, _1: 151},
-																																																																																																						_1: {
-																																																																																																							ctor: '::',
-																																																																																																							_0: {ctor: '_Tuple2', _0: 1538, _1: 154},
-																																																																																																							_1: {
-																																																																																																								ctor: '::',
-																																																																																																								_0: {ctor: '_Tuple2', _0: 1574, _1: 174},
-																																																																																																								_1: {
-																																																																																																									ctor: '::',
-																																																																																																									_0: {ctor: '_Tuple2', _0: 1492, _1: 189},
-																																																																																																									_1: {
-																																																																																																										ctor: '::',
-																																																																																																										_0: {ctor: '_Tuple2', _0: 1429, _1: 201},
-																																																																																																										_1: {
-																																																																																																											ctor: '::',
-																																																																																																											_0: {ctor: '_Tuple2', _0: 1435, _1: 225},
-																																																																																																											_1: {
-																																																																																																												ctor: '::',
-																																																																																																												_0: {ctor: '_Tuple2', _0: 1502, _1: 228},
-																																																																																																												_1: {
-																																																																																																													ctor: '::',
-																																																																																																													_0: {ctor: '_Tuple2', _0: 1538, _1: 231},
-																																																																																																													_1: {
-																																																																																																														ctor: '::',
-																																																																																																														_0: {ctor: '_Tuple2', _0: 1629, _1: 221},
-																																																																																																														_1: {
-																																																																																																															ctor: '::',
-																																																																																																															_0: {ctor: '_Tuple2', _0: 1438, _1: 276},
-																																																																																																															_1: {
-																																																																																																																ctor: '::',
-																																																																																																																_0: {ctor: '_Tuple2', _0: 1494, _1: 292},
-																																																																																																																_1: {
-																																																																																																																	ctor: '::',
-																																																																																																																	_0: {ctor: '_Tuple2', _0: 1593, _1: 269},
-																																																																																																																	_1: {
-																																																																																																																		ctor: '::',
-																																																																																																																		_0: {ctor: '_Tuple2', _0: 1414, _1: 310},
-																																																																																																																		_1: {
-																																																																																																																			ctor: '::',
-																																																																																																																			_0: {ctor: '_Tuple2', _0: 1376, _1: 367},
-																																																																																																																			_1: {
-																																																																																																																				ctor: '::',
-																																																																																																																				_0: {ctor: '_Tuple2', _0: 1649, _1: 280},
-																																																																																																																				_1: {
-																																																																																																																					ctor: '::',
-																																																																																																																					_0: {ctor: '_Tuple2', _0: 1673, _1: 286},
-																																																																																																																					_1: {
-																																																																																																																						ctor: '::',
-																																																																																																																						_0: {ctor: '_Tuple2', _0: 1687, _1: 349},
-																																																																																																																						_1: {
-																																																																																																																							ctor: '::',
-																																																																																																																							_0: {ctor: '_Tuple2', _0: 1724, _1: 323},
-																																																																																																																							_1: {
-																																																																																																																								ctor: '::',
-																																																																																																																								_0: {ctor: '_Tuple2', _0: 1690, _1: 385},
-																																																																																																																								_1: {
-																																																																																																																									ctor: '::',
-																																																																																																																									_0: {ctor: '_Tuple2', _0: 1739, _1: 382},
-																																																																																																																									_1: {
-																																																																																																																										ctor: '::',
-																																																																																																																										_0: {ctor: '_Tuple2', _0: 1767, _1: 474},
-																																																																																																																										_1: {
-																																																																																																																											ctor: '::',
-																																																																																																																											_0: {ctor: '_Tuple2', _0: 1801, _1: 482},
-																																																																																																																											_1: {
-																																																																																																																												ctor: '::',
-																																																																																																																												_0: {ctor: '_Tuple2', _0: 1807, _1: 507},
-																																																																																																																												_1: {
-																																																																																																																													ctor: '::',
-																																																																																																																													_0: {ctor: '_Tuple2', _0: 1901, _1: 462},
-																																																																																																																													_1: {
-																																																																																																																														ctor: '::',
-																																																																																																																														_0: {ctor: '_Tuple2', _0: 1816, _1: 530},
-																																																																																																																														_1: {
-																																																																																																																															ctor: '::',
-																																																																																																																															_0: {ctor: '_Tuple2', _0: 1868, _1: 514},
-																																																																																																																															_1: {
-																																																																																																																																ctor: '::',
-																																																																																																																																_0: {ctor: '_Tuple2', _0: 1864, _1: 540},
-																																																																																																																																_1: {
-																																																																																																																																	ctor: '::',
-																																																																																																																																	_0: {ctor: '_Tuple2', _0: 1901, _1: 543},
-																																																																																																																																	_1: {
-																																																																																																																																		ctor: '::',
-																																																																																																																																		_0: {ctor: '_Tuple2', _0: 1898, _1: 590},
-																																																																																																																																		_1: {
-																																																																																																																																			ctor: '::',
-																																																																																																																																			_0: {ctor: '_Tuple2', _0: 1881, _1: 635},
-																																																																																																																																			_1: {
-																																																																																																																																				ctor: '::',
-																																																																																																																																				_0: {ctor: '_Tuple2', _0: 1906, _1: 622},
-																																																																																																																																				_1: {
-																																																																																																																																					ctor: '::',
-																																																																																																																																					_0: {ctor: '_Tuple2', _0: 1885, _1: 717},
-																																																																																																																																					_1: {ctor: '[]'}
-																																																																																																																																				}
-																																																																																																																																			}
-																																																																																																																																		}
-																																																																																																																																	}
-																																																																																																																																}
-																																																																																																																															}
-																																																																																																																														}
-																																																																																																																													}
-																																																																																																																												}
-																																																																																																																											}
-																																																																																																																										}
-																																																																																																																									}
-																																																																																																																								}
-																																																																																																																							}
-																																																																																																																						}
-																																																																																																																					}
-																																																																																																																				}
-																																																																																																																			}
-																																																																																																																		}
-																																																																																																																	}
-																																																																																																																}
-																																																																																																															}
-																																																																																																														}
-																																																																																																													}
-																																																																																																												}
-																																																																																																											}
-																																																																																																										}
-																																																																																																									}
-																																																																																																								}
-																																																																																																							}
-																																																																																																						}
-																																																																																																					}
-																																																																																																				}
-																																																																																																			}
-																																																																																																		}
-																																																																																																	}
-																																																																																																}
-																																																																																															}
-																																																																																														}
-																																																																																													}
-																																																																																												}
-																																																																																											}
-																																																																																										}
-																																																																																									}
-																																																																																								}
-																																																																																							}
-																																																																																						}
-																																																																																					}
-																																																																																				}
-																																																																																			}
-																																																																																		}
-																																																																																	}
-																																																																																}
-																																																																															}
-																																																																														}
-																																																																													}
-																																																																												}
-																																																																											}
-																																																																										}
-																																																																									}
-																																																																								}
-																																																																							}
-																																																																						}
-																																																																					}
-																																																																				}
-																																																																			}
-																																																																		}
-																																																																	}
-																																																																}
-																																																															}
-																																																														}
-																																																													}
-																																																												}
-																																																											}
-																																																										}
-																																																									}
-																																																								}
-																																																							}
-																																																						}
-																																																					}
-																																																				}
-																																																			}
-																																																		}
-																																																	}
-																																																}
-																																															}
-																																														}
-																																													}
-																																												}
-																																											}
-																																										}
-																																									}
-																																								}
-																																							}
-																																						}
-																																					}
-																																				}
-																																			}
-																																		}
-																																	}
-																																}
-																															}
-																														}
-																													}
-																												}
-																											}
-																										}
-																									}
-																								}
-																							}
-																						}
-																					}
+																					_0: {ctor: '_Tuple2', _0: 1006, _1: 218},
+																					_1: {ctor: '[]'}
 																				}
 																			}
 																		}
@@ -20809,12 +20138,121 @@ var _strelka_2017$phi$Simulation_NodeList$initialPeerList = _elm_lang$core$Set$f
 			}
 		}
 	});
-var _strelka_2017$phi$Simulation_NodeList$tupleToCoords = function (_p0) {
-	var _p1 = _p0;
-	return {
-		x: _elm_lang$core$Basics$toFloat(_p1._0),
-		y: _elm_lang$core$Basics$toFloat(_p1._1)
-	};
+
+var _strelka_2017$phi$Simulation_GraphUpdates$potentialNodesList = function () {
+	var peerList = A2(
+		_elm_lang$core$List$map,
+		function (_p0) {
+			return _strelka_2017$phi$Simulation_Model$PotentialNode(
+				A2(
+					_strelka_2017$phi$Simulation_Model$Potential,
+					_strelka_2017$phi$Simulation_Model$PotentialPeer,
+					_strelka_2017$phi$Simulation_Model$tupleToCoords(_p0)));
+		},
+		_elm_lang$core$Set$toList(_strelka_2017$phi$Simulation_NodeList$potentialPeerList));
+	var genList = A2(
+		_elm_lang$core$List$map,
+		function (_p1) {
+			return _strelka_2017$phi$Simulation_Model$PotentialNode(
+				A2(
+					_strelka_2017$phi$Simulation_Model$Potential,
+					_strelka_2017$phi$Simulation_Model$PotentialGenerator,
+					_strelka_2017$phi$Simulation_Model$tupleToCoords(_p1)));
+		},
+		_elm_lang$core$Set$toList(_strelka_2017$phi$Simulation_NodeList$potentialGeneratorList));
+	return A2(_elm_lang$core$Basics_ops['++'], genList, peerList);
+}();
+var _strelka_2017$phi$Simulation_GraphUpdates$nodeUpdater = F2(
+	function (n, foundCtx) {
+		var _p2 = foundCtx;
+		if (_p2.ctor === 'Just') {
+			return _elm_lang$core$Maybe$Just(
+				_elm_lang$core$Native_Utils.update(
+					_p2._0,
+					{node: n}));
+		} else {
+			return _elm_lang$core$Maybe$Nothing;
+		}
+	});
+var _strelka_2017$phi$Simulation_GraphUpdates$updateNodes = F2(
+	function (updatedNodeList, network) {
+		updateNodes:
+		while (true) {
+			var _p3 = updatedNodeList;
+			if (_p3.ctor === '[]') {
+				return network;
+			} else {
+				var _p4 = _p3._0;
+				var _v2 = _p3._1,
+					_v3 = A3(
+					_elm_community$graph$Graph$update,
+					_p4.id,
+					_strelka_2017$phi$Simulation_GraphUpdates$nodeUpdater(_p4),
+					network);
+				updatedNodeList = _v2;
+				network = _v3;
+				continue updateNodes;
+			}
+		}
+	});
+var _strelka_2017$phi$Simulation_GraphUpdates$createEdge = F2(
+	function (a, b) {
+		return A3(
+			_elm_community$graph$Graph$Edge,
+			a,
+			b,
+			A2(
+				_elm_lang$core$Basics_ops['++'],
+				_elm_lang$core$Basics$toString(a),
+				A2(
+					_elm_lang$core$Basics_ops['++'],
+					'-',
+					_elm_lang$core$Basics$toString(b))));
+	});
+var _strelka_2017$phi$Simulation_GraphUpdates$addEdge = F2(
+	function (edge, network) {
+		return A2(
+			_elm_community$graph$Graph$fromNodesAndEdges,
+			_elm_community$graph$Graph$nodes(network),
+			{
+				ctor: '::',
+				_0: edge,
+				_1: _elm_community$graph$Graph$edges(network)
+			});
+	});
+var _strelka_2017$phi$Simulation_GraphUpdates$addNode = F2(
+	function (nodeLabel, network) {
+		var nodeId = A2(
+			_elm_lang$core$Maybe$withDefault,
+			0,
+			A2(
+				_elm_lang$core$Maybe$map,
+				function (_p5) {
+					return A2(
+						F2(
+							function (x, y) {
+								return x + y;
+							}),
+						1,
+						_elm_lang$core$Tuple$second(_p5));
+				},
+				_elm_community$graph$Graph$nodeIdRange(network)));
+		var node = A2(_elm_community$graph$Graph$Node, nodeId, nodeLabel);
+		return A2(
+			_elm_community$graph$Graph$insert,
+			A3(_elm_community$graph$Graph$NodeContext, node, _elm_community$intdict$IntDict$empty, _elm_community$intdict$IntDict$empty),
+			network);
+	});
+var _strelka_2017$phi$Simulation_GraphUpdates$graphFromNodeList = function (nodes) {
+	var _p6 = nodes;
+	if (_p6.ctor === '[]') {
+		return _elm_community$graph$Graph$empty;
+	} else {
+		return A2(
+			_strelka_2017$phi$Simulation_GraphUpdates$addNode,
+			_p6._0,
+			_strelka_2017$phi$Simulation_GraphUpdates$graphFromNodeList(_p6._1));
+	}
 };
 
 var _strelka_2017$phi$Simulation_WeatherList$weatherTupleToWeather = function (_p0) {
@@ -22289,106 +21727,109 @@ var _strelka_2017$phi$Simulation_Init_Generators$generateEdge = A2(
 		_strelka_2017$phi$Simulation_GraphUpdates$createEdge,
 		A2(_elm_lang$core$Random$int, 0, 20),
 		A2(_elm_lang$core$Random$int, 0, 20)));
-var _strelka_2017$phi$Simulation_Init_Generators$coordsGenerator = function () {
-	var coordsLimit = _elm_lang$core$Set$size(_strelka_2017$phi$Simulation_NodeList$initialPeerList) - 1;
-	var coordsFunc = function (_p0) {
+var _strelka_2017$phi$Simulation_Init_Generators$generatePeer = function (coords) {
+	return A2(
+		_elm_lang$core$Random$generate,
+		_strelka_2017$phi$Action$AddPeer,
+		A5(
+			_elm_lang$core$Random$map4,
+			_strelka_2017$phi$Simulation_Model$Peer,
+			A6(
+				_elm_lang$core$Random$map5,
+				_strelka_2017$phi$Simulation_Model$PeerJoules,
+				_elm_community$random_extra$Random_Extra$constant(
+					{
+						ctor: '::',
+						_0: 0,
+						_1: {ctor: '[]'}
+					}),
+				_elm_community$random_extra$Random_Extra$constant(
+					{
+						ctor: '::',
+						_0: 0,
+						_1: {ctor: '[]'}
+					}),
+				A2(_elm_lang$core$Random$float, 5, 10),
+				_elm_community$random_extra$Random_Extra$constant(
+					{
+						ctor: '::',
+						_0: 0,
+						_1: {ctor: '[]'}
+					}),
+				_elm_community$random_extra$Random_Extra$constant(
+					{
+						ctor: '::',
+						_0: 0,
+						_1: {ctor: '[]'}
+					})),
+			_elm_community$random_extra$Random_Extra$constant(
+				{
+					ctor: '::',
+					_0: 0,
+					_1: {ctor: '[]'}
+				}),
+			_elm_community$random_extra$Random_Extra$constant(
+				{
+					ctor: '::',
+					_0: 1,
+					_1: {ctor: '[]'}
+				}),
+			_elm_community$random_extra$Random_Extra$constant(coords)));
+};
+var _strelka_2017$phi$Simulation_Init_Generators$generateWindTurbine = function (coords) {
+	return A2(
+		_elm_lang$core$Random$generate,
+		_strelka_2017$phi$Action$AddGenerator,
+		A5(
+			_elm_lang$core$Random$map4,
+			_strelka_2017$phi$Simulation_Model$SimGenerator,
+			_elm_community$random_extra$Random_Extra$constant(
+				{ctor: '[]'}),
+			A2(_elm_lang$core$Random$float, 0, 10),
+			_elm_community$random_extra$Random_Extra$constant(coords),
+			_elm_community$random_extra$Random_Extra$constant(_strelka_2017$phi$Simulation_Model$WindTurbine)));
+};
+var _strelka_2017$phi$Simulation_Init_Generators$generatePVPanel = function (coords) {
+	return A2(
+		_elm_lang$core$Random$generate,
+		_strelka_2017$phi$Action$AddGenerator,
+		A5(
+			_elm_lang$core$Random$map4,
+			_strelka_2017$phi$Simulation_Model$SimGenerator,
+			_elm_community$random_extra$Random_Extra$constant(
+				{ctor: '[]'}),
+			A2(_elm_lang$core$Random$float, 0, 10),
+			_elm_community$random_extra$Random_Extra$constant(coords),
+			_elm_community$random_extra$Random_Extra$constant(_strelka_2017$phi$Simulation_Model$SolarPanel)));
+};
+
+var _strelka_2017$phi$Model$initGenerators = function () {
+	var asCoordsList = function (_p0) {
 		return A2(
-			_elm_lang$core$Maybe$withDefault,
-			A2(_strelka_2017$phi$Simulation_Model$Coords, 0, 0),
-			A2(
-				_elm_lang$core$Maybe$map,
-				_strelka_2017$phi$Simulation_NodeList$tupleToCoords,
-				A2(
-					_elm_lang$core$Basics$flip,
-					_elm_lang$core$Array$get,
-					_elm_lang$core$Array$fromList(
-						_elm_lang$core$Set$toList(_strelka_2017$phi$Simulation_NodeList$initialPeerList)))(_p0)));
+			_elm_lang$core$List$map,
+			_strelka_2017$phi$Simulation_Model$tupleToCoords,
+			_elm_lang$core$Set$toList(_p0));
 	};
 	return A2(
-		_elm_lang$core$Random$map,
-		coordsFunc,
-		A2(_elm_lang$core$Random$int, 0, coordsLimit));
-}();
-var _strelka_2017$phi$Simulation_Init_Generators$generatePVPanel = A2(
-	_elm_lang$core$Random$generate,
-	_strelka_2017$phi$Action$AddGenerator,
-	A5(
-		_elm_lang$core$Random$map4,
-		_strelka_2017$phi$Simulation_Model$SimGenerator,
-		_elm_community$random_extra$Random_Extra$constant(
-			{ctor: '[]'}),
-		A2(_elm_lang$core$Random$float, 0, 10),
-		_strelka_2017$phi$Simulation_Init_Generators$coordsGenerator,
-		_elm_community$random_extra$Random_Extra$constant(_strelka_2017$phi$Simulation_Model$SolarPanel)));
-var _strelka_2017$phi$Simulation_Init_Generators$generateWindTurbine = A2(
-	_elm_lang$core$Random$generate,
-	_strelka_2017$phi$Action$AddGenerator,
-	A5(
-		_elm_lang$core$Random$map4,
-		_strelka_2017$phi$Simulation_Model$SimGenerator,
-		_elm_community$random_extra$Random_Extra$constant(
-			{ctor: '[]'}),
-		A2(_elm_lang$core$Random$float, 0, 10),
-		_strelka_2017$phi$Simulation_Init_Generators$coordsGenerator,
-		_elm_community$random_extra$Random_Extra$constant(_strelka_2017$phi$Simulation_Model$WindTurbine)));
-var _strelka_2017$phi$Simulation_Init_Generators$generatePeer = A2(
-	_elm_lang$core$Random$generate,
-	_strelka_2017$phi$Action$AddPeer,
-	A5(
-		_elm_lang$core$Random$map4,
-		_strelka_2017$phi$Simulation_Model$Peer,
-		A6(
-			_elm_lang$core$Random$map5,
-			_strelka_2017$phi$Simulation_Model$PeerJoules,
-			_elm_community$random_extra$Random_Extra$constant(
-				{
-					ctor: '::',
-					_0: 0,
-					_1: {ctor: '[]'}
-				}),
-			_elm_community$random_extra$Random_Extra$constant(
-				{
-					ctor: '::',
-					_0: 0,
-					_1: {ctor: '[]'}
-				}),
-			A2(_elm_lang$core$Random$float, 5, 10),
-			_elm_community$random_extra$Random_Extra$constant(
-				{
-					ctor: '::',
-					_0: 0,
-					_1: {ctor: '[]'}
-				}),
-			_elm_community$random_extra$Random_Extra$constant(
-				{
-					ctor: '::',
-					_0: 0,
-					_1: {ctor: '[]'}
-				})),
-		_elm_community$random_extra$Random_Extra$constant(
-			{
-				ctor: '::',
-				_0: 0,
-				_1: {ctor: '[]'}
-			}),
-		_elm_community$random_extra$Random_Extra$constant(
-			{
-				ctor: '::',
-				_0: 1,
-				_1: {ctor: '[]'}
-			}),
-		_strelka_2017$phi$Simulation_Init_Generators$coordsGenerator));
-
-var _strelka_2017$phi$Model$initGenerators = A2(
-	_elm_lang$core$Basics_ops['++'],
-	A2(_elm_lang$core$List$repeat, 16, _strelka_2017$phi$Simulation_Init_Generators$generateEdge),
-	A2(
 		_elm_lang$core$Basics_ops['++'],
-		A2(_elm_lang$core$List$repeat, 2, _strelka_2017$phi$Simulation_Init_Generators$generatePeer),
+		A2(_elm_lang$core$List$repeat, 12, _strelka_2017$phi$Simulation_Init_Generators$generateEdge),
 		A2(
 			_elm_lang$core$Basics_ops['++'],
-			A2(_elm_lang$core$List$repeat, 6, _strelka_2017$phi$Simulation_Init_Generators$generatePVPanel),
-			A2(_elm_lang$core$List$repeat, 6, _strelka_2017$phi$Simulation_Init_Generators$generateWindTurbine))));
+			A2(
+				_elm_lang$core$List$map,
+				_strelka_2017$phi$Simulation_Init_Generators$generatePeer,
+				asCoordsList(_strelka_2017$phi$Simulation_NodeList$initialPeerList)),
+			A2(
+				_elm_lang$core$Basics_ops['++'],
+				A2(
+					_elm_lang$core$List$map,
+					_strelka_2017$phi$Simulation_Init_Generators$generatePVPanel,
+					asCoordsList(_strelka_2017$phi$Simulation_NodeList$initialPVNodeList)),
+				A2(
+					_elm_lang$core$List$map,
+					_strelka_2017$phi$Simulation_Init_Generators$generateWindTurbine,
+					asCoordsList(_strelka_2017$phi$Simulation_NodeList$initialWTNodeList)))));
+}();
 var _strelka_2017$phi$Model$initNegawattLimit = function (map) {
 	return map.initialNegawattLimit;
 };
@@ -22412,22 +21853,22 @@ var _strelka_2017$phi$Model$initWeather = function (map) {
 var _strelka_2017$phi$Model$initGraph = function (map) {
 	return map.initialNetwork;
 };
-var _strelka_2017$phi$Model$initMap = A9(
-	_strelka_2017$phi$Simulation_Model$SimMap,
-	'Kolionovo',
-	5523,
-	_elm_community$graph$Graph$empty,
-	{sun: 0.5, wind: 0.5},
-	_strelka_2017$phi$Simulation_WeatherList$restWeather(
+var _strelka_2017$phi$Model$initMap = {
+	name: 'Kolionovo',
+	population: 5523,
+	initialNetwork: _strelka_2017$phi$Simulation_GraphUpdates$graphFromNodeList(_strelka_2017$phi$Simulation_GraphUpdates$potentialNodesList),
+	initialWeather: {sun: 0.5, wind: 0.5},
+	initialWeatherList: _strelka_2017$phi$Simulation_WeatherList$restWeather(
 		{ctor: '[]'}),
-	_strelka_2017$phi$Model$initNarrative,
-	{
+	narrative: _strelka_2017$phi$Model$initNarrative,
+	initialBudget: {
 		ctor: '::',
 		_0: 10000,
 		_1: {ctor: '[]'}
 	},
-	{a: 1, b: 0},
-	21);
+	initialReputationRatio: {a: 1, b: 0},
+	initialNegawattLimit: 21
+};
 var _strelka_2017$phi$Model$initSiteInfo = function (map) {
 	return {name: map.name, population: map.population};
 };
@@ -23202,11 +22643,18 @@ var _strelka_2017$phi$Simulation_BuildingMode$handleConvertNodeRequest = F2(
 		var convertNodeLabel = function (label) {
 			var _p0 = label;
 			if (_p0.ctor === 'PotentialNode') {
+				var _p2 = _p0._0.pos;
 				var _p1 = _p0._0.nodeType;
 				if (_p1.ctor === 'PotentialGenerator') {
-					return _strelka_2017$phi$Simulation_Model$GeneratorNode(_strelka_2017$phi$Simulation_Model$defaultGenerator);
+					return _strelka_2017$phi$Simulation_Model$GeneratorNode(
+						_elm_lang$core$Native_Utils.update(
+							_strelka_2017$phi$Simulation_Model$defaultGenerator,
+							{pos: _p2}));
 				} else {
-					return _strelka_2017$phi$Simulation_Model$PeerNode(_strelka_2017$phi$Simulation_Model$defaultPeer);
+					return _strelka_2017$phi$Simulation_Model$PeerNode(
+						_elm_lang$core$Native_Utils.update(
+							_strelka_2017$phi$Simulation_Model$defaultPeer,
+							{pos: _p2}));
 				}
 			} else {
 				return label;
@@ -23231,19 +22679,19 @@ var _strelka_2017$phi$Simulation_BuildingMode$handleConvertNodeRequest = F2(
 			phiNetwork,
 			A2(
 				_elm_lang$core$Maybe$map,
-				function (_p2) {
+				function (_p3) {
 					return function (nc) {
 						return A2(_elm_community$graph$Graph$insert, nc, phiNetwork);
 					}(
-						convertNodeContext(_p2));
+						convertNodeContext(_p3));
 				},
 				A2(_elm_community$graph$Graph$get, nodeId, phiNetwork)));
 	});
 var _strelka_2017$phi$Simulation_BuildingMode$parseConvertNodeRequest = function (x) {
 	var result = A2(_elm_lang$core$Json_Decode$decodeValue, _elm_lang$core$Json_Decode$int, x);
-	var _p3 = result;
-	if (_p3.ctor === 'Ok') {
-		return _strelka_2017$phi$Action$RequestConvertNode(_p3._0);
+	var _p4 = result;
+	if (_p4.ctor === 'Ok') {
+		return _strelka_2017$phi$Action$RequestConvertNode(_p4._0);
 	} else {
 		return _strelka_2017$phi$Action$NoOp;
 	}
