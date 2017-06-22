@@ -18908,6 +18908,10 @@ var _strelka_2017$phi$Simulation_Model$EncodedEdge = F2(
 	function (a, b) {
 		return {transmissionLine: a, pos: b};
 	});
+var _strelka_2017$phi$Simulation_Model$Potential = F2(
+	function (a, b) {
+		return {nodeType: a, pos: b};
+	});
 var _strelka_2017$phi$Simulation_Model$SimGenerator = F4(
 	function (a, b, c, d) {
 		return {dailyGeneration: a, maxGeneration: b, pos: c, generatorType: d};
@@ -18931,12 +18935,17 @@ var _strelka_2017$phi$Simulation_Model$Weather = F2(
 var _strelka_2017$phi$Simulation_Model$BatNode = function (a) {
 	return {ctor: 'BatNode', _0: a};
 };
+var _strelka_2017$phi$Simulation_Model$PotentialNode = function (a) {
+	return {ctor: 'PotentialNode', _0: a};
+};
 var _strelka_2017$phi$Simulation_Model$PeerNode = function (a) {
 	return {ctor: 'PeerNode', _0: a};
 };
 var _strelka_2017$phi$Simulation_Model$GeneratorNode = function (a) {
 	return {ctor: 'GeneratorNode', _0: a};
 };
+var _strelka_2017$phi$Simulation_Model$PotentialGenerator = {ctor: 'PotentialGenerator'};
+var _strelka_2017$phi$Simulation_Model$PotentialPeer = {ctor: 'PotentialPeer'};
 var _strelka_2017$phi$Simulation_Model$SolarPanel = {ctor: 'SolarPanel'};
 var _strelka_2017$phi$Simulation_Model$WindTurbine = {ctor: 'WindTurbine'};
 
@@ -23151,6 +23160,8 @@ var _strelka_2017$phi$Simulation_Encoding$pos = function (nodeLabel) {
 			return _p0._0.pos;
 		case 'BatNode':
 			return _p0._0.pos;
+		case 'PeerNode':
+			return _p0._0.pos;
 		default:
 			return _p0._0.pos;
 	}
@@ -23343,7 +23354,7 @@ var _strelka_2017$phi$Simulation_Encoding$encodeNodeLabel = function (nodeLabel)
 						}
 					}
 				});
-		default:
+		case 'BatNode':
 			var _p7 = _p4._0;
 			return _elm_lang$core$Json_Encode$object(
 				{
@@ -23379,14 +23390,50 @@ var _strelka_2017$phi$Simulation_Encoding$encodeNodeLabel = function (nodeLabel)
 						}
 					}
 				});
+		default:
+			var _p9 = _p4._0;
+			var nodeTypeString = function () {
+				var _p8 = _p9.nodeType;
+				if (_p8.ctor === 'PotentialPeer') {
+					return 'peer';
+				} else {
+					return 'generator';
+				}
+			}();
+			return _elm_lang$core$Json_Encode$object(
+				{
+					ctor: '::',
+					_0: {
+						ctor: '_Tuple2',
+						_0: 'pos',
+						_1: _strelka_2017$phi$Simulation_Encoding$encodeCoords(_p9.pos)
+					},
+					_1: {
+						ctor: '::',
+						_0: {
+							ctor: '_Tuple2',
+							_0: 'nodeType',
+							_1: _elm_lang$core$Json_Encode$string(nodeTypeString)
+						},
+						_1: {
+							ctor: '::',
+							_0: {
+								ctor: '_Tuple2',
+								_0: 'isPotential',
+								_1: _elm_lang$core$Json_Encode$bool(true)
+							},
+							_1: {ctor: '[]'}
+						}
+					}
+				});
 	}
 };
-var _strelka_2017$phi$Simulation_Encoding$encodeNode = function (_p8) {
-	var _p9 = _p8;
+var _strelka_2017$phi$Simulation_Encoding$encodeNode = function (_p10) {
+	var _p11 = _p10;
 	return A2(
 		_elm_community$graph$Graph$Node,
-		_p9.id,
-		_strelka_2017$phi$Simulation_Encoding$encodeNodeLabel(_p9.label));
+		_p11.id,
+		_strelka_2017$phi$Simulation_Encoding$encodeNodeLabel(_p11.label));
 };
 var _strelka_2017$phi$Simulation_Encoding$encodeGraph = function (graph) {
 	var tLines = A2(

@@ -1,5 +1,5 @@
 .simulation {
-  background: linear-gradient(to right, rgba(255,180,0,0.7), rgba(240,0,0,0.8));
+  background: linear-gradient(to right, rgba(114,206,234,1), rgba(193,26,124,1));
   position: absolute;
   width: 100%;
   height: 100%;
@@ -13,34 +13,44 @@
   height: 100%;
 }
 
-.node {
-  fill: #338;
+.node.peer {
+  fill: rgb(246,255,0);
+  stroke: rgb(246,255,0);
+}
+
+.node.windTurbine {
+  fill: rgb(0,0,117);
+  stroke: rgb(0,0,117);
+}
+
+.node.solarPanel {
+  fill: rgb(0,251,255);
+  stroke: rgb(0,251,255);
 }
 
 .node.peer .peerFullCircle{
   stroke-dasharray: 2,8;
-  stroke: #338;
-  stroke-width: 1px;
+  --stroke: #338;
+  stroke-width: 1.5px;
   stroke-opacity: 0.5;
 }
 
 .node.peer .energyIndicator{
-  stroke: #338;
-  stroke-width: 1px;
+  --stroke: #338;
+  stroke-width: 1.5px;
   /*stroke-opacity: 0.5;*/
   opacity: 0;
 }
 
 line.link {
-  stroke: #338;
-  stroke-width: 1px;
+  stroke: white;
+  stroke-width: 1.5px;
   stroke-opacity: 0.7;
 }
 
 .energyIndicator {
   stroke-opacity: .7;
-  stroke: #338;
-  stroke-width: 1px;
+  stroke-width: 2px;
   fill-opacity: 0;
 
 }

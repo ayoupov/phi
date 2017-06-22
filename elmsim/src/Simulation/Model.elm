@@ -117,7 +117,19 @@ type alias EncodedEdge =
 type NodeLabel
     = GeneratorNode SimGenerator
     | PeerNode Peer
+    | PotentialNode Potential
     | BatNode Battery
+
+
+type alias Potential =
+    { nodeType : PotentialNodeType
+    , pos : Coords
+    }
+
+
+type PotentialNodeType
+    = PotentialPeer
+    | PotentialGenerator
 
 
 

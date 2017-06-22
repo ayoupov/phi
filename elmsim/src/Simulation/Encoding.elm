@@ -46,6 +46,22 @@ encodeNodeLabel nodeLabel =
                 , ( "nodeType", Json.string "battery" )
                 ]
 
+        PotentialNode label ->
+            let
+                nodeTypeString =
+                    case label.nodeType of
+                        PotentialPeer ->
+                            "peer"
+
+                        PotentialGenerator ->
+                            "generator"
+            in
+            Json.object
+                [ ( "pos", encodeCoords label.pos )
+                , ( "nodeType", Json.string nodeTypeString )
+                , ( "isPotential", Json.bool True )
+                ]
+
 
 encodeGeneratorType : GeneratorType -> Json.Value
 encodeGeneratorType generatorType =
@@ -80,6 +96,9 @@ pos nodeLabel =
             n.pos
 
         PeerNode n ->
+            n.pos
+
+        PotentialNode n ->
             n.pos
 
 
