@@ -5,6 +5,7 @@ import Array
 import Graph exposing (NodeId)
 import Random exposing (Generator)
 import Random.Extra as Random
+import Set exposing (Set)
 import Simulation.GraphUpdates exposing (createEdge)
 import Simulation.Model exposing (..)
 import Simulation.NodeList as NodeList
@@ -15,14 +16,16 @@ coordsGenerator : Random.Generator Coords
 coordsGenerator =
     let
         coordsFunc =
-            (Array.fromList NodeList.peerList
+            (NodeList.initialPeerList
+                |> Set.toList
+                |> Array.fromList
                 |> flip Array.get
             )
                 >> Maybe.map NodeList.tupleToCoords
                 >> Maybe.withDefault (Coords 0 0)
 
         coordsLimit =
-            List.length NodeList.peerList - 1
+            Set.size NodeList.initialPeerList - 1
     in
     Random.map coordsFunc
         (Random.int 0 coordsLimit)

@@ -1,10 +1,10 @@
 var xScale = d3.scaleLinear()
     .domain([0, 1920])
-    .range([100, window.innerWidth - 100]);
+    .range([0, 1920]);
 
 var yScale = d3.scaleLinear()
     .domain([0,1080])
-    .range([100, window.innerHeight - 100]);
+    .range([0, 1080]);
 
 function setX(node) {
     return xScale(node.label.pos.x);
