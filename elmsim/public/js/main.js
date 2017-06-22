@@ -126,7 +126,6 @@ function updateZoomPos()
         'left': r,
         'top': b
     });
-    console.log(r,b);
 }
 
 function updateZoom(scale)

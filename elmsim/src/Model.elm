@@ -63,7 +63,7 @@ initMap : SimMap
 initMap =
     { name = "Kolionovo"
     , population = 5523
-    , initialNetwork = graphFromNodeList potentialNodesList
+    , initialNetwork = Graph.empty --graphFromNodeList potentialNodesList
     , initialWeather =
         { sun = 0.5
         , wind = 0.5
@@ -117,7 +117,6 @@ initGenerators =
         asCoordsList =
             List.map tupleToCoords << Set.toList
     in
-    List.repeat 12 Generators.generateEdge
-        ++ List.map Generators.generatePeer (asCoordsList initialPeerList)
+    List.map Generators.generatePeer (asCoordsList initialPeerList)
         ++ List.map Generators.generatePVPanel (asCoordsList initialPVNodeList)
         ++ List.map Generators.generateWindTurbine (asCoordsList initialWTNodeList)

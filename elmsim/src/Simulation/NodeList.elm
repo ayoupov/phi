@@ -33,11 +33,8 @@ initialWTNodeList : Set ( Int, Int )
 initialWTNodeList =
     Set.fromList
         [ ( 847, 707 )
-        , ( 747, 506 )
         , ( 852, 427 )
-        , ( 965, 461 )
         , ( 1005, 502 )
-        , ( 1062, 410 )
         , ( 932, 322 )
         , ( 975, 202 )
         , ( 1096, 197 )
