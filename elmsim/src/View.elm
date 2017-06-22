@@ -10,7 +10,6 @@ import Chat.Model
         , MultiChoiceAction(..)
         , mcaName
         )
-import Chat.View exposing (viewChatMsg)
 import FormatNumber exposing (format)
 import Html exposing (..)
 import Html.Attributes exposing (..)
@@ -25,95 +24,17 @@ import Model exposing (Model)
 import Simulation.Model exposing (Budget)
 import Svg exposing (circle, g, svg)
 import Svg.Attributes as SVG
-
-
-intFmt : Int -> String
-intFmt num =
-    format
-        { decimals = 0
-        , thousandSeparator = ","
-        , decimalSeparator = "."
-        }
-        (toFloat num)
-
-
-phiCoin : Budget -> String
-phiCoin budget =
-    budget
-        |> List.head
-        |> Maybe.withDefault 0
-        |> format
-            { decimals = 0
-            , thousandSeparator = ","
-            , decimalSeparator = "."
-            }
-        |> (++) "Φ"
+import View.ChatHeader exposing (viewChatHeader)
+import View.ChatMessage exposing (viewChatMessage)
 
 
 view : Model -> Html Msg
 view model =
     div [ class "chat_window" ]
         [ ul [ id "toScroll", class "messages" ]
-            (List.map viewChatMsg (List.reverse model.messages))
-        , chatHeader model
+            (List.map viewChatMessage (List.reverse model.messages))
+        , viewChatHeader model
         , inputFooter model
-        ]
-
-
-chatHeader : Model -> Html Msg
-chatHeader model =
-    let
-        pt theText =
-            p [] [ text theText ]
-
-        phText =
-            div [ class "ph_text" ]
-                [ b [] [ text "PHI" ]
-                , br [] []
-                , text "health"
-                ]
-
-        ccText =
-            div [ class "cc_text" ]
-                [ b [] [ text "COMMUNITY" ]
-                , br [] []
-                , text "coverage"
-                ]
-
-        statusTitle className iconName txt =
-            span [ class className ]
-                [ Icon.view iconName [ Icon.size18 ]
-                , pt txt
-                ]
-
-        sitePop =
-            intFmt model.siteInfo.population
-
-        siteName =
-            model.siteInfo.name
-    in
-    div [ class "chat_header" ]
-        [ div [ class "map_status" ]
-            [ div [ class "title_bar" ]
-                [ statusTitle "site_name" "location_city" siteName
-                , statusTitle "population" "people" sitePop
-                , statusTitle "week_no" "today" "Week 20"
-                ]
-            , div [ class "status_body" ]
-                [ div [ class "status_section" ]
-                    [ div [ class "donut_legend" ] [ phText, Charts.donutWithPct 50 10 0.5 ]
-                    , div [ class "donut_legend" ] [ ccText, Charts.donutWithPct 50 10 0.3 ]
-                    ]
-                , div [ class "hline" ] []
-                , div [ class "status_section" ]
-                    [ div [ class "budget_status" ]
-                        [ b [] [ text "BUDGET" ]
-                        , br [] []
-                        , span [ class "budget_coin" ] [ text <| phiCoin model.budget ]
-                        ]
-                    ]
-                ]
-            ]
         ]
 
 

@@ -1,20 +1,31 @@
 module Simulation.Init.Generators exposing (..)
 
 import Action exposing (Msg(..))
+import Array
 import Graph exposing (NodeId)
 import Random exposing (Generator)
 import Random.Extra as Random
 import Simulation.GraphUpdates exposing (createEdge)
 import Simulation.Model exposing (..)
+import Simulation.NodeList as NodeList
 import Simulation.WeatherList exposing (restWeather, weatherTupleToWeather)
 
 
 coordsGenerator : Random.Generator Coords
 coordsGenerator =
-    Random.map2 Coords
-        (Random.float (30.5234 - 0.01) (30.5234 + 0.01))
-        -- longitude
-        (Random.float (50.4501 - 0.01) (50.4501 + 0.01))
+    let
+        coordsFunc =
+            (Array.fromList NodeList.peerList
+                |> flip Array.get
+            )
+                >> Maybe.map NodeList.tupleToCoords
+                >> Maybe.withDefault (Coords 0 0)
+
+        coordsLimit =
+            List.length NodeList.peerList - 1
+    in
+    Random.map coordsFunc
+        (Random.int 0 coordsLimit)
 
 
 

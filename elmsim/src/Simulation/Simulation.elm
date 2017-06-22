@@ -6,10 +6,10 @@ import Html.Attributes exposing (..)
 import IntDict
 import Json.Encode as Json
 import List exposing (repeat)
+import ListHelpers exposing (takeFirstElementWithDefault0, takeFirstElementWithDefault1, takeTailDefaultEmpty)
 import Model exposing (Model)
 import Simulation.GraphUpdates exposing (updateNodes)
 import Simulation.Model exposing (..)
-import ListHelpers exposing (takeFirstElementWithDefault0, takeFirstElementWithDefault1, takeTailDefaultEmpty)
 import Svg exposing (..)
 import Svg.Attributes as SVG
 import Update.Extra exposing (andThen)

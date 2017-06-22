@@ -16703,8 +16703,8 @@ var _elm_community$graph$Graph$ignorePath = F4(
 			return _elm_lang$core$Native_Utils.crashCase(
 				'Graph',
 				{
-					start: {line: 885, column: 3},
-					end: {line: 889, column: 20}
+					start: {line: 1017, column: 5},
+					end: {line: 1022, column: 26}
 				},
 				_p1)('Graph.ignorePath: No algorithm should ever pass an empty path into this BfsNodeVisitor.');
 		} else {
@@ -17049,8 +17049,8 @@ var _elm_community$graph$Graph$computeEdgeDiff = F2(
 								return _elm_lang$core$Native_Utils.crashCase(
 									'Graph',
 									{
-										start: {line: 189, column: 11},
-										end: {line: 199, column: 22}
+										start: {line: 255, column: 21},
+										end: {line: 269, column: 36}
 									},
 									_p21)('Graph.computeEdgeDiff: Collected two removals for the same edge. This is an error in the implementation of Graph and you should file a bug report!');
 							}
@@ -17058,8 +17058,8 @@ var _elm_community$graph$Graph$computeEdgeDiff = F2(
 							return _elm_lang$core$Native_Utils.crashCase(
 								'Graph',
 								{
-									start: {line: 189, column: 11},
-									end: {line: 199, column: 22}
+									start: {line: 255, column: 21},
+									end: {line: 269, column: 36}
 								},
 								_p21)('Graph.computeEdgeDiff: Collected inserts before removals. This is an error in the implementation of Graph and you should file a bug report!');
 						}
@@ -17363,8 +17363,8 @@ var _elm_community$graph$Graph$dfsTree = F2(
 				return _elm_lang$core$Native_Utils.crashCase(
 					'Graph',
 					{
-						start: {line: 827, column: 3},
-						end: {line: 833, column: 120}
+						start: {line: 953, column: 5},
+						end: {line: 961, column: 126}
 					},
 					_p42)('dfsTree: There can\'t be more than one DFS tree. This invariant is violated, please report this bug.');
 			}
@@ -17412,8 +17412,8 @@ var _elm_community$graph$Graph$topologicalSort = function (graph) {
 			return _elm_lang$core$Native_Utils.crashCase(
 				'Graph',
 				{
-					start: {line: 1046, column: 7},
-					end: {line: 1054, column: 18}
+					start: {line: 1198, column: 13},
+					end: {line: 1208, column: 32}
 				},
 				_p46)('Invariant hurt in Graph.topologicalSort: No strongly connected component should be empty');
 		} else {
@@ -17422,8 +17422,8 @@ var _elm_community$graph$Graph$topologicalSort = function (graph) {
 				return _elm_lang$core$Native_Utils.crashCase(
 					'Graph',
 					{
-						start: {line: 1050, column: 11},
-						end: {line: 1054, column: 18}
+						start: {line: 1203, column: 21},
+						end: {line: 1208, column: 32}
 					},
 					_p48)('Invariant hurt in Graph.topologicalSort: nodeId in nodeIdRange of the strongly connected component should be present in the original graph');
 			} else {
@@ -17563,8 +17563,8 @@ var _elm_community$graph$Graph$heightLevels = function (graph) {
 					return _elm_lang$core$Native_Utils.crashCase(
 						'Graph',
 						{
-							start: {line: 1006, column: 13},
-							end: {line: 1008, column: 154}
+							start: {line: 1150, column: 21},
+							end: {line: 1155, column: 157}
 						},
 						_p62)('Graph.heightLevels: Could not get a node of a graph which should be there by invariants. Please file a bug report!');
 				}
@@ -17617,8 +17617,8 @@ var _elm_community$graph$Graph$heightLevels = function (graph) {
 					return _elm_lang$core$Native_Utils.crashCase(
 						'Graph',
 						{
-							start: {line: 1025, column: 13},
-							end: {line: 1029, column: 44}
+							start: {line: 1176, column: 21},
+							end: {line: 1181, column: 56}
 						},
 						_p67)('Graph.heightLevels: Reached a branch which is impossible by invariants. Please file a bug report!');
 				} else {
@@ -19165,6 +19165,712 @@ var _strelka_2017$phi$Simulation_GraphUpdates$addNode = F2(
 			network);
 	});
 
+var _strelka_2017$phi$Simulation_NodeList$generatorList = {
+	ctor: '::',
+	_0: {ctor: '_Tuple2', _0: 136, _1: 600},
+	_1: {
+		ctor: '::',
+		_0: {ctor: '_Tuple2', _0: 116, _1: 670},
+		_1: {
+			ctor: '::',
+			_0: {ctor: '_Tuple2', _0: 237, _1: 675},
+			_1: {
+				ctor: '::',
+				_0: {ctor: '_Tuple2', _0: 350, _1: 709},
+				_1: {
+					ctor: '::',
+					_0: {ctor: '_Tuple2', _0: 317, _1: 570},
+					_1: {
+						ctor: '::',
+						_0: {ctor: '_Tuple2', _0: 518, _1: 642},
+						_1: {
+							ctor: '::',
+							_0: {ctor: '_Tuple2', _0: 585, _1: 460},
+							_1: {
+								ctor: '::',
+								_0: {ctor: '_Tuple2', _0: 605, _1: 620},
+								_1: {
+									ctor: '::',
+									_0: {ctor: '_Tuple2', _0: 556, _1: 747},
+									_1: {
+										ctor: '::',
+										_0: {ctor: '_Tuple2', _0: 667, _1: 779},
+										_1: {
+											ctor: '::',
+											_0: {ctor: '_Tuple2', _0: 708, _1: 739},
+											_1: {
+												ctor: '::',
+												_0: {ctor: '_Tuple2', _0: 742, _1: 627},
+												_1: {
+													ctor: '::',
+													_0: {ctor: '_Tuple2', _0: 847, _1: 707},
+													_1: {
+														ctor: '::',
+														_0: {ctor: '_Tuple2', _0: 747, _1: 506},
+														_1: {
+															ctor: '::',
+															_0: {ctor: '_Tuple2', _0: 817, _1: 526},
+															_1: {
+																ctor: '::',
+																_0: {ctor: '_Tuple2', _0: 852, _1: 427},
+																_1: {
+																	ctor: '::',
+																	_0: {ctor: '_Tuple2', _0: 965, _1: 461},
+																	_1: {
+																		ctor: '::',
+																		_0: {ctor: '_Tuple2', _0: 1005, _1: 502},
+																		_1: {
+																			ctor: '::',
+																			_0: {ctor: '_Tuple2', _0: 1062, _1: 410},
+																			_1: {
+																				ctor: '::',
+																				_0: {ctor: '_Tuple2', _0: 932, _1: 322},
+																				_1: {
+																					ctor: '::',
+																					_0: {ctor: '_Tuple2', _0: 995, _1: 273},
+																					_1: {
+																						ctor: '::',
+																						_0: {ctor: '_Tuple2', _0: 975, _1: 202},
+																						_1: {
+																							ctor: '::',
+																							_0: {ctor: '_Tuple2', _0: 1096, _1: 197},
+																							_1: {
+																								ctor: '::',
+																								_0: {ctor: '_Tuple2', _0: 1176, _1: 302},
+																								_1: {
+																									ctor: '::',
+																									_0: {ctor: '_Tuple2', _0: 1208, _1: 164},
+																									_1: {
+																										ctor: '::',
+																										_0: {ctor: '_Tuple2', _0: 1248, _1: 123},
+																										_1: {
+																											ctor: '::',
+																											_0: {ctor: '_Tuple2', _0: 1063, _1: 834},
+																											_1: {
+																												ctor: '::',
+																												_0: {ctor: '_Tuple2', _0: 1117, _1: 897},
+																												_1: {
+																													ctor: '::',
+																													_0: {ctor: '_Tuple2', _0: 1299, _1: 1052},
+																													_1: {
+																														ctor: '::',
+																														_0: {ctor: '_Tuple2', _0: 1687, _1: 41},
+																														_1: {
+																															ctor: '::',
+																															_0: {ctor: '_Tuple2', _0: 1581, _1: 120},
+																															_1: {
+																																ctor: '::',
+																																_0: {ctor: '_Tuple2', _0: 1652, _1: 140},
+																																_1: {
+																																	ctor: '::',
+																																	_0: {ctor: '_Tuple2', _0: 1799, _1: 74},
+																																	_1: {
+																																		ctor: '::',
+																																		_0: {ctor: '_Tuple2', _0: 1470, _1: 233},
+																																		_1: {
+																																			ctor: '::',
+																																			_0: {ctor: '_Tuple2', _0: 1367, _1: 309},
+																																			_1: {
+																																				ctor: '::',
+																																				_0: {ctor: '_Tuple2', _0: 1576, _1: 241},
+																																				_1: {
+																																					ctor: '::',
+																																					_0: {ctor: '_Tuple2', _0: 1682, _1: 255},
+																																					_1: {
+																																						ctor: '::',
+																																						_0: {ctor: '_Tuple2', _0: 1708, _1: 366},
+																																						_1: {
+																																							ctor: '::',
+																																							_0: {ctor: '_Tuple2', _0: 1728, _1: 437},
+																																							_1: {
+																																								ctor: '::',
+																																								_0: {ctor: '_Tuple2', _0: 1837, _1: 475},
+																																								_1: {
+																																									ctor: '::',
+																																									_0: {ctor: '_Tuple2', _0: 1869, _1: 577},
+																																									_1: {
+																																										ctor: '::',
+																																										_0: {ctor: '_Tuple2', _0: 1901, _1: 668},
+																																										_1: {ctor: '[]'}
+																																									}
+																																								}
+																																							}
+																																						}
+																																					}
+																																				}
+																																			}
+																																		}
+																																	}
+																																}
+																															}
+																														}
+																													}
+																												}
+																											}
+																										}
+																									}
+																								}
+																							}
+																						}
+																					}
+																				}
+																			}
+																		}
+																	}
+																}
+															}
+														}
+													}
+												}
+											}
+										}
+									}
+								}
+							}
+						}
+					}
+				}
+			}
+		}
+	}
+};
+var _strelka_2017$phi$Simulation_NodeList$peerList = {
+	ctor: '::',
+	_0: {ctor: '_Tuple2', _0: 12, _1: 653},
+	_1: {
+		ctor: '::',
+		_0: {ctor: '_Tuple2', _0: 62, _1: 632},
+		_1: {
+			ctor: '::',
+			_0: {ctor: '_Tuple2', _0: 98, _1: 574},
+			_1: {
+				ctor: '::',
+				_0: {ctor: '_Tuple2', _0: 98, _1: 652},
+				_1: {
+					ctor: '::',
+					_0: {ctor: '_Tuple2', _0: 94, _1: 688},
+					_1: {
+						ctor: '::',
+						_0: {ctor: '_Tuple2', _0: 170, _1: 678},
+						_1: {
+							ctor: '::',
+							_0: {ctor: '_Tuple2', _0: 146, _1: 655},
+							_1: {
+								ctor: '::',
+								_0: {ctor: '_Tuple2', _0: 217, _1: 623},
+								_1: {
+									ctor: '::',
+									_0: {ctor: '_Tuple2', _0: 227, _1: 714},
+									_1: {
+										ctor: '::',
+										_0: {ctor: '_Tuple2', _0: 265, _1: 659},
+										_1: {
+											ctor: '::',
+											_0: {ctor: '_Tuple2', _0: 276, _1: 603},
+											_1: {
+												ctor: '::',
+												_0: {ctor: '_Tuple2', _0: 285, _1: 528},
+												_1: {
+													ctor: '::',
+													_0: {ctor: '_Tuple2', _0: 301, _1: 683},
+													_1: {
+														ctor: '::',
+														_0: {ctor: '_Tuple2', _0: 420, _1: 690},
+														_1: {
+															ctor: '::',
+															_0: {ctor: '_Tuple2', _0: 503, _1: 700},
+															_1: {
+																ctor: '::',
+																_0: {ctor: '_Tuple2', _0: 528, _1: 775},
+																_1: {
+																	ctor: '::',
+																	_0: {ctor: '_Tuple2', _0: 551, _1: 710},
+																	_1: {
+																		ctor: '::',
+																		_0: {ctor: '_Tuple2', _0: 588, _1: 714},
+																		_1: {
+																			ctor: '::',
+																			_0: {ctor: '_Tuple2', _0: 613, _1: 678},
+																			_1: {
+																				ctor: '::',
+																				_0: {ctor: '_Tuple2', _0: 571, _1: 633},
+																				_1: {
+																					ctor: '::',
+																					_0: {ctor: '_Tuple2', _0: 631, _1: 717},
+																					_1: {
+																						ctor: '::',
+																						_0: {ctor: '_Tuple2', _0: 582, _1: 838},
+																						_1: {
+																							ctor: '::',
+																							_0: {ctor: '_Tuple2', _0: 728, _1: 809},
+																							_1: {
+																								ctor: '::',
+																								_0: {ctor: '_Tuple2', _0: 697, _1: 688},
+																								_1: {
+																									ctor: '::',
+																									_0: {ctor: '_Tuple2', _0: 701, _1: 662},
+																									_1: {
+																										ctor: '::',
+																										_0: {ctor: '_Tuple2', _0: 734, _1: 691},
+																										_1: {
+																											ctor: '::',
+																											_0: {ctor: '_Tuple2', _0: 703, _1: 617},
+																											_1: {
+																												ctor: '::',
+																												_0: {ctor: '_Tuple2', _0: 759, _1: 655},
+																												_1: {
+																													ctor: '::',
+																													_0: {ctor: '_Tuple2', _0: 814, _1: 666},
+																													_1: {
+																														ctor: '::',
+																														_0: {ctor: '_Tuple2', _0: 839, _1: 672},
+																														_1: {
+																															ctor: '::',
+																															_0: {ctor: '_Tuple2', _0: 803, _1: 729},
+																															_1: {
+																																ctor: '::',
+																																_0: {ctor: '_Tuple2', _0: 889, _1: 675},
+																																_1: {
+																																	ctor: '::',
+																																	_0: {ctor: '_Tuple2', _0: 794, _1: 607},
+																																	_1: {
+																																		ctor: '::',
+																																		_0: {ctor: '_Tuple2', _0: 704, _1: 540},
+																																		_1: {
+																																			ctor: '::',
+																																			_0: {ctor: '_Tuple2', _0: 739, _1: 560},
+																																			_1: {
+																																				ctor: '::',
+																																				_0: {ctor: '_Tuple2', _0: 763, _1: 537},
+																																				_1: {
+																																					ctor: '::',
+																																					_0: {ctor: '_Tuple2', _0: 729, _1: 484},
+																																					_1: {
+																																						ctor: '::',
+																																						_0: {ctor: '_Tuple2', _0: 766, _1: 488},
+																																						_1: {
+																																							ctor: '::',
+																																							_0: {ctor: '_Tuple2', _0: 764, _1: 402},
+																																							_1: {
+																																								ctor: '::',
+																																								_0: {ctor: '_Tuple2', _0: 785, _1: 452},
+																																								_1: {
+																																									ctor: '::',
+																																									_0: {ctor: '_Tuple2', _0: 811, _1: 473},
+																																									_1: {
+																																										ctor: '::',
+																																										_0: {ctor: '_Tuple2', _0: 843, _1: 488},
+																																										_1: {
+																																											ctor: '::',
+																																											_0: {ctor: '_Tuple2', _0: 887, _1: 468},
+																																											_1: {
+																																												ctor: '::',
+																																												_0: {ctor: '_Tuple2', _0: 913, _1: 472},
+																																												_1: {
+																																													ctor: '::',
+																																													_0: {ctor: '_Tuple2', _0: 955, _1: 494},
+																																													_1: {
+																																														ctor: '::',
+																																														_0: {ctor: '_Tuple2', _0: 1035, _1: 534},
+																																														_1: {
+																																															ctor: '::',
+																																															_0: {ctor: '_Tuple2', _0: 832, _1: 375},
+																																															_1: {
+																																																ctor: '::',
+																																																_0: {ctor: '_Tuple2', _0: 880, _1: 410},
+																																																_1: {
+																																																	ctor: '::',
+																																																	_0: {ctor: '_Tuple2', _0: 916, _1: 435},
+																																																	_1: {
+																																																		ctor: '::',
+																																																		_0: {ctor: '_Tuple2', _0: 1035, _1: 441},
+																																																		_1: {
+																																																			ctor: '::',
+																																																			_0: {ctor: '_Tuple2', _0: 891, _1: 355},
+																																																			_1: {
+																																																				ctor: '::',
+																																																				_0: {ctor: '_Tuple2', _0: 955, _1: 366},
+																																																				_1: {
+																																																					ctor: '::',
+																																																					_0: {ctor: '_Tuple2', _0: 990, _1: 380},
+																																																					_1: {
+																																																						ctor: '::',
+																																																						_0: {ctor: '_Tuple2', _0: 898, _1: 330},
+																																																						_1: {
+																																																							ctor: '::',
+																																																							_0: {ctor: '_Tuple2', _0: 900, _1: 280},
+																																																							_1: {
+																																																								ctor: '::',
+																																																								_0: {ctor: '_Tuple2', _0: 957, _1: 298},
+																																																								_1: {
+																																																									ctor: '::',
+																																																									_0: {ctor: '_Tuple2', _0: 1034, _1: 310},
+																																																									_1: {
+																																																										ctor: '::',
+																																																										_0: {ctor: '_Tuple2', _0: 1074, _1: 342},
+																																																										_1: {
+																																																											ctor: '::',
+																																																											_0: {ctor: '_Tuple2', _0: 1144, _1: 345},
+																																																											_1: {
+																																																												ctor: '::',
+																																																												_0: {ctor: '_Tuple2', _0: 871, _1: 219},
+																																																												_1: {
+																																																													ctor: '::',
+																																																													_0: {ctor: '_Tuple2', _0: 956, _1: 221},
+																																																													_1: {
+																																																														ctor: '::',
+																																																														_0: {ctor: '_Tuple2', _0: 1006, _1: 218},
+																																																														_1: {
+																																																															ctor: '::',
+																																																															_0: {ctor: '_Tuple2', _0: 1076, _1: 250},
+																																																															_1: {
+																																																																ctor: '::',
+																																																																_0: {ctor: '_Tuple2', _0: 1135, _1: 270},
+																																																																_1: {
+																																																																	ctor: '::',
+																																																																	_0: {ctor: '_Tuple2', _0: 1141, _1: 294},
+																																																																	_1: {
+																																																																		ctor: '::',
+																																																																		_0: {ctor: '_Tuple2', _0: 1198, _1: 258},
+																																																																		_1: {
+																																																																			ctor: '::',
+																																																																			_0: {ctor: '_Tuple2', _0: 1029, _1: 194},
+																																																																			_1: {
+																																																																				ctor: '::',
+																																																																				_0: {ctor: '_Tuple2', _0: 953, _1: 184},
+																																																																				_1: {
+																																																																					ctor: '::',
+																																																																					_0: {ctor: '_Tuple2', _0: 1009, _1: 159},
+																																																																					_1: {
+																																																																						ctor: '::',
+																																																																						_0: {ctor: '_Tuple2', _0: 1124, _1: 215},
+																																																																						_1: {
+																																																																							ctor: '::',
+																																																																							_0: {ctor: '_Tuple2', _0: 1160, _1: 189},
+																																																																							_1: {
+																																																																								ctor: '::',
+																																																																								_0: {ctor: '_Tuple2', _0: 1096, _1: 54},
+																																																																								_1: {
+																																																																									ctor: '::',
+																																																																									_0: {ctor: '_Tuple2', _0: 1157, _1: 152},
+																																																																									_1: {
+																																																																										ctor: '::',
+																																																																										_0: {ctor: '_Tuple2', _0: 1186, _1: 86},
+																																																																										_1: {
+																																																																											ctor: '::',
+																																																																											_0: {ctor: '_Tuple2', _0: 1307, _1: 37},
+																																																																											_1: {
+																																																																												ctor: '::',
+																																																																												_0: {ctor: '_Tuple2', _0: 1040, _1: 831},
+																																																																												_1: {
+																																																																													ctor: '::',
+																																																																													_0: {ctor: '_Tuple2', _0: 1035, _1: 841},
+																																																																													_1: {
+																																																																														ctor: '::',
+																																																																														_0: {ctor: '_Tuple2', _0: 1080, _1: 850},
+																																																																														_1: {
+																																																																															ctor: '::',
+																																																																															_0: {ctor: '_Tuple2', _0: 1083, _1: 886},
+																																																																															_1: {
+																																																																																ctor: '::',
+																																																																																_0: {ctor: '_Tuple2', _0: 1142, _1: 943},
+																																																																																_1: {
+																																																																																	ctor: '::',
+																																																																																	_0: {ctor: '_Tuple2', _0: 1186, _1: 1013},
+																																																																																	_1: {
+																																																																																		ctor: '::',
+																																																																																		_0: {ctor: '_Tuple2', _0: 1203, _1: 1003},
+																																																																																		_1: {
+																																																																																			ctor: '::',
+																																																																																			_0: {ctor: '_Tuple2', _0: 1216, _1: 1030},
+																																																																																			_1: {
+																																																																																				ctor: '::',
+																																																																																				_0: {ctor: '_Tuple2', _0: 1235, _1: 1060},
+																																																																																				_1: {
+																																																																																					ctor: '::',
+																																																																																					_0: {ctor: '_Tuple2', _0: 1271, _1: 1035},
+																																																																																					_1: {
+																																																																																						ctor: '::',
+																																																																																						_0: {ctor: '_Tuple2', _0: 1299, _1: 1016},
+																																																																																						_1: {
+																																																																																							ctor: '::',
+																																																																																							_0: {ctor: '_Tuple2', _0: 1370, _1: 1065},
+																																																																																							_1: {
+																																																																																								ctor: '::',
+																																																																																								_0: {ctor: '_Tuple2', _0: 1629, _1: 20},
+																																																																																								_1: {
+																																																																																									ctor: '::',
+																																																																																									_0: {ctor: '_Tuple2', _0: 1715, _1: 24},
+																																																																																									_1: {
+																																																																																										ctor: '::',
+																																																																																										_0: {ctor: '_Tuple2', _0: 1751, _1: 49},
+																																																																																										_1: {
+																																																																																											ctor: '::',
+																																																																																											_0: {ctor: '_Tuple2', _0: 1826, _1: 7},
+																																																																																											_1: {
+																																																																																												ctor: '::',
+																																																																																												_0: {ctor: '_Tuple2', _0: 1620, _1: 66},
+																																																																																												_1: {
+																																																																																													ctor: '::',
+																																																																																													_0: {ctor: '_Tuple2', _0: 1645, _1: 86},
+																																																																																													_1: {
+																																																																																														ctor: '::',
+																																																																																														_0: {ctor: '_Tuple2', _0: 1677, _1: 79},
+																																																																																														_1: {
+																																																																																															ctor: '::',
+																																																																																															_0: {ctor: '_Tuple2', _0: 1722, _1: 82},
+																																																																																															_1: {
+																																																																																																ctor: '::',
+																																																																																																_0: {ctor: '_Tuple2', _0: 1748, _1: 86},
+																																																																																																_1: {
+																																																																																																	ctor: '::',
+																																																																																																	_0: {ctor: '_Tuple2', _0: 1790, _1: 108},
+																																																																																																	_1: {
+																																																																																																		ctor: '::',
+																																																																																																		_0: {ctor: '_Tuple2', _0: 1563, _1: 98},
+																																																																																																		_1: {
+																																																																																																			ctor: '::',
+																																																																																																			_0: {ctor: '_Tuple2', _0: 1600, _1: 101},
+																																																																																																			_1: {
+																																																																																																				ctor: '::',
+																																																																																																				_0: {ctor: '_Tuple2', _0: 1677, _1: 102},
+																																																																																																				_1: {
+																																																																																																					ctor: '::',
+																																																																																																					_0: {ctor: '_Tuple2', _0: 1597, _1: 151},
+																																																																																																					_1: {
+																																																																																																						ctor: '::',
+																																																																																																						_0: {ctor: '_Tuple2', _0: 1538, _1: 154},
+																																																																																																						_1: {
+																																																																																																							ctor: '::',
+																																																																																																							_0: {ctor: '_Tuple2', _0: 1574, _1: 174},
+																																																																																																							_1: {
+																																																																																																								ctor: '::',
+																																																																																																								_0: {ctor: '_Tuple2', _0: 1492, _1: 189},
+																																																																																																								_1: {
+																																																																																																									ctor: '::',
+																																																																																																									_0: {ctor: '_Tuple2', _0: 1429, _1: 201},
+																																																																																																									_1: {
+																																																																																																										ctor: '::',
+																																																																																																										_0: {ctor: '_Tuple2', _0: 1435, _1: 225},
+																																																																																																										_1: {
+																																																																																																											ctor: '::',
+																																																																																																											_0: {ctor: '_Tuple2', _0: 1502, _1: 228},
+																																																																																																											_1: {
+																																																																																																												ctor: '::',
+																																																																																																												_0: {ctor: '_Tuple2', _0: 1538, _1: 231},
+																																																																																																												_1: {
+																																																																																																													ctor: '::',
+																																																																																																													_0: {ctor: '_Tuple2', _0: 1629, _1: 221},
+																																																																																																													_1: {
+																																																																																																														ctor: '::',
+																																																																																																														_0: {ctor: '_Tuple2', _0: 1438, _1: 276},
+																																																																																																														_1: {
+																																																																																																															ctor: '::',
+																																																																																																															_0: {ctor: '_Tuple2', _0: 1494, _1: 292},
+																																																																																																															_1: {
+																																																																																																																ctor: '::',
+																																																																																																																_0: {ctor: '_Tuple2', _0: 1593, _1: 269},
+																																																																																																																_1: {
+																																																																																																																	ctor: '::',
+																																																																																																																	_0: {ctor: '_Tuple2', _0: 1414, _1: 310},
+																																																																																																																	_1: {
+																																																																																																																		ctor: '::',
+																																																																																																																		_0: {ctor: '_Tuple2', _0: 1376, _1: 367},
+																																																																																																																		_1: {
+																																																																																																																			ctor: '::',
+																																																																																																																			_0: {ctor: '_Tuple2', _0: 1649, _1: 280},
+																																																																																																																			_1: {
+																																																																																																																				ctor: '::',
+																																																																																																																				_0: {ctor: '_Tuple2', _0: 1673, _1: 286},
+																																																																																																																				_1: {
+																																																																																																																					ctor: '::',
+																																																																																																																					_0: {ctor: '_Tuple2', _0: 1687, _1: 349},
+																																																																																																																					_1: {
+																																																																																																																						ctor: '::',
+																																																																																																																						_0: {ctor: '_Tuple2', _0: 1724, _1: 323},
+																																																																																																																						_1: {
+																																																																																																																							ctor: '::',
+																																																																																																																							_0: {ctor: '_Tuple2', _0: 1690, _1: 385},
+																																																																																																																							_1: {
+																																																																																																																								ctor: '::',
+																																																																																																																								_0: {ctor: '_Tuple2', _0: 1739, _1: 382},
+																																																																																																																								_1: {
+																																																																																																																									ctor: '::',
+																																																																																																																									_0: {ctor: '_Tuple2', _0: 1767, _1: 474},
+																																																																																																																									_1: {
+																																																																																																																										ctor: '::',
+																																																																																																																										_0: {ctor: '_Tuple2', _0: 1801, _1: 482},
+																																																																																																																										_1: {
+																																																																																																																											ctor: '::',
+																																																																																																																											_0: {ctor: '_Tuple2', _0: 1807, _1: 507},
+																																																																																																																											_1: {
+																																																																																																																												ctor: '::',
+																																																																																																																												_0: {ctor: '_Tuple2', _0: 1901, _1: 462},
+																																																																																																																												_1: {
+																																																																																																																													ctor: '::',
+																																																																																																																													_0: {ctor: '_Tuple2', _0: 1816, _1: 530},
+																																																																																																																													_1: {
+																																																																																																																														ctor: '::',
+																																																																																																																														_0: {ctor: '_Tuple2', _0: 1868, _1: 514},
+																																																																																																																														_1: {
+																																																																																																																															ctor: '::',
+																																																																																																																															_0: {ctor: '_Tuple2', _0: 1864, _1: 540},
+																																																																																																																															_1: {
+																																																																																																																																ctor: '::',
+																																																																																																																																_0: {ctor: '_Tuple2', _0: 1901, _1: 543},
+																																																																																																																																_1: {
+																																																																																																																																	ctor: '::',
+																																																																																																																																	_0: {ctor: '_Tuple2', _0: 1898, _1: 590},
+																																																																																																																																	_1: {
+																																																																																																																																		ctor: '::',
+																																																																																																																																		_0: {ctor: '_Tuple2', _0: 1881, _1: 635},
+																																																																																																																																		_1: {
+																																																																																																																																			ctor: '::',
+																																																																																																																																			_0: {ctor: '_Tuple2', _0: 1906, _1: 622},
+																																																																																																																																			_1: {
+																																																																																																																																				ctor: '::',
+																																																																																																																																				_0: {ctor: '_Tuple2', _0: 1885, _1: 717},
+																																																																																																																																				_1: {ctor: '[]'}
+																																																																																																																																			}
+																																																																																																																																		}
+																																																																																																																																	}
+																																																																																																																																}
+																																																																																																																															}
+																																																																																																																														}
+																																																																																																																													}
+																																																																																																																												}
+																																																																																																																											}
+																																																																																																																										}
+																																																																																																																									}
+																																																																																																																								}
+																																																																																																																							}
+																																																																																																																						}
+																																																																																																																					}
+																																																																																																																				}
+																																																																																																																			}
+																																																																																																																		}
+																																																																																																																	}
+																																																																																																																}
+																																																																																																															}
+																																																																																																														}
+																																																																																																													}
+																																																																																																												}
+																																																																																																											}
+																																																																																																										}
+																																																																																																									}
+																																																																																																								}
+																																																																																																							}
+																																																																																																						}
+																																																																																																					}
+																																																																																																				}
+																																																																																																			}
+																																																																																																		}
+																																																																																																	}
+																																																																																																}
+																																																																																															}
+																																																																																														}
+																																																																																													}
+																																																																																												}
+																																																																																											}
+																																																																																										}
+																																																																																									}
+																																																																																								}
+																																																																																							}
+																																																																																						}
+																																																																																					}
+																																																																																				}
+																																																																																			}
+																																																																																		}
+																																																																																	}
+																																																																																}
+																																																																															}
+																																																																														}
+																																																																													}
+																																																																												}
+																																																																											}
+																																																																										}
+																																																																									}
+																																																																								}
+																																																																							}
+																																																																						}
+																																																																					}
+																																																																				}
+																																																																			}
+																																																																		}
+																																																																	}
+																																																																}
+																																																															}
+																																																														}
+																																																													}
+																																																												}
+																																																											}
+																																																										}
+																																																									}
+																																																								}
+																																																							}
+																																																						}
+																																																					}
+																																																				}
+																																																			}
+																																																		}
+																																																	}
+																																																}
+																																															}
+																																														}
+																																													}
+																																												}
+																																											}
+																																										}
+																																									}
+																																								}
+																																							}
+																																						}
+																																					}
+																																				}
+																																			}
+																																		}
+																																	}
+																																}
+																															}
+																														}
+																													}
+																												}
+																											}
+																										}
+																									}
+																								}
+																							}
+																						}
+																					}
+																				}
+																			}
+																		}
+																	}
+																}
+															}
+														}
+													}
+												}
+											}
+										}
+									}
+								}
+							}
+						}
+					}
+				}
+			}
+		}
+	}
+};
+var _strelka_2017$phi$Simulation_NodeList$tupleToCoords = function (_p0) {
+	var _p1 = _p0;
+	return {
+		x: _elm_lang$core$Basics$toFloat(_p1._0),
+		y: _elm_lang$core$Basics$toFloat(_p1._1)
+	};
+};
+
 var _strelka_2017$phi$Simulation_WeatherList$weatherTupleToWeather = function (_p0) {
 	var _p1 = _p0;
 	return {sun: _p1._0, wind: _p1._1};
@@ -20637,11 +21343,25 @@ var _strelka_2017$phi$Simulation_Init_Generators$generateEdge = A2(
 		_strelka_2017$phi$Simulation_GraphUpdates$createEdge,
 		A2(_elm_lang$core$Random$int, 0, 10),
 		A2(_elm_lang$core$Random$int, 0, 10)));
-var _strelka_2017$phi$Simulation_Init_Generators$coordsGenerator = A3(
-	_elm_lang$core$Random$map2,
-	_strelka_2017$phi$Simulation_Model$Coords,
-	A2(_elm_lang$core$Random$float, 30.5234 - 1.0e-2, 30.5234 + 1.0e-2),
-	A2(_elm_lang$core$Random$float, 50.4501 - 1.0e-2, 50.4501 + 1.0e-2));
+var _strelka_2017$phi$Simulation_Init_Generators$coordsGenerator = function () {
+	var coordsLimit = _elm_lang$core$List$length(_strelka_2017$phi$Simulation_NodeList$peerList) - 1;
+	var coordsFunc = function (_p0) {
+		return A2(
+			_elm_lang$core$Maybe$withDefault,
+			A2(_strelka_2017$phi$Simulation_Model$Coords, 0, 0),
+			A2(
+				_elm_lang$core$Maybe$map,
+				_strelka_2017$phi$Simulation_NodeList$tupleToCoords,
+				A2(
+					_elm_lang$core$Basics$flip,
+					_elm_lang$core$Array$get,
+					_elm_lang$core$Array$fromList(_strelka_2017$phi$Simulation_NodeList$peerList))(_p0)));
+	};
+	return A2(
+		_elm_lang$core$Random$map,
+		coordsFunc,
+		A2(_elm_lang$core$Random$int, 0, coordsLimit));
+}();
 var _strelka_2017$phi$Simulation_Init_Generators$generatePVPanel = A2(
 	_elm_lang$core$Random$generate,
 	_strelka_2017$phi$Action$AddGenerator,
@@ -20717,7 +21437,7 @@ var _strelka_2017$phi$Model$initGenerators = A2(
 	A2(_elm_lang$core$List$repeat, 12, _strelka_2017$phi$Simulation_Init_Generators$generateEdge),
 	A2(
 		_elm_lang$core$Basics_ops['++'],
-		A2(_elm_lang$core$List$repeat, 2, _strelka_2017$phi$Simulation_Init_Generators$generatePeer),
+		A2(_elm_lang$core$List$repeat, 20, _strelka_2017$phi$Simulation_Init_Generators$generatePeer),
 		A2(
 			_elm_lang$core$Basics_ops['++'],
 			A2(_elm_lang$core$List$repeat, 4, _strelka_2017$phi$Simulation_Init_Generators$generatePVPanel),
@@ -21530,94 +22250,6 @@ var _strelka_2017$phi$Chat_Narrative$daySummary = function (model) {
 			}));
 };
 
-var _strelka_2017$phi$Chat_View$viewChatMsg = function (chatItem) {
-	var textContent = function (msgText) {
-		return {
-			ctor: '::',
-			_0: A2(
-				_elm_lang$html$Html$div,
-				{
-					ctor: '::',
-					_0: _elm_lang$html$Html_Attributes$class('text_wrapper'),
-					_1: {ctor: '[]'}
-				},
-				{
-					ctor: '::',
-					_0: A2(
-						_elm_lang$html$Html$div,
-						{
-							ctor: '::',
-							_0: _elm_lang$html$Html_Attributes$class('text'),
-							_1: {ctor: '[]'}
-						},
-						{
-							ctor: '::',
-							_0: _elm_lang$html$Html$text(msgText),
-							_1: {ctor: '[]'}
-						}),
-					_1: {ctor: '[]'}
-				}),
-			_1: {ctor: '[]'}
-		};
-	};
-	var messageHeader = function (name) {
-		return A2(
-			_elm_lang$html$Html$div,
-			{
-				ctor: '::',
-				_0: _elm_lang$html$Html_Attributes$class('message_header'),
-				_1: {ctor: '[]'}
-			},
-			{
-				ctor: '::',
-				_0: _elm_lang$html$Html$text(name),
-				_1: {ctor: '[]'}
-			});
-	};
-	var messageWrapper = F2(
-		function (senderClass, children) {
-			return A2(
-				_elm_lang$html$Html$li,
-				{
-					ctor: '::',
-					_0: _elm_lang$html$Html_Attributes$class(
-						A2(_elm_lang$core$Basics_ops['++'], 'message appeared ', senderClass)),
-					_1: {ctor: '[]'}
-				},
-				children);
-		});
-	var _p0 = chatItem;
-	if (_p0.ctor === 'UserMessage') {
-		return A2(
-			messageWrapper,
-			'user-sent',
-			textContent(_p0._0));
-	} else {
-		var contents = function () {
-			var _p1 = _p0._0;
-			switch (_p1.ctor) {
-				case 'BotMessage':
-					return textContent(_p1._0);
-				case 'WidgetItem':
-					return textContent('rendering a fancy widget');
-				default:
-					return textContent(_p1._0.text);
-			}
-		}();
-		return A2(
-			messageWrapper,
-			'bot-sent',
-			A2(
-				_elm_lang$core$Basics_ops['++'],
-				{
-					ctor: '::',
-					_0: messageHeader('Phi'),
-					_1: {ctor: '[]'}
-				},
-				contents));
-	}
-};
-
 var _strelka_2017$phi$Simulation_Encoding$pos = function (nodeLabel) {
 	var _p0 = nodeLabel;
 	switch (_p0.ctor) {
@@ -22265,237 +22897,7 @@ var _strelka_2017$phi$Update$weatherForecast = function (model) {
 			model));
 };
 
-var _strelka_2017$phi$View$viewMCA = function (action) {
-	return A2(
-		_debois$elm_mdl$Material_Chip$span,
-		{
-			ctor: '::',
-			_0: _debois$elm_mdl$Material_Options$cs('multi_button'),
-			_1: {
-				ctor: '::',
-				_0: _debois$elm_mdl$Material_Options$onClick(
-					_strelka_2017$phi$Action$MultiChoiceMsg(action)),
-				_1: {ctor: '[]'}
-			}
-		},
-		{
-			ctor: '::',
-			_0: A2(
-				_debois$elm_mdl$Material_Chip$text,
-				{ctor: '[]'},
-				_strelka_2017$phi$Chat_Model$mcaName(action)),
-			_1: {ctor: '[]'}
-		});
-};
-var _strelka_2017$phi$View$freeTextFooter = function (model) {
-	var isEnter = function (num) {
-		var _p0 = num;
-		if (_p0 === 13) {
-			return _strelka_2017$phi$Action$SendUserChatMsg;
-		} else {
-			return _strelka_2017$phi$Action$NoOp;
-		}
-	};
-	var onEnter = A2(
-		_elm_lang$html$Html_Events$on,
-		'keyup',
-		A2(_elm_lang$core$Json_Decode$map, isEnter, _elm_lang$html$Html_Events$keyCode));
-	return A2(
-		_elm_lang$html$Html$div,
-		{
-			ctor: '::',
-			_0: _elm_lang$html$Html_Attributes$class('input_container'),
-			_1: {ctor: '[]'}
-		},
-		{
-			ctor: '::',
-			_0: A2(
-				_elm_lang$html$Html$input,
-				{
-					ctor: '::',
-					_0: _elm_lang$html$Html_Attributes$class('message_input'),
-					_1: {
-						ctor: '::',
-						_0: _elm_lang$html$Html_Attributes$autofocus(true),
-						_1: {
-							ctor: '::',
-							_0: onEnter,
-							_1: {
-								ctor: '::',
-								_0: _elm_lang$html$Html_Events$onInput(_strelka_2017$phi$Action$Input),
-								_1: {
-									ctor: '::',
-									_0: _elm_lang$html$Html_Attributes$value(model.input),
-									_1: {ctor: '[]'}
-								}
-							}
-						}
-					}
-				},
-				{ctor: '[]'}),
-			_1: {
-				ctor: '::',
-				_0: A2(
-					_elm_lang$html$Html$div,
-					{
-						ctor: '::',
-						_0: _elm_lang$html$Html_Attributes$class('hline'),
-						_1: {ctor: '[]'}
-					},
-					{ctor: '[]'}),
-				_1: {
-					ctor: '::',
-					_0: A5(
-						_debois$elm_mdl$Material_Button$render,
-						_strelka_2017$phi$Action$Mdl,
-						{
-							ctor: '::',
-							_0: 0,
-							_1: {ctor: '[]'}
-						},
-						model.mdl,
-						{
-							ctor: '::',
-							_0: _debois$elm_mdl$Material_Button$flat,
-							_1: {
-								ctor: '::',
-								_0: _debois$elm_mdl$Material_Options$onClick(_strelka_2017$phi$Action$SendUserChatMsg),
-								_1: {
-									ctor: '::',
-									_0: _debois$elm_mdl$Material_Options$cs('send_button'),
-									_1: {ctor: '[]'}
-								}
-							}
-						},
-						{
-							ctor: '::',
-							_0: _elm_lang$html$Html$text('Send'),
-							_1: {ctor: '[]'}
-						}),
-					_1: {ctor: '[]'}
-				}
-			}
-		});
-};
-var _strelka_2017$phi$View$multiChoiceFooter = function (model) {
-	var toMultiChoiceActionList = function (chatItem) {
-		var _p1 = chatItem;
-		if (_p1.ctor === 'BotItem') {
-			var _p2 = _p1._0;
-			if (_p2.ctor === 'MultiChoiceItem') {
-				return _elm_lang$core$Maybe$Just(_p2._0.options);
-			} else {
-				return _elm_lang$core$Maybe$Nothing;
-			}
-		} else {
-			return _elm_lang$core$Maybe$Nothing;
-		}
-	};
-	var lastMultiChoiceActionList = A2(
-		_elm_lang$core$Maybe$withDefault,
-		{
-			ctor: '::',
-			_0: _strelka_2017$phi$Chat_Model$McaRunDay,
-			_1: {ctor: '[]'}
-		},
-		_elm_lang$core$List$head(
-			A2(_elm_lang$core$List$filterMap, toMultiChoiceActionList, model.messages)));
-	return A2(
-		_elm_lang$html$Html$div,
-		{
-			ctor: '::',
-			_0: _elm_lang$html$Html_Attributes$class('input_container'),
-			_1: {ctor: '[]'}
-		},
-		A2(_elm_lang$core$List$map, _strelka_2017$phi$View$viewMCA, lastMultiChoiceActionList));
-};
-var _strelka_2017$phi$View$inputFooter = function (model) {
-	var inputCountainer = function () {
-		var _p3 = model.inputType;
-		if (_p3.ctor === 'FreeTextInput') {
-			return _strelka_2017$phi$View$freeTextFooter(model);
-		} else {
-			return _strelka_2017$phi$View$multiChoiceFooter(model);
-		}
-	}();
-	var toggleIcon = function () {
-		var _p4 = model.inputType;
-		if (_p4.ctor === 'FreeTextInput') {
-			return 'view_agenda';
-		} else {
-			return 'text_format';
-		}
-	}();
-	return A2(
-		_elm_lang$html$Html$div,
-		{
-			ctor: '::',
-			_0: _elm_lang$html$Html_Attributes$class('input_footer'),
-			_1: {ctor: '[]'}
-		},
-		{
-			ctor: '::',
-			_0: A2(
-				_debois$elm_mdl$Material_Options$div,
-				{
-					ctor: '::',
-					_0: _debois$elm_mdl$Material_Elevation$e2,
-					_1: {
-						ctor: '::',
-						_0: _debois$elm_mdl$Material_Options$cs('input_wrapper'),
-						_1: {ctor: '[]'}
-					}
-				},
-				{
-					ctor: '::',
-					_0: A5(
-						_debois$elm_mdl$Material_Button$render,
-						_strelka_2017$phi$Action$Mdl,
-						{
-							ctor: '::',
-							_0: 0,
-							_1: {ctor: '[]'}
-						},
-						model.mdl,
-						{
-							ctor: '::',
-							_0: _debois$elm_mdl$Material_Button$icon,
-							_1: {
-								ctor: '::',
-								_0: _debois$elm_mdl$Material_Options$cs('input_type'),
-								_1: {
-									ctor: '::',
-									_0: _debois$elm_mdl$Material_Options$onClick(_strelka_2017$phi$Action$ToggleInputType),
-									_1: {ctor: '[]'}
-								}
-							}
-						},
-						{
-							ctor: '::',
-							_0: _debois$elm_mdl$Material_Icon$i(toggleIcon),
-							_1: {ctor: '[]'}
-						}),
-					_1: {
-						ctor: '::',
-						_0: A2(
-							_elm_lang$html$Html$div,
-							{
-								ctor: '::',
-								_0: _elm_lang$html$Html_Attributes$class('hline'),
-								_1: {ctor: '[]'}
-							},
-							{ctor: '[]'}),
-						_1: {
-							ctor: '::',
-							_0: inputCountainer,
-							_1: {ctor: '[]'}
-						}
-					}
-				}),
-			_1: {ctor: '[]'}
-		});
-};
-var _strelka_2017$phi$View$phiCoin = function (budget) {
+var _strelka_2017$phi$View_Helpers$phiCoin = function (budget) {
 	return A2(
 		F2(
 			function (x, y) {
@@ -22510,15 +22912,16 @@ var _strelka_2017$phi$View$phiCoin = function (budget) {
 				0,
 				_elm_lang$core$List$head(budget))));
 };
-var _strelka_2017$phi$View$intFmt = function (num) {
+var _strelka_2017$phi$View_Helpers$intFmt = function (num) {
 	return A2(
 		_cuducos$elm_format_number$FormatNumber$format,
 		{decimals: 0, thousandSeparator: ',', decimalSeparator: '.'},
 		_elm_lang$core$Basics$toFloat(num));
 };
-var _strelka_2017$phi$View$chatHeader = function (model) {
+
+var _strelka_2017$phi$View_ChatHeader$viewChatHeader = function (model) {
 	var siteName = model.siteInfo.name;
-	var sitePop = _strelka_2017$phi$View$intFmt(model.siteInfo.population);
+	var sitePop = _strelka_2017$phi$View_Helpers$intFmt(model.siteInfo.population);
 	var ccText = A2(
 		_elm_lang$html$Html$div,
 		{
@@ -22766,8 +23169,7 @@ var _strelka_2017$phi$View$chatHeader = function (model) {
 																	{
 																		ctor: '::',
 																		_0: _elm_lang$html$Html$text(
-																			_strelka_2017$phi$View$phiCoin(
-																				_strelka_2017$phi$ListHelpers$takeFirstElementWithDefault0(model.budget))),
+																			_strelka_2017$phi$View_Helpers$phiCoin(model.budget)),
 																		_1: {ctor: '[]'}
 																	}),
 																_1: {ctor: '[]'}
@@ -22781,6 +23183,349 @@ var _strelka_2017$phi$View$chatHeader = function (model) {
 								}
 							}),
 						_1: {ctor: '[]'}
+					}
+				}),
+			_1: {ctor: '[]'}
+		});
+};
+var _strelka_2017$phi$View_ChatHeader$renderShape = F2(
+	function (icon, size) {
+		var _p0 = icon;
+		switch (_p0.ctor) {
+			case 'PeerIcon':
+				return A2(
+					_elm_lang$svg$Svg$svg,
+					{ctor: '[]'},
+					{ctor: '[]'});
+			case 'WTIcon':
+				return A2(
+					_elm_lang$svg$Svg$svg,
+					{ctor: '[]'},
+					{ctor: '[]'});
+			default:
+				return A2(
+					_elm_lang$svg$Svg$svg,
+					{ctor: '[]'},
+					{ctor: '[]'});
+		}
+	});
+var _strelka_2017$phi$View_ChatHeader$PVIcon = {ctor: 'PVIcon'};
+var _strelka_2017$phi$View_ChatHeader$WTIcon = {ctor: 'WTIcon'};
+var _strelka_2017$phi$View_ChatHeader$PeerIcon = {ctor: 'PeerIcon'};
+
+var _strelka_2017$phi$View_ChatMessage$viewChatMessage = function (chatItem) {
+	var textContent = function (msgText) {
+		return {
+			ctor: '::',
+			_0: A2(
+				_elm_lang$html$Html$div,
+				{
+					ctor: '::',
+					_0: _elm_lang$html$Html_Attributes$class('text_wrapper'),
+					_1: {ctor: '[]'}
+				},
+				{
+					ctor: '::',
+					_0: A2(
+						_elm_lang$html$Html$div,
+						{
+							ctor: '::',
+							_0: _elm_lang$html$Html_Attributes$class('text'),
+							_1: {ctor: '[]'}
+						},
+						{
+							ctor: '::',
+							_0: _elm_lang$html$Html$text(msgText),
+							_1: {ctor: '[]'}
+						}),
+					_1: {ctor: '[]'}
+				}),
+			_1: {ctor: '[]'}
+		};
+	};
+	var messageHeader = function (name) {
+		return A2(
+			_elm_lang$html$Html$div,
+			{
+				ctor: '::',
+				_0: _elm_lang$html$Html_Attributes$class('message_header'),
+				_1: {ctor: '[]'}
+			},
+			{
+				ctor: '::',
+				_0: _elm_lang$html$Html$text(name),
+				_1: {ctor: '[]'}
+			});
+	};
+	var messageWrapper = F2(
+		function (senderClass, children) {
+			return A2(
+				_elm_lang$html$Html$li,
+				{
+					ctor: '::',
+					_0: _elm_lang$html$Html_Attributes$class(
+						A2(_elm_lang$core$Basics_ops['++'], 'message appeared ', senderClass)),
+					_1: {ctor: '[]'}
+				},
+				children);
+		});
+	var _p0 = chatItem;
+	if (_p0.ctor === 'UserMessage') {
+		return A2(
+			messageWrapper,
+			'user-sent',
+			textContent(_p0._0));
+	} else {
+		var contents = function () {
+			var _p1 = _p0._0;
+			switch (_p1.ctor) {
+				case 'BotMessage':
+					return textContent(_p1._0);
+				case 'WidgetItem':
+					return textContent('rendering a fancy widget');
+				default:
+					return textContent(_p1._0.text);
+			}
+		}();
+		return A2(
+			messageWrapper,
+			'bot-sent',
+			A2(
+				_elm_lang$core$Basics_ops['++'],
+				{
+					ctor: '::',
+					_0: messageHeader('Phi'),
+					_1: {ctor: '[]'}
+				},
+				contents));
+	}
+};
+
+var _strelka_2017$phi$View$viewMCA = function (action) {
+	return A2(
+		_debois$elm_mdl$Material_Chip$span,
+		{
+			ctor: '::',
+			_0: _debois$elm_mdl$Material_Options$cs('multi_button'),
+			_1: {
+				ctor: '::',
+				_0: _debois$elm_mdl$Material_Options$onClick(
+					_strelka_2017$phi$Action$MultiChoiceMsg(action)),
+				_1: {ctor: '[]'}
+			}
+		},
+		{
+			ctor: '::',
+			_0: A2(
+				_debois$elm_mdl$Material_Chip$text,
+				{ctor: '[]'},
+				_strelka_2017$phi$Chat_Model$mcaName(action)),
+			_1: {ctor: '[]'}
+		});
+};
+var _strelka_2017$phi$View$freeTextFooter = function (model) {
+	var isEnter = function (num) {
+		var _p0 = num;
+		if (_p0 === 13) {
+			return _strelka_2017$phi$Action$SendUserChatMsg;
+		} else {
+			return _strelka_2017$phi$Action$NoOp;
+		}
+	};
+	var onEnter = A2(
+		_elm_lang$html$Html_Events$on,
+		'keyup',
+		A2(_elm_lang$core$Json_Decode$map, isEnter, _elm_lang$html$Html_Events$keyCode));
+	return A2(
+		_elm_lang$html$Html$div,
+		{
+			ctor: '::',
+			_0: _elm_lang$html$Html_Attributes$class('input_container'),
+			_1: {ctor: '[]'}
+		},
+		{
+			ctor: '::',
+			_0: A2(
+				_elm_lang$html$Html$input,
+				{
+					ctor: '::',
+					_0: _elm_lang$html$Html_Attributes$class('message_input'),
+					_1: {
+						ctor: '::',
+						_0: _elm_lang$html$Html_Attributes$autofocus(true),
+						_1: {
+							ctor: '::',
+							_0: onEnter,
+							_1: {
+								ctor: '::',
+								_0: _elm_lang$html$Html_Events$onInput(_strelka_2017$phi$Action$Input),
+								_1: {
+									ctor: '::',
+									_0: _elm_lang$html$Html_Attributes$value(model.input),
+									_1: {ctor: '[]'}
+								}
+							}
+						}
+					}
+				},
+				{ctor: '[]'}),
+			_1: {
+				ctor: '::',
+				_0: A2(
+					_elm_lang$html$Html$div,
+					{
+						ctor: '::',
+						_0: _elm_lang$html$Html_Attributes$class('hline'),
+						_1: {ctor: '[]'}
+					},
+					{ctor: '[]'}),
+				_1: {
+					ctor: '::',
+					_0: A5(
+						_debois$elm_mdl$Material_Button$render,
+						_strelka_2017$phi$Action$Mdl,
+						{
+							ctor: '::',
+							_0: 0,
+							_1: {ctor: '[]'}
+						},
+						model.mdl,
+						{
+							ctor: '::',
+							_0: _debois$elm_mdl$Material_Button$flat,
+							_1: {
+								ctor: '::',
+								_0: _debois$elm_mdl$Material_Options$onClick(_strelka_2017$phi$Action$SendUserChatMsg),
+								_1: {
+									ctor: '::',
+									_0: _debois$elm_mdl$Material_Options$cs('send_button'),
+									_1: {ctor: '[]'}
+								}
+							}
+						},
+						{
+							ctor: '::',
+							_0: _elm_lang$html$Html$text('Send'),
+							_1: {ctor: '[]'}
+						}),
+					_1: {ctor: '[]'}
+				}
+			}
+		});
+};
+var _strelka_2017$phi$View$multiChoiceFooter = function (model) {
+	var toMultiChoiceActionList = function (chatItem) {
+		var _p1 = chatItem;
+		if (_p1.ctor === 'BotItem') {
+			var _p2 = _p1._0;
+			if (_p2.ctor === 'MultiChoiceItem') {
+				return _elm_lang$core$Maybe$Just(_p2._0.options);
+			} else {
+				return _elm_lang$core$Maybe$Nothing;
+			}
+		} else {
+			return _elm_lang$core$Maybe$Nothing;
+		}
+	};
+	var lastMultiChoiceActionList = A2(
+		_elm_lang$core$Maybe$withDefault,
+		{
+			ctor: '::',
+			_0: _strelka_2017$phi$Chat_Model$McaRunDay,
+			_1: {ctor: '[]'}
+		},
+		_elm_lang$core$List$head(
+			A2(_elm_lang$core$List$filterMap, toMultiChoiceActionList, model.messages)));
+	return A2(
+		_elm_lang$html$Html$div,
+		{
+			ctor: '::',
+			_0: _elm_lang$html$Html_Attributes$class('input_container'),
+			_1: {ctor: '[]'}
+		},
+		A2(_elm_lang$core$List$map, _strelka_2017$phi$View$viewMCA, lastMultiChoiceActionList));
+};
+var _strelka_2017$phi$View$inputFooter = function (model) {
+	var inputCountainer = function () {
+		var _p3 = model.inputType;
+		if (_p3.ctor === 'FreeTextInput') {
+			return _strelka_2017$phi$View$freeTextFooter(model);
+		} else {
+			return _strelka_2017$phi$View$multiChoiceFooter(model);
+		}
+	}();
+	var toggleIcon = function () {
+		var _p4 = model.inputType;
+		if (_p4.ctor === 'FreeTextInput') {
+			return 'view_agenda';
+		} else {
+			return 'text_format';
+		}
+	}();
+	return A2(
+		_elm_lang$html$Html$div,
+		{
+			ctor: '::',
+			_0: _elm_lang$html$Html_Attributes$class('input_footer'),
+			_1: {ctor: '[]'}
+		},
+		{
+			ctor: '::',
+			_0: A2(
+				_debois$elm_mdl$Material_Options$div,
+				{
+					ctor: '::',
+					_0: _debois$elm_mdl$Material_Elevation$e2,
+					_1: {
+						ctor: '::',
+						_0: _debois$elm_mdl$Material_Options$cs('input_wrapper'),
+						_1: {ctor: '[]'}
+					}
+				},
+				{
+					ctor: '::',
+					_0: A5(
+						_debois$elm_mdl$Material_Button$render,
+						_strelka_2017$phi$Action$Mdl,
+						{
+							ctor: '::',
+							_0: 0,
+							_1: {ctor: '[]'}
+						},
+						model.mdl,
+						{
+							ctor: '::',
+							_0: _debois$elm_mdl$Material_Button$icon,
+							_1: {
+								ctor: '::',
+								_0: _debois$elm_mdl$Material_Options$cs('input_type'),
+								_1: {
+									ctor: '::',
+									_0: _debois$elm_mdl$Material_Options$onClick(_strelka_2017$phi$Action$ToggleInputType),
+									_1: {ctor: '[]'}
+								}
+							}
+						},
+						{
+							ctor: '::',
+							_0: _debois$elm_mdl$Material_Icon$i(toggleIcon),
+							_1: {ctor: '[]'}
+						}),
+					_1: {
+						ctor: '::',
+						_0: A2(
+							_elm_lang$html$Html$div,
+							{
+								ctor: '::',
+								_0: _elm_lang$html$Html_Attributes$class('hline'),
+								_1: {ctor: '[]'}
+							},
+							{ctor: '[]'}),
+						_1: {
+							ctor: '::',
+							_0: inputCountainer,
+							_1: {ctor: '[]'}
+						}
 					}
 				}),
 			_1: {ctor: '[]'}
@@ -22809,11 +23554,11 @@ var _strelka_2017$phi$View$view = function (model) {
 				},
 				A2(
 					_elm_lang$core$List$map,
-					_strelka_2017$phi$Chat_View$viewChatMsg,
+					_strelka_2017$phi$View_ChatMessage$viewChatMessage,
 					_elm_lang$core$List$reverse(model.messages))),
 			_1: {
 				ctor: '::',
-				_0: _strelka_2017$phi$View$chatHeader(model),
+				_0: _strelka_2017$phi$View_ChatHeader$viewChatHeader(model),
 				_1: {
 					ctor: '::',
 					_0: _strelka_2017$phi$View$inputFooter(model),
