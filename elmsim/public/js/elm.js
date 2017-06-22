@@ -22766,8 +22766,7 @@ var _strelka_2017$phi$View$chatHeader = function (model) {
 																	{
 																		ctor: '::',
 																		_0: _elm_lang$html$Html$text(
-																			_strelka_2017$phi$View$phiCoin(
-																				_strelka_2017$phi$ListHelpers$takeFirstElementWithDefault0(model.budget))),
+																			_strelka_2017$phi$View$phiCoin(model.budget)),
 																		_1: {ctor: '[]'}
 																	}),
 																_1: {ctor: '[]'}
