@@ -23512,8 +23512,12 @@ var _strelka_2017$phi$Update$runDay = function (model) {
 	return A3(
 		_ccapndave$elm_update_extra$Update_Extra$andThen,
 		_strelka_2017$phi$Update$update,
-		_strelka_2017$phi$Action$RenderPhiNetwork,
-		A2(_strelka_2017$phi$Update$generateWeather, model.weatherList, newModel));
+		_strelka_2017$phi$Action$AnimateGeneration,
+		A3(
+			_ccapndave$elm_update_extra$Update_Extra$andThen,
+			_strelka_2017$phi$Update$update,
+			_strelka_2017$phi$Action$RenderPhiNetwork,
+			A2(_strelka_2017$phi$Update$generateWeather, model.weatherList, newModel)));
 };
 var _strelka_2017$phi$Update$generateWeather = function (list) {
 	var currentList = _strelka_2017$phi$Simulation_WeatherList$restWeather(list);

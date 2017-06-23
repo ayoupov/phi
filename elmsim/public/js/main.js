@@ -242,62 +242,71 @@ $(function () {
 
     var clickOnPotential = function (d) {
         app.ports.requestConvertNode.send(d.id);
+        potentialNodes = potentialNodes.filter(function(n){return n.id !== d.id});
+        killPotentials();
+        var nodes = svg.select(".nodes").selectAll(".potential")
+            .data(potentialNodes, function (d) {
+                return d.id;
+            });
+        drawPotentials(nodes);
     };
 
     var potentialNodes;
 
-    app.ports.toggleBuildMode.subscribe(function (isEnteringBuildMode) {
+    function drawPotentials(nodes) {
+
         var t = d3.transition().duration(1000);
 
-        //phiNetwork = model;
+        var nodeEnter = nodes.enter().append("g")
+            .attr("class", function (d) {
+                var classStr = "node potential " + d.label.nodeType;
+                return classStr;
+            });
+
+        nodeEnter.append("path")
+            .attr("d", addBaseNode())
+            .attr('transform', function (d) {
+                return "translate(" + (setX(d)) + "," + (setY(d)) + ")";
+            })
+            .attr("class", "baseNode");
+
+        nodes.selectAll(".potential")
+            .attr("stroke-opacity", "0")
+            .attr("fill-opacity", "0")
+            .style("opacity", "0")
+            .transition(t)
+            .style("opacity", "1")
+            .attr("stroke-opacity", "1")
+            .attr("fill-opacity", "1")
+            .attr('transform', function (d) {
+                return "translate(" + (setX(d)) + "," + (setY(d)) + ")";
+            })
+            .call(endall, function () {
+                app.ports.animationFinished.send("enterBuildModeAnimated");
+            });
+
+        var potentials = d3.selectAll(".potential");
+        potentials
+            .on("click", clickOnPotential);
+
+        nodes.exit()
+            .remove()
+    }
+
+    function killPotentials() {
+        d3.selectAll(".potential")
+            .remove();
+
+        app.ports.animationFinished.send("exitBuildModeAnimated");
+    }
+
+    app.ports.toggleBuildMode.subscribe(function (isEnteringBuildMode) {
         var phiPotentialNodes = potentialNodes;
 
         var nodes = svg.select(".nodes").selectAll(".potential")
             .data(phiPotentialNodes, function (d) {
                 return d.id;
             });
-
-        function drawPotentials(nodes) {
-
-            var nodeEnter = nodes.enter().append("g")
-                .attr("class", function (d) {
-                    var classStr = "node potential " + d.label.nodeType;
-                    return classStr;
-                });
-
-            nodeEnter.append("path")
-                .attr("d", addBaseNode())
-                .attr('transform', function (d) {
-                    return "translate(" + (setX(d)) + "," + (setY(d)) + ")";
-                })
-                .attr("class", "baseNode");
-
-            nodes.selectAll(".potential")
-                .attr("stroke-opacity", "0")
-                .attr("fill-opacity", "0")
-                .style("opacity", "0")
-                .transition(t)
-                .style("opacity", "1")
-                .attr("stroke-opacity", "1")
-                .attr("fill-opacity", "1")
-                .attr('transform', function (d) {
-                    return "translate(" + (setX(d)) + "," + (setY(d)) + ")";
-                })
-                .call(endall, function () {
-                    app.ports.animationFinished.send("enterBuildModeAnimated");
-                });
-
-            var potentials = d3.selectAll(".potential");
-            potentials
-                .on("click", clickOnPotential);
-        }
-
-        function killPotentials() {
-            d3.selectAll(".potential")
-                .remove();
-
-            app.ports.animationFinished.send("exitBuildModeAnimated");
-        }
 
         if (isEnteringBuildMode)
             drawPotentials(nodes);
@@ -384,15 +393,15 @@ $(function () {
                 .style("opacity", "0")
                 .call(endall, function () {
                     // todo: fix ugly hack
-                    var signalSent = false;
-                    d3.select('.simulation .peer')
-                        .each(
-                            function (d) {
-                                if (!signalSent && d.label && d.label.actualConsumption && d.label.actualConsumption.length > 1) {
-                                    signalSent = true;
-                                    app.ports.animationFinished.send("layoutRendered");
-                                }
-                            });
+                    //var signalSent = false;
+                    //d3.select('.simulation .peer')
+                    //    .each(
+                    //        function (d) {
+                    //            if (!signalSent && d.label && d.label.actualConsumption && d.label.actualConsumption.length > 1) {
+                    //                signalSent = true;
+                    //                app.ports.animationFinished.send("layoutRendered");
+                    //            }
+                    //        });
                 });
 
 

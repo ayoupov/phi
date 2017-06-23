@@ -252,6 +252,7 @@ runDay model =
         |> generateWeather model.weatherList
         --        ! [ generateWeather model.weatherList]
         |> andThen update RenderPhiNetwork
+        |> andThen update AnimateGeneration
 
 
 weatherForecast : Model -> ( Model, Cmd Msg )
