@@ -213,7 +213,7 @@ $(function () {
                 return d.id;
             });
 
-        nodes.select(".peer .energyIndicator")
+        nodes.select(".simulation .peer .energyIndicator")
             .attr("d", function (d) {
                 return (peerOutline()(d));
             })
@@ -228,7 +228,7 @@ $(function () {
                 return "translate(" + (setX(d)) + "," + (setY(d)) + ")";
             });
 
-        nodes.select(".generator .energyIndicator")
+        nodes.select(".simulation .generator .energyIndicator")
             .transition(t)
             .attr("d", function (d) {
                 //return "M0,0";
@@ -306,7 +306,7 @@ $(function () {
                 return d.id;
             });
 
-        nodes.select(".generator .energyIndicator")
+        nodes.select(".simulation .generator .energyIndicator")
             .transition(t)
             .attr("d", function (d) {
                 return (transactionShadow()(d));
@@ -370,13 +370,13 @@ $(function () {
                 })
                 .attr("class", "energyIndicator");
 
-            nodes.select('.peer .energyIndicator')
+            nodes.select('.simulation .peer .energyIndicator')
                 .transition(t)
                 .style("opacity", "0")
                 .call(endall, function () {
                     // todo: fix ugly hack
                     var signalSent = false;
-                    d3.select('.peer')
+                    d3.select('.simulation .peer')
                         .each(
                             function (d) {
                                 if (!signalSent && d.label && d.label.actualConsumption && d.label.actualConsumption.length > 1) {
@@ -433,7 +433,10 @@ $(function () {
 
         }
 
-        drawNodes(phiNodes);
+        var liveNodes = phiNodes.filter(function(node) {
+            return (! node.label.isPotential);
+        });
+        drawNodes(liveNodes);
         drawLinks(phiEdges);
 
     });

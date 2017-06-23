@@ -38,6 +38,35 @@ daySummary model =
             ]
 
 
+enterBuildMode : BotChatItem
+enterBuildMode =
+    let
+        text =
+            "Entering Build Mode! The newly illuminated nodes "
+                ++ "represent potential peers (circles) whom you can invite to your"
+                ++ "Phi community, and generators (squares) that you can purchase"
+                ++ " in order to provide more energy to your network."
+    in
+    MultiChoiceItem <|
+        MultiChoiceMessage text
+            [ McaLeaveBuildMode
+            ]
+
+
+exitBuildMode : BotChatItem
+exitBuildMode =
+    let
+        text =
+            "You've just added X pieces of Y, spending ZZZ PhiCoin."
+    in
+    MultiChoiceItem <|
+        MultiChoiceMessage text
+            [ McaWeatherForecast
+            , McaRunDay
+            , McaChangeDesign
+            ]
+
+
 dayBeginning : Model -> BotChatItem
 dayBeginning model =
     let

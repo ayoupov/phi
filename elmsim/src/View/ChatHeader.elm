@@ -5,7 +5,8 @@ import Html exposing (Html, b, br, div, p, span, text)
 import Html.Attributes exposing (class)
 import Material.Icon as Icon
 import Model exposing (Model)
-import Svg exposing (svg)
+import Svg exposing (circle, polygon, rect, svg)
+import Svg.Attributes as SVG
 import View.Helpers exposing (intFmt, phiCoin)
 
 
@@ -33,6 +34,9 @@ viewChatHeader model =
     let
         pt theText =
             p [] [ text theText ]
+
+        peerIcon =
+            svg [ SVG.width "15", SVG.height "15", SVG.class "node peer" ] [ circle [] [] ]
 
         phText =
             div [ class "ph_text" ]
@@ -74,7 +78,12 @@ viewChatHeader model =
                     ]
                 , div [ class "hline" ] []
                 , div [ class "status_section" ]
-                    [ div [ class "budget_status" ]
+                    [ div [ class "node_counts" ]
+                        [ div [] [ text "Peers", peerIcon, text <| toString 24 ]
+                        , div [] [ text "Solar Panels", peerIcon, text <| toString 6 ]
+                        , div [] [ text "Wind Turbines", peerIcon, text <| toString 8 ]
+                        ]
+                    , div [ class "budget_status" ]
                         [ b [] [ text "BUDGET" ]
                         , br [] []
                         , span [ class "budget_coin" ] [ text <| phiCoin model.budget ]

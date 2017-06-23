@@ -38,6 +38,7 @@ type MultiChoiceAction
     | McaRunWeek
     | McaWeatherForecast
     | McaChangeDesign
+    | McaLeaveBuildMode
     | McaSelectLocation Int
 
 
@@ -55,6 +56,9 @@ mcaName action =
 
         McaRunWeek ->
             "Next Week"
+
+        McaLeaveBuildMode ->
+            "Leave Build Mode"
 
         McaSelectLocation n ->
             "Selection some location"

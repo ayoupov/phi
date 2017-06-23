@@ -104,6 +104,11 @@ body {
   margin-right: 5px;
 }
 
+.node_counts {
+  padding: 10 0 10 0;
+  color: #338;
+  font-size: 0.9em;
+}
 
 .ph_text b {
   font-size: 1.95em
