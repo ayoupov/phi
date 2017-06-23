@@ -1,23 +1,23 @@
 var phiNetwork;
 
 var svg = d3.select("body")
-            .insert("div", ":first-child")
-            .attr("class", "simulation")
-            .append("svg");
+    .insert("div", ":first-child")
+    .attr("class", "simulation")
+    .append("svg");
 
 var svg = d3.select("svg")
-            .attr("height", window.innerHeight)
-            .attr("width", window.innerWidth);
+    .attr("height", window.innerHeight)
+    .attr("width", window.innerWidth);
 
 var xZoomScale = d3.scaleLinear()
-    .domain([0,1920])
+    .domain([0, 1920])
     .range([0, 100]);
 
 var zoom = d3.zoom()
-             //.extent([[0,0],[1920,1080]])
-             .scaleExtent([0.75, 40])
-             .translateExtent([[0,0],[1920,1080]])
-             .on("zoom", zoomed);
+    //.extent([[0,0],[1920,1080]])
+    .scaleExtent([0.75, 40])
+    .translateExtent([[0, 0], [1920, 1080]])
+    .on("zoom", zoomed);
 
 var GRIDLINE_SIZE = 100;
 
@@ -36,54 +36,54 @@ var GRIDLINE_SIZE = 100;
 //}
 
 function drawGridlines(svgElt, size) {
-    var cornerSize = size/20;
+    var cornerSize = size / 20;
     var simHeight = Number(svgElt.attr("height"));
     var simWidth = Number(svgElt.attr("width"));
 
-    var xTickValues = d3.range(0, simWidth*2, size);
-    var yTickValues = d3.range(0, simHeight*2, size);
+    var xTickValues = d3.range(0, simWidth * 2, size);
+    var yTickValues = d3.range(0, simHeight * 2, size);
 
     var xGridScale = d3.scaleLinear()
-                       .domain([0, simWidth])
-                       .range([0, simWidth]);
+        .domain([0, simWidth])
+        .range([0, simWidth]);
 
     var yGridScale = d3.scaleLinear()
-                       .domain([0, simHeight])
-                       .range([0, simHeight]);
+        .domain([0, simHeight])
+        .range([0, simHeight]);
 
     var xGridlines = d3.axisTop(xGridScale)
-                       .tickFormat("")
-                       .tickValues(xTickValues)
-                       .tickSize(-simHeight*2)
-                       .tickSizeOuter(0);
+        .tickFormat("")
+        .tickValues(xTickValues)
+        .tickSize(-simHeight * 2)
+        .tickSizeOuter(0);
 
     var yGridlines = d3.axisLeft(yGridScale)
-                       .tickFormat("")
-                       .tickValues(yTickValues)
-                       .tickSize(-simWidth*2)
-                       .tickSizeOuter(0);
+        .tickFormat("")
+        .tickValues(yTickValues)
+        .tickSize(-simWidth * 2)
+        .tickSizeOuter(0);
 
 
     svgElt.append("g")
-          .attr("class", "gridlines")
-          .call(xGridlines);
+        .attr("class", "gridlines")
+        .call(xGridlines);
 
     svgElt.append("g")
-          .attr("class", "gridlines")
-          .call(yGridlines);
+        .attr("class", "gridlines")
+        .call(yGridlines);
 
     svgElt.append("g")
-          .attr("class", "corner_gridlines")
-          .call(xGridlines);
+        .attr("class", "corner_gridlines")
+        .call(xGridlines);
 
     svgElt.append("g")
-          .attr("class", "corner_gridlines")
-          .call(yGridlines);
+        .attr("class", "corner_gridlines")
+        .call(yGridlines);
 
-    var cornerLength = size/10;
+    var cornerLength = size / 10;
     svgElt.selectAll(".corner_gridlines .tick line")
-          .attr("stroke-dasharray", cornerLength + "," + (size-cornerLength))
-          .attr("stroke-dashoffset", cornerLength/2);
+        .attr("stroke-dasharray", cornerLength + "," + (size - cornerLength))
+        .attr("stroke-dashoffset", cornerLength / 2);
 }
 
 
@@ -94,7 +94,7 @@ var container = svg.append("g")
     .attr("height", 1080)
     .attr("class", "container");
 
-drawGridlines(svg,GRIDLINE_SIZE);
+drawGridlines(svg, GRIDLINE_SIZE);
 
 //attachZoomLine(svg);
 
@@ -117,8 +117,7 @@ d3.xml("assets/map_v3.svg").get(function (error, documentFragment) {
 });
 
 
-function updateZoomPos()
-{
+function updateZoomPos() {
     var $zoomCont = $(".zoom-container");
     var r = (Math.floor($(window).width() / GRIDLINE_SIZE) - 1 ) * GRIDLINE_SIZE;
     var b = (Math.floor($(window).height() / GRIDLINE_SIZE) ) * GRIDLINE_SIZE - $zoomCont.height();
@@ -128,18 +127,16 @@ function updateZoomPos()
     });
 }
 
-function updateZoom(scale)
-{
+function updateZoom(scale) {
     // update position
     var $zoomCont = $(".zoom-container");
     updateZoomPos();
     var step = 10;
-    var meters = Math.max(step, Math.round(250 / (step /*step*/) * (1/scale)) * step);
+    var meters = Math.max(step, Math.round(250 / (step /*step*/) * (1 / scale)) * step);
     $zoomCont.html(meters + " m");
 }
 
-function zoomInit()
-{
+function zoomInit() {
     updateZoomPos();
     $(window).on('resize', updateZoomPos);
 }
@@ -172,9 +169,9 @@ $(function () {
     var app = Elm.Main.embed(node);
 
     d3.select("svg")
-      .attr("x", 0)
-      .attr("y", 0)
-      .call(zoom);
+        .attr("x", 0)
+        .attr("y", 0)
+        .call(zoom);
 
     var eliza = new ElizaBot();
     var initial = eliza.getInitial();
@@ -243,27 +240,39 @@ $(function () {
 
     });
 
-    var clickOnPotential = function(d){
-        app.ports.requestConvertNode.send(d.label.nodeId);
+    var clickOnPotential = function (d) {
+        app.ports.requestConvertNode.send(d.id);
     };
+
+    var potentialNodes;
 
     app.ports.toggleBuildMode.subscribe(function (isEnteringBuildMode) {
         var t = d3.transition().duration(1000);
 
         //phiNetwork = model;
-        //var phiPotentialNodes = potentials;
-        //
-        //var nodes = svg.select(".nodes").selectAll(".potential")
-        //    .data(phiPotentialNodes, function (d) {
-        //        return d.id;
-        //    });
+        var phiPotentialNodes = potentialNodes;
 
-        if (isEnteringBuildMode)
-            d3.select(".potential")
-                .on('click', clickOnPotential)
-                .attr("d", function (d) {
-                    return (peerOutline()(d));
+        var nodes = svg.select(".nodes").selectAll(".potential")
+            .data(phiPotentialNodes, function (d) {
+                return d.id;
+            });
+
+        function drawPotentials(nodes) {
+
+            var nodeEnter = nodes.enter().append("g")
+                .attr("class", function (d) {
+                    var classStr = "node potential " + d.label.nodeType;
+                    return classStr;
+                });
+
+            nodeEnter.append("path")
+                .attr("d", addBaseNode())
+                .attr('transform', function (d) {
+                    return "translate(" + (setX(d)) + "," + (setY(d)) + ")";
                 })
+                .attr("class", "baseNode");
+
+            nodes.selectAll(".potential")
                 .attr("stroke-opacity", "0")
                 .attr("fill-opacity", "0")
                 .style("opacity", "0")
@@ -277,23 +286,23 @@ $(function () {
                 .call(endall, function () {
                     app.ports.animationFinished.send("enterBuildModeAnimated");
                 });
-        else
-            d3.select(".potential")
-                .on('click', null)
-                .attr("d", function (d) {
-                    return (peerOutline()(d));
-                })
-                .transition(t)
-                .style("opacity", "0")
-                .attr("stroke-opacity", "0")
-                .attr("fill-opacity", "0")
-                .attr('transform', function (d) {
-                    return "translate(" + (setX(d)) + "," + (setY(d)) + ")";
-                })
-                .call(endall, function () {
-                    app.ports.animationFinished.send("exitBuildModeAnimated");
-                });
 
+            var potentials = d3.selectAll(".potential");
+            potentials
+                .on("click", clickOnPotential);
+        }
+
+        function killPotentials() {
+            d3.selectAll(".potential")
+                .remove();
+
+            app.ports.animationFinished.send("exitBuildModeAnimated");
+        }
+
+        if (isEnteringBuildMode)
+            drawPotentials(nodes);
+        else
+            killPotentials();
     });
 
     app.ports.animateGeneration.subscribe(function (model) {
@@ -433,9 +442,14 @@ $(function () {
 
         }
 
-        var liveNodes = phiNodes.filter(function(node) {
-            return (! node.label.isPotential);
+        var liveNodes = phiNodes.filter(function (node) {
+            return (!node.label.isPotential);
         });
+
+        potentialNodes = phiNodes.filter(function (node) {
+            return (node.label.isPotential);
+        });
+
         drawNodes(liveNodes);
         drawLinks(phiEdges);
 

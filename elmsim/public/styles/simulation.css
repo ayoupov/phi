@@ -39,6 +39,12 @@
   opacity: 0;
 }
 
+.node.potential {
+  fill: rgb(127,127,127);
+  stroke: rgb(127,127,127);
+  cursor: pointer;
+}
+
 line.link {
   stroke: white;
   stroke-width: 1.5px;
