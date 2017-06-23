@@ -19042,6 +19042,10 @@ var _strelka_2017$phi$Action$AddPeer = function (a) {
 var _strelka_2017$phi$Action$AddGenerator = function (a) {
 	return {ctor: 'AddGenerator', _0: a};
 };
+var _strelka_2017$phi$Action$RequestNewLine = F2(
+	function (a, b) {
+		return {ctor: 'RequestNewLine', _0: a, _1: b};
+	});
 var _strelka_2017$phi$Action$RequestConvertNode = function (a) {
 	return {ctor: 'RequestConvertNode', _0: a};
 };
@@ -22787,6 +22791,10 @@ var _strelka_2017$phi$Chat_Narrative$daySummary = function (model) {
 			}));
 };
 
+var _strelka_2017$phi$Simulation_BuildingMode$handleNewLineRequest = F3(
+	function (nodeId1, nodeId2, phiNetwork) {
+		return phiNetwork;
+	});
 var _strelka_2017$phi$Simulation_BuildingMode$handleConvertNodeRequest = F2(
 	function (nodeId, phiNetwork) {
 		var convertNodeLabel = function (label) {
@@ -22836,11 +22844,27 @@ var _strelka_2017$phi$Simulation_BuildingMode$handleConvertNodeRequest = F2(
 				},
 				A2(_elm_community$graph$Graph$get, nodeId, phiNetwork)));
 	});
+var _strelka_2017$phi$Simulation_BuildingMode$parseConvertNewLine = F2(
+	function (x1, x2) {
+		var result = A2(_elm_lang$core$Json_Decode$decodeValue, _elm_lang$core$Json_Decode$int, x1);
+		var _p4 = result;
+		if (_p4.ctor === 'Ok') {
+			var r2 = A2(_elm_lang$core$Json_Decode$decodeValue, _elm_lang$core$Json_Decode$int, x2);
+			var _p5 = r2;
+			if (_p5.ctor === 'Ok') {
+				return A2(_strelka_2017$phi$Action$RequestNewLine, _p4._0, _p5._0);
+			} else {
+				return _strelka_2017$phi$Action$NoOp;
+			}
+		} else {
+			return _strelka_2017$phi$Action$NoOp;
+		}
+	});
 var _strelka_2017$phi$Simulation_BuildingMode$parseConvertNodeRequest = function (x) {
 	var result = A2(_elm_lang$core$Json_Decode$decodeValue, _elm_lang$core$Json_Decode$int, x);
-	var _p4 = result;
-	if (_p4.ctor === 'Ok') {
-		return _strelka_2017$phi$Action$RequestConvertNode(_p4._0);
+	var _p6 = result;
+	if (_p6.ctor === 'Ok') {
+		return _strelka_2017$phi$Action$RequestConvertNode(_p6._0);
 	} else {
 		return _strelka_2017$phi$Action$NoOp;
 	}
@@ -22851,6 +22875,7 @@ var _strelka_2017$phi$Simulation_BuildingMode$toggleBuildMode = _elm_lang$core$N
 		return v;
 	});
 var _strelka_2017$phi$Simulation_BuildingMode$requestConvertNode = _elm_lang$core$Native_Platform.incomingPort('requestConvertNode', _elm_lang$core$Json_Decode$value);
+var _strelka_2017$phi$Simulation_BuildingMode$requestNewLine = _elm_lang$core$Native_Platform.incomingPort('requestNewLine', _elm_lang$core$Json_Decode$value);
 
 var _strelka_2017$phi$Simulation_Encoding$encodeEdge = F2(
 	function (graph, tLine) {
@@ -23248,9 +23273,19 @@ var _strelka_2017$phi$Update$update = F2(
 					msg = _v5;
 					model = _v6;
 					continue update;
-				case 'AddGenerator':
+				case 'RequestNewLine':
 					var _v7 = _strelka_2017$phi$Action$RenderPhiNetwork,
 						_v8 = _elm_lang$core$Native_Utils.update(
+						model,
+						{
+							network: A3(_strelka_2017$phi$Simulation_BuildingMode$handleNewLineRequest, _p0._0, _p0._1, model.network)
+						});
+					msg = _v7;
+					model = _v8;
+					continue update;
+				case 'AddGenerator':
+					var _v9 = _strelka_2017$phi$Action$RenderPhiNetwork,
+						_v10 = _elm_lang$core$Native_Utils.update(
 						model,
 						{
 							network: A3(
@@ -23259,12 +23294,12 @@ var _strelka_2017$phi$Update$update = F2(
 								_strelka_2017$phi$Simulation_Model$GeneratorNode(_p0._0),
 								model.network)
 						});
-					msg = _v7;
-					model = _v8;
+					msg = _v9;
+					model = _v10;
 					continue update;
 				case 'AddPeer':
-					var _v9 = _strelka_2017$phi$Action$RenderPhiNetwork,
-						_v10 = _elm_lang$core$Native_Utils.update(
+					var _v11 = _strelka_2017$phi$Action$RenderPhiNetwork,
+						_v12 = _elm_lang$core$Native_Utils.update(
 						model,
 						{
 							network: A3(
@@ -23273,29 +23308,29 @@ var _strelka_2017$phi$Update$update = F2(
 								_strelka_2017$phi$Simulation_Model$PeerNode(_p0._0),
 								model.network)
 						});
-					msg = _v9;
-					model = _v10;
+					msg = _v11;
+					model = _v12;
 					continue update;
 				case 'AddEdge':
-					var _v11 = _strelka_2017$phi$Action$RenderPhiNetwork,
-						_v12 = _elm_lang$core$Native_Utils.update(
+					var _v13 = _strelka_2017$phi$Action$RenderPhiNetwork,
+						_v14 = _elm_lang$core$Native_Utils.update(
 						model,
 						{
 							network: A2(_strelka_2017$phi$Simulation_GraphUpdates$addEdge, _p0._0, model.network)
 						});
-					msg = _v11;
-					model = _v12;
+					msg = _v13;
+					model = _v14;
 					continue update;
 				case 'UpdateWeather':
-					var _v13 = _strelka_2017$phi$Action$RenderPhiNetwork,
-						_v14 = _elm_lang$core$Native_Utils.update(
+					var _v15 = _strelka_2017$phi$Action$RenderPhiNetwork,
+						_v16 = _elm_lang$core$Native_Utils.update(
 						model,
 						{
 							weather: _p0._0,
 							weatherList: _strelka_2017$phi$Simulation_WeatherList$restWeather(model.weatherList)
 						});
-					msg = _v13;
-					model = _v14;
+					msg = _v15;
+					model = _v16;
 					continue update;
 				case 'RenderPhiNetwork':
 					return {
@@ -23329,10 +23364,10 @@ var _strelka_2017$phi$Update$update = F2(
 					var _p3 = _p0._0;
 					switch (_p3) {
 						case 'layoutRendered':
-							var _v16 = _strelka_2017$phi$Action$AnimateGeneration,
-								_v17 = model;
-							msg = _v16;
-							model = _v17;
+							var _v18 = _strelka_2017$phi$Action$AnimateGeneration,
+								_v19 = model;
+							msg = _v18;
+							model = _v19;
 							continue update;
 						case 'generatorsAnimated':
 							return A3(
@@ -23355,29 +23390,29 @@ var _strelka_2017$phi$Update$update = F2(
 										_strelka_2017$phi$Chat_Narrative$dayConsumed(model)),
 									model));
 						case 'tradeAnimated':
-							var _v18 = _strelka_2017$phi$Action$SendBotChatItem(
+							var _v20 = _strelka_2017$phi$Action$SendBotChatItem(
 								_strelka_2017$phi$Chat_Narrative$dayTraded(model)),
-								_v19 = model;
-							msg = _v18;
-							model = _v19;
-							continue update;
-						case 'enterBuildModeAnimated':
-							var _v20 = _strelka_2017$phi$Action$SendBotChatItem(_strelka_2017$phi$Chat_Narrative$enterBuildMode),
 								_v21 = model;
 							msg = _v20;
 							model = _v21;
 							continue update;
-						case 'exitBuildModeAnimated':
-							var _v22 = _strelka_2017$phi$Action$SendBotChatItem(_strelka_2017$phi$Chat_Narrative$exitBuildMode),
+						case 'enterBuildModeAnimated':
+							var _v22 = _strelka_2017$phi$Action$SendBotChatItem(_strelka_2017$phi$Chat_Narrative$enterBuildMode),
 								_v23 = model;
 							msg = _v22;
 							model = _v23;
 							continue update;
-						default:
-							var _v24 = _strelka_2017$phi$Action$NoOp,
+						case 'exitBuildModeAnimated':
+							var _v24 = _strelka_2017$phi$Action$SendBotChatItem(_strelka_2017$phi$Chat_Narrative$exitBuildMode),
 								_v25 = model;
 							msg = _v24;
 							model = _v25;
+							continue update;
+						default:
+							var _v26 = _strelka_2017$phi$Action$NoOp,
+								_v27 = model;
+							msg = _v26;
+							model = _v27;
 							continue update;
 					}
 				case 'ToggleBuildMode':

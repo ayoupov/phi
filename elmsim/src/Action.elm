@@ -15,6 +15,7 @@ type Msg
     | CheckBudget
     | DescribeNode Int
     | RequestConvertNode Int
+    | RequestNewLine Int Int
     | AddGenerator SimGenerator
     | AddPeer Peer
     | AddEdge TransmissionLine

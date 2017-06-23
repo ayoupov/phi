@@ -306,7 +306,31 @@ $(function () {
         d3.selectAll('.node:not(.potential)')
             .style('cursor', 'pointer')
             .on('click', function (node) {
-                console.log(node);
+                var dNode = d3.select(this);
+                var thisNodeSelected = dNode.classed("selected");
+                if (thisNodeSelected)
+                    // two cases:
+                    // 1. it is already selected, cancel the drawing
+                {
+                    dNode.classed('selected', false);
+                }
+                else
+                // 2. it has no selection :
+                {
+                    var otherSelectedNode = d3.select('.selected');
+                    var areThereAnyOthers = !otherSelectedNode.empty();
+                    // 2.1. if there is one selected, fix the line
+                    if (areThereAnyOthers)
+                    {
+                        otherSelectedNode.classed('selected', false);
+                        console.log(otherSelectedNode.data());
+                        app.ports.requestNewLine(otherSelectedNode.data().id, node.id);
+                    } else
+                    // 2.2. if there is none, fix the starting node
+                    {
+                        dNode.classed('selected', true);
+                    }
+                }
             });
     }
 

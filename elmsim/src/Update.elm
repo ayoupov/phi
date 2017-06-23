@@ -9,7 +9,7 @@ import Graph
 import Json.Encode exposing (encode)
 import Material
 import Model exposing (Model)
-import Simulation.BuildingMode exposing (handleConvertNodeRequest, toggleBuildMode)
+import Simulation.BuildingMode exposing (handleConvertNodeRequest, handleNewLineRequest, toggleBuildMode)
 import Simulation.Encoding exposing (encodeEdge, encodeGraph, encodeNodeLabel)
 import Simulation.GraphUpdates exposing (addEdge, addNodeWithEdges, updateNodes)
 import Simulation.Helpers exposing (liveNodeNetwork)
@@ -92,6 +92,11 @@ update msg model =
         RequestConvertNode nodeId ->
             -- NEED LOGIC TO HANDLE BUDGET
             { model | network = handleConvertNodeRequest nodeId model.network }
+                |> update RenderPhiNetwork
+
+        RequestNewLine nodeId1 nodeId2 ->
+            -- NEED LOGIC TO HANDLE BUDGET
+            { model | network = handleNewLineRequest nodeId1 nodeId2 model.network }
                 |> update RenderPhiNetwork
 
         AddGenerator node ->
