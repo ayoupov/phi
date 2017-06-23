@@ -242,7 +242,9 @@ $(function () {
 
     var clickOnPotential = function (d) {
         app.ports.requestConvertNode.send(d.id);
-        potentialNodes = potentialNodes.filter(function(n){return n.id !== d.id});
+        potentialNodes = potentialNodes.filter(function (n) {
+            return n.id !== d.id
+        });
         killPotentials();
         var nodes = svg.select(".nodes").selectAll(".potential")
             .data(potentialNodes, function (d) {
@@ -300,7 +302,22 @@ $(function () {
         app.ports.animationFinished.send("exitBuildModeAnimated");
     }
 
-    app.ports.toggleBuildMode.subscribe(function (isEnteringBuildMode) {
+    function initLineInteraction() {
+        d3.selectAll('.node:not(.potential)')
+            .style('cursor', 'pointer')
+            .on('click', function (node) {
+                console.log(node);
+            });
+    }
+
+    function killLineInteraction() {
+        d3.selectAll('.node:not(.potential)').on('click', null);
+    }
+
+    var isInBuildingMode = false;
+
+    var toggleBuildModeFunction = function (isEnteringBuildMode) {
+        isInBuildingMode = isEnteringBuildMode;
         var phiPotentialNodes = potentialNodes;
 
         var nodes = svg.select(".nodes").selectAll(".potential")
@@ -308,11 +325,15 @@ $(function () {
                 return d.id;
             });
 
-        if (isEnteringBuildMode)
+        if (isEnteringBuildMode) {
             drawPotentials(nodes);
+            initLineInteraction();
+        }
         else
             killPotentials();
-    });
+    };
+
+    app.ports.toggleBuildMode.subscribe(toggleBuildModeFunction);
 
     app.ports.animateGeneration.subscribe(function (model) {
         var t = d3.transition().duration(1500);
@@ -390,20 +411,11 @@ $(function () {
 
             nodes.select('.simulation .peer .energyIndicator')
                 .transition(t)
-                .style("opacity", "0")
-                .call(endall, function () {
-                    // todo: fix ugly hack
-                    //var signalSent = false;
-                    //d3.select('.simulation .peer')
-                    //    .each(
-                    //        function (d) {
-                    //            if (!signalSent && d.label && d.label.actualConsumption && d.label.actualConsumption.length > 1) {
-                    //                signalSent = true;
-                    //                app.ports.animationFinished.send("layoutRendered");
-                    //            }
-                    //        });
-                });
-
+                .style("opacity", "0");
+                //.call(endall, function () {
+                //});
+            if (isInBuildingMode)
+                toggleBuildModeFunction(true);
 
         }
 
