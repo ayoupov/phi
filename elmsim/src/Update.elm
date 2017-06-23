@@ -9,9 +9,9 @@ import Graph
 import Json.Encode exposing (encode)
 import Material
 import Model exposing (Model)
-import Simulation.BuildingMode exposing (handleConvertNodeRequest, handleNewLineRequest, toggleBuildMode)
+import Simulation.BuildingMode exposing (handleConvertNode, handleConvertNodeRequest, handleNewLineRequest, toggleBuildMode)
 import Simulation.Encoding exposing (encodeEdge, encodeGraph, encodeNodeLabel)
-import Simulation.GraphUpdates exposing (addEdge, addNodeWithEdges, updateNodes)
+import Simulation.GraphUpdates exposing (addEdge, addNode, addNodeWithEdges, updateNodes)
 import Simulation.Helpers exposing (liveNodeNetwork)
 import Simulation.Init.Generators as Generators exposing (..)
 import Simulation.Model exposing (..)
@@ -91,8 +91,8 @@ update msg model =
 
         RequestConvertNode nodeId ->
             -- NEED LOGIC TO HANDLE BUDGET
-            { model | network = handleConvertNodeRequest nodeId model.network }
-                |> update RenderPhiNetwork
+            handleConvertNode nodeId model
+                |> andThen update RenderPhiNetwork
 
         RequestNewLine nodeId1 nodeId2 ->
             -- NEED LOGIC TO HANDLE BUDGET
@@ -108,11 +108,11 @@ update msg model =
                 |> update RenderPhiNetwork
 
         AddGenerator node ->
-            { model | network = addNodeWithEdges 70 (GeneratorNode node) model.network }
+            { model | network = addNode (GeneratorNode node) model.network }
                 |> update RenderPhiNetwork
 
         AddPeer node ->
-            { model | network = addNodeWithEdges 70 (PeerNode node) model.network }
+            { model | network = addNode (PeerNode node) model.network }
                 |> update RenderPhiNetwork
 
         AddEdge edge ->
