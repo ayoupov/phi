@@ -45,12 +45,13 @@ function nodeShape(d) {
 
         case "generator" :
             switch (d.label.generatorType) {
+                case "windTurbine":
+                    //return d3.symbolTriangle;
                 case "solarPanel":
                     return d3.symbolSquare;
-                case "windTurbine":
-                    return d3.symbolTriangle;
                 default:
-                    return defaultSymbol;
+                    //return defaultSymbol;
+                    return d3.symbolSquare;
             }
 
         default:
