@@ -1,6 +1,6 @@
 module Model exposing (..)
 
-import Action exposing (Msg)
+import Action exposing (Msg(..))
 import Chat.Model exposing (ChatItem, InputType(..), initChat)
 import Graph
 import Material
@@ -114,9 +114,12 @@ initNegawattLimit map =
 initGenerators : List (Cmd Msg)
 initGenerators =
     let
+        edgeSearchRadius =
+            70
+
         asCoordsList =
             List.map tupleToCoords << Set.toList
     in
-    List.map Generators.generatePeer (asCoordsList initialPeerList)
-        ++ List.map Generators.generatePVPanel (asCoordsList initialPVNodeList)
-        ++ List.map Generators.generateWindTurbine (asCoordsList initialWTNodeList)
+    (List.map (Generators.generatePeer <| AddPeerWithEdges edgeSearchRadius) <| asCoordsList initialPeerList)
+        ++ (List.map (Generators.generatePVPanel <| AddGeneratorWithEdges edgeSearchRadius) <| asCoordsList initialPVNodeList)
+        ++ (List.map (Generators.generateWindTurbine <| AddGeneratorWithEdges edgeSearchRadius) <| asCoordsList initialWTNodeList)

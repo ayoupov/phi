@@ -13,7 +13,9 @@ import Simulation.Model exposing (..)
 
 port toggleBuildMode : Bool -> Cmd msg
 
+
 port requestConvertNode : (Value -> msg) -> Sub msg
+
 
 port requestNewLine : (Value -> msg) -> Sub msg
 
@@ -31,6 +33,7 @@ parseConvertNodeRequest x =
         Err _ ->
             NoOp
 
+
 parseConvertNewLine : Value -> Msg
 parseConvertNewLine x =
     let
@@ -40,13 +43,18 @@ parseConvertNewLine x =
     case result of
         Ok list ->
             case list of
-                head::tail ->
+                head :: tail ->
                     let
-                        first = (Debug.log "first" head)
-                        second = (Debug.log "second" (takeFirstElementWithDefault0 tail))
+                        first =
+                            Debug.log "first" head
+
+                        second =
+                            Debug.log "second" (takeFirstElementWithDefault0 tail)
                     in
-                        RequestNewLine first second
-                _ -> NoOp
+                    RequestNewLine first second
+
+                _ ->
+                    NoOp
 
         Err _ ->
             NoOp
@@ -55,6 +63,9 @@ parseConvertNewLine x =
 handleConvertNodeRequest : NodeId -> PhiNetwork -> PhiNetwork
 handleConvertNodeRequest nodeId phiNetwork =
     let
+        coords =
+            Graph.get
+
         convertNode node =
             { node | label = convertNodeLabel node.label }
 
@@ -77,6 +88,7 @@ handleConvertNodeRequest nodeId phiNetwork =
     Graph.get nodeId phiNetwork
         |> Maybe.map ((\nc -> Graph.insert nc phiNetwork) << convertNodeContext)
         |> Maybe.withDefault phiNetwork
+
 
 handleNewLineRequest : NodeId -> NodeId -> PhiNetwork -> PhiNetwork
 handleNewLineRequest nodeId1 nodeId2 phiNetwork =

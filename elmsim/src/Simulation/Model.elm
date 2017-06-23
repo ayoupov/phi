@@ -17,6 +17,10 @@ type alias Line =
     }
 
 
+type alias SearchRadius =
+    Float
+
+
 
 -- VARIABLES
 

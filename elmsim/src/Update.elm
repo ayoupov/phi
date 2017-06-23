@@ -99,6 +99,14 @@ update msg model =
             { model | network = handleNewLineRequest nodeId1 nodeId2 model.network }
                 |> update RenderPhiNetwork
 
+        AddGeneratorWithEdges searchRadius generator ->
+            { model | network = addNodeWithEdges searchRadius (GeneratorNode generator) model.network }
+                |> update RenderPhiNetwork
+
+        AddPeerWithEdges searchRadius peer ->
+            { model | network = addNodeWithEdges searchRadius (PeerNode peer) model.network }
+                |> update RenderPhiNetwork
+
         AddGenerator node ->
             { model | network = addNodeWithEdges 70 (GeneratorNode node) model.network }
                 |> update RenderPhiNetwork
