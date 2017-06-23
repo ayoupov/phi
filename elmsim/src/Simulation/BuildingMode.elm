@@ -6,6 +6,7 @@ import Json.Decode as Decode
 import Json.Encode exposing (Value)
 import ListHelpers exposing (takeFirstElementWithDefault0)
 import Model exposing (Model)
+import Simulation.GraphUpdates exposing (addEdge, createEdge)
 import Simulation.Helpers exposing (getCoords)
 import Simulation.Init.Generators as Generators
 import Simulation.Model exposing (..)
@@ -127,5 +128,6 @@ handleConvertNode nodeId model =
 
 
 handleNewLineRequest : NodeId -> NodeId -> PhiNetwork -> PhiNetwork
-handleNewLineRequest nodeId1 nodeId2 phiNetwork =
+handleNewLineRequest a b phiNetwork =
     phiNetwork
+        |> addEdge (createEdge a b)

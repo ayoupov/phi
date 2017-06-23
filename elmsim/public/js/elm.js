@@ -22799,8 +22799,11 @@ var _strelka_2017$phi$Chat_Narrative$daySummary = function (model) {
 };
 
 var _strelka_2017$phi$Simulation_BuildingMode$handleNewLineRequest = F3(
-	function (nodeId1, nodeId2, phiNetwork) {
-		return phiNetwork;
+	function (a, b, phiNetwork) {
+		return A2(
+			_strelka_2017$phi$Simulation_GraphUpdates$addEdge,
+			A2(_strelka_2017$phi$Simulation_GraphUpdates$createEdge, a, b),
+			phiNetwork);
 	});
 var _strelka_2017$phi$Simulation_BuildingMode$handleConvertNode = F2(
 	function (nodeId, model) {
