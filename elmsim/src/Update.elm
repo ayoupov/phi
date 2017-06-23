@@ -189,11 +189,9 @@ handleMultiChoiceMsg action model =
             weatherForecast model
 
         McaChangeDesign ->
-            --            changeDesign model
             update (ToggleBuildMode True) model
 
         McaLeaveBuildMode ->
-            --            changeDesign model
             update (ToggleBuildMode False) model
 
         McaRunDay ->
@@ -281,15 +279,6 @@ weatherForecast model =
     update (SendBotChatItem chatMsg) model
         |> andThen update
             (SendBotChatItem <| WidgetItem WeatherWidget)
-
-
-changeDesign : Model -> ( Model, Cmd Msg )
-changeDesign model =
-    let
-        chatMsg =
-            BotMessage "Sorry that's not available yet!"
-    in
-    update (SendBotChatItem chatMsg) model
 
 
 

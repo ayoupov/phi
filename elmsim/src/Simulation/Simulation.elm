@@ -485,9 +485,10 @@ tradingPhase network =
 updateBudget : Model -> Budget
 updateBudget model =
     let
-        joulesToPhiQuotient = 15
+        joulesToPhiQuotient =
+            15
     in
-        (networkTradedEnergy model.network * joulesToPhiQuotient + takeFirstElementWithDefault0 model.budget) :: model.budget
+    (networkTradedEnergy model.network * joulesToPhiQuotient + takeFirstElementWithDefault0 model.budget) :: model.budget
 
 
 
