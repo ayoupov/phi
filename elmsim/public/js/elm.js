@@ -18843,6 +18843,8 @@ var _strelka_2017$phi$Chat_Model$mcaName = function (action) {
 			return 'Change Design';
 		case 'McaRunWeek':
 			return 'Next Week';
+		case 'McaLeaveBuildMode':
+			return 'Leave Build Mode';
 		default:
 			return 'Selection some location';
 	}
@@ -18873,6 +18875,7 @@ var _strelka_2017$phi$Chat_Model$WidgetItem = function (a) {
 var _strelka_2017$phi$Chat_Model$McaSelectLocation = function (a) {
 	return {ctor: 'McaSelectLocation', _0: a};
 };
+var _strelka_2017$phi$Chat_Model$McaLeaveBuildMode = {ctor: 'McaLeaveBuildMode'};
 var _strelka_2017$phi$Chat_Model$McaChangeDesign = {ctor: 'McaChangeDesign'};
 var _strelka_2017$phi$Chat_Model$McaWeatherForecast = {ctor: 'McaWeatherForecast'};
 var _strelka_2017$phi$Chat_Model$McaRunWeek = {ctor: 'McaRunWeek'};
@@ -19292,17 +19295,33 @@ var _strelka_2017$phi$Simulation_Helpers$isLiveNode = function (node) {
 		return _elm_lang$core$Maybe$Just(node);
 	}
 };
+var _strelka_2017$phi$Simulation_Helpers$liveNodeNetwork = function (network) {
+	return function (idList) {
+		return A2(_elm_community$graph$Graph$inducedSubgraph, idList, network);
+	}(
+		A2(
+			_elm_lang$core$List$filterMap,
+			function (_p1) {
+				return A2(
+					_elm_lang$core$Maybe$map,
+					function (_) {
+						return _.id;
+					},
+					_strelka_2017$phi$Simulation_Helpers$isLiveNode(_p1));
+			},
+			_elm_community$graph$Graph$nodes(network)));
+};
 var _strelka_2017$phi$Simulation_Helpers$getCoords = function (nodeLabel) {
-	var _p1 = nodeLabel;
-	switch (_p1.ctor) {
+	var _p2 = nodeLabel;
+	switch (_p2.ctor) {
 		case 'GeneratorNode':
-			return _p1._0.pos;
+			return _p2._0.pos;
 		case 'BatNode':
-			return _p1._0.pos;
+			return _p2._0.pos;
 		case 'PeerNode':
-			return _p1._0.pos;
+			return _p2._0.pos;
 		default:
-			return _p1._0.pos;
+			return _p2._0.pos;
 	}
 };
 var _strelka_2017$phi$Simulation_Helpers$distBetweenNodes = F2(
@@ -20079,62 +20098,78 @@ var _strelka_2017$phi$Simulation_NodeList$initialPeerList = _elm_lang$core$Set$f
 		_0: {ctor: '_Tuple2', _0: 887, _1: 468},
 		_1: {
 			ctor: '::',
-			_0: {ctor: '_Tuple2', _0: 913, _1: 472},
+			_0: {ctor: '_Tuple2', _0: 955, _1: 494},
 			_1: {
 				ctor: '::',
-				_0: {ctor: '_Tuple2', _0: 955, _1: 494},
+				_0: {ctor: '_Tuple2', _0: 1035, _1: 534},
 				_1: {
 					ctor: '::',
-					_0: {ctor: '_Tuple2', _0: 1035, _1: 534},
+					_0: {ctor: '_Tuple2', _0: 880, _1: 410},
 					_1: {
 						ctor: '::',
-						_0: {ctor: '_Tuple2', _0: 832, _1: 375},
+						_0: {ctor: '_Tuple2', _0: 916, _1: 435},
 						_1: {
 							ctor: '::',
-							_0: {ctor: '_Tuple2', _0: 880, _1: 410},
+							_0: {ctor: '_Tuple2', _0: 1035, _1: 441},
 							_1: {
 								ctor: '::',
-								_0: {ctor: '_Tuple2', _0: 916, _1: 435},
+								_0: {ctor: '_Tuple2', _0: 891, _1: 355},
 								_1: {
 									ctor: '::',
-									_0: {ctor: '_Tuple2', _0: 1035, _1: 441},
+									_0: {ctor: '_Tuple2', _0: 955, _1: 366},
 									_1: {
 										ctor: '::',
-										_0: {ctor: '_Tuple2', _0: 891, _1: 355},
+										_0: {ctor: '_Tuple2', _0: 990, _1: 380},
 										_1: {
 											ctor: '::',
-											_0: {ctor: '_Tuple2', _0: 955, _1: 366},
+											_0: {ctor: '_Tuple2', _0: 898, _1: 330},
 											_1: {
 												ctor: '::',
-												_0: {ctor: '_Tuple2', _0: 990, _1: 380},
+												_0: {ctor: '_Tuple2', _0: 957, _1: 298},
 												_1: {
 													ctor: '::',
-													_0: {ctor: '_Tuple2', _0: 898, _1: 330},
+													_0: {ctor: '_Tuple2', _0: 1034, _1: 310},
 													_1: {
 														ctor: '::',
-														_0: {ctor: '_Tuple2', _0: 900, _1: 280},
+														_0: {ctor: '_Tuple2', _0: 1074, _1: 342},
 														_1: {
 															ctor: '::',
-															_0: {ctor: '_Tuple2', _0: 957, _1: 298},
+															_0: {ctor: '_Tuple2', _0: 1144, _1: 345},
 															_1: {
 																ctor: '::',
-																_0: {ctor: '_Tuple2', _0: 1034, _1: 310},
+																_0: {ctor: '_Tuple2', _0: 871, _1: 219},
 																_1: {
 																	ctor: '::',
-																	_0: {ctor: '_Tuple2', _0: 1074, _1: 342},
+																	_0: {ctor: '_Tuple2', _0: 1006, _1: 218},
 																	_1: {
 																		ctor: '::',
-																		_0: {ctor: '_Tuple2', _0: 1144, _1: 345},
+																		_0: {ctor: '_Tuple2', _0: 1160, _1: 189},
 																		_1: {
 																			ctor: '::',
-																			_0: {ctor: '_Tuple2', _0: 871, _1: 219},
+																			_0: {ctor: '_Tuple2', _0: 1096, _1: 54},
 																			_1: {
 																				ctor: '::',
-																				_0: {ctor: '_Tuple2', _0: 956, _1: 221},
+																				_0: {ctor: '_Tuple2', _0: 1157, _1: 152},
 																				_1: {
 																					ctor: '::',
-																					_0: {ctor: '_Tuple2', _0: 1006, _1: 218},
-																					_1: {ctor: '[]'}
+																					_0: {ctor: '_Tuple2', _0: 1186, _1: 86},
+																					_1: {
+																						ctor: '::',
+																						_0: {ctor: '_Tuple2', _0: 1040, _1: 831},
+																						_1: {
+																							ctor: '::',
+																							_0: {ctor: '_Tuple2', _0: 1035, _1: 841},
+																							_1: {
+																								ctor: '::',
+																								_0: {ctor: '_Tuple2', _0: 1080, _1: 850},
+																								_1: {
+																									ctor: '::',
+																									_0: {ctor: '_Tuple2', _0: 1083, _1: 886},
+																									_1: {ctor: '[]'}
+																								}
+																							}
+																						}
+																					}
 																				}
 																			}
 																		}
@@ -20247,7 +20282,7 @@ var _strelka_2017$phi$Simulation_GraphUpdates$addNodeWithEdges = F3(
 			function (a, b) {
 				return _elm_lang$core$Native_Utils.cmp(
 					A2(_strelka_2017$phi$Simulation_Helpers$distBetweenNodes, a, b),
-					80) < 0;
+					searchRadius) < 0;
 			});
 		var nodeId = A2(
 			_elm_lang$core$Maybe$withDefault,
@@ -22659,6 +22694,44 @@ var _strelka_2017$phi$Chat_Narrative$dayBeginning = function (model) {
 	var text = 'Glorious new day in Arstotzka';
 	return _strelka_2017$phi$Chat_Model$BotMessage(text);
 };
+var _strelka_2017$phi$Chat_Narrative$exitBuildMode = function () {
+	var text = 'You\'ve just added X pieces of Y, spending ZZZ PhiCoin.';
+	return _strelka_2017$phi$Chat_Model$MultiChoiceItem(
+		A2(
+			_strelka_2017$phi$Chat_Model$MultiChoiceMessage,
+			text,
+			{
+				ctor: '::',
+				_0: _strelka_2017$phi$Chat_Model$McaWeatherForecast,
+				_1: {
+					ctor: '::',
+					_0: _strelka_2017$phi$Chat_Model$McaRunDay,
+					_1: {
+						ctor: '::',
+						_0: _strelka_2017$phi$Chat_Model$McaChangeDesign,
+						_1: {ctor: '[]'}
+					}
+				}
+			}));
+}();
+var _strelka_2017$phi$Chat_Narrative$enterBuildMode = function () {
+	var text = A2(
+		_elm_lang$core$Basics_ops['++'],
+		'Entering Build Mode! The newly illuminated nodes ',
+		A2(
+			_elm_lang$core$Basics_ops['++'],
+			'represent potential peers (circles) whom you can invite to your',
+			A2(_elm_lang$core$Basics_ops['++'], 'Phi community, and generators (squares) that you can purchase', ' in order to provide more energy to your network.')));
+	return _strelka_2017$phi$Chat_Model$MultiChoiceItem(
+		A2(
+			_strelka_2017$phi$Chat_Model$MultiChoiceMessage,
+			text,
+			{
+				ctor: '::',
+				_0: _strelka_2017$phi$Chat_Model$McaLeaveBuildMode,
+				_1: {ctor: '[]'}
+			}));
+}();
 var _strelka_2017$phi$Chat_Narrative$daySummary = function (model) {
 	var totalStored = _elm_lang$core$Basics$toString(
 		_strelka_2017$phi$Simulation_Simulation$networkStoredEnergy(model.network));
@@ -23175,7 +23248,7 @@ var _strelka_2017$phi$Update$update = F2(
 						{
 							network: A3(
 								_strelka_2017$phi$Simulation_GraphUpdates$addNodeWithEdges,
-								1,
+								70,
 								_strelka_2017$phi$Simulation_Model$GeneratorNode(_p0._0),
 								model.network)
 						});
@@ -23189,7 +23262,7 @@ var _strelka_2017$phi$Update$update = F2(
 						{
 							network: A3(
 								_strelka_2017$phi$Simulation_GraphUpdates$addNodeWithEdges,
-								1,
+								70,
 								_strelka_2017$phi$Simulation_Model$PeerNode(_p0._0),
 								model.network)
 						});
@@ -23282,15 +23355,13 @@ var _strelka_2017$phi$Update$update = F2(
 							model = _v19;
 							continue update;
 						case 'enterBuildModeAnimated':
-							var _v20 = _strelka_2017$phi$Action$SendBotChatItem(
-								_strelka_2017$phi$Chat_Model$BotMessage('You\'ve entered building mode')),
+							var _v20 = _strelka_2017$phi$Action$SendBotChatItem(_strelka_2017$phi$Chat_Narrative$enterBuildMode),
 								_v21 = model;
 							msg = _v20;
 							model = _v21;
 							continue update;
 						case 'exitBuildModeAnimated':
-							var _v22 = _strelka_2017$phi$Action$SendBotChatItem(
-								_strelka_2017$phi$Chat_Model$BotMessage('You\'ve exited building mode')),
+							var _v22 = _strelka_2017$phi$Action$SendBotChatItem(_strelka_2017$phi$Chat_Narrative$exitBuildMode),
 								_v23 = model;
 							msg = _v22;
 							model = _v23;
@@ -23356,8 +23427,17 @@ var _strelka_2017$phi$Update$handleMultiChoiceMsg = F2(
 					_strelka_2017$phi$Update$update,
 					_strelka_2017$phi$Action$ToggleBuildMode(true),
 					model);
+			case 'McaLeaveBuildMode':
+				return A2(
+					_strelka_2017$phi$Update$update,
+					_strelka_2017$phi$Action$ToggleBuildMode(false),
+					model);
 			case 'McaRunDay':
-				return _strelka_2017$phi$Update$runDay(model);
+				return A3(
+					_ccapndave$elm_update_extra$Update_Extra$andThen,
+					_strelka_2017$phi$Update$update,
+					_strelka_2017$phi$Action$DaySummary,
+					_strelka_2017$phi$Update$runDay(model));
 			case 'McaSelectLocation':
 				return A2(
 					_elm_lang$core$Platform_Cmd_ops['!'],
@@ -23371,16 +23451,16 @@ var _strelka_2017$phi$Update$handleMultiChoiceMsg = F2(
 		}
 	});
 var _strelka_2017$phi$Update$runDay = function (model) {
-	var joinEdges = F2(
-		function (source, target) {
-			return A2(
-				_elm_community$graph$Graph$fromNodesAndEdges,
-				_elm_community$graph$Graph$nodes(target),
-				A2(
-					_elm_lang$core$List$append,
-					_elm_community$graph$Graph$edges(source),
-					_elm_community$graph$Graph$edges(target)));
-		});
+	var makeBidirectional = function (nw) {
+		return A2(
+			_elm_community$graph$Graph$fromNodesAndEdges,
+			_elm_community$graph$Graph$nodes(nw),
+			A2(
+				_elm_lang$core$List$append,
+				_elm_community$graph$Graph$edges(nw),
+				_elm_community$graph$Graph$edges(
+					_elm_community$graph$Graph$reverseEdges(nw))));
+	};
 	var updateNetwork = F2(
 		function (source, target) {
 			return A2(
@@ -23390,19 +23470,7 @@ var _strelka_2017$phi$Update$runDay = function (model) {
 		});
 	var joinNetworks = F2(
 		function (list, network) {
-			joinNetworks:
-			while (true) {
-				var _p7 = list;
-				if (_p7.ctor === '[]') {
-					return network;
-				} else {
-					var _v29 = _p7._1,
-						_v30 = A2(updateNetwork, _p7._0, network);
-					list = _v29;
-					network = _v30;
-					continue joinNetworks;
-				}
-			}
+			return A3(_elm_lang$core$List$foldr, updateNetwork, network, list);
 		});
 	var applyPhases = function (network) {
 		return _strelka_2017$phi$Simulation_Simulation$tradingPhase(
@@ -23420,14 +23488,12 @@ var _strelka_2017$phi$Update$runDay = function (model) {
 			_elm_lang$core$List$map,
 			applyPhases,
 			_elm_community$graph$Graph$stronglyConnectedComponents(
-				A2(
-					joinEdges,
-					_elm_community$graph$Graph$reverseEdges(nw),
-					nw)));
+				makeBidirectional(nw)));
 	};
 	var newNetwork = A2(
 		joinNetworks,
-		newNetworkList(model.network),
+		newNetworkList(
+			_strelka_2017$phi$Simulation_Helpers$liveNodeNetwork(model.network)),
 		model.network);
 	var modelWithUpdatedNetwork = _elm_lang$core$Native_Utils.update(
 		model,
@@ -23571,6 +23637,29 @@ var _strelka_2017$phi$View_ChatHeader$viewChatHeader = function (model) {
 					_1: {ctor: '[]'}
 				}
 			}
+		});
+	var peerIcon = A2(
+		_elm_lang$svg$Svg$svg,
+		{
+			ctor: '::',
+			_0: _elm_lang$svg$Svg_Attributes$width('15'),
+			_1: {
+				ctor: '::',
+				_0: _elm_lang$svg$Svg_Attributes$height('15'),
+				_1: {
+					ctor: '::',
+					_0: _elm_lang$svg$Svg_Attributes$class('node peer'),
+					_1: {ctor: '[]'}
+				}
+			}
+		},
+		{
+			ctor: '::',
+			_0: A2(
+				_elm_lang$svg$Svg$circle,
+				{ctor: '[]'},
+				{ctor: '[]'}),
+			_1: {ctor: '[]'}
 		});
 	var pt = function (theText) {
 		return A2(
@@ -23728,45 +23817,116 @@ var _strelka_2017$phi$View_ChatHeader$viewChatHeader = function (model) {
 													_elm_lang$html$Html$div,
 													{
 														ctor: '::',
-														_0: _elm_lang$html$Html_Attributes$class('budget_status'),
+														_0: _elm_lang$html$Html_Attributes$class('node_counts'),
 														_1: {ctor: '[]'}
 													},
 													{
 														ctor: '::',
 														_0: A2(
-															_elm_lang$html$Html$b,
+															_elm_lang$html$Html$div,
 															{ctor: '[]'},
 															{
 																ctor: '::',
-																_0: _elm_lang$html$Html$text('BUDGET'),
-																_1: {ctor: '[]'}
+																_0: _elm_lang$html$Html$text('Peers'),
+																_1: {
+																	ctor: '::',
+																	_0: peerIcon,
+																	_1: {
+																		ctor: '::',
+																		_0: _elm_lang$html$Html$text(
+																			_elm_lang$core$Basics$toString(24)),
+																		_1: {ctor: '[]'}
+																	}
+																}
 															}),
 														_1: {
 															ctor: '::',
 															_0: A2(
-																_elm_lang$html$Html$br,
+																_elm_lang$html$Html$div,
 																{ctor: '[]'},
-																{ctor: '[]'}),
+																{
+																	ctor: '::',
+																	_0: _elm_lang$html$Html$text('Solar Panels'),
+																	_1: {
+																		ctor: '::',
+																		_0: peerIcon,
+																		_1: {
+																			ctor: '::',
+																			_0: _elm_lang$html$Html$text(
+																				_elm_lang$core$Basics$toString(6)),
+																			_1: {ctor: '[]'}
+																		}
+																	}
+																}),
 															_1: {
 																ctor: '::',
 																_0: A2(
-																	_elm_lang$html$Html$span,
+																	_elm_lang$html$Html$div,
+																	{ctor: '[]'},
 																	{
 																		ctor: '::',
-																		_0: _elm_lang$html$Html_Attributes$class('budget_coin'),
-																		_1: {ctor: '[]'}
-																	},
-																	{
-																		ctor: '::',
-																		_0: _elm_lang$html$Html$text(
-																			_strelka_2017$phi$View_Helpers$phiCoin(model.budget)),
-																		_1: {ctor: '[]'}
+																		_0: _elm_lang$html$Html$text('Wind Turbines'),
+																		_1: {
+																			ctor: '::',
+																			_0: peerIcon,
+																			_1: {
+																				ctor: '::',
+																				_0: _elm_lang$html$Html$text(
+																					_elm_lang$core$Basics$toString(8)),
+																				_1: {ctor: '[]'}
+																			}
+																		}
 																	}),
 																_1: {ctor: '[]'}
 															}
 														}
 													}),
-												_1: {ctor: '[]'}
+												_1: {
+													ctor: '::',
+													_0: A2(
+														_elm_lang$html$Html$div,
+														{
+															ctor: '::',
+															_0: _elm_lang$html$Html_Attributes$class('budget_status'),
+															_1: {ctor: '[]'}
+														},
+														{
+															ctor: '::',
+															_0: A2(
+																_elm_lang$html$Html$b,
+																{ctor: '[]'},
+																{
+																	ctor: '::',
+																	_0: _elm_lang$html$Html$text('BUDGET'),
+																	_1: {ctor: '[]'}
+																}),
+															_1: {
+																ctor: '::',
+																_0: A2(
+																	_elm_lang$html$Html$br,
+																	{ctor: '[]'},
+																	{ctor: '[]'}),
+																_1: {
+																	ctor: '::',
+																	_0: A2(
+																		_elm_lang$html$Html$span,
+																		{
+																			ctor: '::',
+																			_0: _elm_lang$html$Html_Attributes$class('budget_coin'),
+																			_1: {ctor: '[]'}
+																		},
+																		{
+																			ctor: '::',
+																			_0: _elm_lang$html$Html$text(
+																				_strelka_2017$phi$View_Helpers$phiCoin(model.budget)),
+																			_1: {ctor: '[]'}
+																		}),
+																	_1: {ctor: '[]'}
+																}
+															}
+														}),
+													_1: {ctor: '[]'}
+												}
 											}),
 										_1: {ctor: '[]'}
 									}

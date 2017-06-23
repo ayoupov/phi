@@ -12,6 +12,7 @@ import Model exposing (Model)
 import Simulation.BuildingMode exposing (handleConvertNodeRequest, toggleBuildMode)
 import Simulation.Encoding exposing (encodeEdge, encodeGraph, encodeNodeLabel)
 import Simulation.GraphUpdates exposing (addEdge, addNodeWithEdges, updateNodes)
+import Simulation.Helpers exposing (liveNodeNetwork)
 import Simulation.Init.Generators as Generators exposing (..)
 import Simulation.Model exposing (..)
 import Simulation.Simulation as Simulation exposing (..)
@@ -94,11 +95,11 @@ update msg model =
                 |> update RenderPhiNetwork
 
         AddGenerator node ->
-            { model | network = addNodeWithEdges 1 (GeneratorNode node) model.network }
+            { model | network = addNodeWithEdges 70 (GeneratorNode node) model.network }
                 |> update RenderPhiNetwork
 
         AddPeer node ->
-            { model | network = addNodeWithEdges 1 (PeerNode node) model.network }
+            { model | network = addNodeWithEdges 70 (PeerNode node) model.network }
                 |> update RenderPhiNetwork
 
         AddEdge edge ->
@@ -141,10 +142,11 @@ update msg model =
                     update (SendBotChatItem <| Narrative.dayTraded model) model
 
                 "enterBuildModeAnimated" ->
-                    update (SendBotChatItem <| BotMessage "You've entered building mode") model
+                    model
+                        |> update (SendBotChatItem <| Narrative.enterBuildMode)
 
                 "exitBuildModeAnimated" ->
-                    update (SendBotChatItem <| BotMessage "You've exited building mode") model
+                    update (SendBotChatItem <| Narrative.exitBuildMode) model
 
                 _ ->
                     update NoOp model
@@ -185,8 +187,13 @@ handleMultiChoiceMsg action model =
             --            changeDesign model
             update (ToggleBuildMode True) model
 
+        McaLeaveBuildMode ->
+            --            changeDesign model
+            update (ToggleBuildMode False) model
+
         McaRunDay ->
             runDay model
+                |> andThen update DaySummary
 
         --                |> andThen update DaySummary
         McaSelectLocation _ ->
@@ -214,27 +221,23 @@ runDay model =
 
         joinNetworks : List PhiNetwork -> PhiNetwork -> PhiNetwork
         joinNetworks list network =
-            case list of
-                [] ->
-                    network
+            List.foldr updateNetwork network list
 
-                nw :: tail ->
-                    joinNetworks tail (updateNetwork nw network)
-
-        joinEdges : PhiNetwork -> PhiNetwork -> PhiNetwork
-        joinEdges source target =
-            Graph.fromNodesAndEdges (Graph.nodes target) (List.append (Graph.edges source) (Graph.edges target))
+        makeBidirectional : PhiNetwork -> PhiNetwork
+        makeBidirectional nw =
+            Graph.edges (Graph.reverseEdges nw)
+                |> List.append (Graph.edges nw)
+                |> Graph.fromNodesAndEdges (Graph.nodes nw)
 
         newNetworkList nw =
-            nw
-                |> joinEdges (Graph.reverseEdges nw)
+            makeBidirectional nw
                 |> Graph.stronglyConnectedComponents
                 |> List.map applyPhases
 
         --        newNetwork =
         --            applyPhases model.network
         newNetwork =
-            joinNetworks (newNetworkList model.network) model.network
+            joinNetworks (newNetworkList <| liveNodeNetwork model.network) model.network
 
         modelWithUpdatedNetwork =
             { model | network = newNetwork }

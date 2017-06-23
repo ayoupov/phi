@@ -1,7 +1,7 @@
 module Simulation.Helpers exposing (..)
 
 import Graph exposing (Node)
-import Simulation.Model exposing (Coords, NodeLabel(..))
+import Simulation.Model exposing (Coords, NodeLabel(..), PhiNetwork)
 
 
 getCoords : NodeLabel -> Coords
@@ -40,3 +40,11 @@ isLiveNode node =
 
         _ ->
             Just node
+
+
+liveNodeNetwork : PhiNetwork -> PhiNetwork
+liveNodeNetwork network =
+    network
+        |> Graph.nodes
+        |> List.filterMap (Maybe.map .id << isLiveNode)
+        |> (\idList -> Graph.inducedSubgraph idList network)

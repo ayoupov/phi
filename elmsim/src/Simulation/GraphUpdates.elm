@@ -32,7 +32,7 @@ addNodeWithEdges searchRadius nodeLabel network =
             Node nodeId nodeLabel
 
         isCloseEnough a b =
-            distBetweenNodes a b < 80
+            distBetweenNodes a b < searchRadius
 
         closeNodes =
             network
