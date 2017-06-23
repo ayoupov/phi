@@ -19332,7 +19332,7 @@ var _strelka_2017$phi$Simulation_Helpers$distBetweenNodes = F2(
 			Math.pow(bPos.x - aPos.x, 2) + Math.pow(bPos.y - aPos.y, 2));
 	});
 
-var _strelka_2017$phi$Simulation_NodeList$potentialGeneratorList = _elm_lang$core$Set$fromList(
+var _strelka_2017$phi$Simulation_NodeList$generatorList = _elm_lang$core$Set$fromList(
 	{
 		ctor: '::',
 		_0: {ctor: '_Tuple2', _0: 136, _1: 600},
@@ -19502,7 +19502,7 @@ var _strelka_2017$phi$Simulation_NodeList$potentialGeneratorList = _elm_lang$cor
 			}
 		}
 	});
-var _strelka_2017$phi$Simulation_NodeList$potentialPeerList = _elm_lang$core$Set$fromList(
+var _strelka_2017$phi$Simulation_NodeList$peerList = _elm_lang$core$Set$fromList(
 	{
 		ctor: '::',
 		_0: {ctor: '_Tuple2', _0: 12, _1: 653},
@@ -20058,6 +20058,7 @@ var _strelka_2017$phi$Simulation_NodeList$initialPVNodeList = _elm_lang$core$Set
 			}
 		}
 	});
+var _strelka_2017$phi$Simulation_NodeList$potentialPeerList = A2(_elm_lang$core$Set$diff, _strelka_2017$phi$Simulation_NodeList$peerList, _strelka_2017$phi$Simulation_NodeList$initialPVNodeList);
 var _strelka_2017$phi$Simulation_NodeList$initialWTNodeList = _elm_lang$core$Set$fromList(
 	{
 		ctor: '::',
@@ -20092,6 +20093,11 @@ var _strelka_2017$phi$Simulation_NodeList$initialWTNodeList = _elm_lang$core$Set
 			}
 		}
 	});
+var _strelka_2017$phi$Simulation_NodeList$potentialGeneratorList = A3(
+	_elm_lang$core$Basics$flip,
+	_elm_lang$core$Set$diff,
+	_strelka_2017$phi$Simulation_NodeList$initialWTNodeList,
+	A2(_elm_lang$core$Set$diff, _strelka_2017$phi$Simulation_NodeList$generatorList, _strelka_2017$phi$Simulation_NodeList$initialPVNodeList));
 var _strelka_2017$phi$Simulation_NodeList$initialPeerList = _elm_lang$core$Set$fromList(
 	{
 		ctor: '::',

@@ -61,6 +61,17 @@ initialPVNodeList =
 
 potentialPeerList : Set ( Int, Int )
 potentialPeerList =
+    Set.diff peerList initialPVNodeList
+
+
+potentialGeneratorList : Set ( Int, Int )
+potentialGeneratorList =
+    Set.diff generatorList initialPVNodeList
+        |> flip Set.diff initialWTNodeList
+
+
+peerList : Set ( Int, Int )
+peerList =
     Set.fromList
         [ ( 12, 653 )
         , ( 62, 632 )
@@ -197,8 +208,8 @@ potentialPeerList =
         ]
 
 
-potentialGeneratorList : Set ( Int, Int )
-potentialGeneratorList =
+generatorList : Set ( Int, Int )
+generatorList =
     Set.fromList
         [ ( 136, 600 )
         , ( 116, 670 )
