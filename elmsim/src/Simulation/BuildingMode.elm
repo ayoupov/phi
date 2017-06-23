@@ -43,7 +43,7 @@ parseConvertNewLine x =
                 head::tail ->
                     let
                         first = (Debug.log "first" head)
-                        second = (Debug.log "second" takeFirstElementWithDefault0 tail)
+                        second = (Debug.log "second" (takeFirstElementWithDefault0 tail))
                     in
                         RequestNewLine first second
                 _ -> NoOp
