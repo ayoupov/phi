@@ -29,5 +29,6 @@ subscriptions model =
     [ Chat.elizaReply (SendBotChatItem << BotMessage)
     , Interop.animationFinished AnimationFinished
     , BuildingMode.requestConvertNode BuildingMode.parseConvertNodeRequest
+    , BuildingMode.requestNewLine BuildingMode.parseConvertNewLine
     ]
         |> Sub.batch

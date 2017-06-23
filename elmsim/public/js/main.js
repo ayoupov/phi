@@ -324,7 +324,7 @@ $(function () {
                     {
                         otherSelectedNode.classed('selected', false);
                         console.log(otherSelectedNode.data());
-                        app.ports.requestNewLine(otherSelectedNode.data().id, node.id);
+                        app.ports.requestNewLine([otherSelectedNode.data().id, node.id]);
                     } else
                     // 2.2. if there is none, fix the starting node
                     {

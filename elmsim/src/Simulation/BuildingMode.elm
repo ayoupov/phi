@@ -4,6 +4,7 @@ import Action exposing (Msg(..))
 import Graph exposing (Edge, Node, NodeContext, NodeId)
 import Json.Decode as Decode
 import Json.Encode exposing (Value)
+import ListHelpers exposing (takeFirstElementWithDefault0)
 import Simulation.Model exposing (..)
 
 
@@ -30,22 +31,22 @@ parseConvertNodeRequest x =
         Err _ ->
             NoOp
 
-parseConvertNewLine : Value -> Value -> Msg
-parseConvertNewLine x1 x2 =
+parseConvertNewLine : Value -> Msg
+parseConvertNewLine x =
     let
         result =
-            Decode.decodeValue Decode.int x1
+            Decode.decodeValue (Decode.list Decode.int) x
     in
     case result of
-        Ok nodeId1 ->
-            let
-                r2 = Decode.decodeValue Decode.int x2
-            in
-            case r2 of
-            Ok nodeId2 ->
-                RequestNewLine nodeId1 nodeId2
-            Err _ ->
-                NoOp
+        Ok list ->
+            case list of
+                head::tail ->
+                    let
+                        first = (Debug.log "first" head)
+                        second = (Debug.log "second" takeFirstElementWithDefault0 tail)
+                    in
+                        RequestNewLine first second
+                _ -> NoOp
 
         Err _ ->
             NoOp

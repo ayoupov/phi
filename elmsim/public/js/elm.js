@@ -22844,22 +22844,25 @@ var _strelka_2017$phi$Simulation_BuildingMode$handleConvertNodeRequest = F2(
 				},
 				A2(_elm_community$graph$Graph$get, nodeId, phiNetwork)));
 	});
-var _strelka_2017$phi$Simulation_BuildingMode$parseConvertNewLine = F2(
-	function (x1, x2) {
-		var result = A2(_elm_lang$core$Json_Decode$decodeValue, _elm_lang$core$Json_Decode$int, x1);
-		var _p4 = result;
-		if (_p4.ctor === 'Ok') {
-			var r2 = A2(_elm_lang$core$Json_Decode$decodeValue, _elm_lang$core$Json_Decode$int, x2);
-			var _p5 = r2;
-			if (_p5.ctor === 'Ok') {
-				return A2(_strelka_2017$phi$Action$RequestNewLine, _p4._0, _p5._0);
-			} else {
-				return _strelka_2017$phi$Action$NoOp;
-			}
+var _strelka_2017$phi$Simulation_BuildingMode$parseConvertNewLine = function (x) {
+	var result = A2(
+		_elm_lang$core$Json_Decode$decodeValue,
+		_elm_lang$core$Json_Decode$list(_elm_lang$core$Json_Decode$int),
+		x);
+	var _p4 = result;
+	if (_p4.ctor === 'Ok') {
+		var _p5 = _p4._0;
+		if (_p5.ctor === '::') {
+			var second = A3(_elm_lang$core$Debug$log, 'second', _strelka_2017$phi$ListHelpers$takeFirstElementWithDefault0, _p5._1);
+			var first = A2(_elm_lang$core$Debug$log, 'first', _p5._0);
+			return A2(_strelka_2017$phi$Action$RequestNewLine, first, second);
 		} else {
 			return _strelka_2017$phi$Action$NoOp;
 		}
-	});
+	} else {
+		return _strelka_2017$phi$Action$NoOp;
+	}
+};
 var _strelka_2017$phi$Simulation_BuildingMode$parseConvertNodeRequest = function (x) {
 	var result = A2(_elm_lang$core$Json_Decode$decodeValue, _elm_lang$core$Json_Decode$int, x);
 	var _p6 = result;
@@ -24379,7 +24382,11 @@ var _strelka_2017$phi$Main$subscriptions = function (model) {
 				_1: {
 					ctor: '::',
 					_0: _strelka_2017$phi$Simulation_BuildingMode$requestConvertNode(_strelka_2017$phi$Simulation_BuildingMode$parseConvertNodeRequest),
-					_1: {ctor: '[]'}
+					_1: {
+						ctor: '::',
+						_0: _strelka_2017$phi$Simulation_BuildingMode$requestNewLine(_strelka_2017$phi$Simulation_BuildingMode$parseConvertNewLine),
+						_1: {ctor: '[]'}
+					}
 				}
 			}
 		});
