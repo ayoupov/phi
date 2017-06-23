@@ -20058,7 +20058,6 @@ var _strelka_2017$phi$Simulation_NodeList$initialPVNodeList = _elm_lang$core$Set
 			}
 		}
 	});
-var _strelka_2017$phi$Simulation_NodeList$potentialPeerList = A2(_elm_lang$core$Set$diff, _strelka_2017$phi$Simulation_NodeList$peerList, _strelka_2017$phi$Simulation_NodeList$initialPVNodeList);
 var _strelka_2017$phi$Simulation_NodeList$initialWTNodeList = _elm_lang$core$Set$fromList(
 	{
 		ctor: '::',
@@ -20196,6 +20195,7 @@ var _strelka_2017$phi$Simulation_NodeList$initialPeerList = _elm_lang$core$Set$f
 			}
 		}
 	});
+var _strelka_2017$phi$Simulation_NodeList$potentialPeerList = A2(_elm_lang$core$Set$diff, _strelka_2017$phi$Simulation_NodeList$peerList, _strelka_2017$phi$Simulation_NodeList$initialPeerList);
 
 var _strelka_2017$phi$Simulation_GraphUpdates$potentialNodesList = function () {
 	var peerList = A2(

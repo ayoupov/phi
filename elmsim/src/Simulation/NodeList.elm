@@ -61,7 +61,7 @@ initialPVNodeList =
 
 potentialPeerList : Set ( Int, Int )
 potentialPeerList =
-    Set.diff peerList initialPVNodeList
+    Set.diff peerList initialPeerList
 
 
 potentialGeneratorList : Set ( Int, Int )
