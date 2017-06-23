@@ -22853,7 +22853,10 @@ var _strelka_2017$phi$Simulation_BuildingMode$parseConvertNewLine = function (x)
 	if (_p4.ctor === 'Ok') {
 		var _p5 = _p4._0;
 		if (_p5.ctor === '::') {
-			var second = A3(_elm_lang$core$Debug$log, 'second', _strelka_2017$phi$ListHelpers$takeFirstElementWithDefault0, _p5._1);
+			var second = A2(
+				_elm_lang$core$Debug$log,
+				'second',
+				_strelka_2017$phi$ListHelpers$takeFirstElementWithDefault0(_p5._1));
 			var first = A2(_elm_lang$core$Debug$log, 'first', _p5._0);
 			return A2(_strelka_2017$phi$Action$RequestNewLine, first, second);
 		} else {
