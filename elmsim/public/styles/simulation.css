@@ -40,8 +40,8 @@
 }
 
 .node.potential {
-  fill: rgb(127,127,127);
-  stroke: rgb(127,127,127);
+  fill: rgba(127,127,127,0.6);
+  stroke: rgba(127,127,127,0.6);
   cursor: pointer;
 }
 

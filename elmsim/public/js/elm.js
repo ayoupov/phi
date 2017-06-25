@@ -19036,6 +19036,14 @@ var _strelka_2017$phi$Action$RenderPhiNetwork = {ctor: 'RenderPhiNetwork'};
 var _strelka_2017$phi$Action$AddEdge = function (a) {
 	return {ctor: 'AddEdge', _0: a};
 };
+var _strelka_2017$phi$Action$AddPeerWithEdges = F2(
+	function (a, b) {
+		return {ctor: 'AddPeerWithEdges', _0: a, _1: b};
+	});
+var _strelka_2017$phi$Action$AddGeneratorWithEdges = F2(
+	function (a, b) {
+		return {ctor: 'AddGeneratorWithEdges', _0: a, _1: b};
+	});
 var _strelka_2017$phi$Action$AddPeer = function (a) {
 	return {ctor: 'AddPeer', _0: a};
 };
@@ -21836,24 +21844,42 @@ var _strelka_2017$phi$Simulation_WeatherList$restWeather = function (list) {
 		_elm_lang$core$List$tail(list));
 };
 
-var _strelka_2017$phi$Simulation_Init_Generators$generateEdge = A2(
-	_elm_lang$core$Random$generate,
-	_strelka_2017$phi$Action$AddEdge,
-	A3(
-		_elm_lang$core$Random$map2,
-		_strelka_2017$phi$Simulation_GraphUpdates$createEdge,
-		A2(_elm_lang$core$Random$int, 0, 20),
-		A2(_elm_lang$core$Random$int, 0, 20)));
-var _strelka_2017$phi$Simulation_Init_Generators$generatePeer = function (coords) {
-	return A2(
-		_elm_lang$core$Random$generate,
-		_strelka_2017$phi$Action$AddPeer,
-		A5(
-			_elm_lang$core$Random$map4,
-			_strelka_2017$phi$Simulation_Model$Peer,
-			A6(
-				_elm_lang$core$Random$map5,
-				_strelka_2017$phi$Simulation_Model$PeerJoules,
+var _strelka_2017$phi$Simulation_Init_Generators$generatePeer = F2(
+	function (peerMsgConstructor, coords) {
+		return A2(
+			_elm_lang$core$Random$generate,
+			peerMsgConstructor,
+			A5(
+				_elm_lang$core$Random$map4,
+				_strelka_2017$phi$Simulation_Model$Peer,
+				A6(
+					_elm_lang$core$Random$map5,
+					_strelka_2017$phi$Simulation_Model$PeerJoules,
+					_elm_community$random_extra$Random_Extra$constant(
+						{
+							ctor: '::',
+							_0: 0,
+							_1: {ctor: '[]'}
+						}),
+					_elm_community$random_extra$Random_Extra$constant(
+						{
+							ctor: '::',
+							_0: 0,
+							_1: {ctor: '[]'}
+						}),
+					A2(_elm_lang$core$Random$float, 5, 10),
+					_elm_community$random_extra$Random_Extra$constant(
+						{
+							ctor: '::',
+							_0: 0,
+							_1: {ctor: '[]'}
+						}),
+					_elm_community$random_extra$Random_Extra$constant(
+						{
+							ctor: '::',
+							_0: 0,
+							_1: {ctor: '[]'}
+						})),
 				_elm_community$random_extra$Random_Extra$constant(
 					{
 						ctor: '::',
@@ -21863,62 +21889,39 @@ var _strelka_2017$phi$Simulation_Init_Generators$generatePeer = function (coords
 				_elm_community$random_extra$Random_Extra$constant(
 					{
 						ctor: '::',
-						_0: 0,
+						_0: 1,
 						_1: {ctor: '[]'}
 					}),
-				A2(_elm_lang$core$Random$float, 5, 10),
+				_elm_community$random_extra$Random_Extra$constant(coords)));
+	});
+var _strelka_2017$phi$Simulation_Init_Generators$generateWindTurbine = F2(
+	function (genMsgConstructor, coords) {
+		return A2(
+			_elm_lang$core$Random$generate,
+			genMsgConstructor,
+			A5(
+				_elm_lang$core$Random$map4,
+				_strelka_2017$phi$Simulation_Model$SimGenerator,
 				_elm_community$random_extra$Random_Extra$constant(
-					{
-						ctor: '::',
-						_0: 0,
-						_1: {ctor: '[]'}
-					}),
+					{ctor: '[]'}),
+				A2(_elm_lang$core$Random$float, 0, 10),
+				_elm_community$random_extra$Random_Extra$constant(coords),
+				_elm_community$random_extra$Random_Extra$constant(_strelka_2017$phi$Simulation_Model$WindTurbine)));
+	});
+var _strelka_2017$phi$Simulation_Init_Generators$generatePVPanel = F2(
+	function (genMsgConstructor, coords) {
+		return A2(
+			_elm_lang$core$Random$generate,
+			genMsgConstructor,
+			A5(
+				_elm_lang$core$Random$map4,
+				_strelka_2017$phi$Simulation_Model$SimGenerator,
 				_elm_community$random_extra$Random_Extra$constant(
-					{
-						ctor: '::',
-						_0: 0,
-						_1: {ctor: '[]'}
-					})),
-			_elm_community$random_extra$Random_Extra$constant(
-				{
-					ctor: '::',
-					_0: 0,
-					_1: {ctor: '[]'}
-				}),
-			_elm_community$random_extra$Random_Extra$constant(
-				{
-					ctor: '::',
-					_0: 1,
-					_1: {ctor: '[]'}
-				}),
-			_elm_community$random_extra$Random_Extra$constant(coords)));
-};
-var _strelka_2017$phi$Simulation_Init_Generators$generateWindTurbine = function (coords) {
-	return A2(
-		_elm_lang$core$Random$generate,
-		_strelka_2017$phi$Action$AddGenerator,
-		A5(
-			_elm_lang$core$Random$map4,
-			_strelka_2017$phi$Simulation_Model$SimGenerator,
-			_elm_community$random_extra$Random_Extra$constant(
-				{ctor: '[]'}),
-			A2(_elm_lang$core$Random$float, 0, 10),
-			_elm_community$random_extra$Random_Extra$constant(coords),
-			_elm_community$random_extra$Random_Extra$constant(_strelka_2017$phi$Simulation_Model$WindTurbine)));
-};
-var _strelka_2017$phi$Simulation_Init_Generators$generatePVPanel = function (coords) {
-	return A2(
-		_elm_lang$core$Random$generate,
-		_strelka_2017$phi$Action$AddGenerator,
-		A5(
-			_elm_lang$core$Random$map4,
-			_strelka_2017$phi$Simulation_Model$SimGenerator,
-			_elm_community$random_extra$Random_Extra$constant(
-				{ctor: '[]'}),
-			A2(_elm_lang$core$Random$float, 0, 10),
-			_elm_community$random_extra$Random_Extra$constant(coords),
-			_elm_community$random_extra$Random_Extra$constant(_strelka_2017$phi$Simulation_Model$SolarPanel)));
-};
+					{ctor: '[]'}),
+				A2(_elm_lang$core$Random$float, 0, 10),
+				_elm_community$random_extra$Random_Extra$constant(coords),
+				_elm_community$random_extra$Random_Extra$constant(_strelka_2017$phi$Simulation_Model$SolarPanel)));
+	});
 
 var _strelka_2017$phi$Model$initGenerators = function () {
 	var asCoordsList = function (_p0) {
@@ -21927,21 +21930,25 @@ var _strelka_2017$phi$Model$initGenerators = function () {
 			_strelka_2017$phi$Simulation_Model$tupleToCoords,
 			_elm_lang$core$Set$toList(_p0));
 	};
+	var edgeSearchRadius = 70;
 	return A2(
 		_elm_lang$core$Basics_ops['++'],
 		A2(
 			_elm_lang$core$List$map,
-			_strelka_2017$phi$Simulation_Init_Generators$generatePeer,
+			_strelka_2017$phi$Simulation_Init_Generators$generatePeer(
+				_strelka_2017$phi$Action$AddPeerWithEdges(edgeSearchRadius)),
 			asCoordsList(_strelka_2017$phi$Simulation_NodeList$initialPeerList)),
 		A2(
 			_elm_lang$core$Basics_ops['++'],
 			A2(
 				_elm_lang$core$List$map,
-				_strelka_2017$phi$Simulation_Init_Generators$generatePVPanel,
+				_strelka_2017$phi$Simulation_Init_Generators$generatePVPanel(
+					_strelka_2017$phi$Action$AddGeneratorWithEdges(edgeSearchRadius)),
 				asCoordsList(_strelka_2017$phi$Simulation_NodeList$initialPVNodeList)),
 			A2(
 				_elm_lang$core$List$map,
-				_strelka_2017$phi$Simulation_Init_Generators$generateWindTurbine,
+				_strelka_2017$phi$Simulation_Init_Generators$generateWindTurbine(
+					_strelka_2017$phi$Action$AddGeneratorWithEdges(edgeSearchRadius)),
 				asCoordsList(_strelka_2017$phi$Simulation_NodeList$initialWTNodeList))));
 }();
 var _strelka_2017$phi$Model$initNegawattLimit = function (map) {
@@ -22792,26 +22799,74 @@ var _strelka_2017$phi$Chat_Narrative$daySummary = function (model) {
 };
 
 var _strelka_2017$phi$Simulation_BuildingMode$handleNewLineRequest = F3(
-	function (nodeId1, nodeId2, phiNetwork) {
-		return phiNetwork;
+	function (a, b, phiNetwork) {
+		return A2(
+			_strelka_2017$phi$Simulation_GraphUpdates$addEdge,
+			A2(_strelka_2017$phi$Simulation_GraphUpdates$createEdge, a, b),
+			phiNetwork);
+	});
+var _strelka_2017$phi$Simulation_BuildingMode$handleConvertNode = F2(
+	function (nodeId, model) {
+		var nodeGenerator = function (nodeLabel) {
+			var coords = _strelka_2017$phi$Simulation_Helpers$getCoords(nodeLabel);
+			var _p0 = nodeLabel;
+			if (_p0.ctor === 'PotentialNode') {
+				var _p1 = _p0._0.nodeType;
+				if (_p1.ctor === 'PotentialGenerator') {
+					return _elm_lang$core$Maybe$Just(
+						A2(_strelka_2017$phi$Simulation_Init_Generators$generatePVPanel, _strelka_2017$phi$Action$AddGenerator, coords));
+				} else {
+					return _elm_lang$core$Maybe$Just(
+						A2(_strelka_2017$phi$Simulation_Init_Generators$generatePeer, _strelka_2017$phi$Action$AddPeer, coords));
+				}
+			} else {
+				return _elm_lang$core$Maybe$Nothing;
+			}
+		};
+		var maybeNodeLabel = A2(
+			_elm_lang$core$Maybe$map,
+			function (_p2) {
+				return function (_) {
+					return _.label;
+				}(
+					function (_) {
+						return _.node;
+					}(_p2));
+			},
+			A2(_elm_community$graph$Graph$get, nodeId, model.network));
+		var cmd = A2(
+			_elm_lang$core$Maybe$withDefault,
+			_elm_lang$core$Platform_Cmd$none,
+			A2(_elm_lang$core$Maybe$andThen, nodeGenerator, maybeNodeLabel));
+		var networkWithoutOldNode = A2(_elm_community$graph$Graph$remove, nodeId, model.network);
+		return A2(
+			_elm_lang$core$Platform_Cmd_ops['!'],
+			_elm_lang$core$Native_Utils.update(
+				model,
+				{network: networkWithoutOldNode}),
+			{
+				ctor: '::',
+				_0: cmd,
+				_1: {ctor: '[]'}
+			});
 	});
 var _strelka_2017$phi$Simulation_BuildingMode$handleConvertNodeRequest = F2(
 	function (nodeId, phiNetwork) {
 		var convertNodeLabel = function (label) {
-			var _p0 = label;
-			if (_p0.ctor === 'PotentialNode') {
-				var _p2 = _p0._0.pos;
-				var _p1 = _p0._0.nodeType;
-				if (_p1.ctor === 'PotentialGenerator') {
+			var _p3 = label;
+			if (_p3.ctor === 'PotentialNode') {
+				var _p5 = _p3._0.pos;
+				var _p4 = _p3._0.nodeType;
+				if (_p4.ctor === 'PotentialGenerator') {
 					return _strelka_2017$phi$Simulation_Model$GeneratorNode(
 						_elm_lang$core$Native_Utils.update(
 							_strelka_2017$phi$Simulation_Model$defaultGenerator,
-							{pos: _p2}));
+							{pos: _p5}));
 				} else {
 					return _strelka_2017$phi$Simulation_Model$PeerNode(
 						_elm_lang$core$Native_Utils.update(
 							_strelka_2017$phi$Simulation_Model$defaultPeer,
-							{pos: _p2}));
+							{pos: _p5}));
 				}
 			} else {
 				return label;
@@ -22836,11 +22891,11 @@ var _strelka_2017$phi$Simulation_BuildingMode$handleConvertNodeRequest = F2(
 			phiNetwork,
 			A2(
 				_elm_lang$core$Maybe$map,
-				function (_p3) {
+				function (_p6) {
 					return function (nc) {
 						return A2(_elm_community$graph$Graph$insert, nc, phiNetwork);
 					}(
-						convertNodeContext(_p3));
+						convertNodeContext(_p6));
 				},
 				A2(_elm_community$graph$Graph$get, nodeId, phiNetwork)));
 	});
@@ -22849,15 +22904,15 @@ var _strelka_2017$phi$Simulation_BuildingMode$parseConvertNewLine = function (x)
 		_elm_lang$core$Json_Decode$decodeValue,
 		_elm_lang$core$Json_Decode$list(_elm_lang$core$Json_Decode$int),
 		x);
-	var _p4 = result;
-	if (_p4.ctor === 'Ok') {
-		var _p5 = _p4._0;
-		if (_p5.ctor === '::') {
+	var _p7 = result;
+	if (_p7.ctor === 'Ok') {
+		var _p8 = _p7._0;
+		if (_p8.ctor === '::') {
 			var second = A2(
 				_elm_lang$core$Debug$log,
 				'second',
-				_strelka_2017$phi$ListHelpers$takeFirstElementWithDefault0(_p5._1));
-			var first = A2(_elm_lang$core$Debug$log, 'first', _p5._0);
+				_strelka_2017$phi$ListHelpers$takeFirstElementWithDefault0(_p8._1));
+			var first = A2(_elm_lang$core$Debug$log, 'first', _p8._0);
 			return A2(_strelka_2017$phi$Action$RequestNewLine, first, second);
 		} else {
 			return _strelka_2017$phi$Action$NoOp;
@@ -22868,9 +22923,9 @@ var _strelka_2017$phi$Simulation_BuildingMode$parseConvertNewLine = function (x)
 };
 var _strelka_2017$phi$Simulation_BuildingMode$parseConvertNodeRequest = function (x) {
 	var result = A2(_elm_lang$core$Json_Decode$decodeValue, _elm_lang$core$Json_Decode$int, x);
-	var _p6 = result;
-	if (_p6.ctor === 'Ok') {
-		return _strelka_2017$phi$Action$RequestConvertNode(_p6._0);
+	var _p9 = result;
+	if (_p9.ctor === 'Ok') {
+		return _strelka_2017$phi$Action$RequestConvertNode(_p9._0);
 	} else {
 		return _strelka_2017$phi$Action$NoOp;
 	}
@@ -23270,73 +23325,95 @@ var _strelka_2017$phi$Update$update = F2(
 									},
 									A2(_elm_community$graph$Graph$get, _p0._0, model.network)))))(model);
 				case 'RequestConvertNode':
+					return A3(
+						_ccapndave$elm_update_extra$Update_Extra$andThen,
+						_strelka_2017$phi$Update$update,
+						_strelka_2017$phi$Action$RenderPhiNetwork,
+						A2(_strelka_2017$phi$Simulation_BuildingMode$handleConvertNode, _p0._0, model));
+				case 'RequestNewLine':
 					var _v5 = _strelka_2017$phi$Action$RenderPhiNetwork,
 						_v6 = _elm_lang$core$Native_Utils.update(
 						model,
 						{
-							network: A2(_strelka_2017$phi$Simulation_BuildingMode$handleConvertNodeRequest, _p0._0, model.network)
+							network: A3(_strelka_2017$phi$Simulation_BuildingMode$handleNewLineRequest, _p0._0, _p0._1, model.network)
 						});
 					msg = _v5;
 					model = _v6;
 					continue update;
-				case 'RequestNewLine':
+				case 'AddGeneratorWithEdges':
 					var _v7 = _strelka_2017$phi$Action$RenderPhiNetwork,
 						_v8 = _elm_lang$core$Native_Utils.update(
 						model,
 						{
-							network: A3(_strelka_2017$phi$Simulation_BuildingMode$handleNewLineRequest, _p0._0, _p0._1, model.network)
+							network: A3(
+								_strelka_2017$phi$Simulation_GraphUpdates$addNodeWithEdges,
+								_p0._0,
+								_strelka_2017$phi$Simulation_Model$GeneratorNode(_p0._1),
+								model.network)
 						});
 					msg = _v7;
 					model = _v8;
 					continue update;
-				case 'AddGenerator':
+				case 'AddPeerWithEdges':
 					var _v9 = _strelka_2017$phi$Action$RenderPhiNetwork,
 						_v10 = _elm_lang$core$Native_Utils.update(
 						model,
 						{
 							network: A3(
 								_strelka_2017$phi$Simulation_GraphUpdates$addNodeWithEdges,
-								70,
-								_strelka_2017$phi$Simulation_Model$GeneratorNode(_p0._0),
+								_p0._0,
+								_strelka_2017$phi$Simulation_Model$PeerNode(_p0._1),
 								model.network)
 						});
 					msg = _v9;
 					model = _v10;
 					continue update;
-				case 'AddPeer':
+				case 'AddGenerator':
 					var _v11 = _strelka_2017$phi$Action$RenderPhiNetwork,
 						_v12 = _elm_lang$core$Native_Utils.update(
 						model,
 						{
-							network: A3(
-								_strelka_2017$phi$Simulation_GraphUpdates$addNodeWithEdges,
-								70,
-								_strelka_2017$phi$Simulation_Model$PeerNode(_p0._0),
+							network: A2(
+								_strelka_2017$phi$Simulation_GraphUpdates$addNode,
+								_strelka_2017$phi$Simulation_Model$GeneratorNode(_p0._0),
 								model.network)
 						});
 					msg = _v11;
 					model = _v12;
 					continue update;
-				case 'AddEdge':
+				case 'AddPeer':
 					var _v13 = _strelka_2017$phi$Action$RenderPhiNetwork,
 						_v14 = _elm_lang$core$Native_Utils.update(
 						model,
 						{
-							network: A2(_strelka_2017$phi$Simulation_GraphUpdates$addEdge, _p0._0, model.network)
+							network: A2(
+								_strelka_2017$phi$Simulation_GraphUpdates$addNode,
+								_strelka_2017$phi$Simulation_Model$PeerNode(_p0._0),
+								model.network)
 						});
 					msg = _v13;
 					model = _v14;
 					continue update;
-				case 'UpdateWeather':
+				case 'AddEdge':
 					var _v15 = _strelka_2017$phi$Action$RenderPhiNetwork,
 						_v16 = _elm_lang$core$Native_Utils.update(
+						model,
+						{
+							network: A2(_strelka_2017$phi$Simulation_GraphUpdates$addEdge, _p0._0, model.network)
+						});
+					msg = _v15;
+					model = _v16;
+					continue update;
+				case 'UpdateWeather':
+					var _v17 = _strelka_2017$phi$Action$RenderPhiNetwork,
+						_v18 = _elm_lang$core$Native_Utils.update(
 						model,
 						{
 							weather: _p0._0,
 							weatherList: _strelka_2017$phi$Simulation_WeatherList$restWeather(model.weatherList)
 						});
-					msg = _v15;
-					model = _v16;
+					msg = _v17;
+					model = _v18;
 					continue update;
 				case 'RenderPhiNetwork':
 					return {
@@ -23370,10 +23447,10 @@ var _strelka_2017$phi$Update$update = F2(
 					var _p3 = _p0._0;
 					switch (_p3) {
 						case 'layoutRendered':
-							var _v18 = _strelka_2017$phi$Action$AnimateGeneration,
-								_v19 = model;
-							msg = _v18;
-							model = _v19;
+							var _v20 = _strelka_2017$phi$Action$AnimateGeneration,
+								_v21 = model;
+							msg = _v20;
+							model = _v21;
 							continue update;
 						case 'generatorsAnimated':
 							return A3(
@@ -23396,29 +23473,29 @@ var _strelka_2017$phi$Update$update = F2(
 										_strelka_2017$phi$Chat_Narrative$dayConsumed(model)),
 									model));
 						case 'tradeAnimated':
-							var _v20 = _strelka_2017$phi$Action$SendBotChatItem(
+							var _v22 = _strelka_2017$phi$Action$SendBotChatItem(
 								_strelka_2017$phi$Chat_Narrative$dayTraded(model)),
-								_v21 = model;
-							msg = _v20;
-							model = _v21;
-							continue update;
-						case 'enterBuildModeAnimated':
-							var _v22 = _strelka_2017$phi$Action$SendBotChatItem(_strelka_2017$phi$Chat_Narrative$enterBuildMode),
 								_v23 = model;
 							msg = _v22;
 							model = _v23;
 							continue update;
-						case 'exitBuildModeAnimated':
-							var _v24 = _strelka_2017$phi$Action$SendBotChatItem(_strelka_2017$phi$Chat_Narrative$exitBuildMode),
+						case 'enterBuildModeAnimated':
+							var _v24 = _strelka_2017$phi$Action$SendBotChatItem(_strelka_2017$phi$Chat_Narrative$enterBuildMode),
 								_v25 = model;
 							msg = _v24;
 							model = _v25;
 							continue update;
-						default:
-							var _v26 = _strelka_2017$phi$Action$NoOp,
+						case 'exitBuildModeAnimated':
+							var _v26 = _strelka_2017$phi$Action$SendBotChatItem(_strelka_2017$phi$Chat_Narrative$exitBuildMode),
 								_v27 = model;
 							msg = _v26;
 							model = _v27;
+							continue update;
+						default:
+							var _v28 = _strelka_2017$phi$Action$NoOp,
+								_v29 = model;
+							msg = _v28;
+							model = _v29;
 							continue update;
 					}
 				case 'ToggleBuildMode':
@@ -23596,13 +23673,6 @@ var _strelka_2017$phi$Update$weatherForecast = function (model) {
 			_strelka_2017$phi$Update$update,
 			_strelka_2017$phi$Action$SendBotChatItem(chatMsg),
 			model));
-};
-var _strelka_2017$phi$Update$changeDesign = function (model) {
-	var chatMsg = _strelka_2017$phi$Chat_Model$BotMessage('Sorry that\'s not available yet!');
-	return A2(
-		_strelka_2017$phi$Update$update,
-		_strelka_2017$phi$Action$SendBotChatItem(chatMsg),
-		model);
 };
 
 var _strelka_2017$phi$View_Helpers$phiCoin = function (budget) {

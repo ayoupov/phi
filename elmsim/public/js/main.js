@@ -165,9 +165,6 @@ function endall(transition, callback) {
 }
 
 $(function () {
-    var node = document.getElementById('elm-node');
-    var app = Elm.Main.embed(node);
-
     d3.select("svg")
         .attr("x", 0)
         .attr("y", 0)
@@ -183,6 +180,9 @@ $(function () {
     });
 
     zoomInit();
+
+    var node = document.getElementById('elm-node');
+    var app = Elm.Main.embed(node);
 
     app.ports.animateTrade.subscribe(function (model) {
         var t = d3.transition().duration(1500);

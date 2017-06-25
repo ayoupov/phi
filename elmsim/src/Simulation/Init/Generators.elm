@@ -20,8 +20,8 @@ import Simulation.WeatherList exposing (restWeather, weatherTupleToWeather)
 --        |> Random.generate UpdateWeather
 
 
-generatePVPanel : Coords -> Cmd Msg
-generatePVPanel coords =
+generatePVPanel : (SimGenerator -> Msg) -> Coords -> Cmd Msg
+generatePVPanel genMsgConstructor coords =
     Random.map4 SimGenerator
         (Random.constant [])
         -- dailyConsumption
@@ -31,22 +31,22 @@ generatePVPanel coords =
         -- xy coordinates
         (Random.constant SolarPanel)
         -- generator type
-        |> Random.generate AddGenerator
+        |> Random.generate genMsgConstructor
 
 
-generateWindTurbine : Coords -> Cmd Msg
-generateWindTurbine coords =
+generateWindTurbine : (SimGenerator -> Msg) -> Coords -> Cmd Msg
+generateWindTurbine genMsgConstructor coords =
     Random.map4 SimGenerator
         (Random.constant [])
         (Random.float 0 10)
         -- capacity
         (Random.constant coords)
         (Random.constant WindTurbine)
-        |> Random.generate AddGenerator
+        |> Random.generate genMsgConstructor
 
 
-generatePeer : Coords -> Cmd Msg
-generatePeer coords =
+generatePeer : (Peer -> Msg) -> Coords -> Cmd Msg
+generatePeer peerMsgConstructor coords =
     Random.map4 Peer
         --        generatePeerJoules
         (Random.map5 PeerJoules
@@ -65,14 +65,4 @@ generatePeer coords =
         -- initial reputation
         (Random.constant [ 1 ])
         (Random.constant coords)
-        |> Random.generate AddPeer
-
-
-generateEdge : Cmd Msg
-generateEdge =
-    Random.map2 createEdge
-        --        (Random.int 0 45)
-        --        (Random.int 0 45)
-        (Random.int 0 20)
-        (Random.int 0 20)
-        |> Random.generate AddEdge
+        |> Random.generate peerMsgConstructor
