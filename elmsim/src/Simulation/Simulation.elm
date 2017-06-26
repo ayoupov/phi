@@ -477,7 +477,7 @@ updateBudget : Model -> Budget
 updateBudget model =
     let
         joulesToPhiQuotient =
-            15
+            150
     in
     (networkTradedEnergy model.network * joulesToPhiQuotient + takeFirstElementWithDefault0 model.budget) :: model.budget
 

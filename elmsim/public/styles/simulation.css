@@ -63,9 +63,22 @@ body {
 .node.peer .peerFullCircle{
   fill-opacity: 0;
   stroke-dasharray: 3,4;
-  --stroke: #338;
   stroke-width: 3px;
+  --animation-duration: 20s;
+  --animation-name: dashanimation;
+  --animation-iteration-count: infinite;
 }
+
+@keyframes dashanimation {
+  from {
+    stroke-dashoffset: 0;
+  }
+
+  to {
+    stroke-dashoffset: 100;
+  }
+}
+
 
 .node.peer .energyIndicator{
   stroke-width: 3px;
