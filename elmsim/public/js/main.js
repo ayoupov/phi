@@ -1,8 +1,6 @@
 var phiNetwork;
 
-var svg = d3.select("body")
-    .insert("div", ":first-child")
-    .attr("class", "simulation")
+var svg = d3.select(".simulation")
     .append("svg");
 
 var svg = d3.select("svg")
@@ -185,6 +183,7 @@ $(function () {
     var app = Elm.Main.embed(node);
 
     app.ports.animateTrade.subscribe(function (model) {
+        //d3.select(".simulationBackground").classed("dayCycle", false);
         var t = d3.transition().duration(1500);
 
         phiNetwork = model;
@@ -265,12 +264,13 @@ $(function () {
                 return classStr;
             });
 
-        nodeEnter.append("path")
-            .attr("d", addBaseNode())
+        var baseNode = nodeEnter.append("path")
+            .attr("d", addBaseNode(100))
             .attr('transform', function (d) {
                 return "translate(" + (setX(d)) + "," + (setY(d)) + ")";
             })
             .attr("class", "baseNode");
+
 
         nodes.selectAll(".potential")
             .attr("stroke-opacity", "0")
@@ -295,6 +295,7 @@ $(function () {
             .remove()
     }
 
+
     function killPotentials() {
         d3.selectAll(".potential")
             .remove();
@@ -304,7 +305,6 @@ $(function () {
 
     function initLineInteraction() {
         d3.selectAll('.node:not(.potential)')
-            .style('cursor', 'pointer')
             .on('click', function (node) {
                 var dNode = d3.select(this);
                 var thisNodeSelected = dNode.classed("selected");
@@ -351,14 +351,19 @@ $(function () {
         if (isEnteringBuildMode) {
             drawPotentials(nodes);
             initLineInteraction();
+
+            addHoverAnimation(svg.selectAll(".baseNode"));
         }
-        else
+        else {
+            cancelHoverAnimation(svg.selectAll(".baseNode"));
             killPotentials();
+        }
     };
 
     app.ports.toggleBuildMode.subscribe(toggleBuildModeFunction);
 
     app.ports.animateGeneration.subscribe(function (model) {
+        //d3.select(".simulationBackground").classed("dayCycle", true);
         var t = d3.transition().duration(1500);
         phiNetwork = model;
         var phiNodes = model[0];
@@ -405,20 +410,29 @@ $(function () {
                 });
 
             nodeEnter.append("path")
-                .attr("d", addBaseNode())
+                .attr("d", addBaseNode(250))
                 .attr('transform', function (d) {
                     return "translate(" + (setX(d)) + "," + (setY(d)) + ")";
                 })
-                .attr("class", "baseNode");
+                .attr("class", "baseNode")
+                .transition()
+                .ease(d3.easeElastic)
+                .duration(1000)
+                .attr("d", addBaseNode(150));
 
-            nodeEnter.append("path")
-                .attr('transform', function (d) {
-                    return "translate(" + (setX(d)) + "," + (setY(d)) + ")";
-                })
-                .attr("d", function (d) {
-                    return (!isGenerator(d) ? peerFullOutline()(d) : generatorInitialShadow()(d));
-                })
+            nodeEnter.append("circle")
+                .attr('cx', setX)
+                .attr('cy', setY)
+                .attr('r', peerSize)
                 .attr("class", "peerFullCircle");
+            //nodeEnter.append("path")
+            //    .attr('transform', function (d) {
+            //        return "translate(" + (setX(d)) + "," + (setY(d)) + ")";
+            //    })
+            //    .attr("d", function (d) {
+            //        return (!isGenerator(d) ? peerFullOutline()(d) : generatorInitialShadow()(d));
+            //    })
+            //    .attr("class", "peerFullCircle");
 
             nodeEnter.append("path")
                 .attr("d", function (d) {

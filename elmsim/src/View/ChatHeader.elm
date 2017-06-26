@@ -5,8 +5,9 @@ import Html exposing (Html, b, br, div, p, span, text)
 import Html.Attributes exposing (class)
 import Material.Icon as Icon
 import Model exposing (Model)
+import Simulation.Stats exposing (communityCoverage, health, peerCount, spCount, wtCount)
 import Svg exposing (circle, polygon, rect, svg)
-import Svg.Attributes as SVG
+import Svg.Attributes as SVG exposing (cx, cy, r, x, y)
 import View.Helpers exposing (intFmt, phiCoin)
 
 
@@ -35,8 +36,32 @@ viewChatHeader model =
         pt theText =
             p [] [ text theText ]
 
-        peerIcon =
-            svg [ SVG.width "15", SVG.height "15", SVG.class "node peer" ] [ circle [] [] ]
+        peerIcon size =
+            svg
+                [ SVG.width (toString size)
+                , SVG.height (toString size)
+                , SVG.viewBox "0 0 31 31"
+                , SVG.class "peerIcon"
+                ]
+                [ circle [ cx "15.5", cy "15.5", r "15" ] [] ]
+
+        squareIcon className size =
+            svg
+                [ SVG.width (toString size)
+                , SVG.height (toString size)
+                , SVG.viewBox "0 0 30 30"
+                , SVG.class className
+                ]
+                [ rect [ x "0", y "0", SVG.width "30", SVG.height "30" ] [] ]
+
+        wtIcon size =
+            squareIcon "wtIcon" size
+
+        spIcon size =
+            squareIcon "spIcon" size
+
+        renderNodeCount num =
+            div [ class "node_count" ] [ text (toString num) ]
 
         phText =
             div [ class "ph_text" ]
@@ -73,16 +98,18 @@ viewChatHeader model =
                 ]
             , div [ class "status_body" ]
                 [ div [ class "status_section" ]
-                    [ div [ class "donut_legend" ] [ phText, Charts.donutWithPct 45 3 0.5 ]
-                    , div [ class "donut_legend" ] [ ccText, Charts.donutWithPct 45 3 0.3 ]
+                    [ div [ class "donut_legend" ] [ phText, Charts.donutWithPct 45 3 <| health model.network ]
+                    , div [ class "hline" ] []
+                    , div [ class "donut_legend" ] [ ccText, Charts.donutWithPct 45 3 <| communityCoverage model.network ]
                     ]
                 , div [ class "hline" ] []
                 , div [ class "status_section" ]
                     [ div [ class "node_counts" ]
-                        [ div [] [ text "Peers", peerIcon, text <| toString 24 ]
-                        , div [] [ text "Solar Panels", peerIcon, text <| toString 6 ]
-                        , div [] [ text "Wind Turbines", peerIcon, text <| toString 8 ]
+                        [ div [ class "node_count_row" ] [ peerIcon 10, text "Peers", renderNodeCount (peerCount model.network) ]
+                        , div [ class "node_count_row" ] [ spIcon 10, text "Solar Panels", renderNodeCount (spCount model.network) ]
+                        , div [ class "node_count_row" ] [ wtIcon 10, text "Wind Turbines", renderNodeCount (wtCount model.network) ]
                         ]
+                    , div [ class "hline" ] []
                     , div [ class "budget_status" ]
                         [ b [] [ text "BUDGET" ]
                         , br [] []

@@ -1,7 +1,7 @@
 module Simulation.Helpers exposing (..)
 
 import Graph exposing (Node)
-import Simulation.Model exposing (Coords, NodeLabel(..), PhiNetwork)
+import Simulation.Model exposing (Coords, NodeLabel(..), Peer, PhiNetwork)
 
 
 getCoords : NodeLabel -> Coords
@@ -48,3 +48,13 @@ liveNodeNetwork network =
         |> Graph.nodes
         |> List.filterMap (Maybe.map .id << isLiveNode)
         |> (\idList -> Graph.inducedSubgraph idList network)
+
+
+toPeer : Node NodeLabel -> Maybe Peer
+toPeer { label, id } =
+    case label of
+        PeerNode peer ->
+            Just peer
+
+        _ ->
+            Nothing

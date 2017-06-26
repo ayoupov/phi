@@ -47,7 +47,7 @@ inputFooter model =
                     "view_agenda"
 
                 MultiChoiceInput ->
-                    "text_format"
+                    "border_color"
 
         inputCountainer =
             case model.inputType of
@@ -92,7 +92,7 @@ multiChoiceFooter model =
         lastMultiChoiceActionList =
             List.filterMap toMultiChoiceActionList model.messages
                 |> List.head
-                |> Maybe.withDefault [ McaRunDay ]
+                |> Maybe.withDefault [ McaRunDay, McaChangeDesign ]
     in
     div [ class "input_container" ]
         (List.map viewMCA lastMultiChoiceActionList)

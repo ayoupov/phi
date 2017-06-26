@@ -62,6 +62,8 @@ function nodeShape(d) {
 function peerSize(d) {
     if (d.label.nodeType == "peer") {
         return 8 + 2 * (d.label.desiredConsumption || 0);
+    } else {
+        return 0;
     }
 }
 
@@ -91,8 +93,30 @@ function peerOutline() {
         } );
 }
 
-function addBaseNode() {
+function addBaseNode(size) {
     return d3.symbol()
-        .size(100)
+        .size(size)
         .type(nodeShape);
+}
+
+
+function addHoverAnimation(selector) {
+  selector.on("mouseover", function() {
+            d3.select(this)
+              .transition()
+              .ease(d3.easeElastic)
+              .duration(600)
+              .attr("d", addBaseNode(180));
+          })
+          .on("mouseout", function() {
+            d3.select(this)
+              .transition()
+              .ease(d3.easeElastic)
+              .duration(600)
+              .attr("d", addBaseNode(100));
+          });
+}
+function cancelHoverAnimation(selector) {
+  selector.on("mouseover", null)
+          .on("mouseout", null)
 }
