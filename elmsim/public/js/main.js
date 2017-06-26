@@ -325,6 +325,13 @@ $(function () {
             .attr("y2", yScale(d.pos.y));
     }
 
+    function cancelDrawing() {
+        $(window).off('mousemove.newlink');
+        $('.simulation').off('click.newlink');
+        $temporalLink = d3.select('.newlink');
+        initNewLink($temporalLink, emptyLinkData);
+    }
+
     function initLineInteraction() {
         d3.selectAll('.node:not(.potential)')
             .on('click', function (node) {
@@ -336,10 +343,7 @@ $(function () {
                     // 1. it is already selected, cancel the drawing
                     {
                         dNode.classed('selected', false);
-                        $(window).off('mousemove.newlink');
-                        $temporalLink = d3.select('.newlink');
-                        //if ($temporalLink && $temporalLink.length)
-                            initNewLink($temporalLink, emptyLinkData);
+                        cancelDrawing();
                     }
                     else
                     // 2. it has no selection :
@@ -349,20 +353,15 @@ $(function () {
                         // 2.1. if there is one selected, fix the line
                         if (areThereAnyOthers) {
                             otherSelectedNode.classed('selected', false);
-                            $(window).off('mousemove.newlink');
-                            $temporalLink = d3.select('.newlink');
-                            //if ($temporalLink && $temporalLink.length)
-                                initNewLink($temporalLink, emptyLinkData);
+                            cancelDrawing();
                             app.ports.requestNewLine.send([otherSelectedNode.data()[0].id, node.id]);
                         } else
                         // 2.2. if there is none, fix the starting node
                         {
                             dNode.classed('selected', true);
-                            //$temporalLink = $("<line class='link'>");
                             $temporalLink = d3.select('.newlink');
                             var d = dNode.data()[0].label;
                             initNewLink($temporalLink, d);
-                            //$(".links").append($temporalLink);
                             $(window).on('mousemove.newlink', function (e) {
                                 var $simulation = $(".simulation");
                                 var scrollTop = $simulation.scrollTop() || 0;
@@ -375,6 +374,14 @@ $(function () {
                                 $temporalLink
                                     .attr("x2", newX)
                                     .attr("y2", newY)
+                            });
+                            $('.simulation').on('click.newlink', function (e) {
+                                var $target = $(e.target), $parent = $target.parent();
+                                var ok = $target.is(".node") || $parent.is(".node");
+                                if (!ok) {
+                                    dNode.classed('selected', false);
+                                    cancelDrawing();
+                                }
                             });
                         }
                     }
