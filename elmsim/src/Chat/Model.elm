@@ -1,6 +1,7 @@
 module Chat.Model exposing (..)
 
 import Dict exposing (Dict)
+import Html exposing (img)
 
 
 type InputType
@@ -67,6 +68,7 @@ mcaName action =
 type Widget
     = WeatherWidget
     | BotMultiQuestion
+    | ImageSrc String
 
 
 initChat : ChatItem

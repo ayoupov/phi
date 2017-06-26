@@ -9,6 +9,7 @@ import List exposing (repeat)
 import ListHelpers exposing (takeFirstElementWithDefault0, takeFirstElementWithDefault1, takeTailDefaultEmpty)
 import Model exposing (Model)
 import Simulation.GraphUpdates exposing (updateNodes)
+import Simulation.Helpers exposing (toPeer)
 import Simulation.Model exposing (..)
 import Svg exposing (..)
 import Svg.Attributes as SVG
@@ -47,16 +48,6 @@ joulesToGenerators weather network =
                     node
     in
     Graph.mapNodes updateNode network
-
-
-toPeer : Node NodeLabel -> Maybe Peer
-toPeer { label, id } =
-    case label of
-        PeerNode peer ->
-            Just peer
-
-        _ ->
-            Nothing
 
 
 networkStoredEnergy : PhiNetwork -> KWHour

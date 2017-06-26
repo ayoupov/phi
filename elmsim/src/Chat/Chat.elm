@@ -6,7 +6,17 @@ import Chat.Model exposing (..)
 
 parseUserMessage : UserChatMessage -> Msg
 parseUserMessage chatMsg =
-    if not (String.startsWith "/" chatMsg) then
+    let
+        imgWidgetWithUrl url =
+            WidgetItem (ImageSrc url)
+    in
+    if String.contains "budget" chatMsg then
+        SendBotChatItem <| imgWidgetWithUrl "assets/widget_budget_forecast.png"
+    else if String.contains "wind" chatMsg then
+        SendBotChatItem <| imgWidgetWithUrl "assets/widget_weather_data.png"
+    else if String.contains "calculate" chatMsg then
+        SendBotChatItem <| imgWidgetWithUrl "assets/widget_consumption_math.png"
+    else if not (String.startsWith "/" chatMsg) then
         SendToEliza chatMsg
     else if chatMsg == "/weather" then
         CheckWeather

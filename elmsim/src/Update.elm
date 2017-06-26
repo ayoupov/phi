@@ -155,17 +155,23 @@ update msg model =
                     update (SendBotChatItem <| Narrative.dayTraded model) model
 
                 "enterBuildModeAnimated" ->
-                    model
-                        |> update (SendBotChatItem <| Narrative.enterBuildMode)
+                    update NoOp model
 
                 "exitBuildModeAnimated" ->
-                    update (SendBotChatItem <| Narrative.exitBuildMode) model
+                    update NoOp model
 
                 _ ->
                     update NoOp model
 
         ToggleBuildMode isEnteringBuildMode ->
-            ( model, toggleBuildMode isEnteringBuildMode )
+            case isEnteringBuildMode of
+                True ->
+                    ( model, toggleBuildMode True )
+                        |> andThen update (SendBotChatItem <| Narrative.enterBuildMode)
+
+                False ->
+                    ( model, toggleBuildMode False )
+                        |> andThen update (SendBotChatItem <| Narrative.exitBuildMode)
 
         MultiChoiceMsg multiChoiceAction ->
             let

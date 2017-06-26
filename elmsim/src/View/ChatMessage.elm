@@ -1,9 +1,9 @@
 module View.ChatMessage exposing (viewChatMessage)
 
 import Action exposing (Msg)
-import Chat.Model exposing (BotChatItem(..), ChatItem(..))
-import Html exposing (Html, div, li, text)
-import Html.Attributes exposing (class)
+import Chat.Model exposing (BotChatItem(..), ChatItem(..), Widget(..))
+import Html exposing (Html, div, img, li, text)
+import Html.Attributes exposing (class, src)
 
 
 viewChatMessage : ChatItem -> Html Msg
@@ -33,9 +33,19 @@ viewChatMessage chatItem =
                             textContent txt
 
                         WidgetItem widget ->
-                            textContent "rendering a fancy widget"
+                            renderWidget widget
 
                         MultiChoiceItem item ->
                             textContent item.text
             in
             messageWrapper "bot-sent" <| [ messageHeader "Phi" ] ++ contents
+
+
+renderWidget : Widget -> List (Html Msg)
+renderWidget widget =
+    case widget of
+        ImageSrc url ->
+            [ div [ class "widget_wrapper" ] [ img [ src url ] [] ] ]
+
+        _ ->
+            [ div [ class "text_wrapper" ] [ text "rendering a fancy widget" ] ]

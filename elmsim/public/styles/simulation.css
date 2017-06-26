@@ -13,6 +13,11 @@
   height: 100%;
 }
 
+.peerIcon {
+  fill: rgb(246,255,0);
+  stroke: rgb(246,255,0);
+}
+
 .node.peer {
   fill: rgb(246,255,0);
   stroke: rgb(246,255,0);
@@ -23,9 +28,17 @@
   stroke: rgb(0,0,117);
 }
 
+.wtIcon {
+  fill: rgb(0,0,117);
+}
+
 .node.solarPanel {
   fill: rgb(0,251,255);
   stroke: rgb(0,251,255);
+}
+
+.spIcon {
+  fill: rgb(0,251,255);
 }
 
 .node.peer .peerFullCircle{
@@ -42,7 +55,6 @@
 .node.potential {
   fill: rgba(127,127,127,0.6);
   stroke: rgba(127,127,127,0.6);
-  cursor: pointer;
 }
 
 line.link {

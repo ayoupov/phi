@@ -265,12 +265,13 @@ $(function () {
                 return classStr;
             });
 
-        nodeEnter.append("path")
-            .attr("d", addBaseNode())
+        var baseNode = nodeEnter.append("path")
+            .attr("d", addBaseNode(100))
             .attr('transform', function (d) {
                 return "translate(" + (setX(d)) + "," + (setY(d)) + ")";
             })
             .attr("class", "baseNode");
+
 
         nodes.selectAll(".potential")
             .attr("stroke-opacity", "0")
@@ -295,6 +296,7 @@ $(function () {
             .remove()
     }
 
+
     function killPotentials() {
         d3.selectAll(".potential")
             .remove();
@@ -304,7 +306,6 @@ $(function () {
 
     function initLineInteraction() {
         d3.selectAll('.node:not(.potential)')
-            .style('cursor', 'pointer')
             .on('click', function (node) {
                 var dNode = d3.select(this);
                 var thisNodeSelected = dNode.classed("selected");
@@ -352,9 +353,13 @@ $(function () {
         if (isEnteringBuildMode) {
             drawPotentials(nodes);
             initLineInteraction();
+
+            addHoverAnimation(svg.selectAll(".baseNode"));
         }
-        else
+        else {
+            cancelHoverAnimation(svg.selectAll(".baseNode"));
             killPotentials();
+        }
     };
 
     app.ports.toggleBuildMode.subscribe(toggleBuildModeFunction);
@@ -406,11 +411,15 @@ $(function () {
                 });
 
             nodeEnter.append("path")
-                .attr("d", addBaseNode())
+                .attr("d", addBaseNode(250))
                 .attr('transform', function (d) {
                     return "translate(" + (setX(d)) + "," + (setY(d)) + ")";
                 })
-                .attr("class", "baseNode");
+                .attr("class", "baseNode")
+                .transition()
+                .ease(d3.easeElastic)
+                .duration(1000)
+                .attr("d", addBaseNode(150));
 
             nodeEnter.append("path")
                 .attr('transform', function (d) {
