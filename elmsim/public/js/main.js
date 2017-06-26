@@ -306,28 +306,29 @@ $(function () {
     function initLineInteraction() {
         d3.selectAll('.node:not(.potential)')
             .on('click', function (node) {
-                var dNode = d3.select(this);
-                var thisNodeSelected = dNode.classed("selected");
-                if (thisNodeSelected)
+                if (isInBuildingMode) {
+                    var dNode = d3.select(this);
+                    var thisNodeSelected = dNode.classed("selected");
+                    if (thisNodeSelected)
                     // two cases:
                     // 1. it is already selected, cancel the drawing
-                {
-                    dNode.classed('selected', false);
-                }
-                else
-                // 2. it has no selection :
-                {
-                    var otherSelectedNode = d3.select('.selected');
-                    var areThereAnyOthers = !otherSelectedNode.empty();
-                    // 2.1. if there is one selected, fix the line
-                    if (areThereAnyOthers)
                     {
-                        otherSelectedNode.classed('selected', false);
-                        app.ports.requestNewLine.send([otherSelectedNode.data()[0].id, node.id]);
-                    } else
-                    // 2.2. if there is none, fix the starting node
+                        dNode.classed('selected', false);
+                    }
+                    else
+                    // 2. it has no selection :
                     {
-                        dNode.classed('selected', true);
+                        var otherSelectedNode = d3.select('.selected');
+                        var areThereAnyOthers = !otherSelectedNode.empty();
+                        // 2.1. if there is one selected, fix the line
+                        if (areThereAnyOthers) {
+                            otherSelectedNode.classed('selected', false);
+                            app.ports.requestNewLine.send([otherSelectedNode.data()[0].id, node.id]);
+                        } else
+                        // 2.2. if there is none, fix the starting node
+                        {
+                            dNode.classed('selected', true);
+                        }
                     }
                 }
             });
@@ -449,8 +450,8 @@ $(function () {
             nodes.select('.simulation .peer .energyIndicator')
                 .transition(t)
                 .style("opacity", "0");
-                //.call(endall, function () {
-                //});
+            //.call(endall, function () {
+            //});
             if (isInBuildingMode)
                 toggleBuildModeFunction(true);
 
