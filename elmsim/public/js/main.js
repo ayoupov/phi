@@ -457,6 +457,14 @@ $(function () {
                     return classStr;
                 });
 
+            //draw dotted outlines for peers
+            nodeEnter.append("circle")
+                .attr('cx', setX)
+                .attr('cy', setY)
+                .attr('r', peerSize)
+                .attr("class", "peerFullCircle");
+
+            //add baseNode
             nodeEnter.append("path")
                 .attr("d", addBaseNode(250))
                 .attr('transform', function (d) {
@@ -467,12 +475,6 @@ $(function () {
                 .ease(d3.easeElastic)
                 .duration(1000)
                 .attr("d", addBaseNode(150));
-
-            nodeEnter.append("circle")
-                .attr('cx', setX)
-                .attr('cy', setY)
-                .attr('r', peerSize)
-                .attr("class", "peerFullCircle");
 
             nodeEnter.append("path")
                 .attr("d", function (d) {
