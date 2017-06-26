@@ -434,15 +434,6 @@ $(function () {
             });
     });
 
-    function drawNewLinks() {
-        var newlink = d3.select(".newlinks").selectAll('.newlink').data([emptyLinkData]);
-
-        newlink.exit().remove();
-        newlink.enter().append("line")
-            .attr("class", "newlink link");
-
-    }
-
     app.ports.renderPhiNetwork.subscribe(function (model) {
 
         phiNetwork = model;
@@ -550,6 +541,15 @@ $(function () {
 
             link.exit()
                 .remove();
+
+        }
+
+        function drawNewLinks() {
+            var newlink = d3.select(".newlinks").selectAll('.newlink').data([emptyLinkData]);
+
+            newlink.enter().append("line")
+                .attr("class", "newlink link");
+            newlink.exit().remove();
 
         }
 
