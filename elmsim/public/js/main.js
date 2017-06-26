@@ -142,12 +142,14 @@ function zoomInit() {
     $(window).on('resize', updateZoomPos);
 }
 
+var currentTransform = {k: 1.0, x: 0, y:0};
 
 function zoomed() {
     var transform = d3.zoomTransform(this);
     container.attr("transform", transform);
     //container.select('.zoom-line').call(zoomLine);
-    updateZoom(transform.k);
+    currentTransform = transform;
+    updateZoom(currentTransform.k);
 }
 
 function endall(transition, callback) {
@@ -306,7 +308,22 @@ $(function () {
         app.ports.animationFinished.send("exitBuildModeAnimated");
     }
 
-    var imaginaryNode, $temporalLink;
+    var $temporalLink;
+
+    var emptyLinkData = {
+        pos: {
+            x: 0,
+            y: 0
+        }
+    };
+
+    function initNewLink($link, d) {
+        $link
+            .attr("x1", xScale(d.pos.x))
+            .attr("y1", yScale(d.pos.y))
+            .attr("x2", xScale(d.pos.x))
+            .attr("y2", yScale(d.pos.y));
+    }
 
     function initLineInteraction() {
         d3.selectAll('.node:not(.potential)')
@@ -320,8 +337,9 @@ $(function () {
                     {
                         dNode.classed('selected', false);
                         $(window).off('mousemove.newlink');
-                        if ($temporalLink && $temporalLink.length)
-                            $temporalLink.remove();
+                        $temporalLink = d3.select('.newlink');
+                        //if ($temporalLink && $temporalLink.length)
+                            initNewLink($temporalLink, emptyLinkData);
                     }
                     else
                     // 2. it has no selection :
@@ -332,27 +350,31 @@ $(function () {
                         if (areThereAnyOthers) {
                             otherSelectedNode.classed('selected', false);
                             $(window).off('mousemove.newlink');
+                            $temporalLink = d3.select('.newlink');
                             //if ($temporalLink && $temporalLink.length)
-                            //    $temporalLink.remove();
+                                initNewLink($temporalLink, emptyLinkData);
                             app.ports.requestNewLine.send([otherSelectedNode.data()[0].id, node.id]);
                         } else
                         // 2.2. if there is none, fix the starting node
                         {
                             dNode.classed('selected', true);
-                            imaginaryNode = dNode; // copy?
                             //$temporalLink = $("<line class='link'>");
                             $temporalLink = d3.select('.newlink');
                             var d = dNode.data()[0].label;
-                            $temporalLink
-                                .attr("x1", xScale(d.pos.x))
-                                .attr("y1", yScale(d.pos.y))
-                                .attr("x2", xScale(d.pos.x))
-                                .attr("y2", yScale(d.pos.y));
+                            initNewLink($temporalLink, d);
                             //$(".links").append($temporalLink);
                             $(window).on('mousemove.newlink', function (e) {
+                                var $simulation = $(".simulation");
+                                var scrollTop = $simulation.scrollTop() || 0;
+                                var scrollLeft = $simulation.scrollLeft() || 0;
+                                var q = (1.0 / currentTransform.k);
+                                var trXk = currentTransform.x * q;
+                                var trYk = currentTransform.y * q;
+                                var newX = e.clientX * q + scrollLeft - trXk;
+                                var newY = e.clientY * q + scrollTop - trYk;
                                 $temporalLink
-                                    .attr("x2", xScale(e.clientX))
-                                    .attr("y2", xScale(e.clientY))
+                                    .attr("x2", newX)
+                                    .attr("y2", newY)
                             });
                         }
                     }
@@ -412,6 +434,15 @@ $(function () {
                 app.ports.animationFinished.send("generatorsAnimated");
             });
     });
+
+    function drawNewLinks() {
+        var newlink = d3.select(".newlinks").selectAll('.newlink').data([emptyLinkData]);
+
+        newlink.exit().remove();
+        newlink.enter().append("line")
+            .attr("class", "newlink link");
+
+    }
 
     app.ports.renderPhiNetwork.subscribe(function (model) {
 
@@ -521,12 +552,6 @@ $(function () {
             link.exit()
                 .remove();
 
-            var newlink = d3.select(".newlinks").selectAll('.newlink').data([{}]);
-
-            newlink.exit().remove();
-            newlink.enter().append("line")
-                .attr("class", "newlink link");
-
         }
 
         var liveNodes = phiNodes.filter(function (node) {
@@ -539,6 +564,7 @@ $(function () {
 
         drawNodes(liveNodes);
         drawLinks(phiEdges);
+        drawNewLinks();
 
     });
 
