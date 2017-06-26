@@ -183,7 +183,7 @@ $(function () {
     var app = Elm.Main.embed(node);
 
     app.ports.animateTrade.subscribe(function (model) {
-        //d3.select(".simulationBackground").classed("dayCycle", false);
+        //d3.select(".simulationBackground").classed("dayCycle", true);
         var t = d3.transition().duration(1500);
 
         phiNetwork = model;
@@ -364,7 +364,6 @@ $(function () {
     app.ports.toggleBuildMode.subscribe(toggleBuildModeFunction);
 
     app.ports.animateGeneration.subscribe(function (model) {
-        //d3.select(".simulationBackground").classed("dayCycle", true);
         var t = d3.transition().duration(1500);
         phiNetwork = model;
         var phiNodes = model[0];
