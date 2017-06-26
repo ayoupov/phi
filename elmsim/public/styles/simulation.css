@@ -64,21 +64,29 @@ body {
   fill-opacity: 0;
   stroke-dasharray: 3,4;
   stroke-width: 3px;
-  --animation-duration: 20s;
-  --animation-name: dashanimation;
-  --animation-iteration-count: infinite;
 }
 
-@keyframes dashanimation {
-  from {
-    stroke-dashoffset: 0;
-  }
-
-  to {
-    stroke-dashoffset: 100;
-  }
+.pulser {
+  animation: pulse 10s ease infinite;
+  fill: rgb(246,235,0);
+  stroke-opacity: 0;
 }
 
+@keyframes pulse {
+  0% {
+    transform: scale(0.5);
+    transform-origin: center center;
+    opacity: 0.8
+  }
+  50% {
+    transform: scale(1.7);
+    transform-origin: center center;
+    opacity: 0;
+  }
+  100% {
+    opacity: 0;
+  }
+}
 
 .node.peer .energyIndicator{
   stroke-width: 3px;

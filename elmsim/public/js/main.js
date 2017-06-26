@@ -464,12 +464,22 @@ $(function () {
                     return classStr;
                 });
 
+            //add pulsating to peers
+            nodeEnter.filter(function(d) {return d.label.nodeType == "peer"})
+                .append("circle")
+                .attr('cx', setX)
+                .attr('cy', setY)
+                .attr('r', 10)
+                .style('animation-delay', -20*Math.random()+"s")
+                .attr("class", "pulser");
+
             //draw dotted outlines for peers
             nodeEnter.append("circle")
                 .attr('cx', setX)
                 .attr('cy', setY)
                 .attr('r', peerSize)
                 .attr("class", "peerFullCircle");
+
 
             //add baseNode
             nodeEnter.append("path")
