@@ -111,6 +111,9 @@ d3.xml("assets/map_v3.svg").get(function (error, documentFragment) {
         .attr("class", "links");
 
     container.append("g")
+        .attr("class", "newlinks");
+
+    container.append("g")
         .attr("class", "nodes");
 });
 
@@ -303,6 +306,8 @@ $(function () {
         app.ports.animationFinished.send("exitBuildModeAnimated");
     }
 
+    var imaginaryNode, $temporalLink;
+
     function initLineInteraction() {
         d3.selectAll('.node:not(.potential)')
             .on('click', function (node) {
@@ -314,6 +319,9 @@ $(function () {
                     // 1. it is already selected, cancel the drawing
                     {
                         dNode.classed('selected', false);
+                        $(window).off('mousemove.newlink');
+                        if ($temporalLink && $temporalLink.length)
+                            $temporalLink.remove();
                     }
                     else
                     // 2. it has no selection :
@@ -323,11 +331,29 @@ $(function () {
                         // 2.1. if there is one selected, fix the line
                         if (areThereAnyOthers) {
                             otherSelectedNode.classed('selected', false);
+                            $(window).off('mousemove.newlink');
+                            //if ($temporalLink && $temporalLink.length)
+                            //    $temporalLink.remove();
                             app.ports.requestNewLine.send([otherSelectedNode.data()[0].id, node.id]);
                         } else
                         // 2.2. if there is none, fix the starting node
                         {
                             dNode.classed('selected', true);
+                            imaginaryNode = dNode; // copy?
+                            //$temporalLink = $("<line class='link'>");
+                            $temporalLink = d3.select('.newlink');
+                            var d = dNode.data()[0].label;
+                            $temporalLink
+                                .attr("x1", xScale(d.pos.x))
+                                .attr("y1", yScale(d.pos.y))
+                                .attr("x2", xScale(d.pos.x))
+                                .attr("y2", yScale(d.pos.y));
+                            //$(".links").append($temporalLink);
+                            $(window).on('mousemove.newlink', function (e) {
+                                $temporalLink
+                                    .attr("x2", xScale(e.clientX))
+                                    .attr("y2", xScale(e.clientY))
+                            });
                         }
                     }
                 }
@@ -425,14 +451,6 @@ $(function () {
                 .attr('cy', setY)
                 .attr('r', peerSize)
                 .attr("class", "peerFullCircle");
-            //nodeEnter.append("path")
-            //    .attr('transform', function (d) {
-            //        return "translate(" + (setX(d)) + "," + (setY(d)) + ")";
-            //    })
-            //    .attr("d", function (d) {
-            //        return (!isGenerator(d) ? peerFullOutline()(d) : generatorInitialShadow()(d));
-            //    })
-            //    .attr("class", "peerFullCircle");
 
             nodeEnter.append("path")
                 .attr("d", function (d) {
@@ -497,6 +515,16 @@ $(function () {
                 .attr("y2", function (d) {
                     return yScale(d.pos.to.y)
                 });
+
+
+            link.exit()
+                .remove();
+
+            var newlink = d3.select(".newlinks").selectAll('.newlink').data([{}]);
+
+            newlink.exit().remove();
+            newlink.enter().append("line")
+                .attr("class", "newlink link");
 
         }
 
