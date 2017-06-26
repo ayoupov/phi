@@ -1,8 +1,6 @@
 var phiNetwork;
 
-var svg = d3.select("body")
-    .insert("div", ":first-child")
-    .attr("class", "simulation")
+var svg = d3.select(".simulation")
     .append("svg");
 
 var svg = d3.select("svg")
@@ -185,6 +183,7 @@ $(function () {
     var app = Elm.Main.embed(node);
 
     app.ports.animateTrade.subscribe(function (model) {
+        //d3.select(".simulationBackground").classed("dayCycle", false);
         var t = d3.transition().duration(1500);
 
         phiNetwork = model;
@@ -365,6 +364,7 @@ $(function () {
     app.ports.toggleBuildMode.subscribe(toggleBuildModeFunction);
 
     app.ports.animateGeneration.subscribe(function (model) {
+        //d3.select(".simulationBackground").classed("dayCycle", true);
         var t = d3.transition().duration(1500);
         phiNetwork = model;
         var phiNodes = model[0];
@@ -421,14 +421,19 @@ $(function () {
                 .duration(1000)
                 .attr("d", addBaseNode(150));
 
-            nodeEnter.append("path")
-                .attr('transform', function (d) {
-                    return "translate(" + (setX(d)) + "," + (setY(d)) + ")";
-                })
-                .attr("d", function (d) {
-                    return (!isGenerator(d) ? peerFullOutline()(d) : generatorInitialShadow()(d));
-                })
+            nodeEnter.append("circle")
+                .attr('cx', setX)
+                .attr('cy', setY)
+                .attr('r', peerSize)
                 .attr("class", "peerFullCircle");
+            //nodeEnter.append("path")
+            //    .attr('transform', function (d) {
+            //        return "translate(" + (setX(d)) + "," + (setY(d)) + ")";
+            //    })
+            //    .attr("d", function (d) {
+            //        return (!isGenerator(d) ? peerFullOutline()(d) : generatorInitialShadow()(d));
+            //    })
+            //    .attr("class", "peerFullCircle");
 
             nodeEnter.append("path")
                 .attr("d", function (d) {
