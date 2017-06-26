@@ -25,14 +25,14 @@ donutChart size thickness percent =
             2 * Basics.pi * radius
     in
     svg [ width (toString size), height (toString size), viewbox, class "donut" ]
-        [ circle [ class "donut-hole", cx center, cy center, r radiusStr, fill "#fff" ] []
+        [ circle [ class "donut-hole", cx center, cy center, r radiusStr, opacity "0" ] []
         , circle
             [ class "donut-ring"
             , cx center
             , cy center
             , r radiusStr
             , fill "transparent"
-            , stroke "#d2d3d4"
+            , stroke "#FFFFFF"
             , strokeWidth <| toString thickness
             ]
             []

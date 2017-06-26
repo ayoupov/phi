@@ -17,7 +17,7 @@ var zoom = d3.zoom()
     .translateExtent([[0, 0], [1920, 1080]])
     .on("zoom", zoomed);
 
-var GRIDLINE_SIZE = 100;
+var GRIDLINE_SIZE = 95;
 
 //function attachZoomLine(svgElt) {
 //    var simHeight = Number(svgElt.attr("height"));
@@ -471,10 +471,28 @@ $(function () {
                 .attr('cy', setY)
                 .attr('r', 10)
                 .style('animation-delay', -20*Math.random()+"s")
-                .attr("class", "pulser");
+                .attr("class", "peer_pulse");
+
+            //add pulsating to generators
+            nodeEnter.filter(function(d) {return (d.label.nodeType == "generator")})
+                .append("g")
+                .attr("class", function (d) {
+                    if (d.label.generatorType == "windTurbine") {
+                        return "wt_pulse";
+                    } else if (d.label.generatorType == "solarPanel") {
+                        return "sp_pulse";
+                    }
+                })
+                .append("path")
+                .attr('transform', function (d) {
+                    return "translate(" + (setX(d)) + "," + (setY(d)) + ")";
+                })
+                .style('animation-delay', -20*Math.random()+"s")
+                .attr("d", addBaseNode(200));
 
             //draw dotted outlines for peers
-            nodeEnter.append("circle")
+            nodeEnter.filter(function(d) {return d.label.nodeType == "peer"})
+                .append("circle")
                 .attr('cx', setX)
                 .attr('cy', setY)
                 .attr('r', peerSize)
@@ -490,7 +508,7 @@ $(function () {
                 .attr("class", "baseNode")
                 .transition()
                 .ease(d3.easeElastic)
-                .duration(1000)
+                .duration(2000)
                 .attr("d", addBaseNode(150));
 
             nodeEnter.append("path")

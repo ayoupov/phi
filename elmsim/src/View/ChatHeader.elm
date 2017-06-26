@@ -14,29 +14,13 @@ import View.Helpers exposing (intFmt, phiCoin)
 type NodeIcon
     = PeerIcon
     | WTIcon
-    | PVIcon
+    | SPIcon
 
 
 renderShape : NodeIcon -> Int -> Html msg
 renderShape icon size =
     case icon of
         PeerIcon ->
-            svg [] []
-
-        WTIcon ->
-            svg [] []
-
-        PVIcon ->
-            svg [] []
-
-
-viewChatHeader : Model -> Html msg
-viewChatHeader model =
-    let
-        pt theText =
-            p [] [ text theText ]
-
-        peerIcon size =
             svg
                 [ SVG.width (toString size)
                 , SVG.height (toString size)
@@ -45,20 +29,30 @@ viewChatHeader model =
                 ]
                 [ circle [ cx "15.5", cy "15.5", r "15" ] [] ]
 
-        squareIcon className size =
+        WTIcon ->
             svg
                 [ SVG.width (toString size)
                 , SVG.height (toString size)
-                , SVG.viewBox "0 0 30 30"
-                , SVG.class className
+                , SVG.viewBox "0 0 31 31"
+                , SVG.class "wtIcon"
                 ]
-                [ rect [ x "0", y "0", SVG.width "30", SVG.height "30" ] [] ]
+                [ polygon [ SVG.points "15,4 31,31 0,31" ] [] ]
 
-        wtIcon size =
-            squareIcon "wtIcon" size
+        SPIcon ->
+            svg
+                [ SVG.width (toString size)
+                , SVG.height (toString size)
+                , SVG.viewBox "0 0 31 31"
+                , SVG.class "spIcon"
+                ]
+                [ rect [ x "0", y "0", SVG.width "31", SVG.height "31" ] [] ]
 
-        spIcon size =
-            squareIcon "spIcon" size
+
+viewChatHeader : Model -> Html msg
+viewChatHeader model =
+    let
+        pt theText =
+            p [] [ text theText ]
 
         renderNodeCount num =
             div [ class "node_count" ] [ text (toString num) ]
@@ -105,15 +99,15 @@ viewChatHeader model =
                 , div [ class "hline" ] []
                 , div [ class "status_section" ]
                     [ div [ class "node_counts" ]
-                        [ div [ class "node_count_row" ] [ peerIcon 10, text "Peers", renderNodeCount (peerCount model.network) ]
-                        , div [ class "node_count_row" ] [ spIcon 10, text "Solar Panels", renderNodeCount (spCount model.network) ]
-                        , div [ class "node_count_row" ] [ wtIcon 10, text "Wind Turbines", renderNodeCount (wtCount model.network) ]
+                        [ div [ class "node_count_row" ] [ renderShape PeerIcon 10, text "Peers", renderNodeCount (peerCount model.network) ]
+                        , div [ class "node_count_row" ] [ renderShape SPIcon 10, text "Solar Panels", renderNodeCount (spCount model.network) ]
+                        , div [ class "node_count_row" ] [ renderShape WTIcon 12, text "Wind Turbines", renderNodeCount (wtCount model.network) ]
                         ]
                     , div [ class "hline" ] []
                     , div [ class "budget_status" ]
-                        [ b [] [ text "BUDGET" ]
+                        [ span [ class "budget_coin" ] [ text <| phiCoin model.budget ]
                         , br [] []
-                        , span [ class "budget_coin" ] [ text <| phiCoin model.budget ]
+                        , text "Budget"
                         ]
                     ]
                 ]

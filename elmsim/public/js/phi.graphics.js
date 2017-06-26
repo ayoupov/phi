@@ -46,7 +46,7 @@ function nodeShape(d) {
         case "generator" :
             switch (d.label.generatorType) {
                 case "windTurbine":
-                    //return d3.symbolTriangle;
+                    return d3.symbolTriangle;
                 case "solarPanel":
                     return d3.symbolSquare;
                 default:
@@ -105,14 +105,14 @@ function addHoverAnimation(selector) {
             d3.select(this)
               .transition()
               .ease(d3.easeElastic)
-              .duration(600)
+              .duration(800)
               .attr("d", addBaseNode(180));
           })
           .on("mouseout", function() {
             d3.select(this)
               .transition()
               .ease(d3.easeElastic)
-              .duration(600)
+              .duration(800)
               .attr("d", addBaseNode(100));
           });
 }

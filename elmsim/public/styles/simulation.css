@@ -33,54 +33,82 @@ body {
 }
 
 .peerIcon {
-  fill: rgb(246,255,0);
-  stroke: rgb(246,255,0);
+  fill: rgb(255,255,117);
 }
 
 .node.peer {
-  fill: rgb(246,255,0);
-  stroke: rgb(246,255,0);
+  fill: rgb(255,255,117);
+  stroke: rgb(255,255,117);
 }
 
 .node.windTurbine {
+  fill: rgb(114,236,245);
+  stroke: rgb(114,236,245);
+}
+
+.wtIcon {
+  fill: rgb(114,236,245);
+}
+
+.node.solarPanel {
   fill: rgb(0,0,117);
   stroke: rgb(0,0,117);
 }
 
-.wtIcon {
-  fill: rgb(0,0,117);
-}
-
-.node.solarPanel {
-  fill: rgb(0,251,255);
-  stroke: rgb(0,251,255);
-}
-
 .spIcon {
-  fill: rgb(0,251,255);
+  fill: rgb(0,0,117);
 }
 
 .node.peer .peerFullCircle{
   fill-opacity: 0;
+  stroke-opacity: 0;
   stroke-dasharray: 3,4;
   stroke-width: 3px;
 }
 
-.pulser {
-  animation: pulse 10s ease infinite;
-  fill: rgb(246,235,0);
+.wt_pulse {
+  fill: rgb(114,236,245);
+  transform-origin: center 66%;
+  animation: out-pulse 5s ease infinite;
   stroke-opacity: 0;
 }
 
-@keyframes pulse {
+.sp_pulse {
+  fill: rgb(0,0,117);
+  transform-origin: center center;
+  animation: out-pulse 5s ease infinite;
+  stroke-opacity: 0;
+}
+
+.peer_pulse {
+  animation: in-pulse 10s ease infinite;
+  transform-origin: center center;
+  fill: rgb(255,255,117);
+  stroke-opacity: 0;
+}
+
+@keyframes in-pulse {
   0% {
-    transform: scale(0.5);
-    transform-origin: center center;
-    opacity: 0.8
-  }
-  50% {
     transform: scale(1.7);
-    transform-origin: center center;
+    opacity: 0
+  }
+  80% {
+    transform: scale(0.7);
+    opacity: 1;
+  }
+  100% {
+    transform: scale(0.7);
+    opacity: 0;
+  }
+}
+
+@keyframes out-pulse {
+  0% {
+    transform: scale(0.7);
+    opacity: 1;
+  }
+  80% {
+    transform: scale(1.7);
     opacity: 0;
   }
   100% {
