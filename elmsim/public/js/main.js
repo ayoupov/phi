@@ -13,7 +13,7 @@ var xZoomScale = d3.scaleLinear()
 
 var zoom = d3.zoom()
     //.extent([[0,0],[1920,1080]])
-    .scaleExtent([0.75, 40])
+    .scaleExtent([1, 40])
     .translateExtent([[0, 0], [1920, 1080]])
     .on("zoom", zoomed);
 
@@ -148,7 +148,10 @@ var currentTransform = {k: 1.0, x: 0, y:0};
 function zoomed() {
     var transform = d3.zoomTransform(this);
     container.attr("transform", transform);
-    //container.selectAll(".nodes").attr("transform", "translate(" + d3.event.transform.x + "," + d3.event.transform.y + ") scale(" + 1/d3.event.transform.k + ")");
+    container.selectAll(".node")
+            .attr("transform", function(d) {
+              return " scale(" + 1/d3.event.transform.k + ")";
+            });
     //container.select('.zoom-line').call(zoomLine);
     currentTransform = transform;
     updateZoom(currentTransform.k);
