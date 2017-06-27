@@ -53,7 +53,7 @@ mcaName action =
             "Next Day"
 
         McaWeatherForecast ->
-            "Weather Forecast"
+            "Weather"
 
         --        McaChangeDesign ->
         --            "Change Design"
