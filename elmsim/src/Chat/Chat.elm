@@ -2,11 +2,10 @@ port module Chat.Chat exposing (..)
 
 import Action exposing (Msg(..))
 import Chat.Model exposing (..)
-import Random.Extra.Task exposing (timeout)
 
 
-delayResponse : Cmd Msg
-delay
+--delayResponse : Cmd Msg
+--delay
 
 
 parseUserMessage : UserChatMessage -> Msg
