@@ -9,6 +9,7 @@ import Simulation.SimulationInterop exposing (AnimationPhase)
 type Msg
     = Input String
     | SendUserChatMsg
+    | ProcessNarrative (List BotChatItem)
     | SendBotChatItem BotChatItem
     | NoOp
     | CheckWeather

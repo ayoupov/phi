@@ -149,49 +149,16 @@ function zoomed() {
     var transform = d3.zoomTransform(this);
     currentTransform = transform;
     container.attr("transform", transform);
-    //var $simulation = $(".simulation");
-    //var scrollTop = $simulation.scrollTop() || 0;
-    //var scrollLeft = $simulation.scrollLeft() || 0;
-    //var q = (1.0 / currentTransform.k);
-    //var trXk = currentTransform.x * q + scrollLeft;
-    //var trYk = currentTransform.y * q + scrollTop;
-    //var diffX = trXk - currentTransform.x;
-    //var diffY = trYk - currentTransform.y;
-    //console.log(diffX, diffY);
-    //container
-    //    .selectAll(".node")
-    //    .attr("transform", function (d) {
-    //        var x = d.label.pos.x;
-    //        var y = d.label.pos.y;
-            //console.log(x,y,this);
-    //});
-        //container
-        //    .selectAll(".node")
-        //.attr("transform", function (d) {
-        //    var x = d.label.pos.x;
-        //    var y = d.label.pos.y;
-        //    var x1 = x * q - trXk;
-        //    var y1 = y * q - trYk;
-        //    console.log(x, y, trXk, trYk, x1, y1);
-        //    return "translate(" + x1 + "," + y1 + ")" + " scale(" + q + ")";
-        //});
-    //    .attr("transform", function (d) {
-    //        //var x = d.label.pos.x;
-    //        //var y = d.label.pos.y;
-    //        //var nodeTransform = currentTransform.translate(x, y);
-    //        //var xTrans = nodeTransform.x;
-    //        //var yTrans = nodeTransform.y;
-    //        var kscale = 1/ nodeTransform.k;
-    //        //console.log(q, x, y, trXk, trYk, nodeTransform);
-    //        ////return "translate(" + (x + newX) + "," + (y + newY) + ")" + " scale(" + 1/d3.event.transform.k + ")";
-    //        //return "translate(" + ((xTrans * kscale + trXk) * q) + "," + ((yTrans * kscale + trYk) * q) + ")" + " scale(" + kscale + ")";
-    //        return " scale(" + kscale + ")";
-    //    });
 
-    //container.selectAll(".node")
-    //        .attr("transform", function(d) {
-    //          return " scale(" + 1/d3.event.transform.k + ")";
-    //        });
+    container.selectAll(".node")
+            .attr("transform", function(d) {
+             //custom scale factor so nodes grow slightly larger as you zoom
+              var scaleFactor = 0.75+0.25*d3.event.transform.k;
+              var x = d.label.pos.x;
+              var y = d.label.pos.y;
+              return "translate(" + (x - x/scaleFactor) + ", " + (y - y/scaleFactor) + ") "
+                + "scale(" + 1/scaleFactor + ")";
+            });
     //container.select('.zoom-line').call(zoomLine);
     updateZoom(currentTransform.k);
 }

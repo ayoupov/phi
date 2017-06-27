@@ -1,17 +1,13 @@
 port module Chat.Chat exposing (..)
 
 import Action exposing (Msg(..))
+import Chat.Helpers exposing (delayMessage)
 import Chat.Model exposing (..)
+import Chat.Narrative exposing (siteNarrative)
 import Model exposing (Model)
 import Process
 import Task
 import Time
-
-
-delayMessage : Float -> msg -> Cmd msg
-delayMessage timeOut msg =
-    Process.sleep (timeOut * Time.second)
-        |> Task.perform (\_ -> msg)
 
 
 handleTextInputMessage : UserChatMessage -> Cmd Msg
@@ -80,8 +76,8 @@ handleMultiChoiceMessage action =
                 McaRunDay ->
                     CallTurn
 
-                McaSelectLocation _ ->
-                    NoOp
+                McaLaunchSite ->
+                    ProcessNarrative siteNarrative
 
                 _ ->
                     NoOp

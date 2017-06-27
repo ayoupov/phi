@@ -69,6 +69,9 @@ update msg model =
             , scrollDown
             )
 
+        ProcessNarrative chatItems ->
+            ( model, Narrative.processNarrative chatItems )
+
         CheckWeather ->
             weatherForecast model
 
@@ -182,8 +185,8 @@ update msg model =
 
                 _ ->
                     ( model, changeBuildMode "none" )
---                        |> andThen update (SendBotChatItem <| Narrative.exitBuildMode)
 
+        --                        |> andThen update (SendBotChatItem <| Narrative.exitBuildMode)
         MultiChoiceMsg multiChoiceAction ->
             let
                 newModel =
