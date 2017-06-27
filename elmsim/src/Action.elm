@@ -26,7 +26,7 @@ type Msg
     | AnimatePeerConsumption
     | AnimateTrade
     | AnimationFinished AnimationPhase
-    | ToggleBuildMode Bool
+    | ChangeBuildMode String
     | UpdateWeather Weather
     | CallTurn
     | DaySummary

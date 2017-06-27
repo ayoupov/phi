@@ -121,10 +121,11 @@ d3.xml("assets/map_v3.svg").get(function (error, documentFragment) {
 function updateZoomPos() {
     var $zoomCont = $(".zoom-container");
     var r = (Math.floor($(window).width() / GRIDLINE_SIZE) - 1 ) * GRIDLINE_SIZE;
-    var b = (Math.floor($(window).height() / GRIDLINE_SIZE) ) * GRIDLINE_SIZE - $zoomCont.height();
+    var b = (Math.floor($(window).height() / GRIDLINE_SIZE) - 1 ) * GRIDLINE_SIZE - $zoomCont.height();
     $zoomCont.css({
         'left': r,
-        'top': b
+        'top': b,
+        'width' : GRIDLINE_SIZE + 'px'
     });
 }
 
@@ -246,20 +247,33 @@ $(function () {
 
     var clickOnPotential = function (d) {
         app.ports.requestConvertNode.send(d.id);
-        potentialNodes = potentialNodes.filter(function (n) {
-            return n.id !== d.id
-        });
-        killPotentials();
-        var nodes = svg.select(".nodes").selectAll(".potential")
-            .data(potentialNodes, function (d) {
+        var addendum = ".peer";
+        var currentSet = potentialPeers;
+        switch (lastBuildMode) {
+            case "peers":
+                potentialPeers = potentialPeers.filter(function (n) {
+                    return n.id !== d.id
+                });
+                currentSet = potentialPeers;
+                break;
+            case "generators" :
+                potentialGenerators = potentialGenerators.filter(function (n) {
+                    return n.id !== d.id
+                });
+                currentSet = potentialGenerators;
+                addendum = ".generator";
+        }
+        //killPotentials();
+        var nodes = svg.select(".nodes").selectAll(".potential" + addendum)
+            .data(currentSet, function (d) {
                 return d.id;
             });
-        drawPotentials(nodes);
+        drawPotentialNodes(nodes);
     };
 
-    var potentialNodes;
+    var potentialPeers, potentialGenerators;
 
-    function drawPotentials(nodes) {
+    function drawPotentialNodes(nodes) {
 
         var t = d3.transition().duration(1000);
 
@@ -276,8 +290,9 @@ $(function () {
             })
             .attr("class", "baseNode");
 
+        var addendum = lastBuildMode == "peers" ? ".peer" : ".generator";
 
-        nodes.selectAll(".potential")
+        nodes.selectAll(".potential" + addendum)
             .attr("stroke-opacity", "0")
             .attr("fill-opacity", "0")
             .style("opacity", "0")
@@ -292,7 +307,7 @@ $(function () {
                 app.ports.animationFinished.send("enterBuildModeAnimated");
             });
 
-        var potentials = d3.selectAll(".potential");
+        var potentials = d3.selectAll(".potential" + addendum);
         potentials
             .on("click", clickOnPotential);
 
@@ -333,6 +348,7 @@ $(function () {
     }
 
     function initLineInteraction() {
+        killPotentials();
         d3.selectAll('.node:not(.potential)')
             .on('click', function (node) {
                 if (isInBuildingMode) {
@@ -393,30 +409,52 @@ $(function () {
         d3.selectAll('.node:not(.potential)').on('click', null);
     }
 
-    var isInBuildingMode = false;
+    var isInBuildingMode = false, lastBuildMode = "none";
 
-    var toggleBuildModeFunction = function (isEnteringBuildMode) {
-        isInBuildingMode = isEnteringBuildMode;
-        var phiPotentialNodes = potentialNodes;
+    var changeBuildModeFunction = function (buildModeType) {
 
-        var nodes = svg.select(".nodes").selectAll(".potential")
-            .data(phiPotentialNodes, function (d) {
-                return d.id;
-            });
-
-        if (isEnteringBuildMode) {
-            drawPotentials(nodes);
-            initLineInteraction();
-
-            addHoverAnimation(svg.selectAll(".baseNode"));
+        switch (buildModeType) {
+            case "peers" :
+                isInBuildingMode = true;
+                lastBuildMode = "peers";
+                var nodes = svg.select(".nodes").selectAll(".potential.peer")
+                    .data(potentialPeers, function (d) {
+                        return d.id;
+                    });
+                drawPotentialNodes(nodes);
+                break;
+            case "generators" :
+                isInBuildingMode = true;
+                lastBuildMode = "generators";
+                var nodes = svg.select(".nodes").selectAll(".potential.generator")
+                    .data(potentialGenerators, function (d) {
+                        return d.id;
+                    });
+                drawPotentialNodes(nodes);
+                break;
+            case "lines" :
+                isInBuildingMode = true;
+                lastBuildMode = "lines";
+                initLineInteraction();
+                break;
+            case "none" :
+            default :
+                isInBuildingMode = false;
+                lastBuildMode = "none";
+                cancelHoverAnimation(svg.selectAll(".baseNode"));
+                killPotentials();
         }
-        else {
-            cancelHoverAnimation(svg.selectAll(".baseNode"));
-            killPotentials();
+        if (lastBuildMode != "lines") {
+            if (isInBuildingMode) {
+                addHoverAnimation(svg.selectAll(".baseNode"));
+            }
+            else {
+                cancelHoverAnimation(svg.selectAll(".baseNode"));
+            }
         }
     };
 
-    app.ports.toggleBuildMode.subscribe(toggleBuildModeFunction);
+    app.ports.changeBuildMode.subscribe(changeBuildModeFunction);
 
     app.ports.animateGeneration.subscribe(function (model) {
         var t = d3.transition().duration(1500);
@@ -529,7 +567,7 @@ $(function () {
             //.call(endall, function () {
             //});
             if (isInBuildingMode)
-                toggleBuildModeFunction(true);
+                changeBuildModeFunction(lastBuildMode);
 
         }
 
@@ -594,8 +632,12 @@ $(function () {
             return (!node.label.isPotential);
         });
 
-        potentialNodes = phiNodes.filter(function (node) {
-            return (node.label.isPotential);
+        potentialPeers = phiNodes.filter(function (node) {
+            return (node.label.isPotential && node.label.nodeType != 'generator');
+        });
+
+        potentialGenerators = phiNodes.filter(function (node) {
+            return (node.label.isPotential && node.label.nodeType == 'generator');
         });
 
         drawNodes(liveNodes);

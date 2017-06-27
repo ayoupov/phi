@@ -9,7 +9,7 @@ import Graph
 import Json.Encode exposing (encode)
 import Material
 import Model exposing (Model)
-import Simulation.BuildingMode exposing (handleConvertNode, handleConvertNodeRequest, handleNewLineRequest, toggleBuildMode)
+import Simulation.BuildingMode exposing (handleConvertNode, handleConvertNodeRequest, handleNewLineRequest, changeBuildMode)
 import Simulation.Encoding exposing (encodeEdge, encodeGraph, encodeNodeLabel)
 import Simulation.GraphUpdates exposing (addEdge, addNode, addNodeWithEdges, updateNodes)
 import Simulation.Helpers exposing (liveNodeNetwork)
@@ -163,14 +163,22 @@ update msg model =
                 _ ->
                     update NoOp model
 
-        ToggleBuildMode isEnteringBuildMode ->
-            case isEnteringBuildMode of
-                True ->
-                    ( model, toggleBuildMode True )
+        ChangeBuildMode buildModeType ->
+            case buildModeType of
+                "peers" ->
+                    ( model, changeBuildMode "peers" )
                         |> andThen update (SendBotChatItem <| Narrative.enterBuildMode)
 
-                False ->
-                    ( model, toggleBuildMode False )
+                "generators" ->
+                    ( model, changeBuildMode "generators" )
+                        |> andThen update (SendBotChatItem <| Narrative.enterBuildMode)
+
+                "lines" ->
+                    ( model, changeBuildMode "lines" )
+                        |> andThen update (SendBotChatItem <| Narrative.enterBuildMode)
+
+                _ ->
+                    ( model, changeBuildMode "none" )
                         |> andThen update (SendBotChatItem <| Narrative.exitBuildMode)
 
         MultiChoiceMsg multiChoiceAction ->
@@ -202,11 +210,20 @@ handleMultiChoiceMsg action model =
         McaWeatherForecast ->
             weatherForecast model
 
-        McaChangeDesign ->
-            update (ToggleBuildMode True) model
+--        McaChangeDesign ->
+--            update (ChangeBuildMode True) model
+
+        McaAddPeers ->
+            update (ChangeBuildMode "peers") model
+
+        McaAddGenerators ->
+            update (ChangeBuildMode "generators") model
+
+        McaBuyCables ->
+            update (ChangeBuildMode "lines") model
 
         McaLeaveBuildMode ->
-            update (ToggleBuildMode False) model
+            update (ChangeBuildMode "none") model
 
         McaRunDay ->
             runDay model

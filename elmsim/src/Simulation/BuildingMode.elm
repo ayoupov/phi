@@ -15,7 +15,7 @@ import Simulation.Model exposing (..)
 -- PORTS
 
 
-port toggleBuildMode : Bool -> Cmd msg
+port changeBuildMode : String -> Cmd msg
 
 
 port requestConvertNode : (Value -> msg) -> Sub msg
