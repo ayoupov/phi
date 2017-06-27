@@ -311,7 +311,7 @@ $(function () {
             .data(currentSet, function (d) {
                 return d.id;
             });
-        killPotentials();
+        //killPotentials();
         drawPotentialNodes(nodes);
     };
 
