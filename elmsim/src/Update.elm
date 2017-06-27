@@ -167,15 +167,15 @@ update msg model =
             case buildModeType of
                 "peers" ->
                     ( model, changeBuildMode "peers" )
-                        |> andThen update (SendBotChatItem <| Narrative.enterBuildMode)
+                        |> andThen update (SendBotChatItem <| Narrative.enterBuildModePeers)
 
                 "generators" ->
                     ( model, changeBuildMode "generators" )
-                        |> andThen update (SendBotChatItem <| Narrative.enterBuildMode)
+                        |> andThen update (SendBotChatItem <| Narrative.enterBuildModeGenerators)
 
                 "lines" ->
                     ( model, changeBuildMode "lines" )
-                        |> andThen update (SendBotChatItem <| Narrative.enterBuildMode)
+                        |> andThen update (SendBotChatItem <| Narrative.enterBuildModeLines)
 
                 _ ->
                     ( model, changeBuildMode "none" )
@@ -210,8 +210,6 @@ handleMultiChoiceMsg action model =
         McaWeatherForecast ->
             weatherForecast model
 
-        --        McaChangeDesign ->
-        --            update (ChangeBuildMode True) model
         McaAddPeers ->
             update (ChangeBuildMode "peers") model
 
@@ -283,6 +281,7 @@ runDay model =
     in
     newModel
         |> generateWeather model.weatherList
+        |> andThen update (ChangeBuildMode "none")
         --        ! [ generateWeather model.weatherList]
         |> andThen update RenderPhiNetwork
         |> andThen update AnimateGeneration

@@ -34,16 +34,14 @@ daySummary model =
         MultiChoiceMessage text
             [ McaWeatherForecast
             , McaRunDay
-
-            --            , McaChangeDesign
             , McaAddPeers
             , McaAddGenerators
             , McaBuyCables
             ]
 
 
-enterBuildMode : BotChatItem
-enterBuildMode =
+enterBuildModePeers : BotChatItem
+enterBuildModePeers =
     let
         text =
             "Entering Build Mode! The newly illuminated nodes "
@@ -53,7 +51,41 @@ enterBuildMode =
     in
     MultiChoiceItem <|
         MultiChoiceMessage text
-            [ McaLeaveBuildMode
+            [ McaWeatherForecast
+            , McaRunDay
+            , McaAddGenerators
+            , McaBuyCables
+            ]
+
+enterBuildModeGenerators : BotChatItem
+enterBuildModeGenerators =
+    let
+        text =
+            "GENERATORS!!! "
+    in
+    MultiChoiceItem <|
+        MultiChoiceMessage text
+            [ McaWeatherForecast
+            , McaRunDay
+            , McaAddPeers
+            , McaBuyCables
+            ]
+
+enterBuildModeLines : BotChatItem
+enterBuildModeLines =
+    let
+        text =
+            "CABLES!!!! "
+                ++ "represent potential peers (circles) whom you can invite to your"
+                ++ "Phi community, and generators (squares) that you can purchase"
+                ++ " in order to provide more energy to your network."
+    in
+    MultiChoiceItem <|
+        MultiChoiceMessage text
+            [ McaWeatherForecast
+            , McaRunDay
+            , McaAddPeers
+            , McaAddGenerators
             ]
 
 
@@ -67,8 +99,6 @@ exitBuildMode =
         MultiChoiceMessage text
             [ McaWeatherForecast
             , McaRunDay
-
-            --            , McaChangeDesign
             , McaAddPeers
             , McaAddGenerators
             , McaBuyCables
@@ -80,7 +110,6 @@ dayBeginning model =
     let
         text =
             "Glorious new day in Arstotzka"
-
         -- add weather?
     in
     BotMessage text
@@ -135,8 +164,6 @@ dayTraded model =
         MultiChoiceMessage text
             [ McaWeatherForecast
             , McaRunDay
-
-            --            , McaChangeDesign
             , McaAddPeers
             , McaAddGenerators
             , McaBuyCables
