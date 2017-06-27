@@ -182,7 +182,7 @@ update msg model =
 
                 _ ->
                     ( model, changeBuildMode "none" )
-                        |> andThen update (SendBotChatItem <| Narrative.exitBuildMode)
+--                        |> andThen update (SendBotChatItem <| Narrative.exitBuildMode)
 
         MultiChoiceMsg multiChoiceAction ->
             let
