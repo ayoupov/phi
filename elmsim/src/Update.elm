@@ -291,11 +291,14 @@ runDay model =
 weatherForecast : Model -> ( Model, Cmd Msg )
 weatherForecast model =
     let
+        weather =
+            pregenerateWeather model.weatherList
+
         sunny =
-            toString model.weather.sun
+            toString weather.sun
 
         windy =
-            toString model.weather.wind
+            toString weather.wind
 
         chatMsg =
             BotMessage <|
@@ -312,8 +315,18 @@ weatherForecast model =
 
 
 
---generateWeather : List WeatherTuple -> Cmd Msg
-
+pregenerateWeather : List WeatherTuple -> Weather
+pregenerateWeather list =
+    let
+        currentWeather =
+            list
+            |> List.tail
+            |> Maybe.withDefault [(0.5, 0.5)]
+            |> List.head
+            |> Maybe.withDefault ( 0.5, 0.5 )
+            |> weatherTupleToWeather
+    in
+    currentWeather
 
 generateWeather list =
     let
