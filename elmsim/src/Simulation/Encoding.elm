@@ -49,17 +49,29 @@ encodeNodeLabel nodeLabel =
 
         PotentialNode label ->
             let
-                nodeTypeString =
+                nodeTypeVal =
                     case label.nodeType of
                         PotentialPeer ->
-                            "peer"
+                            Json.string "peer"
 
-                        PotentialGenerator ->
-                            "generator"
+                        _ ->
+                            Json.string "generator"
+
+                generatorTypeVal =
+                    case label.nodeType of
+                        PotentialSolarPanel ->
+                            Json.string "solarPanel"
+
+                        PotentialWindTurbine ->
+                            Json.string "windTurbine"
+
+                        _ ->
+                            Json.null
             in
             Json.object
                 [ ( "pos", encodeCoords label.pos )
-                , ( "nodeType", Json.string nodeTypeString )
+                , ( "nodeType", nodeTypeVal )
+                , ( "generatorType", generatorTypeVal )
                 , ( "isPotential", Json.bool True )
                 ]
 

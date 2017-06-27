@@ -148,6 +148,7 @@ var currentTransform = {k: 1.0, x: 0, y:0};
 function zoomed() {
     var transform = d3.zoomTransform(this);
     container.attr("transform", transform);
+    //container.selectAll(".nodes").attr("transform", "translate(" + d3.event.transform.x + "," + d3.event.transform.y + ") scale(" + 1/d3.event.transform.k + ")");
     //container.select('.zoom-line').call(zoomLine);
     currentTransform = transform;
     updateZoom(currentTransform.k);
@@ -521,11 +522,11 @@ $(function () {
                         return "sp_pulse";
                     }
                 })
+                .style('animation-delay', -20*Math.random()+"s")
                 .append("path")
                 .attr('transform', function (d) {
                     return "translate(" + (setX(d)) + "," + (setY(d)) + ")";
                 })
-                .style('animation-delay', -20*Math.random()+"s")
                 .attr("d", addBaseNode(200));
 
             //draw dotted outlines for peers

@@ -64,31 +64,32 @@ parseConvertNewLine x =
             NoOp
 
 
-handleConvertNodeRequest : NodeId -> PhiNetwork -> PhiNetwork
-handleConvertNodeRequest nodeId phiNetwork =
-    let
-        convertNode node =
-            { node | label = convertNodeLabel node.label }
 
-        convertNodeLabel label =
-            case label of
-                PotentialNode { nodeType, pos } ->
-                    case nodeType of
-                        PotentialGenerator ->
-                            GeneratorNode { defaultGenerator | pos = pos }
-
-                        PotentialPeer ->
-                            PeerNode { defaultPeer | pos = pos }
-
-                _ ->
-                    label
-
-        convertNodeContext nodeContext =
-            { nodeContext | node = convertNode nodeContext.node }
-    in
-    Graph.get nodeId phiNetwork
-        |> Maybe.map ((\nc -> Graph.insert nc phiNetwork) << convertNodeContext)
-        |> Maybe.withDefault phiNetwork
+--handleConvertNodeRequest : NodeId -> PhiNetwork -> PhiNetwork
+--handleConvertNodeRequest nodeId phiNetwork =
+--    let
+--        convertNode node =
+--            { node | label = convertNodeLabel node.label }
+--
+--        convertNodeLabel label =
+--            case label of
+--                PotentialNode { nodeType, pos } ->
+--                    case nodeType of
+--                        PotentialGenerator ->
+--                            GeneratorNode { defaultGenerator | pos = pos }
+--
+--                        PotentialPeer ->
+--                            PeerNode { defaultPeer | pos = pos }
+--
+--                _ ->
+--                    label
+--
+--        convertNodeContext nodeContext =
+--            { nodeContext | node = convertNode nodeContext.node }
+--    in
+--    Graph.get nodeId phiNetwork
+--        |> Maybe.map ((\nc -> Graph.insert nc phiNetwork) << convertNodeContext)
+--        |> Maybe.withDefault phiNetwork
 
 
 handleConvertNode : NodeId -> Model -> ( Model, Cmd Msg )
@@ -110,7 +111,10 @@ handleConvertNode nodeId model =
             case nodeLabel of
                 PotentialNode potential ->
                     case potential.nodeType of
-                        PotentialGenerator ->
+                        PotentialWindTurbine ->
+                            Just <| Generators.generateWindTurbine AddGenerator coords
+
+                        PotentialSolarPanel ->
                             Just <| Generators.generatePVPanel AddGenerator coords
 
                         PotentialPeer ->

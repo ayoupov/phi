@@ -32,11 +32,11 @@ body {
   height: 100%;
 }
 
-.peerIcon {
+.spIcon {
   fill: rgb(255,255,117);
 }
 
-.node.peer {
+.node.solarPanel {
   fill: rgb(255,255,117);
   stroke: rgb(255,255,117);
 }
@@ -50,12 +50,12 @@ body {
   fill: rgb(114,236,245);
 }
 
-.node.solarPanel {
+.node.peer {
   fill: rgb(0,0,117);
   stroke: rgb(0,0,117);
 }
 
-.spIcon {
+.peerIcon {
   fill: rgb(0,0,117);
 }
 
@@ -74,26 +74,26 @@ body {
 }
 
 .sp_pulse {
-  fill: rgb(0,0,117);
+  fill: rgb(255,255,117);
   transform-origin: center center;
-  animation: out-pulse 5s ease infinite;
+  animation: out-pulse 10s ease infinite;
   stroke-opacity: 0;
 }
 
 .peer_pulse {
+  fill: rgb(0,0,117);
   animation: in-pulse 10s ease infinite;
   transform-origin: center center;
-  fill: rgb(255,255,117);
   stroke-opacity: 0;
 }
 
 @keyframes in-pulse {
   0% {
-    transform: scale(1.7);
+    transform: scale(1.5);
     opacity: 0
   }
   80% {
-    transform: scale(0.7);
+    transform: scale(0.5);
     opacity: 1;
   }
   100% {
@@ -107,8 +107,8 @@ body {
     transform: scale(0.7);
     opacity: 1;
   }
-  80% {
-    transform: scale(1.7);
+  90% {
+    transform: scale(2);
     opacity: 0;
   }
   100% {
@@ -129,7 +129,7 @@ body {
 line.link {
   stroke: white;
   stroke-width: 1.5px;
-  stroke-opacity: 0.7;
+  stroke-opacity: 1;
 }
 
 .energyIndicator {

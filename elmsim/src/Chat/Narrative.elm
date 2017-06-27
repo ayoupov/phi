@@ -34,7 +34,8 @@ daySummary model =
         MultiChoiceMessage text
             [ McaWeatherForecast
             , McaRunDay
---            , McaChangeDesign
+
+            --            , McaChangeDesign
             , McaAddPeers
             , McaAddGenerators
             , McaBuyCables
@@ -66,7 +67,8 @@ exitBuildMode =
         MultiChoiceMessage text
             [ McaWeatherForecast
             , McaRunDay
---            , McaChangeDesign
+
+            --            , McaChangeDesign
             , McaAddPeers
             , McaAddGenerators
             , McaBuyCables
@@ -133,7 +135,8 @@ dayTraded model =
         MultiChoiceMessage text
             [ McaWeatherForecast
             , McaRunDay
---            , McaChangeDesign
+
+            --            , McaChangeDesign
             , McaAddPeers
             , McaAddGenerators
             , McaBuyCables

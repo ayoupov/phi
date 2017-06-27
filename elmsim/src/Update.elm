@@ -9,7 +9,7 @@ import Graph
 import Json.Encode exposing (encode)
 import Material
 import Model exposing (Model)
-import Simulation.BuildingMode exposing (handleConvertNode, handleConvertNodeRequest, handleNewLineRequest, changeBuildMode)
+import Simulation.BuildingMode exposing (changeBuildMode, handleConvertNode, handleNewLineRequest)
 import Simulation.Encoding exposing (encodeEdge, encodeGraph, encodeNodeLabel)
 import Simulation.GraphUpdates exposing (addEdge, addNode, addNodeWithEdges, updateNodes)
 import Simulation.Helpers exposing (liveNodeNetwork)
@@ -210,9 +210,8 @@ handleMultiChoiceMsg action model =
         McaWeatherForecast ->
             weatherForecast model
 
---        McaChangeDesign ->
---            update (ChangeBuildMode True) model
-
+        --        McaChangeDesign ->
+        --            update (ChangeBuildMode True) model
         McaAddPeers ->
             update (ChangeBuildMode "peers") model
 

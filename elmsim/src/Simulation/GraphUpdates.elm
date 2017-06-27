@@ -4,8 +4,8 @@ import Graph exposing (Edge, Node, NodeContext, NodeId)
 import IntDict
 import Set
 import Simulation.Helpers exposing (distBetweenNodes, isLiveNode)
-import Simulation.Model exposing (NodeLabel(PotentialNode), PhiNetwork, Potential, PotentialNodeType(PotentialGenerator, PotentialPeer), TransmissionLine, tupleToCoords)
-import Simulation.NodeList exposing (potentialGeneratorList, potentialPeerList)
+import Simulation.Model exposing (NodeLabel(PotentialNode), PhiNetwork, Potential, PotentialNodeType(..), TransmissionLine, tupleToCoords)
+import Simulation.NodeList exposing (potentialPeerList, potentialSolarPanelList, potentialWindTurbineList)
 
 
 addNode : NodeLabel -> PhiNetwork -> PhiNetwork
@@ -96,11 +96,17 @@ graphFromNodeList nodes =
 potentialNodesList : List NodeLabel
 potentialNodesList =
     let
-        genList =
-            potentialGeneratorList
+        spList =
+            potentialSolarPanelList
                 |> Set.toList
                 |> List.map
-                    (PotentialNode << Potential PotentialGenerator << tupleToCoords)
+                    (PotentialNode << Potential PotentialSolarPanel << tupleToCoords)
+
+        wtList =
+            potentialWindTurbineList
+                |> Set.toList
+                |> List.map
+                    (PotentialNode << Potential PotentialWindTurbine << tupleToCoords)
 
         peerList =
             potentialPeerList
@@ -108,4 +114,4 @@ potentialNodesList =
                 |> List.map
                     (PotentialNode << Potential PotentialPeer << tupleToCoords)
     in
-    genList ++ peerList
+    spList ++ wtList ++ peerList

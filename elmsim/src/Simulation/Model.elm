@@ -138,7 +138,8 @@ type alias Potential =
 
 type PotentialNodeType
     = PotentialPeer
-    | PotentialGenerator
+    | PotentialSolarPanel
+    | PotentialWindTurbine
 
 
 

@@ -12,7 +12,6 @@ initialPeerList =
         , ( 880, 410 )
         , ( 916, 435 )
         , ( 1035, 441 )
-        , ( 891, 355 )
         , ( 955, 366 )
         , ( 990, 380 )
         , ( 898, 330 )
@@ -33,13 +32,12 @@ initialPeerList =
         ]
 
 
-initialWTNodeList : Set ( Int, Int )
-initialWTNodeList =
+initialWindTurbineList : Set ( Int, Int )
+initialWindTurbineList =
     Set.fromList
         [ ( 847, 707 )
         , ( 852, 427 )
         , ( 1005, 502 )
-        , ( 932, 322 )
         , ( 975, 202 )
         , ( 1096, 197 )
         , ( 1208, 164 )
@@ -47,13 +45,14 @@ initialWTNodeList =
         ]
 
 
-initialPVNodeList : Set ( Int, Int )
-initialPVNodeList =
+initialSolarPanelList : Set ( Int, Int )
+initialSolarPanelList =
     Set.fromList
         [ ( 817, 526 )
         , ( 995, 273 )
         , ( 1176, 302 )
         , ( 747, 506 )
+        , ( 932, 322 )
         , ( 965, 461 )
         , ( 1062, 410 )
         ]
@@ -64,10 +63,14 @@ potentialPeerList =
     Set.diff peerList initialPeerList
 
 
-potentialGeneratorList : Set ( Int, Int )
-potentialGeneratorList =
-    Set.diff generatorList initialPVNodeList
-        |> flip Set.diff initialWTNodeList
+potentialSolarPanelList : Set ( Int, Int )
+potentialSolarPanelList =
+    Set.diff solarPanelList initialSolarPanelList
+
+
+potentialWindTurbineList : Set ( Int, Int )
+potentialWindTurbineList =
+    Set.diff windTurbineList initialWindTurbineList
 
 
 peerList : Set ( Int, Int )
@@ -190,6 +193,7 @@ windTurbineList =
         , ( 588, 714 )
         , ( 1690, 385 )
         , ( 1864, 540 )
+        , ( 1005, 502 )
         , ( 1790, 108 )
         , ( 1502, 228 )
         , ( 891, 355 )
@@ -216,8 +220,8 @@ windTurbineList =
         ]
 
 
-generatorList : Set ( Int, Int )
-generatorList =
+solarPanelList : Set ( Int, Int )
+solarPanelList =
     Set.fromList
         [ ( 136, 600 )
         , ( 116, 670 )
@@ -236,7 +240,6 @@ generatorList =
         , ( 817, 526 )
         , ( 852, 427 )
         , ( 965, 461 )
-        , ( 1005, 502 )
         , ( 1062, 410 )
         , ( 932, 322 )
         , ( 995, 273 )

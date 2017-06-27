@@ -38,7 +38,7 @@ type MultiChoiceAction
     = McaRunDay
     | McaRunWeek
     | McaWeatherForecast
---    | McaChangeDesign
+      --    | McaChangeDesign
     | McaAddPeers
     | McaAddGenerators
     | McaBuyCables
@@ -55,9 +55,8 @@ mcaName action =
         McaWeatherForecast ->
             "Weather Forecast"
 
---        McaChangeDesign ->
---            "Change Design"
-
+        --        McaChangeDesign ->
+        --            "Change Design"
         McaAddPeers ->
             "Add Peers"
 
