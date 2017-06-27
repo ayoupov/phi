@@ -120,7 +120,7 @@ var elizaKeywords = [
   ["* what *", [
      "I am Phi.",
      "Phi is a planetary community for clean energy resources.",
-      "Phi is a platform for collaborative energy infrastructure planning"
+    "Phi is a platform for collaborative energy infrastructure planning"
   ]],
   ["how * ", [ 
     "Do you want to join a community or be a seeder?",
@@ -260,16 +260,9 @@ var elizaKeywords = [
      ["* what *", [
       "A peer community is a collection of nodes that are in the same DAO. "
      ]],
-     ["* how *", [
+     ["*", [
      "If you are producing clean energy you can join the Phi community to get a more consistent energy supply. And you will be able to trade your surplus with other nodes."
-     ]],
-      ["*", [
-     "A peer community is usually in a geographical proximity, but it doesn't have to be.",
-     "If you are a member of a peer community, you can monitor the health of each node and tweak the simulation with your peers.",
-     "You don't have to like everyone in your community but you should respect them regardless.",
-     "Who should be a neighbour, when we don’t share flesh?",
-     "DAO is the new definition of community."
-     ]],
+     ]]
   ]],
 
 ["community", 0, [
@@ -1050,7 +1043,7 @@ var elizaKeywords = [
      "goto alike"
   ]]
 ]],
-["different", 0, [
+["different", 5, [
  ["*", [
      "How is it different ?",
      "What differences do you see ?",
@@ -1059,6 +1052,14 @@ var elizaKeywords = [
      "What do you suppose that disparity means ?",
      "Could there be some connection, do you suppose ?",
      "How ?"
+  ]],
+  ["phi", [
+      "You can join the Phi community and start trading clean energy if you are producing some, or you can be a seeder by investing existing simulation plan, or purchase some infrastructures for a community."
+      ]],
+]],
+["difference", 0, [
+  ["*", [
+  "goto different"
   ]]
 ]]
 
