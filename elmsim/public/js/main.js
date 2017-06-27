@@ -311,6 +311,7 @@ $(function () {
             .data(currentSet, function (d) {
                 return d.id;
             });
+        killPotentials();
         drawPotentialNodes(nodes);
     };
 
@@ -464,6 +465,7 @@ $(function () {
                     .data(potentialPeers, function (d) {
                         return d.id;
                     });
+                killPotentials();
                 drawPotentialNodes(nodes);
                 break;
             case "generators" :
@@ -473,6 +475,7 @@ $(function () {
                     .data(potentialGenerators, function (d) {
                         return d.id;
                     });
+                killPotentials();
                 drawPotentialNodes(nodes);
                 break;
             case "lines" :
