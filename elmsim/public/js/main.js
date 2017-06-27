@@ -13,7 +13,7 @@ var xZoomScale = d3.scaleLinear()
 
 var zoom = d3.zoom()
     //.extent([[0,0],[1920,1080]])
-    .scaleExtent([0.75, 40])
+    .scaleExtent([1, 40])
     .translateExtent([[0, 0], [1920, 1080]])
     .on("zoom", zoomed);
 
@@ -125,7 +125,7 @@ function updateZoomPos() {
     $zoomCont.css({
         'left': r,
         'top': b,
-        'width' : GRIDLINE_SIZE + 'px'
+        'width': GRIDLINE_SIZE + 'px'
     });
 }
 
@@ -143,28 +143,55 @@ function zoomInit() {
     $(window).on('resize', updateZoomPos);
 }
 
-var currentTransform = {k: 1.0, x: 0, y:0};
+var currentTransform = {k: 1.0, x: 0, y: 0};
 
 function zoomed() {
     var transform = d3.zoomTransform(this);
     currentTransform = transform;
     container.attr("transform", transform);
-    var $simulation = $(".simulation");
-    var scrollTop = $simulation.scrollTop() || 0;
-    var scrollLeft = $simulation.scrollLeft() || 0;
-    var q = (1.0 / currentTransform.k);
-    var trXk = currentTransform.x * q;
-    var trYk = currentTransform.y * q;
-    var newX = - d3.event.transform.x * q + scrollLeft;
-    var newY = - d3.event.transform.y * q + scrollTop;
-    console.log(q, trXk, trYk, newX, newY);
-    container
-        .selectAll(".node")
-        .attr("transform", function(d) {
-            var nodeTransform = currentTransform.translate(d.label.pos.x, d.label.pos.y );
-            return "translate(" + (nodeTransform.x - newX) + "," + (nodeTransform.y - newY) + ")"
-        });
+    //var $simulation = $(".simulation");
+    //var scrollTop = $simulation.scrollTop() || 0;
+    //var scrollLeft = $simulation.scrollLeft() || 0;
+    //var q = (1.0 / currentTransform.k);
+    //var trXk = currentTransform.x * q + scrollLeft;
+    //var trYk = currentTransform.y * q + scrollTop;
+    //var diffX = trXk - currentTransform.x;
+    //var diffY = trYk - currentTransform.y;
+    //console.log(diffX, diffY);
+    //container
+    //    .selectAll(".node")
+    //    .attr("transform", function (d) {
+    //        var x = d.label.pos.x;
+    //        var y = d.label.pos.y;
+            //console.log(x,y,this);
+    //});
+        //container
+        //    .selectAll(".node")
+        //.attr("transform", function (d) {
+        //    var x = d.label.pos.x;
+        //    var y = d.label.pos.y;
+        //    var x1 = x * q - trXk;
+        //    var y1 = y * q - trYk;
+        //    console.log(x, y, trXk, trYk, x1, y1);
+        //    return "translate(" + x1 + "," + y1 + ")" + " scale(" + q + ")";
+        //});
+    //    .attr("transform", function (d) {
+    //        //var x = d.label.pos.x;
+    //        //var y = d.label.pos.y;
+    //        //var nodeTransform = currentTransform.translate(x, y);
+    //        //var xTrans = nodeTransform.x;
+    //        //var yTrans = nodeTransform.y;
+    //        var kscale = 1/ nodeTransform.k;
+    //        //console.log(q, x, y, trXk, trYk, nodeTransform);
+    //        ////return "translate(" + (x + newX) + "," + (y + newY) + ")" + " scale(" + 1/d3.event.transform.k + ")";
+    //        //return "translate(" + ((xTrans * kscale + trXk) * q) + "," + ((yTrans * kscale + trYk) * q) + ")" + " scale(" + kscale + ")";
+    //        return " scale(" + kscale + ")";
+    //    });
 
+    //container.selectAll(".node")
+    //        .attr("transform", function(d) {
+    //          return " scale(" + 1/d3.event.transform.k + ")";
+    //        });
     //container.select('.zoom-line').call(zoomLine);
     updateZoom(currentTransform.k);
 }
@@ -519,16 +546,20 @@ $(function () {
                 });
 
             //add pulsating to peers
-            nodeEnter.filter(function(d) {return d.label.nodeType == "peer"})
+            nodeEnter.filter(function (d) {
+                    return d.label.nodeType == "peer"
+                })
                 .append("circle")
                 .attr('cx', setX)
                 .attr('cy', setY)
                 .attr('r', 10)
-                .style('animation-delay', -20*Math.random()+"s")
+                .style('animation-delay', -20 * Math.random() + "s")
                 .attr("class", "peer_pulse");
 
             //add pulsating to generators
-            nodeEnter.filter(function(d) {return (d.label.nodeType == "generator")})
+            nodeEnter.filter(function (d) {
+                    return (d.label.nodeType == "generator")
+                })
                 .append("g")
                 .attr("class", function (d) {
                     if (d.label.generatorType == "windTurbine") {
@@ -537,7 +568,7 @@ $(function () {
                         return "sp_pulse";
                     }
                 })
-                .style('animation-delay', -20*Math.random()+"s")
+                .style('animation-delay', -20 * Math.random() + "s")
                 .append("path")
                 .attr('transform', function (d) {
                     return "translate(" + (setX(d)) + "," + (setY(d)) + ")";
@@ -545,7 +576,9 @@ $(function () {
                 .attr("d", addBaseNode(200));
 
             //draw dotted outlines for peers
-            nodeEnter.filter(function(d) {return d.label.nodeType == "peer"})
+            nodeEnter.filter(function (d) {
+                    return d.label.nodeType == "peer"
+                })
                 .append("circle")
                 .attr('cx', setX)
                 .attr('cy', setY)

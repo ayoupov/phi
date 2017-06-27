@@ -57,6 +57,7 @@ enterBuildModePeers =
             , McaBuyCables
             ]
 
+
 enterBuildModeGenerators : BotChatItem
 enterBuildModeGenerators =
     let
@@ -70,6 +71,7 @@ enterBuildModeGenerators =
             , McaAddPeers
             , McaBuyCables
             ]
+
 
 enterBuildModeLines : BotChatItem
 enterBuildModeLines =
@@ -110,6 +112,7 @@ dayBeginning model =
     let
         text =
             "Glorious new day in Arstotzka"
+
         -- add weather?
     in
     BotMessage text

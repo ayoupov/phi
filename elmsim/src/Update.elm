@@ -1,7 +1,7 @@
 module Update exposing (update)
 
 import Action exposing (Msg(..))
-import Chat.Chat exposing (parseUserMessage, sendToEliza)
+import Chat.Chat as Chat
 import Chat.Model exposing (..)
 import Chat.Narrative as Narrative
 import Dom.Scroll as Scroll
@@ -57,9 +57,12 @@ update msg model =
 
                     newModel =
                         addChatItem chatMsg clearedInputModel
+
+                    botResponse : Cmd Msg
+                    botResponse =
+                        Chat.handleTextInputMessage model.input
                 in
-                ( newModel, scrollDown )
-                    |> andThen update (parseUserMessage model.input)
+                newModel ! [ scrollDown, botResponse ]
 
         SendBotChatItem chatItem ->
             ( addChatItem (BotItem chatItem) model
@@ -185,8 +188,11 @@ update msg model =
             let
                 newModel =
                     addChatItem (UserMessage <| mcaName multiChoiceAction) model
+
+                botResponse =
+                    Chat.handleMultiChoiceMessage multiChoiceAction
             in
-            handleMultiChoiceMsg multiChoiceAction newModel
+            newModel ! [ scrollDown, botResponse ]
 
         ToggleInputType ->
             case model.inputType of
@@ -197,41 +203,11 @@ update msg model =
                     { model | inputType = FreeTextInput } ! []
 
         SendToEliza userChatMessage ->
-            model ! [ sendToEliza userChatMessage ]
+            model ! [ Chat.sendToEliza userChatMessage ]
 
 
 
 -- HELPERS
-
-
-handleMultiChoiceMsg : MultiChoiceAction -> Model -> ( Model, Cmd Msg )
-handleMultiChoiceMsg action model =
-    case action of
-        McaWeatherForecast ->
-            weatherForecast model
-
-        McaAddPeers ->
-            update (ChangeBuildMode "peers") model
-
-        McaAddGenerators ->
-            update (ChangeBuildMode "generators") model
-
-        McaBuyCables ->
-            update (ChangeBuildMode "lines") model
-
-        McaLeaveBuildMode ->
-            update (ChangeBuildMode "none") model
-
-        McaRunDay ->
-            runDay model
-                |> andThen update DaySummary
-
-        --                |> andThen update DaySummary
-        McaSelectLocation _ ->
-            model ! []
-
-        _ ->
-            model ! []
 
 
 runDay : Model -> ( Model, Cmd Msg )
@@ -313,20 +289,21 @@ weatherForecast model =
             (SendBotChatItem <| WidgetItem WeatherWidget)
 
 
-
 pregenerateWeather : List WeatherTuple -> Weather
 pregenerateWeather list =
     let
         currentWeather =
             list
-            |> List.tail
-            |> Maybe.withDefault [(0.5, 0.5)]
-            |> List.head
-            |> Maybe.withDefault ( 0.5, 0.5 )
-            |> weatherTupleToWeather
+                |> List.tail
+                |> Maybe.withDefault [ ( 0.5, 0.5 ) ]
+                |> List.head
+                |> Maybe.withDefault ( 0.5, 0.5 )
+                |> weatherTupleToWeather
     in
     currentWeather
 
+
+generateWeather : List WeatherTuple -> (Model -> ( Model, Cmd Msg ))
 generateWeather list =
     let
         currentList =
