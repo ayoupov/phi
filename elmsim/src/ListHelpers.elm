@@ -1,4 +1,4 @@
-module Simulation.SimulationHelpers exposing (..)
+module ListHelpers exposing (..)
 
 -- function helpers
 

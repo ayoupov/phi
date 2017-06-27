@@ -6,8 +6,10 @@ import Html.Attributes exposing (..)
 import IntDict
 import Json.Encode as Json
 import List exposing (repeat)
+import ListHelpers exposing (takeFirstElementWithDefault0, takeFirstElementWithDefault1, takeTailDefaultEmpty)
+import Model exposing (Model)
+import Simulation.GraphUpdates exposing (updateNodes)
 import Simulation.Model exposing (..)
-import Simulation.SimulationHelpers exposing (takeFirstElementWithDefault0, takeFirstElementWithDefault1, takeTailDefaultEmpty)
 import Svg exposing (..)
 import Svg.Attributes as SVG
 import Update.Extra exposing (andThen)
@@ -89,6 +91,29 @@ networkConsumedEnergy network =
         |> List.sum
 
 
+networkTradedEnergy : PhiNetwork -> KWHour
+networkTradedEnergy network =
+    let
+        nodeTradedEnergy { label, id } =
+            case label of
+                PeerNode node ->
+                    let
+                        balance =
+                            List.head node.joules.tradeBalance
+                    in
+                    if Maybe.withDefault 0 balance > 0 then
+                        balance
+                    else
+                        Nothing
+
+                _ ->
+                    Nothing
+    in
+    Graph.nodes network
+        |> List.filterMap nodeTradedEnergy
+        |> List.sum
+
+
 networkGeneratedEnergy : PhiNetwork -> KWHour
 networkGeneratedEnergy network =
     let
@@ -106,6 +131,7 @@ networkGeneratedEnergy network =
 
 
 
+--        |> Debug.log "nge"
 -- update helpers
 
 
@@ -129,6 +155,11 @@ asStoredJoulesIn =
     flip setStoredJoules
 
 
+setTradeBalance : List KWHour -> PeerJoules -> PeerJoules
+setTradeBalance tb joules =
+    { joules | tradeBalance = tb }
+
+
 setJoules : PeerJoules -> Peer -> Peer
 setJoules newJoules peer =
     { peer | joules = newJoules }
@@ -142,6 +173,28 @@ asJoulesIn =
 setNegawatts : List KWHour -> Peer -> Peer
 setNegawatts newNW peer =
     { peer | negawatts = newNW }
+
+
+setNegawattsStoredJoulesAndBalance : ( List KWHour, List KWHour, List KWHour ) -> Peer -> Peer
+setNegawattsStoredJoulesAndBalance ( newNW, newSJ, newTB ) peer =
+    peer.joules
+        |> setStoredJoules newSJ
+        |> setTradeBalance newTB
+        |> asJoulesIn peer
+        |> setNegawatts newNW
+
+
+setNegawattsActualConsumptionAndBalance : ( List KWHour, List KWHour, List KWHour ) -> Peer -> Peer
+setNegawattsActualConsumptionAndBalance ( newNW, newAC, newTB ) peer =
+    peer.joules
+        |> setActualConsumption newAC
+        |> setTradeBalance newTB
+        |> asJoulesIn peer
+        |> setNegawatts newNW
+
+
+
+-- phases
 
 
 distributeGeneratedJoules : MapLimit -> ReputationRatio -> PhiNetwork -> PhiNetwork
@@ -161,10 +214,14 @@ distributeGeneratedJoules limit ratio network =
 
         weightConstant =
             Graph.nodes network
+                --                |> Debug.log "nodes"
                 |> List.filterMap (toPeer >> Maybe.map (\x -> x.joules.desiredConsumption * reputationRating x))
+                --                |> Debug.log "map"
                 |> List.sum
+                --                |> Debug.log "sum"
                 |> (/) 1
 
+        --                |> Debug.log "wc"
         networkDesiredEnergy =
             Graph.nodes network
                 |> List.filterMap (toPeer >> Maybe.map (.joules >> .desiredConsumption))
@@ -177,6 +234,7 @@ distributeGeneratedJoules limit ratio network =
                 * reputationRating peer
                 * totalGeneratedEnergy
 
+        --                |> Debug.log "aj"
         updatePeer : Peer -> Peer
         updatePeer peer =
             let
@@ -204,6 +262,7 @@ distributeGeneratedJoules limit ratio network =
                 |> asJoulesIn peer
                 |> setNegawatts (negawattAllocation :: peer.negawatts)
 
+        --                |> Debug.log "after allocation "
         updateNode : NodeLabel -> NodeLabel
         updateNode node =
             case node of
@@ -217,46 +276,49 @@ distributeGeneratedJoules limit ratio network =
         |> Graph.mapNodes updateNode
 
 
-setNegawattsAndStoredJoules : ( List KWHour, List KWHour ) -> Peer -> Peer
-setNegawattsAndStoredJoules ( newNW, newSJ ) peer =
-    peer.joules
-        |> setStoredJoules newSJ
-        |> asJoulesIn peer
-        |> setNegawatts newNW
-
-
-
---    { peer | negawatts = newNW, storedJoules = newSJ }
-
-
-setNegawattsAndActualConsumption : ( List KWHour, List KWHour ) -> Peer -> Peer
-setNegawattsAndActualConsumption ( newNW, newAC ) peer =
-    peer.joules
-        |> setActualConsumption newAC
-        |> asJoulesIn peer
-        |> setNegawatts newNW
-
-
-
---    { peer | negawatts = newNW, actualConsumption = newAC }
-
-
 maxDesiredTrade : Peer -> Float
 maxDesiredTrade peerInNeed =
     peerInNeed.joules.desiredConsumption
         - takeFirstElementWithDefault0 peerInNeed.joules.actualConsumption
 
 
+consumeFromStorage : NodeLabel -> NodeLabel
+consumeFromStorage node =
+    case node of
+        PeerNode peer ->
+            let
+                actualConsumption =
+                    takeFirstElementWithDefault0 peer.joules.actualConsumption
+
+                remainingDesiredConsumption =
+                    Basics.max 0 <| peer.joules.desiredConsumption - actualConsumption
+
+                storedJoules =
+                    takeFirstElementWithDefault0 peer.joules.storedJoules
+
+                toConsume =
+                    Basics.min remainingDesiredConsumption storedJoules
+            in
+            (actualConsumption + toConsume)
+                :: (Maybe.withDefault [] <| List.tail peer.joules.actualConsumption)
+                |> asActualConsumptionIn peer.joules
+                |> asJoulesIn peer
+                |> PeerNode
+
+        _ ->
+            node
+
+
 tradingPhase : PhiNetwork -> PhiNetwork
 tradingPhase network =
     let
-        initialPool =
+        getInitialPool =
             Graph.nodes network
                 |> List.filterMap (toPeer >> Maybe.map (.joules >> .storedJoules >> takeFirstElementWithDefault0))
                 |> List.sum
 
         --        currentPool = initialPool
-        newDemandChanges : Float -> Peer -> ( List KWHour, List KWHour, Float )
+        newDemandChanges : Float -> Peer -> ( List KWHour, List KWHour, List KWHour, Float )
         newDemandChanges pool peer =
             let
                 currentNW =
@@ -277,6 +339,7 @@ tradingPhase network =
             in
             ( currentNW - actualTradeConsumption :: takeTailDefaultEmpty peer.negawatts
             , currentAC + actualTradeConsumption :: takeTailDefaultEmpty peer.joules.actualConsumption
+            , -actualTradeConsumption :: takeTailDefaultEmpty peer.joules.tradeBalance
             , newPool
             )
 
@@ -305,16 +368,15 @@ tradingPhase network =
         updateNodeDemand : Float -> Peer -> ( Float, Peer )
         updateNodeDemand pool peer =
             let
-                ( newNW, newAC, newPool ) =
+                ( newNW, newAC, newTB, newPool ) =
                     newDemandChanges pool peer
 
                 updatedPeer =
-                    setNegawattsAndActualConsumption ( newNW, newAC ) peer
+                    setNegawattsActualConsumptionAndBalance ( newNW, newAC, newTB ) peer
             in
-            -- ^ should update in graph
             ( newPool, updatedPeer )
 
-        newSupplyChanges : Float -> Peer -> ( List KWHour, List KWHour )
+        newSupplyChanges : Float -> Peer -> ( List KWHour, List KWHour, List KWHour )
         newSupplyChanges tradeRatio peer =
             let
                 currentNW =
@@ -325,16 +387,17 @@ tradingPhase network =
             in
             ( currentNW + currentNW * tradeRatio :: takeTailDefaultEmpty peer.negawatts
             , currentSJ - currentSJ * tradeRatio :: takeTailDefaultEmpty peer.joules.storedJoules
+            , currentSJ * tradeRatio :: takeTailDefaultEmpty peer.joules.tradeBalance
             )
 
         updateNodeSupplyReward : Float -> Peer -> Peer
         updateNodeSupplyReward tradeRatio peer =
             let
-                ( newNW, newSJ ) =
+                ( newNW, newSJ, newTB ) =
                     newSupplyChanges tradeRatio peer
 
                 updatedPeer =
-                    setNegawattsAndStoredJoules ( newNW, newSJ ) peer
+                    setNegawattsStoredJoulesAndBalance ( newNW, newSJ, newTB ) peer
             in
             updatedPeer
 
@@ -375,8 +438,7 @@ tradingPhase network =
         supplyNodesFilter { label, id } =
             case label of
                 PeerNode peer ->
-                    takeFirstElementWithDefault0 peer.joules.actualConsumption
-                        - peer.joules.desiredConsumption
+                    takeFirstElementWithDefault0 peer.joules.storedJoules
                         > 0
 
                 _ ->
@@ -388,32 +450,30 @@ tradingPhase network =
         supplyNodes =
             List.filter supplyNodesFilter (Graph.nodes network)
 
-        nodeUpdater n foundCtx =
-            case foundCtx of
-                Just ctx ->
-                    Just { ctx | node = n }
-
-                Nothing ->
-                    Nothing
-
-        updateNodes : List (Node NodeLabel) -> PhiNetwork -> PhiNetwork
-        updateNodes updatedNodeList network =
-            case updatedNodeList of
-                [] ->
-                    network
-
-                node :: tail ->
-                    network
-                        |> Graph.update node.id (node |> nodeUpdater)
-                        |> updateNodes tail
-
         updateNetwork =
             let
+                initialPool =
+                    getInitialPool
+
+                demandList =
+                    nodesInDistress
+
+                supplyList =
+                    supplyNodes
+
+                tradeRatioValue initialPool actualPool =
+                    case initialPool of
+                        0 ->
+                            0
+
+                        _ ->
+                            (initialPool - poolLeft) / initialPool
+
                 ( poolLeft, updatedDemandNodes ) =
-                    updateNodeListDemand initialPool nodesInDistress
+                    updateNodeListDemand initialPool demandList
 
                 updatedSupplyNodes =
-                    updateNodeListSupply (initialPool - poolLeft) supplyNodes
+                    updateNodeListSupply (tradeRatioValue initialPool poolLeft) supplyList
             in
             network
                 |> updateNodes updatedDemandNodes
@@ -422,11 +482,25 @@ tradingPhase network =
     updateNetwork
 
 
+updateBudget : Model -> Budget
+updateBudget model =
+    (networkTradedEnergy model.network * 0.15 + takeFirstElementWithDefault0 model.budget) :: model.budget
+
+
 
 -- PORTS
 
 
 port renderPhiNetwork : ( List (Node Json.Value), List EncodedEdge ) -> Cmd msg
+
+
+port animateGeneration : ( List (Node Json.Value), List EncodedEdge ) -> Cmd msg
+
+
+port animatePeerConsumption : ( List (Node Json.Value), List EncodedEdge ) -> Cmd msg
+
+
+port animateTrade : ( List (Node Json.Value), List EncodedEdge ) -> Cmd msg
 
 
 

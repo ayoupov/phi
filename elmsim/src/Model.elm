@@ -5,7 +5,8 @@ import Chat.Model exposing (ChatItem, InputType(..), initChat)
 import Graph
 import Material
 import Simulation.Init.Generators as Generators
-import Simulation.Model exposing (Budget, MapLimit, Narrative, NarrativeItem, PhiNetwork, ReputationRatio, SimMap, Weather)
+import Simulation.Model exposing (Budget, MapLimit, Narrative, NarrativeItem, PhiNetwork, ReputationRatio, SimMap, SiteInfo, Weather, WeatherTuple)
+import Simulation.WeatherList exposing (restWeather)
 
 
 type alias Model =
@@ -14,6 +15,8 @@ type alias Model =
     , messages : List ChatItem
     , network : PhiNetwork
     , weather : Weather
+    , weatherList : List WeatherTuple
+    , siteInfo : SiteInfo
     , budget : Budget
     , reputationRatio : ReputationRatio
     , negawattLimit : MapLimit
@@ -33,11 +36,20 @@ initModel =
         [ initChat ]
         (initGraph map)
         (initWeather map)
+        (initWeatherList map)
+        (initSiteInfo map)
         (initBudget map)
         (initReputation map)
         (initNegawattLimit map)
         Material.model
         ! initGenerators
+
+
+initSiteInfo : SimMap -> SiteInfo
+initSiteInfo map =
+    { name = map.name
+    , population = map.population
+    }
 
 
 
@@ -46,7 +58,7 @@ initModel =
 
 initMap : SimMap
 initMap =
-    SimMap "Kolionovo" 5523 Graph.empty (Weather 0.8 0.4) initNarrative 10000 { a = 1, b = 0 } 21
+    SimMap "Kolionovo" 5523 Graph.empty { sun = 0.5, wind = 0.5 } (restWeather []) initNarrative [ 10000 ] { a = 1, b = 0 } 21
 
 
 initGraph : SimMap -> PhiNetwork
@@ -56,7 +68,12 @@ initGraph map =
 
 initWeather : SimMap -> Weather
 initWeather map =
-    Weather map.initialWeather.sun map.initialWeather.wind
+    map.initialWeather
+
+
+initWeatherList : SimMap -> List WeatherTuple
+initWeatherList map =
+    map.initialWeatherList
 
 
 initBudget : SimMap -> Budget
@@ -81,7 +98,7 @@ initNegawattLimit map =
 
 initGenerators : List (Cmd Msg)
 initGenerators =
-    List.repeat 20 Generators.generateEdge
+    List.repeat 12 Generators.generateEdge
         ++ List.repeat 5 Generators.generatePeer
-        ++ List.repeat 10 Generators.generatePVPanel
-        ++ List.repeat 10 Generators.generateWindTurbine
+        ++ List.repeat 2 Generators.generatePVPanel
+        ++ List.repeat 2 Generators.generateWindTurbine

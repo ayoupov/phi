@@ -9,11 +9,14 @@ import Graph
 import Json.Encode exposing (encode)
 import Material
 import Model exposing (Model)
+import Simulation.BuildingMode exposing (toggleBuildMode)
 import Simulation.Encoding exposing (encodeEdge, encodeGraph, encodeNodeLabel)
-import Simulation.GraphUpdates exposing (addEdge, addNode)
+import Simulation.GraphUpdates exposing (addEdge, addNode, updateNodes)
 import Simulation.Init.Generators as Generators exposing (..)
 import Simulation.Model exposing (..)
 import Simulation.Simulation as Simulation exposing (..)
+import Simulation.SimulationInterop exposing (..)
+import Simulation.WeatherList exposing (restWeather, weatherTupleToWeather)
 import Task
 import Update.Extra exposing (andThen)
 
@@ -65,8 +68,12 @@ update msg model =
         CheckWeather ->
             weatherForecast model
 
+        CheckBudget ->
+            update (SendBotChatItem <| BotMessage (toString model.budget)) model
+
         DaySummary ->
-            update (SendBotChatItem <| Narrative.daySummary model) model
+            --            update (SendBotChatItem <| Narrative.daySummary model) model
+            update (SendBotChatItem <| Narrative.dayBeginning model) model
 
         CallTurn ->
             runDay model
@@ -94,10 +101,51 @@ update msg model =
                 |> update RenderPhiNetwork
 
         UpdateWeather weather ->
-            update RenderPhiNetwork { model | weather = weather }
+            update RenderPhiNetwork { model | weather = weather, weatherList = restWeather model.weatherList }
 
         RenderPhiNetwork ->
             ( model, renderPhiNetwork <| encodeGraph model.network )
+
+        AnimateGeneration ->
+            ( model, animateGeneration <| encodeGraph model.network )
+
+        AnimatePeerConsumption ->
+            ( model, animatePeerConsumption <| encodeGraph model.network )
+
+        AnimateTrade ->
+            ( model, animateTrade <| encodeGraph model.network )
+
+        AnimationFinished phase ->
+            case phase of
+                "layoutRendered" ->
+                    update AnimateGeneration model
+
+                "generatorsAnimated" ->
+                    update (SendBotChatItem <| Narrative.dayGenerated model) model
+                        |> andThen
+                            update
+                            AnimatePeerConsumption
+
+                "consumptionAnimated" ->
+                    update (SendBotChatItem <| Narrative.dayConsumed model) model
+                        |> andThen
+                            update
+                            AnimateTrade
+
+                "tradeAnimated" ->
+                    update (SendBotChatItem <| Narrative.dayTraded model) model
+
+                "enterBuildModeAnimated" ->
+                    update (SendBotChatItem <| BotMessage "You've entered building mode") model
+
+                "exitBuildModeAnimated" ->
+                    update (SendBotChatItem <| BotMessage "You've exited building mode") model
+
+                _ ->
+                    update NoOp model
+
+        ToggleBuildMode isEnteringBuildMode ->
+            ( model, toggleBuildMode isEnteringBuildMode )
 
         MultiChoiceMsg multiChoiceAction ->
             let
@@ -129,12 +177,13 @@ handleMultiChoiceMsg action model =
             weatherForecast model
 
         McaChangeDesign ->
-            changeDesign model
+            --            changeDesign model
+            update (ToggleBuildMode True) model
 
         McaRunDay ->
             runDay model
-                |> andThen update DaySummary
 
+        --                |> andThen update DaySummary
         McaSelectLocation _ ->
             model ! []
 
@@ -145,19 +194,55 @@ handleMultiChoiceMsg action model =
 runDay : Model -> ( Model, Cmd Msg )
 runDay model =
     let
-        newNetwork =
-            model.network
+        applyPhases : PhiNetwork -> PhiNetwork
+        applyPhases network =
+            network
+                --                |> Debug.log "current nw"
                 |> Simulation.joulesToGenerators model.weather
                 |> Simulation.distributeGeneratedJoules model.negawattLimit model.reputationRatio
+                |> Graph.mapNodes Simulation.consumeFromStorage
                 |> Simulation.tradingPhase
 
-        --|> Simulation.tradingPhase
-        newModel =
+        updateNetwork : PhiNetwork -> PhiNetwork -> PhiNetwork
+        updateNetwork source target =
+            updateNodes (Graph.nodes source) target
+
+        joinNetworks : List PhiNetwork -> PhiNetwork -> PhiNetwork
+        joinNetworks list network =
+            case list of
+                [] ->
+                    network
+
+                nw :: tail ->
+                    joinNetworks tail (updateNetwork nw network)
+
+        joinEdges : PhiNetwork -> PhiNetwork -> PhiNetwork
+        joinEdges source target =
+            Graph.fromNodesAndEdges (Graph.nodes target) (List.append (Graph.edges source) (Graph.edges target))
+
+        newNetworkList nw =
+            nw
+                |> joinEdges (Graph.reverseEdges nw)
+                |> Graph.stronglyConnectedComponents
+                |> List.map applyPhases
+
+        --        newNetwork =
+        --            applyPhases model.network
+        newNetwork =
+            joinNetworks (newNetworkList model.network) model.network
+
+        modelWithUpdatedNetwork =
             { model | network = newNetwork }
+
+        newBudget =
+            Simulation.updateBudget modelWithUpdatedNetwork
+
+        newModel =
+            { modelWithUpdatedNetwork | budget = newBudget }
     in
     newModel
-        ! [ Generators.generateWeather ]
-        -- should be not in Generators
+        |> generateWeather model.weatherList
+        --        ! [ generateWeather model.weatherList]
         |> andThen update RenderPhiNetwork
 
 
@@ -191,3 +276,21 @@ changeDesign model =
             BotMessage "Sorry that's not available yet!"
     in
     update (SendBotChatItem chatMsg) model
+
+
+
+--generateWeather : List WeatherTuple -> Cmd Msg
+
+
+generateWeather list =
+    let
+        currentList =
+            restWeather list
+
+        currentWeather =
+            currentList
+                |> List.head
+                |> Maybe.withDefault ( 0.5, 0.5 )
+                |> weatherTupleToWeather
+    in
+    update (UpdateWeather currentWeather)

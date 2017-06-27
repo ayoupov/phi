@@ -12,6 +12,8 @@ parseUserMessage chatMsg =
         CheckWeather
     else if chatMsg == "/turn" then
         CallTurn
+    else if chatMsg == "/budget" then
+        CheckBudget
     else if String.startsWith "/describe" chatMsg then
         String.split " " chatMsg
             |> (List.head << List.drop 1)

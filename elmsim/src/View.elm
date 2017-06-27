@@ -1,6 +1,7 @@
 module View exposing (view)
 
 import Action exposing (Msg(..))
+import Charts
 import Chat.Model
     exposing
         ( BotChatItem(..)
@@ -9,7 +10,7 @@ import Chat.Model
         , MultiChoiceAction(..)
         , mcaName
         )
-import Chat.View exposing (viewChatMsg)
+import FormatNumber exposing (format)
 import Html exposing (..)
 import Html.Attributes exposing (..)
 import Html.Events exposing (..)
@@ -20,33 +21,20 @@ import Material.Elevation as Elevation
 import Material.Icon as Icon
 import Material.Options as Options
 import Model exposing (Model)
-import Svg exposing (g, svg)
+import Simulation.Model exposing (Budget)
+import Svg exposing (circle, g, svg)
 import Svg.Attributes as SVG
+import View.ChatHeader exposing (viewChatHeader)
+import View.ChatMessage exposing (viewChatMessage)
 
 
 view : Model -> Html Msg
 view model =
     div [ class "chat_window" ]
         [ ul [ id "toScroll", class "messages" ]
-            (List.map viewChatMsg (List.reverse model.messages))
-        , chatHeader model
+            (List.map viewChatMessage (List.reverse model.messages))
+        , viewChatHeader model
         , inputFooter model
-        ]
-
-
-chatHeader : Model -> Html Msg
-chatHeader model =
-    div [ class "chat_header" ]
-        [ div [ class "map_status" ]
-            [ div [ class "title_bar" ]
-                [ span [ class "site_name" ] [ text "Nomovovo" ]
-                , span [ class "population" ] [ text "12345" ]
-                , span [ class "week_no" ] [ text "Week 20" ]
-                ]
-            , div [ class "status_body" ]
-                [ div [ class "hline" ] []
-                ]
-            ]
         ]
 
 
@@ -127,6 +115,7 @@ freeTextFooter model =
     div [ class "input_container" ]
         [ input
             [ class "message_input"
+            , autofocus True
             , onEnter
             , onInput Input
             , value model.input
@@ -151,9 +140,3 @@ viewMCA action =
         , Options.onClick (MultiChoiceMsg action)
         ]
         [ Chip.text [] <| mcaName action ]
-
-
-
---button
---    [ class "multi_button", onClick (MultiChoiceMsg action) ]
---    [ text (mcaName action) ]

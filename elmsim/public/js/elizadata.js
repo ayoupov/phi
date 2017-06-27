@@ -176,13 +176,18 @@ var elizaKeywords = [
 
 ["simulation", 4, [
  ["*", [
+<<<<<<< HEAD:elmsim/js/elizadata.js
      "The Phi Simulation is the initial phase of the Phi platform which allows users to design and test a clean-energy plan for a given location."
+=======
+     "The Phi Simulation is the initial phrase of the Phi platform which allows users to design and test a clean-energy plan for a given location."
+>>>>>>> 491f51c20e2c1f06bac0c5ef41632e5077cd7620:elmsim/public/js/elizadata.js
   ]],
   ["* how *", [
      "You can change the design of the simulation in every turn; when you do, your budget will change accordingly."
       ]]
 ]],
 
+<<<<<<< HEAD:elmsim/js/elizadata.js
 ["here", 2, [
   ["*what *", [
     "This is the initial phase of the Phi platform which you can play with clean-energy infrastructures for local planning."
@@ -204,6 +209,21 @@ var elizaKeywords = [
 ["this", 2, [
   ["*", [
   "goto here"
+=======
+["what", 2, [
+  ["this ", [
+    "This is the initial phrase of the Phi platform which you can play with clean-energy infrastructures for local planning."
+    ]],
+  [" here ", [
+    "goto this"
+    ]],
+  ["* how *", [
+     "You can change the design of the simulation in every turn; when you do, your budget will change accordingly.",
+     "You can click any node you see for information; if you click on a grey node, you add a piece of infrastructure if your budget allows."
+      ]],
+   ["*", [
+    "The Phi Simulation is the initial phrase of the Phi platform which allows users to design and test a clean-energy plan for a given location."
+>>>>>>> 491f51c20e2c1f06bac0c5ef41632e5077cd7620:elmsim/public/js/elizadata.js
   ]]
 ]],
 
@@ -315,11 +335,19 @@ var elizaKeywords = [
     "Phi currently supports the following infrastructures for planing: solar panels, wind turbines, geothermal wells, sensors, batteries and transmission lines."
     ]],
   ["* how *", [
+<<<<<<< HEAD:elmsim/js/elizadata.js
      "The Phi Simulation is the initial phase of the Phi platform which allows users to design and test a clean-energy plan for a given location."
   ]]
 ]],
 
 ["solar panel", 5, [
+=======
+     "The Phi Simulation is the initial phrase of the Phi platform which allows users to design and test a clean-energy plan for a given location."
+  ]]
+]],
+
+["solar panel", 1, [
+>>>>>>> 491f51c20e2c1f06bac0c5ef41632e5077cd7620:elmsim/public/js/elizadata.js
   ["what *", [
     "Solar panels are photovoltaic (PV) module that absorb the sunlight as a source of energy to generate electricity or heat."
     ]],
@@ -382,7 +410,11 @@ var elizaKeywords = [
     ]]
   ]],
 
+<<<<<<< HEAD:elmsim/js/elizadata.js
 ["geothermal well", 5, [
+=======
+["geothermal well", 0, [
+>>>>>>> 491f51c20e2c1f06bac0c5ef41632e5077cd7620:elmsim/public/js/elizadata.js
   ["what *", [
     "Solar panels are photovoltaic (PV) module that absorb the sunlight as a source of energy to generate electricity or heat."
     ]],
@@ -510,6 +542,10 @@ var elizaKeywords = [
     ]]
     ]],
 
+<<<<<<< HEAD:elmsim/js/elizadata.js
+=======
+
+>>>>>>> 491f51c20e2c1f06bac0c5ef41632e5077cd7620:elmsim/public/js/elizadata.js
 
 
 ////////////* eliza general text */////////////
@@ -979,6 +1015,11 @@ var elizaKeywords = [
 
 
 ["why", 0, [
+  ["* here *", [
+    "Here you can talk to me. Don't you like it?",
+    "You can explore how a clean-energy future can look like at here. Don't you like it?",
+    "Didn't you already know?"
+    ]],
  ["* why don't you *", [
      "Do you believe I don't (2) ?",
      "Perhaps I will (2) in good time.",

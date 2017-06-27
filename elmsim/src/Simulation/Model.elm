@@ -74,7 +74,13 @@ type alias Narrative =
 
 
 type alias Budget =
-    Float
+    List Phicoin
+
+
+type alias SiteInfo =
+    { name : String
+    , population : Int
+    }
 
 
 type alias SimMap =
@@ -82,6 +88,7 @@ type alias SimMap =
     , population : Int
     , initialNetwork : PhiNetwork
     , initialWeather : Weather
+    , initialWeatherList : List WeatherTuple
     , narrative : Narrative
     , initialBudget : Budget
     , initialReputationRatio : ReputationRatio
@@ -142,6 +149,7 @@ type alias PeerJoules =
     , actualConsumption : List KWHour
     , desiredConsumption : KWHour
     , seedRatingJoules : List KWHour
+    , tradeBalance : List KWHour
     }
 
 
@@ -161,3 +169,7 @@ type alias Weather =
     { sun : Float
     , wind : Float
     }
+
+
+type alias WeatherTuple =
+    ( Float, Float )

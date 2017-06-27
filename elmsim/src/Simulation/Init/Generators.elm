@@ -1,27 +1,43 @@
 module Simulation.Init.Generators exposing (..)
 
 import Action exposing (Msg(..))
+import Array
 import Graph exposing (NodeId)
 import Random exposing (Generator)
 import Random.Extra as Random
+import Set exposing (Set)
 import Simulation.GraphUpdates exposing (createEdge)
 import Simulation.Model exposing (..)
+import Simulation.NodeList as NodeList
+import Simulation.WeatherList exposing (restWeather, weatherTupleToWeather)
 
 
 coordsGenerator : Random.Generator Coords
 coordsGenerator =
-    Random.map2 Coords
-        (Random.float (30.5234 - 0.01) (30.5234 + 0.01))
-        -- longitude
-        (Random.float (50.4501 - 0.01) (50.4501 + 0.01))
+    let
+        coordsFunc =
+            (NodeList.initialPeerList
+                |> Set.toList
+                |> Array.fromList
+                |> flip Array.get
+            )
+                >> Maybe.map NodeList.tupleToCoords
+                >> Maybe.withDefault (Coords 0 0)
+
+        coordsLimit =
+            Set.size NodeList.initialPeerList - 1
+    in
+    Random.map coordsFunc
+        (Random.int 0 coordsLimit)
 
 
-generateWeather : Cmd Msg
-generateWeather =
-    Random.map2 Weather
-        (Random.float 0 1)
-        (Random.float 0 1)
-        |> Random.generate UpdateWeather
+
+--generateWeather : List WeatherTuple -> Cmd Msg
+--generateWeather list =
+--    Random.map2 Weather
+--        (Random.float 0 1)
+--        (Random.float 0 1)
+--        |> Random.generate UpdateWeather
 
 
 generatePVPanel : Cmd Msg
@@ -68,13 +84,15 @@ generatePeer : Cmd Msg
 generatePeer =
     Random.map4 Peer
         --        generatePeerJoules
-        (Random.map4 PeerJoules
+        (Random.map5 PeerJoules
             (Random.constant [ 0 ])
             -- actual consumption
             (Random.constant [ 0 ])
             -- desired consumption
             (Random.float 5 10)
             -- seedRating in joules?
+            (Random.constant [ 0 ])
+            -- initial trade balance
             (Random.constant [ 0 ])
         )
         -- negawatts
@@ -88,6 +106,8 @@ generatePeer =
 generateEdge : Cmd Msg
 generateEdge =
     Random.map2 createEdge
-        (Random.int 0 45)
-        (Random.int 0 45)
+        --        (Random.int 0 45)
+        --        (Random.int 0 45)
+        (Random.int 0 10)
+        (Random.int 0 10)
         |> Random.generate AddEdge

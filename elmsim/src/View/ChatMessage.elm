@@ -1,4 +1,4 @@
-module Chat.View exposing (viewChatMsg)
+module View.ChatMessage exposing (viewChatMessage)
 
 import Action exposing (Msg)
 import Chat.Model exposing (BotChatItem(..), ChatItem(..))
@@ -6,8 +6,8 @@ import Html exposing (Html, div, li, text)
 import Html.Attributes exposing (class)
 
 
-viewChatMsg : ChatItem -> Html Msg
-viewChatMsg chatItem =
+viewChatMessage : ChatItem -> Html Msg
+viewChatMessage chatItem =
     let
         messageWrapper senderClass children =
             li [ class <| "message appeared " ++ senderClass ]
