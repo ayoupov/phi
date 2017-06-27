@@ -147,10 +147,25 @@ var currentTransform = {k: 1.0, x: 0, y:0};
 
 function zoomed() {
     var transform = d3.zoomTransform(this);
-    container.attr("transform", transform);
-    //container.selectAll(".nodes").attr("transform", "translate(" + d3.event.transform.x + "," + d3.event.transform.y + ") scale(" + 1/d3.event.transform.k + ")");
-    //container.select('.zoom-line').call(zoomLine);
     currentTransform = transform;
+    container.attr("transform", transform);
+    var $simulation = $(".simulation");
+    var scrollTop = $simulation.scrollTop() || 0;
+    var scrollLeft = $simulation.scrollLeft() || 0;
+    var q = (1.0 / currentTransform.k);
+    var trXk = currentTransform.x * q;
+    var trYk = currentTransform.y * q;
+    var newX = - d3.event.transform.x * q + scrollLeft;
+    var newY = - d3.event.transform.y * q + scrollTop;
+    console.log(q, trXk, trYk, newX, newY);
+    container
+        .selectAll(".node")
+        .attr("transform", function(d) {
+            var nodeTransform = currentTransform.translate(d.label.pos.x, d.label.pos.y );
+            return "translate(" + (nodeTransform.x - newX) + "," + (nodeTransform.y - newY) + ")"
+        });
+
+    //container.select('.zoom-line').call(zoomLine);
     updateZoom(currentTransform.k);
 }
 
