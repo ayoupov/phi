@@ -1,10 +1,42 @@
 module Chat.Narrative exposing (..)
 
-import Action exposing (Msg)
-import Chat.Model exposing (BotChatItem(..), MultiChoiceAction(..), MultiChoiceMessage)
+import Action exposing (Msg(..))
+import Chat.Helpers exposing (delayMessage)
+import Chat.Model exposing (BotChatItem(..), MultiChoiceAction(..), MultiChoiceMessage, defaultMcaList)
 import Html exposing (Html)
 import Model exposing (Model)
 import Simulation.Simulation exposing (networkConsumedEnergy, networkGeneratedEnergy, networkStoredEnergy, networkTradedEnergy)
+
+
+siteNarrative : List BotChatItem
+siteNarrative =
+    [ BotMessage "Добро пожаловать в Усть-Карск."
+    , BotMessage "Welcome to Ust-Karsk."
+    , BotMessage "Population 1768."
+    , BotMessage <|
+        "We’re in a small urban settlement on the northern bank of the "
+            ++ "Shilka River, in the Sretensky District of Zabaykalsky Krai, Russia."
+    , MultiChoiceItem <|
+        MultiChoiceMessage
+            ("The network has approved investment of 10,000 Phi Coin "
+                ++ "to build renewable energy infrastructure in Ust-Karsk."
+            )
+            defaultMcaList
+    ]
+
+
+processNarrative : List BotChatItem -> Cmd Msg
+processNarrative list =
+    case list of
+        [] ->
+            Cmd.none
+
+        botMessage :: tail ->
+            [ ProcessNarrative tail
+            , SendBotChatItem botMessage
+            ]
+                |> List.map (delayMessage 1)
+                |> Cmd.batch
 
 
 daySummary : Model -> BotChatItem

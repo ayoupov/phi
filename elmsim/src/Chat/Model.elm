@@ -38,12 +38,11 @@ type MultiChoiceAction
     = McaRunDay
     | McaRunWeek
     | McaWeatherForecast
-      --    | McaChangeDesign
     | McaAddPeers
     | McaAddGenerators
     | McaBuyCables
     | McaLeaveBuildMode
-    | McaSelectLocation Int
+    | McaLaunchSite
 
 
 mcaName : MultiChoiceAction -> String
@@ -72,8 +71,8 @@ mcaName action =
         McaLeaveBuildMode ->
             "Leave Build Mode"
 
-        McaSelectLocation n ->
-            "Selection some location"
+        McaLaunchSite ->
+            "Launch Site"
 
 
 type Widget
@@ -82,14 +81,21 @@ type Widget
     | ImageSrc String
 
 
+defaultMcaList : List MultiChoiceAction
+defaultMcaList =
+    [ McaRunDay, McaAddPeers, McaAddGenerators, McaBuyCables ]
+
+
 initChat : ChatItem
 initChat =
     BotItem <|
-        BotMessage
-            """Welcome to Φ Chat! I only respond to commands for now.
+        MultiChoiceItem <|
+            MultiChoiceMessage
+                """Welcome to Φ Chat! I only respond to commands for now.
 Current available commands are:
 
 /weather (i tell you abt the weather today)
 /turn (i move to the next day)
 /describe [nodeId] (i tell you some info about a specific node)
 """
+                [ McaLaunchSite, McaRunDay ]
