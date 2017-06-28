@@ -7,9 +7,10 @@ import Chat.Narrative as Narrative
 import Dom.Scroll as Scroll
 import Graph
 import Json.Encode exposing (encode)
+import ListHelpers exposing (addToFirstElement)
 import Material
 import Model exposing (Model)
-import Simulation.BuildingMode exposing (changeBuildMode, conversionBudgetUpdate, handleConvertNode, handleNewLineRequest)
+import Simulation.BuildingMode exposing (changeBuildMode, handleConvertNode, handleNewLineRequest)
 import Simulation.Encoding exposing (encodeEdge, encodeGraph, encodeNodeLabel)
 import Simulation.GraphUpdates exposing (addEdge, addNode, addNodeWithEdges, updateNodes)
 import Simulation.Helpers exposing (liveNodeNetwork)
@@ -101,12 +102,12 @@ update msg model =
         RequestConvertNode nodeId ->
             -- NEED LOGIC TO HANDLE BUDGET
             handleConvertNode nodeId model
-                |> andThen conversionBudgetUpdate nodeId model
                 |> andThen update RenderPhiNetwork
 
         RequestNewLine nodeId1 nodeId2 ->
             -- NEED LOGIC TO HANDLE BUDGET
-            { model | network = handleNewLineRequest nodeId1 nodeId2 model.network }
+            { model | network = handleNewLineRequest nodeId1 nodeId2 model.network,
+                      budget = addToFirstElement model.budget -10}
                 |> update RenderPhiNetwork
 
         AddGeneratorWithEdges searchRadius generator ->

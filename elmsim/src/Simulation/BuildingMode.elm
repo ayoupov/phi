@@ -102,7 +102,7 @@ handleConvertNode nodeId model =
             Graph.get nodeId model.network
                 |> Maybe.map (.node >> .label)
 
-        nodeGenerator : NodeLabel -> Maybe (Cmd Msg)
+        nodeGenerator : NodeLabel -> (Maybe (Cmd Msg, Phicoin))
         nodeGenerator nodeLabel =
             let
                 coords =
@@ -112,55 +112,29 @@ handleConvertNode nodeId model =
                 PotentialNode potential ->
                     case potential.nodeType of
                         PotentialWindTurbine ->
-                            Just <| Generators.generateWindTurbine AddGenerator coords
+                            (Just( Generators.generateWindTurbine AddGenerator coords , 200))
 
                         PotentialSolarPanel ->
-                            Just <| Generators.generatePVPanel AddGenerator coords
+                            (Just( Generators.generatePVPanel AddGenerator coords , 150))
 
                         PotentialPeer ->
-                            Just <| Generators.generatePeer AddPeer coords
+                            (Just(Generators.generatePeer AddPeer coords , 50))
 
                 _ ->
                     Nothing
 
-        cmd =
-            maybeNodeLabel
-                |> Maybe.andThen nodeGenerator
+        cmdTuple = maybeNodeLabel
+                   |> Maybe.andThen nodeGenerator
+
+        cmd = cmdTuple
+                |> Maybe.map Tuple.first
                 |> Maybe.withDefault Cmd.none
+
+        cost = cmdTuple
+                |> Maybe.map Tuple.second
+                |> Maybe.withDefault 0
     in
-    { model | network = networkWithoutOldNode } ! [ cmd ]
-
-conversionBudgetUpdate : NodeId -> Model -> ( Model, Cmd Msg )
-conversionBudgetUpdate nodeId model =
-    let
-        maybeNodeLabel =
-            Graph.get nodeId model.network
-                |> Maybe.map (.node >> .label)
-
-        getCost maybeLabel =
-            case maybeLabel of
-                Just nodeLabel ->
-                    case nodeLabel of
-                        GeneratorNode gen ->
-                            case gen.generatorType of
-                                WindTurbine ->
-                                    200
-
-                                SolarPanel ->
-                                    150
-
-                        PeerNode peer ->
-                                50
-                        _ ->
-                           0
-                Nothing ->
-                    0
-
-        cost = maybeNodeLabel
-                |> getCost
-
-    in
-    { model | budget = addToFirstElement model.budget -cost} ! [ Cmd.none ]
+    { model | network = networkWithoutOldNode,  budget = addToFirstElement model.budget -cost} ! [ cmd ]
 
 handleNewLineRequest : NodeId -> NodeId -> PhiNetwork -> PhiNetwork
 handleNewLineRequest a b phiNetwork =
