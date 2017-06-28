@@ -178,40 +178,39 @@ function endall(transition, callback) {
 
 $(function () {
 
-    // Load SVG Map from file, append to container
-    // and set container with graph elements
+// Load SVG Map from file, append to container
+// and set container with graph elements
 
-    d3.xml("assets/map_large.svg").get(function (error, documentFragment) {
-        if (error) throw error;
-        var svgNode = documentFragment.getElementsByTagName("svg")[0];
+d3.xml("assets/map_large.svg").get(function (error, documentFragment) {
+    if (error) throw error;
+    var svgNode = documentFragment.getElementsByTagName("svg")[0];
 
-        container.node().appendChild(svgNode);
+    container.node().appendChild(svgNode);
 
-        container.select("svg")
-            .attr("class", "map");
+    container.select("svg")
+        .attr("class", "map");
 
-        container.append("g")
-            .attr("class", "links");
+    container.append("g")
+        .attr("class", "links");
 
-        container.append("g")
-            .attr("class", "newlinks");
+    container.append("g")
+        .attr("class", "newlinks");
 
-        container.append("g")
-            .attr("class", "nodes");
-    });
+    container.append("g")
+        .attr("class", "nodes");
 
-function initTransform() {
-  return d3.zoomIdentity
-      .translate(-1140,-760)
-      .scale(0.75);
-}
+    function initTransform() {
+      return d3.zoomIdentity
+          .translate(-1140,-760)
+          .scale(0.75);
+    }
 
 
     svg.attr("x", 0)
        .attr("y", 0)
        .call(zoom)
-       .call(zoom.transform,initTransform);
-
+       .call(zoom.transform,initTransform)
+       .on("dblclick.zoom", null);
 
     var eliza = new ElizaBot();
     var initial = eliza.getInitial();
@@ -709,4 +708,5 @@ function initTransform() {
 
     });
 
+});
 });

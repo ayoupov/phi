@@ -65,16 +65,16 @@ freeTextFooter model =
 viewMCA : Bool -> MultiChoiceAction -> Html Msg
 viewMCA enabled action =
     let
-        class =
+        attributes =
             case enabled of
                 True ->
-                    "multi_button"
+                    [ Options.cs "multi_button"
+                    , Options.onClick (MultiChoiceMsg action)
+                    ]
 
                 False ->
-                    "multi_button disabled"
+                    [ Options.cs "multi_button disabled" ]
     in
     Chip.span
-        [ Options.cs class
-        , Options.onClick (MultiChoiceMsg action)
-        ]
+        attributes
         [ Chip.text [] <| mcaName action ]
