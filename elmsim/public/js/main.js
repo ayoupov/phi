@@ -96,28 +96,6 @@ drawGridlines(svg, GRIDLINE_SIZE);
 
 //attachZoomLine(svg);
 
-// Load SVG Map from file, append to container
-// and set container with graph elements
-d3.xml("assets/map_v3.svg").get(function (error, documentFragment) {
-    if (error) throw error;
-    var svgNode = documentFragment.getElementsByTagName("svg")[0];
-
-    container.node().appendChild(svgNode);
-
-    container.select("svg")
-        .attr("class", "map");
-
-    container.append("g")
-        .attr("class", "links");
-
-    container.append("g")
-        .attr("class", "newlinks");
-
-    container.append("g")
-        .attr("class", "nodes");
-});
-
-
 function updateZoomPos() {
     var $zoomCont = $(".zoom-container");
     var r = (Math.floor($(window).width() / GRIDLINE_SIZE) - 1 ) * GRIDLINE_SIZE;
@@ -179,6 +157,29 @@ function endall(transition, callback) {
 }
 
 $(function () {
+
+    // Load SVG Map from file, append to container
+    // and set container with graph elements
+
+    d3.xml("assets/map_v3.svg").get(function (error, documentFragment) {
+        if (error) throw error;
+        var svgNode = documentFragment.getElementsByTagName("svg")[0];
+
+        container.node().appendChild(svgNode);
+
+        container.select("svg")
+            .attr("class", "map");
+
+        container.append("g")
+            .attr("class", "links");
+
+        container.append("g")
+            .attr("class", "newlinks");
+
+        container.append("g")
+            .attr("class", "nodes");
+    });
+
     d3.select("svg")
         .attr("x", 0)
         .attr("y", 0)
