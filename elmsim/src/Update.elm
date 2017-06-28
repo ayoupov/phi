@@ -80,7 +80,7 @@ update msg model =
 
         DaySummary ->
             --            update (SendBotChatItem <| Narrative.daySummary model) model
-            update (SendBotChatItem <| Narrative.dayBeginning model) model
+            update (SendBotChatItem <| Narrative.dayBeginning model.network) model
 
         CallTurn ->
             runDay model
@@ -146,19 +146,19 @@ update msg model =
                     update AnimateGeneration model
 
                 "generatorsAnimated" ->
-                    update (SendBotChatItem <| Narrative.dayGenerated model) model
+                    update (SendBotChatItem <| Narrative.dayGenerated model.network) model
                         |> andThen
                             update
                             AnimatePeerConsumption
 
                 "consumptionAnimated" ->
-                    update (SendBotChatItem <| Narrative.dayConsumed model) model
+                    update (SendBotChatItem <| Narrative.dayConsumed model.network) model
                         |> andThen
                             update
                             AnimateTrade
 
                 "tradeAnimated" ->
-                    update (SendBotChatItem <| Narrative.dayTraded model) model
+                    update (SendBotChatItem <| Narrative.dayTraded model.network) model
 
                 "enterBuildModeAnimated" ->
                     update NoOp model
@@ -253,7 +253,7 @@ runDay model =
             { model | network = newNetwork }
 
         newBudget =
-            Simulation.updateBudget modelWithUpdatedNetwork
+            Simulation.updateBudget modelWithUpdatedNetwork.network modelWithUpdatedNetwork.budget
 
         newModel =
             { modelWithUpdatedNetwork | budget = newBudget }

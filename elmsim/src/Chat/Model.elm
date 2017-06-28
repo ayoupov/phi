@@ -43,6 +43,9 @@ type MultiChoiceAction
     | McaBuyCables
     | McaLeaveBuildMode
     | McaLaunchSite
+    | McaSkipIntro
+    | McaIntro1
+    | McaIntro2
 
 
 mcaName : MultiChoiceAction -> String
@@ -72,7 +75,16 @@ mcaName action =
             "Leave Build Mode"
 
         McaLaunchSite ->
-            "Launch Site"
+            "Load Ust-Karsk"
+
+        McaSkipIntro ->
+            "Skip Intro"
+
+        McaIntro1 ->
+            "Get Started"
+
+        McaIntro2 ->
+            "What can Phi do?"
 
 
 type Widget
@@ -98,4 +110,4 @@ Current available commands are:
 /turn (i move to the next day)
 /describe [nodeId] (i tell you some info about a specific node)
 """
-                [ McaLaunchSite, McaRunDay ]
+                [ McaLaunchSite, McaSkipIntro ]

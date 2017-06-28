@@ -3,7 +3,7 @@ port module Chat.Chat exposing (..)
 import Action exposing (Msg(..))
 import Chat.Helpers exposing (delayMessage)
 import Chat.Model exposing (..)
-import Chat.Narrative exposing (siteNarrative)
+import Chat.Narrative exposing (getStartedNarrative, siteNarrative)
 import Model exposing (Model)
 import Process
 import Task
@@ -56,33 +56,42 @@ handleTextInputMessage chatMsg =
 handleMultiChoiceMessage : MultiChoiceAction -> Cmd Msg
 handleMultiChoiceMessage action =
     let
-        msg =
+        ( msg, timeout ) =
             case action of
                 McaWeatherForecast ->
-                    CheckWeather
+                    ( CheckWeather, 1 )
 
                 McaAddPeers ->
-                    ChangeBuildMode "peers"
+                    ( ChangeBuildMode "peers", 0 )
 
                 McaAddGenerators ->
-                    ChangeBuildMode "generators"
+                    ( ChangeBuildMode "generators", 0 )
 
                 McaBuyCables ->
-                    ChangeBuildMode "lines"
+                    ( ChangeBuildMode "lines", 0 )
 
                 McaLeaveBuildMode ->
-                    ChangeBuildMode "none"
+                    ( ChangeBuildMode "none", 0 )
 
                 McaRunDay ->
-                    CallTurn
+                    ( CallTurn, 1 )
 
                 McaLaunchSite ->
-                    ProcessNarrative siteNarrative
+                    ( ProcessNarrative siteNarrative, 1 )
+
+                McaSkipIntro ->
+                    ( SendBotChatItem <| MultiChoiceItem <| MultiChoiceMessage "test" defaultMcaList, 0 )
+
+                McaIntro1 ->
+                    ( ProcessNarrative getStartedNarrative, 0.5 )
+
+                McaIntro2 ->
+                    ( ProcessNarrative getStartedNarrative, 0.5 )
 
                 _ ->
-                    NoOp
+                    ( NoOp, 0 )
     in
-    delayMessage 1 msg
+    delayMessage timeout msg
 
 
 port sendToEliza : UserChatMessage -> Cmd msg

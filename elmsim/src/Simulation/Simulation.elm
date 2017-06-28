@@ -7,7 +7,6 @@ import IntDict
 import Json.Encode as Json
 import List exposing (repeat)
 import ListHelpers exposing (takeFirstElementWithDefault0, takeFirstElementWithDefault1, takeTailDefaultEmpty)
-import Model exposing (Model)
 import Simulation.GraphUpdates exposing (updateNodes)
 import Simulation.Helpers exposing (toPeer)
 import Simulation.Model exposing (..)
@@ -473,13 +472,13 @@ tradingPhase network =
     updateNetwork
 
 
-updateBudget : Model -> Budget
-updateBudget model =
+updateBudget : PhiNetwork -> Budget -> Budget
+updateBudget network budget =
     let
         joulesToPhiQuotient =
             150
     in
-    (networkTradedEnergy model.network * joulesToPhiQuotient + takeFirstElementWithDefault0 model.budget) :: model.budget
+    (networkTradedEnergy network * joulesToPhiQuotient + takeFirstElementWithDefault0 budget) :: budget
 
 
 

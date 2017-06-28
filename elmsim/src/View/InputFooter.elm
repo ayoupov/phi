@@ -1,15 +1,7 @@
 module View.InputFooter exposing (viewInputFooter)
 
 import Action exposing (Msg(..))
-import Chat.Model
-    exposing
-        ( BotChatItem(MultiChoiceItem)
-        , ChatItem(BotItem)
-        , InputType(FreeTextInput, MultiChoiceInput)
-        , MultiChoiceAction(McaAddGenerators, McaAddPeers, McaBuyCables, McaRunDay)
-        , defaultMcaList
-        , mcaName
-        )
+import Chat.Model exposing (BotChatItem(MultiChoiceItem), ChatItem(BotItem), InputType(FreeTextInput, MultiChoiceInput), MultiChoiceAction(McaAddGenerators, McaAddPeers, McaBuyCables, McaRunDay, McaSkipIntro), defaultMcaList, mcaName)
 import Html exposing (Html, div, input, text)
 import Html.Attributes exposing (autofocus, class, value)
 import Html.Events exposing (keyCode, on, onInput)
@@ -56,7 +48,7 @@ multiChoiceFooter model =
         lastMultiChoiceActionList =
             List.filterMap toMultiChoiceActionList model.messages
                 |> List.head
-                |> Maybe.withDefault defaultMcaList
+                |> Maybe.withDefault [ McaSkipIntro ]
     in
     div [ class "mca_container" ]
         (List.map viewMCA lastMultiChoiceActionList)

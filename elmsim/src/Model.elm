@@ -2,6 +2,7 @@ module Model exposing (..)
 
 import Action exposing (Msg(..))
 import Chat.Model exposing (ChatItem, InputType(..), initChat)
+import Chat.Narrative exposing (introNarrative, processNarrative)
 import Graph
 import Material
 import Set exposing (Set)
@@ -36,7 +37,7 @@ initModel =
     in
     Model ""
         FreeTextInput
-        [ initChat ]
+        []
         (initGraph map)
         (initWeather map)
         (initWeatherList map)
@@ -45,7 +46,7 @@ initModel =
         (initReputation map)
         (initNegawattLimit map)
         Material.model
-        ! initGenerators
+        ! (processNarrative introNarrative :: initGenerators)
 
 
 initSiteInfo : SimMap -> SiteInfo

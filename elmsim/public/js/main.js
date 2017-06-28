@@ -13,7 +13,7 @@ var xZoomScale = d3.scaleLinear()
 
 var zoom = d3.zoom()
     //.extent([[0,0],[1920,1080]])
-    .scaleExtent([1, 40])
+    .scaleExtent([0.75, 40])
     .translateExtent([[0, 0], [1920, 1080]])
     .on("zoom", zoomed);
 

@@ -4,8 +4,35 @@ import Action exposing (Msg(..))
 import Chat.Helpers exposing (delayMessage)
 import Chat.Model exposing (BotChatItem(..), MultiChoiceAction(..), MultiChoiceMessage, defaultMcaList)
 import Html exposing (Html)
-import Model exposing (Model)
+import Simulation.Model exposing (PhiNetwork)
 import Simulation.Simulation exposing (networkConsumedEnergy, networkGeneratedEnergy, networkStoredEnergy, networkTradedEnergy)
+
+
+introNarrative : List BotChatItem
+introNarrative =
+    [ BotMessage "Hello, I'm Phi."
+    , BotMessage "Your interface to peer-to-peer energy."
+    , BotMessage "To get started, ask me what I can do."
+    , MultiChoiceItem <|
+        MultiChoiceMessage
+            "You can always select from the multiple choice options."
+            [ McaIntro1, McaIntro2 ]
+    ]
+
+
+getStartedNarrative : List BotChatItem
+getStartedNarrative =
+    [ BotMessage "I help you design, simulate, and manage renewable energy resources and biosensors."
+    , BotMessage """Here are some things you can tell me:
+                 /day advances the simulation to the next day.
+                 /weather aggregates a weather forecast from climate sensor data.
+                 /build enables design mode.
+                 """
+    , MultiChoiceItem <|
+        MultiChoiceMessage
+            "I've preloaded a site for you based on your location."
+            [ McaLaunchSite ]
+    ]
 
 
 siteNarrative : List BotChatItem
@@ -16,11 +43,14 @@ siteNarrative =
     , BotMessage <|
         "We’re in a small urban settlement on the northern bank of the "
             ++ "Shilka River, in the Sretensky District of Zabaykalsky Krai, Russia."
+    , BotMessage <|
+        "The network has approved investment of 10,000 Phi Coin "
+            ++ "to build renewable energy infrastructure in Ust-Karsk."
+    , BotMessage "The Health meter compares the Joules requested by the Peer Community with the Joules available."
+    , BotMessage "The Coverage meter compares the size of your Peer Community with the population of Ust-Karsk."
     , MultiChoiceItem <|
         MultiChoiceMessage
-            ("The network has approved investment of 10,000 Phi Coin "
-                ++ "to build renewable energy infrastructure in Ust-Karsk."
-            )
+            "Enable design mode to add peers to the network, and to purchase generators."
             defaultMcaList
     ]
 
@@ -39,17 +69,17 @@ processNarrative list =
                 |> Cmd.batch
 
 
-daySummary : Model -> BotChatItem
-daySummary model =
+daySummary : PhiNetwork -> BotChatItem
+daySummary network =
     let
         generatedEnergy =
-            toString <| networkGeneratedEnergy model.network
+            toString <| networkGeneratedEnergy network
 
         totalConsumed =
-            toString <| networkConsumedEnergy model.network
+            toString <| networkConsumedEnergy network
 
         totalStored =
-            toString <| networkStoredEnergy model.network
+            toString <| networkStoredEnergy network
 
         text =
             "Yesterday we have generated "
@@ -139,25 +169,23 @@ exitBuildMode =
             ]
 
 
-dayBeginning : Model -> BotChatItem
-dayBeginning model =
+dayBeginning : PhiNetwork -> BotChatItem
+dayBeginning network =
     let
         text =
             "Glorious new day in Arstotzka"
-
-        -- add weather?
     in
     BotMessage text
 
 
-dayGenerated : Model -> BotChatItem
-dayGenerated model =
+dayGenerated : PhiNetwork -> BotChatItem
+dayGenerated network =
     let
         generatedEnergy =
-            toString <| networkGeneratedEnergy model.network
+            toString <| networkGeneratedEnergy network
 
         totalStored =
-            toString <| networkStoredEnergy model.network
+            toString <| networkStoredEnergy network
 
         text =
             "Today we have generated "
@@ -169,11 +197,11 @@ dayGenerated model =
     BotMessage text
 
 
-dayConsumed : Model -> BotChatItem
-dayConsumed model =
+dayConsumed : PhiNetwork -> BotChatItem
+dayConsumed network =
     let
         totalConsumed =
-            toString <| networkConsumedEnergy model.network
+            toString <| networkConsumedEnergy network
 
         text =
             "The community had consumed "
@@ -183,11 +211,11 @@ dayConsumed model =
     BotMessage text
 
 
-dayTraded : Model -> BotChatItem
-dayTraded model =
+dayTraded : PhiNetwork -> BotChatItem
+dayTraded network =
     let
         totalTraded =
-            toString <| networkTradedEnergy model.network
+            toString <| networkTradedEnergy network
 
         text =
             "The community had traded "
