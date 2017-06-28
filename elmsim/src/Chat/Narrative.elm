@@ -41,8 +41,9 @@ introNarrative =
 
 getStartedNarrative : List NarrativeElement
 getStartedNarrative =
-    [ BotMessage "I help you design, simulate, and manage renewable energy resources and biosensors."
-        |> chatWithDelay 1 []
+    [ initMsg (ToggleInputAvailable False)
+    , BotMessage "I help you design, simulate, and manage renewable energy resources and biosensors."
+        |> chatWithDelay 2 []
     , BotMessage
         """Here are some things you can tell me:
 /day advances the simulation to the next day.
@@ -55,7 +56,7 @@ getStartedNarrative =
             "I've preloaded a site for you based on your location."
             [ McaLaunchSite ]
       )
-        |> chatWithDelay 1 []
+        |> chatWithDelay 1 [ ToggleInputAvailable True ]
     ]
 
 

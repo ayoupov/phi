@@ -39,7 +39,7 @@ update msg model =
             noOp
 
         ToggleInputAvailable bool ->
-            noOp
+            { model | inputAvailable = bool } ! []
 
         Input newInput ->
             ( { model | input = newInput }, Cmd.none )
@@ -199,14 +199,6 @@ update msg model =
                     Chat.handleMultiChoiceMessage multiChoiceAction
             in
             newModel ! [ scrollDown, botResponse ]
-
-        ToggleInputType ->
-            case model.inputType of
-                FreeTextInput ->
-                    { model | inputType = MultiChoiceInput } ! []
-
-                MultiChoiceInput ->
-                    { model | inputType = FreeTextInput } ! []
 
         SendToEliza userChatMessage ->
             model ! [ Chat.sendToEliza userChatMessage ]

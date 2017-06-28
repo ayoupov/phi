@@ -39,6 +39,5 @@ type Msg
     | CallTurn
     | DaySummary
     | MultiChoiceMsg MultiChoiceAction
-    | ToggleInputType
     | Mdl (Material.Msg Msg)
     | SendToEliza UserChatMessage

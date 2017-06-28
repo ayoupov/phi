@@ -117,12 +117,6 @@ body {
   }
 }
 
-.node.selected {
-  stroke-width: 1.5px;
-  stroke: #FFF;
-
-}
-
 .node.peer .energyIndicator{
   stroke-width: 1.5px;
   opacity: 0;
