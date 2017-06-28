@@ -434,6 +434,8 @@ $(function () {
                     });
                 killPotentials();
                 drawPotentialNodes(nodes);
+                cancelHoverAnimation(svg.selectAll('.baseNode'));
+                addHoverAnimation(svg.selectAll('.potential.peer .baseNode'));
                 break;
             case "generators" :
                 isInBuildingMode = true;
@@ -444,10 +446,14 @@ $(function () {
                     });
                 killPotentials();
                 drawPotentialNodes(nodes);
+                cancelHoverAnimation(svg.selectAll('.baseNode'));
+                addHoverAnimation(svg.selectAll('.potential.generator .baseNode'));
                 break;
             case "lines" :
                 isInBuildingMode = true;
                 lastBuildMode = "lines";
+                cancelHoverAnimation(svg.selectAll('.baseNode'));
+                addHoverAnimation(svg.selectAll('.baseNode'));
                 initLineInteraction();
                 break;
             case "none" :
@@ -457,14 +463,14 @@ $(function () {
                 cancelHoverAnimation(svg.selectAll(".baseNode"));
                 killPotentials();
         }
-        if (lastBuildMode != "lines") {
-            if (isInBuildingMode) {
-                addHoverAnimation(svg.selectAll(".baseNode"));
-            }
-            else {
-                cancelHoverAnimation(svg.selectAll(".baseNode"));
-            }
-        }
+        //if (lastBuildMode != "lines") {
+        //    if (isInBuildingMode) {
+        //        addHoverAnimation(svg.selectAll(".baseNode"));
+        //    }
+        //    else {
+        //        cancelHoverAnimation(svg.selectAll(".baseNode"));
+        //    }
+        //}
     };
 
     app.ports.changeBuildMode.subscribe(changeBuildModeFunction);
