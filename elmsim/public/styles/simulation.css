@@ -162,6 +162,27 @@ line.link {
   text-align: center;
 }
 
+.zoom-controls {
+  /*text-align: right;*/
+  opacity: 0.5;
+  height: 50px;
+  float: right;
+}
+
+.zoom-scale {
+  float: right;
+  width: 100%;
+}
+
+.zoom-control {
+  width: 20px;
+  height: 20px;
+  background: rgb(93,93,93);
+  margin-top: 5px;
+  cursor: pointer;
+  user-select: none;
+}
+
 .scaleText {
   font-size: 10px;
 }

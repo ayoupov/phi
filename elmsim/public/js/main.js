@@ -96,29 +96,52 @@ drawGridlines(svg, GRIDLINE_SIZE);
 
 //attachZoomLine(svg);
 
+var $zoomCont = $(".zoom-container");
+
 function updateZoomPos() {
-    var $zoomCont = $(".zoom-container");
     var r = (Math.floor($(window).width() / GRIDLINE_SIZE) - 1 ) * GRIDLINE_SIZE;
     var b = (Math.floor($(window).height() / GRIDLINE_SIZE) - 1 ) * GRIDLINE_SIZE - $zoomCont.height();
+    var scrollTop = $(".simulation").scrollTop() || 0;
     $zoomCont.css({
         'left': r,
-        'top': b,
+        'top': b - scrollTop,
         'width': GRIDLINE_SIZE + 'px'
     });
 }
 
 function updateZoom(scale) {
     // update position
-    var $zoomCont = $(".zoom-container");
     updateZoomPos();
     var step = 10;
     var meters = Math.max(step, Math.round(250 / (step /*step*/) * (1 / scale)) * step);
-    $zoomCont.html(meters + " m");
+    var $zoomScaleCont = $(".zoom-scale", $zoomCont);
+    $zoomScaleCont.html(meters + " m");
+}
+
+
+function zoomIn()
+{
+    zoomDelta(true);
+}
+
+function zoomOut(){
+    zoomDelta(false);
+}
+
+function zoomDelta(isZoomingIn)
+{
+    //console.log(zoom);
+    //console.log(currentTransform);
+    var factor = isZoomingIn ? 1.3 : 1/1.3;
+    zoom.scaleBy(d3.select('svg'), factor);
 }
 
 function zoomInit() {
     updateZoomPos();
     $(window).on('resize', updateZoomPos);
+    $(".simulation").on('scroll', updateZoomPos);
+    $(".zoom-plus").on('click', zoomIn);
+    $(".zoom-minus").on('click', zoomOut);
 }
 
 var currentTransform = {k: 1.0, x: 0, y: 0};
