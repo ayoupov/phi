@@ -38,6 +38,9 @@ update msg model =
         NoOp ->
             noOp
 
+        ToggleInputAvailable bool ->
+            noOp
+
         Input newInput ->
             ( { model | input = newInput }, Cmd.none )
 

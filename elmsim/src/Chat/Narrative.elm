@@ -15,9 +15,15 @@ chatWithDelay delay msgs botChatItem =
         |> NarrativeElement delay
 
 
+initMsg : Msg -> NarrativeElement
+initMsg msg =
+    NarrativeElement 0 [ msg ]
+
+
 introNarrative : List NarrativeElement
 introNarrative =
-    [ BotMessage "Hello, I'm Phi."
+    [ initMsg (ToggleInputAvailable False)
+    , BotMessage "Hello, I'm Phi."
         |> chatWithDelay 0 []
     , BotMessage "Your interface to peer-to-peer energy."
         |> chatWithDelay 1 []
@@ -29,7 +35,7 @@ introNarrative =
             )
             [ McaIntro1, McaIntro2, McaSkipIntro ]
       )
-        |> chatWithDelay 1 []
+        |> chatWithDelay 1 [ ToggleInputAvailable True ]
     ]
 
 
