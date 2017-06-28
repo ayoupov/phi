@@ -118,18 +118,16 @@ function updateZoom(scale) {
 }
 
 
-function zoomIn()
-{
+function zoomIn() {
     zoomDelta(true);
 }
 
-function zoomOut(){
+function zoomOut() {
     zoomDelta(false);
 }
 
-function zoomDelta(isZoomingIn)
-{
-    var factor = isZoomingIn ? 1.3 : 1/1.3;
+function zoomDelta(isZoomingIn) {
+    var factor = isZoomingIn ? 1.3 : 1 / 1.3;
     zoom.scaleBy(d3.select('svg'), factor);
 }
 
@@ -149,14 +147,14 @@ function zoomed() {
     container.attr("transform", transform);
 
     container.selectAll(".node")
-            .attr("transform", function(d) {
-             //custom scale factor so nodes grow slightly larger as you zoom
-              var scaleFactor = 0.75+0.25*d3.event.transform.k;
-              var x = d.label.pos.x;
-              var y = d.label.pos.y;
-              return "translate(" + (x - x/scaleFactor) + ", " + (y - y/scaleFactor) + ") "
-                + "scale(" + 1/scaleFactor + ")";
-            });
+        .attr("transform", function (d) {
+            //custom scale factor so nodes grow slightly larger as you zoom
+            var scaleFactor = 0.75 + 0.25 * d3.event.transform.k;
+            var x = d.label.pos.x;
+            var y = d.label.pos.y;
+            return "translate(" + (x - x / scaleFactor) + ", " + (y - y / scaleFactor) + ") "
+                + "scale(" + 1 / scaleFactor + ")";
+        });
     //container.select('.zoom-line').call(zoomLine);
     updateZoom(currentTransform.k);
 }
@@ -200,9 +198,9 @@ d3.xml("assets/map_large.svg").get(function (error, documentFragment) {
         .attr("class", "nodes");
 
     function initTransform() {
-      return d3.zoomIdentity
-          .translate(-1140,-760)
-          .scale(0.75);
+        return d3.zoomIdentity
+            .translate(-1140, -760)
+            .scale(0.75);
     }
 
 

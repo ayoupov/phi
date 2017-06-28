@@ -274,7 +274,7 @@ runDay model =
     newModel
         |> generateWeather model.weatherList
         |> andThen update (ChangeBuildMode "none")
-        |> andThen update (StatsUpdate)
+        |> andThen update StatsUpdate
         |> andThen update RenderPhiNetwork
         |> andThen update AnimateGeneration
 

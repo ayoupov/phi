@@ -86,10 +86,12 @@ type alias SiteInfo =
     , population : Int
     }
 
+
 type alias Stats =
     { health : Float
     , coverage : Float
     }
+
 
 type alias SimMap =
     { name : String

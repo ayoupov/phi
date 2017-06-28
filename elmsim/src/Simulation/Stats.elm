@@ -92,6 +92,7 @@ communityCoverage : PhiNetwork -> Float
 communityCoverage network =
     toFloat (peerCount network) / 156
 
+
 setStats : List Stats -> Model -> Model
 setStats newStats model =
     { model | stats = newStats }
@@ -102,15 +103,15 @@ asStatsIn =
     flip setStats
 
 
-updateStats : Model -> (Model, Cmd Msg)
+updateStats : Model -> ( Model, Cmd Msg )
 updateStats model =
     let
         updatedStats : List Stats
         updatedStats =
-            {health = health model.network, coverage = communityCoverage model.network} :: model.stats
+            { health = health model.network, coverage = communityCoverage model.network } :: model.stats
 
         updatedModel =
             model
-            |> setStats updatedStats
+                |> setStats updatedStats
     in
-        updatedModel ! []
+    updatedModel ! []

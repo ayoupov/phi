@@ -59,9 +59,14 @@ initSiteInfo map =
     , population = map.population
     }
 
-defaultStats = { health = 0, coverage = 0.15}
+
+defaultStats =
+    { health = 0, coverage = 0.15 }
+
+
 
 -- less hardcode??
+
 
 initMap : SimMap
 initMap =
@@ -77,7 +82,7 @@ initMap =
     , initialBudget = [ 10000 ]
     , initialReputationRatio = { a = 1, b = 0 }
     , initialNegawattLimit = 21
-    , initialStats = [defaultStats]
+    , initialStats = [ defaultStats ]
     }
 
 
@@ -114,6 +119,7 @@ initReputation map =
 initNegawattLimit : SimMap -> MapLimit
 initNegawattLimit map =
     map.initialNegawattLimit
+
 
 initStats : SimMap -> List Stats
 initStats map =
