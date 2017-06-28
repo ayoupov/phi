@@ -27,22 +27,23 @@ introNarrative =
         |> chatWithDelay 1.5 []
     , (MultiChoiceItem <|
         MultiChoiceMessage
-            ("Your interface to peer-to-peer energy.")
+            "Your interface to peer-to-peer energy."
             [ McaIntro1, McaSkipIntro ]
       )
         |> chatWithDelay 2.25 [ ToggleInputAvailable True ]
     ]
 
+
 aboutHealthNarrative : List NarrativeElement
 aboutHealthNarrative =
     [ BotMessage "The Health meter compares the Joules requested by the Peer Community with the Joules available."
-              |> chatWithDelay 1.5 [ ToggleInputAvailable True ]
-          , BotMessage "The Coverage meter compares the size of your Peer Community with the population of Ust-Karsk."
-              |> chatWithDelay 2 []
-        , BotMessage "Click the button below to load the map."
-            |> chatWithDelay 3 []
-
+        |> chatWithDelay 1.5 [ ToggleInputAvailable True ]
+    , BotMessage "The Coverage meter compares the size of your Peer Community with the population of Ust-Karsk."
+        |> chatWithDelay 2 []
+    , BotMessage "Click the button below to load the map."
+        |> chatWithDelay 3 []
     ]
+
 
 getStartedNarrative : List NarrativeElement
 getStartedNarrative =
@@ -80,11 +81,9 @@ siteNarrative =
             "To begin building your network add [symbol] peers, buy [symbol] generators, and install [symbol] cables."
             defaultMcaList
       )
-        |> chatWithDelay 7 [ToggleInputAvailable True]
-
+        |> chatWithDelay 7 [ ToggleInputAvailable True ]
     , BotMessage "A network is made up of [symbol] peers, [symbol] solar panels, [symbol] wind turbines, and [symbol] cables."
         |> chatWithDelay 5 []
-
     ]
 
 
@@ -121,7 +120,6 @@ daySummary network =
                 ++ " Joules burned."
                 ++ totalStored
                 ++ " surplus stored in batteries."
-
     in
     MultiChoiceItem <|
         MultiChoiceMessage text
@@ -137,18 +135,18 @@ enterBuildModePeers : List NarrativeElement
 enterBuildModePeers =
     [ BotMessage "Click [symbol] to add new peers."
         |> chatWithDelay 1 []
-          , BotMessage "Next click the button below to buy generators."
-          |> chatWithDelay 6 []
-        ]
+    , BotMessage "Next click the button below to buy generators."
+        |> chatWithDelay 6 []
+    ]
+
 
 enterBuildModeGenerators : BotChatItem
 enterBuildModeGenerators =
     let
         text =
-           "Click [symbol] to buy new solar panels."
-           ++ " Click [symbol] to buy new wind turbines."
-           ++ " Next click the button to install cables."
-
+            "Click [symbol] to buy new solar panels."
+                ++ " Click [symbol] to buy new wind turbines."
+                ++ " Next click the button to install cables."
     in
     MultiChoiceItem <|
         MultiChoiceMessage text
@@ -164,8 +162,7 @@ enterBuildModeLines =
     let
         text =
             "Nodes must be connected to share energy. Click from [symbol] to [symbol] or [symbol] to install distribution cables."
-            ++ " Next click the button to go to the next day."
-
+                ++ " Next click the button to go to the next day."
     in
     MultiChoiceItem <|
         MultiChoiceMessage text
@@ -180,8 +177,8 @@ exitBuildMode : BotChatItem
 exitBuildMode =
     let
         text =
-          "Daily Briefing:"
-            ++ " В пустой бочке звону больше. | An empty barrel rings loudly."
+            "Daily Briefing:"
+                ++ " В пустой бочке звону больше. | An empty barrel rings loudly."
     in
     MultiChoiceItem <|
         MultiChoiceMessage text
@@ -212,11 +209,11 @@ dayGenerated network =
             toString <| networkStoredEnergy network
 
         text =
-          ""
-            ++ generatedEnergy
-            ++ " Joules created. "
-            ++ totalStored
-            ++ " surplus stored in batteries."
+            ""
+                ++ generatedEnergy
+                ++ " Joules created. "
+                ++ totalStored
+                ++ " surplus stored in batteries."
     in
     BotMessage text
 

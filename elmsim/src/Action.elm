@@ -18,6 +18,7 @@ type Msg
     | ProcessNarrative (List NarrativeElement)
     | SendBotChatItem BotChatItem
     | ToggleInputAvailable Bool
+    | SetMCAList (List MultiChoiceAction)
     | NoOp
     | CheckWeather
     | CheckBudget

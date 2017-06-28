@@ -3,7 +3,7 @@ port module Chat.Chat exposing (..)
 import Action exposing (Msg(..))
 import Chat.Helpers exposing (delayMessage)
 import Chat.Model exposing (..)
-import Chat.Narrative exposing (getStartedNarrative, siteNarrative, aboutHealthNarrative)
+import Chat.Narrative exposing (aboutHealthNarrative, getStartedNarrative, processNarrative, siteNarrative)
 import Model exposing (Model)
 import Process
 import Task
@@ -55,50 +55,48 @@ handleTextInputMessage chatMsg =
 
 handleMultiChoiceMessage : MultiChoiceAction -> Cmd Msg
 handleMultiChoiceMessage action =
-    let
-        ( msg, timeout ) =
-            case action of
-                McaWeatherForecast ->
-                    ( CheckWeather, 1 )
+    case action of
+        McaWeatherForecast ->
+            delayMessage 1 CheckWeather
 
-                McaAddPeers ->
-                    ( ChangeBuildMode "peers", 0 )
+        McaAddPeers ->
+            delayMessage 0 <| ChangeBuildMode "peers"
 
-                McaAddGenerators ->
-                    ( ChangeBuildMode "generators", 0 )
+        McaAddGenerators ->
+            delayMessage 0 <| ChangeBuildMode "generators"
 
-                McaBuyCables ->
-                    ( ChangeBuildMode "lines", 0 )
+        McaBuyCables ->
+            delayMessage 0 <| ChangeBuildMode "lines"
 
-                McaLeaveBuildMode ->
-                    ( ChangeBuildMode "none", 0 )
+        McaLeaveBuildMode ->
+            delayMessage 0 <| ChangeBuildMode "none"
 
-                McaRunDay ->
-                    ( CallTurn, 1 )
+        McaRunDay ->
+            delayMessage 1 CallTurn
 
-                McaLaunchSite ->
-                    ( ProcessNarrative siteNarrative, 1 )
+        McaLaunchSite ->
+            processNarrative siteNarrative
 
-                McaSkipIntro ->
-                    ( SendBotChatItem <|
-                        MultiChoiceItem <|
-                            MultiChoiceMessage
-                                "Добро пожаловать в Усть-Карск. | Welcome to Ust-Karsk."
-                                defaultMcaList , 0.5
-                    )
+        McaSkipIntro ->
+            delayMessage 0.5
+                (SendBotChatItem <|
+                    MultiChoiceItem <|
+                        MultiChoiceMessage
+                            "Добро пожаловать в Усть-Карск. | Welcome to Ust-Karsk."
+                            defaultMcaList
+                )
 
-                McaIntro1 ->
-                    ( ProcessNarrative getStartedNarrative, 0.5 )
+        McaIntro1 ->
+            processNarrative getStartedNarrative
 
-                McaIntro2 ->
-                    ( ProcessNarrative getStartedNarrative, 0.5 )
-                McaAboutHealth ->
-                    ( ProcessNarrative aboutHealthNarrative, 0.5)
+        McaIntro2 ->
+            processNarrative getStartedNarrative
 
-                _ ->
-                    ( NoOp, 0 )
-    in
-    delayMessage timeout msg
+        McaAboutHealth ->
+            processNarrative aboutHealthNarrative
+
+        _ ->
+            Cmd.none
 
 
 port sendToEliza : UserChatMessage -> Cmd msg

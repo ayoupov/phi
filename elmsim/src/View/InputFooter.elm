@@ -1,7 +1,7 @@
 module View.InputFooter exposing (viewInputFooter)
 
 import Action exposing (Msg(..))
-import Chat.Model exposing (BotChatItem(MultiChoiceItem), ChatItem(BotItem), InputType(FreeTextInput, MultiChoiceInput), MultiChoiceAction(McaAddGenerators, McaAddPeers, McaBuyCables, McaRunDay, McaSkipIntro), defaultMcaList, mcaName)
+import Chat.Model exposing (BotChatItem(MultiChoiceItem), ChatItem(BotItem), MultiChoiceAction(McaAddGenerators, McaAddPeers, McaBuyCables, McaRunDay, McaSkipIntro), defaultMcaList, mcaName)
 import Html exposing (Html, div, input, text)
 import Html.Attributes exposing (autofocus, class, style, value)
 import Html.Events exposing (keyCode, on, onInput)
@@ -23,27 +23,8 @@ viewInputFooter model =
 
 multiChoiceFooter : Bool -> Model -> Html Msg
 multiChoiceFooter multiEnabled model =
-    let
-        toMultiChoiceActionList chatItem =
-            case chatItem of
-                BotItem botItem ->
-                    case botItem of
-                        MultiChoiceItem item ->
-                            Just item.options
-
-                        _ ->
-                            Nothing
-
-                _ ->
-                    Nothing
-
-        lastMultiChoiceActionList =
-            List.filterMap toMultiChoiceActionList model.messages
-                |> List.head
-                |> Maybe.withDefault []
-    in
     div [ class "mca_container" ]
-        (List.map (viewMCA multiEnabled) lastMultiChoiceActionList)
+        (List.map (viewMCA multiEnabled) model.mcaList)
 
 
 freeTextFooter : Model -> Html Msg

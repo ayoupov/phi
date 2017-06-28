@@ -1,7 +1,7 @@
 module Model exposing (..)
 
 import Action exposing (Msg(..))
-import Chat.Model exposing (ChatItem, InputType(..), initChat)
+import Chat.Model exposing (ChatItem, MultiChoiceAction(..), initChat)
 import Chat.Narrative exposing (introNarrative, processNarrative)
 import Graph
 import Material
@@ -15,8 +15,8 @@ import Simulation.WeatherList exposing (restWeather)
 
 type alias Model =
     { input : String
+    , mcaList : List MultiChoiceAction
     , inputAvailable : Bool
-    , inputType : InputType
     , messages : List ChatItem
     , network : PhiNetwork
     , weather : Weather
@@ -37,8 +37,8 @@ initModel =
             initMap
     in
     Model ""
+        [ McaIntro1, McaIntro2, McaSkipIntro ]
         True
-        FreeTextInput
         []
         (initGraph map)
         (initWeather map)

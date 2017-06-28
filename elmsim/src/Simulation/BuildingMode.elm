@@ -102,7 +102,7 @@ handleConvertNode nodeId model =
             Graph.get nodeId model.network
                 |> Maybe.map (.node >> .label)
 
-        nodeGenerator : NodeLabel -> (Maybe (Cmd Msg, Phicoin))
+        nodeGenerator : NodeLabel -> Maybe ( Cmd Msg, Phicoin )
         nodeGenerator nodeLabel =
             let
                 coords =
@@ -112,29 +112,33 @@ handleConvertNode nodeId model =
                 PotentialNode potential ->
                     case potential.nodeType of
                         PotentialWindTurbine ->
-                            (Just( Generators.generateWindTurbine AddGenerator coords , 200))
+                            Just ( Generators.generateWindTurbine AddGenerator coords, 200 )
 
                         PotentialSolarPanel ->
-                            (Just( Generators.generatePVPanel AddGenerator coords , 150))
+                            Just ( Generators.generatePVPanel AddGenerator coords, 150 )
 
                         PotentialPeer ->
-                            (Just(Generators.generatePeer AddPeer coords , 50))
+                            Just ( Generators.generatePeer AddPeer coords, 50 )
 
                 _ ->
                     Nothing
 
-        cmdTuple = maybeNodeLabel
-                   |> Maybe.andThen nodeGenerator
+        cmdTuple =
+            maybeNodeLabel
+                |> Maybe.andThen nodeGenerator
 
-        cmd = cmdTuple
+        cmd =
+            cmdTuple
                 |> Maybe.map Tuple.first
                 |> Maybe.withDefault Cmd.none
 
-        cost = cmdTuple
+        cost =
+            cmdTuple
                 |> Maybe.map Tuple.second
                 |> Maybe.withDefault 0
     in
-    { model | network = networkWithoutOldNode,  budget = addToFirstElement model.budget -cost} ! [ cmd ]
+    { model | network = networkWithoutOldNode, budget = addToFirstElement model.budget -cost } ! [ cmd ]
+
 
 handleNewLineRequest : NodeId -> NodeId -> PhiNetwork -> PhiNetwork
 handleNewLineRequest a b phiNetwork =

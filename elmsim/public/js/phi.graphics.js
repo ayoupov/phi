@@ -61,7 +61,7 @@ function nodeShape(d) {
 
 function peerSize(d) {
     if (d.label.nodeType == "peer") {
-        return 2 + 2 * (d.label.desiredConsumption || 0);
+        return 8 + 2 * (d.label.desiredConsumption || 0);
     } else {
         return 0;
     }

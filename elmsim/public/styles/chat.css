@@ -6,6 +6,10 @@
     font-family: "OpenSans Light";
     src: url("../fonts/Open_Sans/OpenSans-Light.ttf") format("truetype");
 }
+@font-face {
+    font-family: "OpenSans Regular";
+    src: url("../fonts/Open_Sans/OpenSans-Regular.ttf") format("truetype");
+}
 
 body {
   background-size: cover;
@@ -227,6 +231,7 @@ body {
   background: rgba(231,232,233,0.85);
   width: calc(100% - 40px);
   left: 0px;
+  color: #336;
 }
 
 .messages .message.user-sent {
@@ -246,11 +251,12 @@ body {
 
 .messages .message .text_wrapper {
   padding: 10px;
+  font-family: "OpenSans Regular", monospace;
+  font-size: 14px;
 }
 
 
 .messages .message .text_wrapper .text {
-  font-size: 13px;
   white-space: pre-wrap;
 }
 
@@ -259,26 +265,26 @@ body {
   width: 100%;
 }
 
-.messages .buttons {
-  position: relative;
-  list-style: none;
-  width: 100%;
-  float: left;
-  padding: 0 0 0 0;
-  margin: 0;
-}
-
-.messages .buttons .button {
-  text-align: center;
-  background: linear-gradient(to right, rgba(255,180,0,0.7), rgba(250,180,0,0.8));
-  display: inline-block;
-  padding: 3px;
-  margin-bottom: 2px;
-  border: 1.4px solid #336;
-  width: 100%;
-  min-width: 100px;
-  position: relative;
-}
+--.messages .buttons {
+--  position: relative;
+--  list-style: none;
+--  width: 100%;
+--  float: left;
+--  padding: 0 0 0 0;
+--  margin: 0;
+--}
+--
+--.messages .buttons .button {
+--  text-align: center;
+--  background: linear-gradient(to right, rgba(255,180,0,0.7), rgba(250,180,0,0.8));
+--  display: inline-block;
+--  padding: 3px;
+--  margin-bottom: 2px;
+--  border: 1.4px solid #336;
+--  width: 100%;
+--  min-width: 100px;
+--  position: relative;
+--}
 
 
 .input_footer {

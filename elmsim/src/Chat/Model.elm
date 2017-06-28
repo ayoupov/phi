@@ -4,11 +4,6 @@ import Dict exposing (Dict)
 import Html exposing (img)
 
 
-type InputType
-    = MultiChoiceInput
-    | FreeTextInput
-
-
 type ChatItem
     = UserMessage UserChatMessage
     | BotItem BotChatItem
@@ -86,6 +81,7 @@ mcaName action =
 
         McaIntro2 ->
             "What can Phi do?"
+
         McaAboutHealth ->
             "More Info"
 

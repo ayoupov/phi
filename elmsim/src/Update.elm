@@ -69,9 +69,23 @@ update msg model =
                 newModel ! [ scrollDown, botResponse ]
 
         SendBotChatItem chatItem ->
-            ( addChatItem (BotItem chatItem) model
-            , scrollDown
+            let
+                updateMcaList model =
+                    case chatItem of
+                        MultiChoiceItem mcMessage ->
+                            { model | mcaList = mcMessage.options }
+
+                        _ ->
+                            model
+            in
+            (model
+                |> addChatItem (BotItem chatItem)
+                |> updateMcaList
             )
+                ! [ scrollDown ]
+
+        SetMCAList mcaList ->
+            { model | mcaList = mcaList } ! []
 
         ProcessNarrative chatItems ->
             ( model, Narrative.processNarrative chatItems )
@@ -106,8 +120,10 @@ update msg model =
 
         RequestNewLine nodeId1 nodeId2 ->
             -- NEED LOGIC TO HANDLE BUDGET
-            { model | network = handleNewLineRequest nodeId1 nodeId2 model.network,
-                      budget = addToFirstElement model.budget -10}
+            { model
+                | network = handleNewLineRequest nodeId1 nodeId2 model.network
+                , budget = addToFirstElement model.budget -10
+            }
                 |> update RenderPhiNetwork
 
         AddGeneratorWithEdges searchRadius generator ->

@@ -14,5 +14,6 @@ takeFirstElementWithDefault0 list =
 takeTailDefaultEmpty list =
     Maybe.withDefault [] (List.tail list)
 
+
 addToFirstElement list value =
-    (takeFirstElementWithDefault0 list) + value :: takeTailDefaultEmpty list
+    takeFirstElementWithDefault0 list + value :: takeTailDefaultEmpty list
