@@ -38,6 +38,7 @@ type Msg
     | ChangeBuildMode String
     | UpdateWeather Weather
     | CallTurn
+    | StatsUpdate
     | DaySummary
     | MultiChoiceMsg MultiChoiceAction
     | Mdl (Material.Msg Msg)

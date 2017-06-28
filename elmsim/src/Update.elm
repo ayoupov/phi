@@ -18,6 +18,7 @@ import Simulation.Init.Generators as Generators exposing (..)
 import Simulation.Model exposing (..)
 import Simulation.Simulation as Simulation exposing (..)
 import Simulation.SimulationInterop exposing (..)
+import Simulation.Stats exposing (updateStats)
 import Simulation.WeatherList exposing (restWeather, weatherTupleToWeather)
 import Task
 import Update.Extra exposing (andThen)
@@ -207,7 +208,9 @@ update msg model =
                 _ ->
                     ( model, changeBuildMode "none" )
 
-        --                        |> andThen update (SendBotChatItem <| Narrative.exitBuildMode)
+        StatsUpdate ->
+            updateStats model
+
         MultiChoiceMsg multiChoiceAction ->
             let
                 newModel =
@@ -232,7 +235,6 @@ runDay model =
         applyPhases : PhiNetwork -> PhiNetwork
         applyPhases network =
             network
-                --                |> Debug.log "current nw"
                 |> Simulation.joulesToGenerators model.weather
                 |> Simulation.distributeGeneratedJoules model.negawattLimit model.reputationRatio
                 |> Graph.mapNodes Simulation.consumeFromStorage
@@ -257,8 +259,6 @@ runDay model =
                 |> Graph.stronglyConnectedComponents
                 |> List.map applyPhases
 
-        --        newNetwork =
-        --            applyPhases model.network
         newNetwork =
             joinNetworks (newNetworkList <| liveNodeNetwork model.network) model.network
 
@@ -274,7 +274,7 @@ runDay model =
     newModel
         |> generateWeather model.weatherList
         |> andThen update (ChangeBuildMode "none")
-        --        ! [ generateWeather model.weatherList]
+        |> andThen update (StatsUpdate)
         |> andThen update RenderPhiNetwork
         |> andThen update AnimateGeneration
 

@@ -1,7 +1,9 @@
 module Simulation.Stats exposing (..)
 
+import Action exposing (Msg(NoOp))
 import Graph
 import ListHelpers exposing (takeFirstElementWithDefault0)
+import Model exposing (Model)
 import Simulation.Helpers exposing (toPeer)
 import Simulation.Model exposing (..)
 import Tuple exposing (first, second)
@@ -89,3 +91,26 @@ health network =
 communityCoverage : PhiNetwork -> Float
 communityCoverage network =
     toFloat (peerCount network) / 156
+
+setStats : List Stats -> Model -> Model
+setStats newStats model =
+    { model | stats = newStats }
+
+
+asStatsIn : Model -> List Stats -> Model
+asStatsIn =
+    flip setStats
+
+
+updateStats : Model -> (Model, Cmd Msg)
+updateStats model =
+    let
+        updatedStats : List Stats
+        updatedStats =
+            {health = health model.network, coverage = communityCoverage model.network} :: model.stats
+
+        updatedModel =
+            model
+            |> setStats updatedStats
+    in
+        updatedModel ! []

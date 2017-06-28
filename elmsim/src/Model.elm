@@ -8,7 +8,7 @@ import Material
 import Set exposing (Set)
 import Simulation.GraphUpdates exposing (graphFromNodeList, potentialNodesList)
 import Simulation.Init.Generators as Generators
-import Simulation.Model exposing (Budget, MapLimit, Narrative, NarrativeItem, PhiNetwork, ReputationRatio, SimMap, SiteInfo, Weather, WeatherTuple, tupleToCoords)
+import Simulation.Model exposing (Budget, MapLimit, Narrative, NarrativeItem, PhiNetwork, ReputationRatio, SimMap, SiteInfo, Stats, Weather, WeatherTuple, tupleToCoords)
 import Simulation.NodeList exposing (initialPeerList, initialSolarPanelList, initialWindTurbineList)
 import Simulation.WeatherList exposing (restWeather)
 
@@ -25,6 +25,7 @@ type alias Model =
     , budget : Budget
     , reputationRatio : ReputationRatio
     , negawattLimit : MapLimit
+    , stats : List Stats
     , mdl : Material.Model
     }
 
@@ -47,6 +48,7 @@ initModel =
         (initBudget map)
         (initReputation map)
         (initNegawattLimit map)
+        (initStats map)
         Material.model
         ! (processNarrative introNarrative :: initGenerators)
 
@@ -57,10 +59,9 @@ initSiteInfo map =
     , population = map.population
     }
 
-
+defaultStats = { health = 0, coverage = 0.15}
 
 -- less hardcode??
-
 
 initMap : SimMap
 initMap =
@@ -76,6 +77,7 @@ initMap =
     , initialBudget = [ 10000 ]
     , initialReputationRatio = { a = 1, b = 0 }
     , initialNegawattLimit = 21
+    , initialStats = [defaultStats]
     }
 
 
@@ -112,6 +114,10 @@ initReputation map =
 initNegawattLimit : SimMap -> MapLimit
 initNegawattLimit map =
     map.initialNegawattLimit
+
+initStats : SimMap -> List Stats
+initStats map =
+    map.initialStats
 
 
 initGenerators : List (Cmd Msg)

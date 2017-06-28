@@ -129,8 +129,6 @@ function zoomOut(){
 
 function zoomDelta(isZoomingIn)
 {
-    //console.log(zoom);
-    //console.log(currentTransform);
     var factor = isZoomingIn ? 1.3 : 1/1.3;
     zoom.scaleBy(d3.select('svg'), factor);
 }

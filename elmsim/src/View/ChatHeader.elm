@@ -82,6 +82,10 @@ viewChatHeader model =
 
         siteName =
             model.siteInfo.name
+
+        thisStats =
+            List.head model.stats
+            |> Maybe.withDefault { health = 0, coverage = 0.15}
     in
     div [ class "chat_header" ]
         [ div [ class "tint_overlay" ] []
@@ -92,9 +96,9 @@ viewChatHeader model =
                 , statusTitle "week_no" "today" "Week 20"
                 ]
             , div [ class "status_body" ]
-                [ div [ class "donut_legend" ] [ Charts.donutWithPct 40 3 (health model.network), text "health" ]
+                [ div [ class "donut_legend" ] [ Charts.donutWithPct 40 3 (.health thisStats ), text "health" ]
                 , div [ class "hline" ] []
-                , div [ class "donut_legend" ] [ Charts.donutWithPct 40 3 (communityCoverage model.network), text "coverage" ]
+                , div [ class "donut_legend" ] [ Charts.donutWithPct 40 3 (.coverage thisStats ), text "coverage" ]
                 , div [ class "hline" ]
                     []
                 , div
