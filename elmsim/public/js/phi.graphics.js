@@ -61,7 +61,7 @@ function nodeShape(d) {
 
 function peerSize(d) {
     if (d.label.nodeType == "peer") {
-        return 8 + 2 * (d.label.desiredConsumption || 0);
+        return 2 + 2 * (d.label.desiredConsumption || 0);
     } else {
         return 0;
     }
@@ -100,20 +100,34 @@ function addBaseNode(size) {
 }
 
 
+function addClickAnimation(selector) {
+  selector.on("click", function() {
+            d3.select(this)
+              .transition()
+              .ease(d3.easeElastic)
+              .duration(600)
+              .attr("d", addBaseNode(250))
+              .transition()
+              .ease(d3.easeSin)
+              .duration(600)
+              .attr("d", addBaseNode(150));
+          });
+}
+
 function addHoverAnimation(selector) {
   selector.on("mouseover", function() {
             d3.select(this)
               .transition()
-              .ease(d3.easeElastic)
-              .duration(800)
-              .attr("d", addBaseNode(180));
+              .ease(d3.easeSin)
+              .duration(400)
+              .attr("d", addBaseNode(200));
           })
           .on("mouseout", function() {
             d3.select(this)
               .transition()
-              .ease(d3.easeElastic)
-              .duration(800)
-              .attr("d", addBaseNode(100));
+              .ease(d3.easeQuad)
+              .duration(400)
+              .attr("d", addBaseNode(150));
           });
 }
 function cancelHoverAnimation(selector) {

@@ -453,6 +453,7 @@ $(function () {
                 isInBuildingMode = true;
                 lastBuildMode = "lines";
                 cancelHoverAnimation(svg.selectAll('.baseNode'));
+                addClickAnimation(svg.selectAll('.baseNode'));
                 addHoverAnimation(svg.selectAll('.baseNode'));
                 initLineInteraction();
                 break;
@@ -564,7 +565,7 @@ $(function () {
 
             //add baseNode
             nodeEnter.append("path")
-                .attr("d", addBaseNode(250))
+                .attr("d", addBaseNode(10))
                 .attr('transform', function (d) {
                     return "translate(" + (setX(d)) + "," + (setY(d)) + ")";
                 })
@@ -572,7 +573,7 @@ $(function () {
                 .transition()
                 .ease(d3.easeElastic)
                 .duration(2000)
-                .attr("d", addBaseNode(150));
+                .attr("d", addBaseNode(100));
 
             nodeEnter.append("path")
                 .attr("d", function (d) {
