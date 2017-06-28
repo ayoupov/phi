@@ -9,7 +9,7 @@ import Graph
 import Json.Encode exposing (encode)
 import Material
 import Model exposing (Model)
-import Simulation.BuildingMode exposing (changeBuildMode, handleConvertNode, handleNewLineRequest)
+import Simulation.BuildingMode exposing (changeBuildMode, conversionBudgetUpdate, handleConvertNode, handleNewLineRequest)
 import Simulation.Encoding exposing (encodeEdge, encodeGraph, encodeNodeLabel)
 import Simulation.GraphUpdates exposing (addEdge, addNode, addNodeWithEdges, updateNodes)
 import Simulation.Helpers exposing (liveNodeNetwork)
@@ -98,6 +98,7 @@ update msg model =
         RequestConvertNode nodeId ->
             -- NEED LOGIC TO HANDLE BUDGET
             handleConvertNode nodeId model
+                |> andThen conversionBudgetUpdate nodeId model
                 |> andThen update RenderPhiNetwork
 
         RequestNewLine nodeId1 nodeId2 ->

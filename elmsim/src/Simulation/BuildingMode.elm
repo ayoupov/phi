@@ -4,7 +4,7 @@ import Action exposing (Msg(..))
 import Graph exposing (Edge, Node, NodeContext, NodeId)
 import Json.Decode as Decode
 import Json.Encode exposing (Value)
-import ListHelpers exposing (takeFirstElementWithDefault0)
+import ListHelpers exposing (addToFirstElement, takeFirstElementWithDefault0)
 import Model exposing (Model)
 import Simulation.GraphUpdates exposing (addEdge, createEdge)
 import Simulation.Helpers exposing (getCoords)
@@ -130,6 +130,37 @@ handleConvertNode nodeId model =
     in
     { model | network = networkWithoutOldNode } ! [ cmd ]
 
+conversionBudgetUpdate : NodeId -> Model -> ( Model, Cmd Msg )
+conversionBudgetUpdate nodeId model =
+    let
+        maybeNodeLabel =
+            Graph.get nodeId model.network
+                |> Maybe.map (.node >> .label)
+
+        getCost maybeLabel =
+            case maybeLabel of
+                Just nodeLabel ->
+                    case nodeLabel of
+                        GeneratorNode gen ->
+                            case gen.generatorType of
+                                WindTurbine ->
+                                    200
+
+                                SolarPanel ->
+                                    150
+
+                        PeerNode peer ->
+                                50
+                        _ ->
+                           0
+                Nothing ->
+                    0
+
+        cost = maybeNodeLabel
+                |> getCost
+
+    in
+    { model | budget = addToFirstElement model.budget -cost} ! [ Cmd.none ]
 
 handleNewLineRequest : NodeId -> NodeId -> PhiNetwork -> PhiNetwork
 handleNewLineRequest a b phiNetwork =
