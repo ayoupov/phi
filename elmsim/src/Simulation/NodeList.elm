@@ -3,6 +3,11 @@ module Simulation.NodeList exposing (..)
 import Set exposing (Set)
 
 
+transformTuple : ( Int, Int ) -> ( Int, Int )
+transformTuple ( x, y ) =
+    ( x + 1920, y + 1080 )
+
+
 initialPeerList : Set ( Int, Int )
 initialPeerList =
     Set.fromList
@@ -30,6 +35,7 @@ initialPeerList =
         , ( 1080, 850 )
         , ( 1083, 886 )
         ]
+        |> Set.map transformTuple
 
 
 initialWindTurbineList : Set ( Int, Int )
@@ -43,6 +49,7 @@ initialWindTurbineList =
         , ( 1208, 164 )
         , ( 1248, 123 )
         ]
+        |> Set.map transformTuple
 
 
 initialSolarPanelList : Set ( Int, Int )
@@ -56,6 +63,7 @@ initialSolarPanelList =
         , ( 965, 461 )
         , ( 1062, 410 )
         ]
+        |> Set.map transformTuple
 
 
 potentialPeerList : Set ( Int, Int )
@@ -178,6 +186,7 @@ peerList =
         , ( 1906, 622 )
         , ( 1885, 717 )
         ]
+        |> Set.map transformTuple
 
 
 windTurbineList : Set ( Int, Int )
@@ -218,6 +227,7 @@ windTurbineList =
         , ( 1600, 101 )
         , ( 1687, 349 )
         ]
+        |> Set.map transformTuple
 
 
 solarPanelList : Set ( Int, Int )
@@ -265,3 +275,4 @@ solarPanelList =
         , ( 1869, 577 )
         , ( 1901, 668 )
         ]
+        |> Set.map transformTuple

@@ -24,8 +24,8 @@ generatePVPanel : (SimGenerator -> Msg) -> Coords -> Cmd Msg
 generatePVPanel genMsgConstructor coords =
     Random.map4 SimGenerator
         (Random.constant [])
-        -- dailyConsumption
-        (Random.float 0 10)
+        -- dailyGeneration
+        (Random.float 15 30)
         -- maxGeneration
         (Random.constant coords)
         -- xy coordinates
@@ -38,8 +38,9 @@ generateWindTurbine : (SimGenerator -> Msg) -> Coords -> Cmd Msg
 generateWindTurbine genMsgConstructor coords =
     Random.map4 SimGenerator
         (Random.constant [])
-        (Random.float 0 10)
-        -- capacity
+        -- dailyGeneration
+        (Random.float 25 50)
+        -- maxGeneration
         (Random.constant coords)
         (Random.constant WindTurbine)
         |> Random.generate genMsgConstructor

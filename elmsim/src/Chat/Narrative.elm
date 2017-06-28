@@ -81,9 +81,9 @@ siteNarrative =
             "To begin building your network add [symbol] peers, buy [symbol] generators, and install [symbol] cables."
             defaultMcaList
       )
-        |> chatWithDelay 7 [ ToggleInputAvailable True ]
+        |> chatWithDelay 7 []
     , BotMessage "A network is made up of [symbol] peers, [symbol] solar panels, [symbol] wind turbines, and [symbol] cables."
-        |> chatWithDelay 5 []
+        |> chatWithDelay 5 [ ToggleInputAvailable True ]
     ]
 
 

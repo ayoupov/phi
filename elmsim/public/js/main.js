@@ -12,9 +12,8 @@ var xZoomScale = d3.scaleLinear()
     .range([0, 100]);
 
 var zoom = d3.zoom()
-    //.extent([[0,0],[1920,1080]])
-    .scaleExtent([0.75, 40])
-    .translateExtent([[0, 0], [1920, 1080]])
+    .scaleExtent([0.25, 40])
+    .translateExtent([[0, 0], [5760, 3240]])
     .on("zoom", zoomed);
 
 var GRIDLINE_SIZE = 95;
@@ -184,7 +183,7 @@ $(function () {
     // Load SVG Map from file, append to container
     // and set container with graph elements
 
-    d3.xml("assets/map_v3.svg").get(function (error, documentFragment) {
+    d3.xml("assets/map_large.svg").get(function (error, documentFragment) {
         if (error) throw error;
         var svgNode = documentFragment.getElementsByTagName("svg")[0];
 
@@ -203,10 +202,18 @@ $(function () {
             .attr("class", "nodes");
     });
 
-    d3.select("svg")
-        .attr("x", 0)
-        .attr("y", 0)
-        .call(zoom);
+function initTransform() {
+  return d3.zoomIdentity
+      .translate(-1140,-760)
+      .scale(0.75);
+}
+
+
+    svg.attr("x", 0)
+       .attr("y", 0)
+       .call(zoom)
+       .call(zoom.transform,initTransform);
+
 
     var eliza = new ElizaBot();
     var initial = eliza.getInitial();
