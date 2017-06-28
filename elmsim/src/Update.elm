@@ -288,6 +288,7 @@ weatherForecast model =
                     ++ " amount of wind"
     in
     update (SendBotChatItem chatMsg) model
+        |> andThen update (ChangeBuildMode "none")
         |> andThen update
             (SendBotChatItem <| WidgetItem WeatherWidget)
 
