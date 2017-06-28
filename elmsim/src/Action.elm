@@ -1,4 +1,4 @@
-module Action exposing (Msg(..))
+module Action exposing (Msg(..), NarrativeElement)
 
 import Chat.Model exposing (BotChatItem, MultiChoiceAction, UserChatMessage)
 import Material
@@ -6,11 +6,18 @@ import Simulation.Model exposing (GeneratorType, Peer, SearchRadius, SimGenerato
 import Simulation.SimulationInterop exposing (AnimationPhase)
 
 
+type alias NarrativeElement =
+    { timeDelaySec : Float
+    , updateMsgs : List Msg
+    }
+
+
 type Msg
     = Input String
     | SendUserChatMsg
-    | ProcessNarrative (List BotChatItem)
+    | ProcessNarrative (List NarrativeElement)
     | SendBotChatItem BotChatItem
+    | ToggleInputAvailable Bool
     | NoOp
     | CheckWeather
     | CheckBudget
@@ -32,6 +39,5 @@ type Msg
     | CallTurn
     | DaySummary
     | MultiChoiceMsg MultiChoiceAction
-    | ToggleInputType
     | Mdl (Material.Msg Msg)
     | SendToEliza UserChatMessage

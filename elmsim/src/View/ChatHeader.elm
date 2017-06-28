@@ -84,7 +84,8 @@ viewChatHeader model =
             model.siteInfo.name
     in
     div [ class "chat_header" ]
-        [ div [ class "map_status" ]
+        [ div [ class "tint_overlay" ] []
+        , div [ class "map_status" ]
             [ div [ class "title_bar" ]
                 [ statusTitle "site_name" "location_city" siteName
                 , statusTitle "population" "people" sitePop

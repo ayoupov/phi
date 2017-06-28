@@ -3,7 +3,7 @@ module View.InputFooter exposing (viewInputFooter)
 import Action exposing (Msg(..))
 import Chat.Model exposing (BotChatItem(MultiChoiceItem), ChatItem(BotItem), InputType(FreeTextInput, MultiChoiceInput), MultiChoiceAction(McaAddGenerators, McaAddPeers, McaBuyCables, McaRunDay, McaSkipIntro), defaultMcaList, mcaName)
 import Html exposing (Html, div, input, text)
-import Html.Attributes exposing (autofocus, class, value)
+import Html.Attributes exposing (autofocus, class, style, value)
 import Html.Events exposing (keyCode, on, onInput)
 import Json.Decode as Json
 import Material.Button as Button
@@ -14,23 +14,15 @@ import Model exposing (Model)
 
 viewInputFooter : Model -> Html Msg
 viewInputFooter model =
-    let
-        inputCountainer =
-            case model.inputType of
-                FreeTextInput ->
-                    freeTextFooter model
-
-                MultiChoiceInput ->
-                    multiChoiceFooter model
-    in
     div [ class "input_footer" ]
-        [ multiChoiceFooter model
-        , div [ class "input_wrapper" ] [ inputCountainer ]
+        [ div [ class "tint_overlay" ] []
+        , multiChoiceFooter model.inputAvailable model
+        , div [ class "input_wrapper" ] [ freeTextFooter model ]
         ]
 
 
-multiChoiceFooter : Model -> Html Msg
-multiChoiceFooter model =
+multiChoiceFooter : Bool -> Model -> Html Msg
+multiChoiceFooter multiEnabled model =
     let
         toMultiChoiceActionList chatItem =
             case chatItem of
@@ -48,10 +40,10 @@ multiChoiceFooter model =
         lastMultiChoiceActionList =
             List.filterMap toMultiChoiceActionList model.messages
                 |> List.head
-                |> Maybe.withDefault [ McaSkipIntro ]
+                |> Maybe.withDefault []
     in
     div [ class "mca_container" ]
-        (List.map viewMCA lastMultiChoiceActionList)
+        (List.map (viewMCA multiEnabled) lastMultiChoiceActionList)
 
 
 freeTextFooter : Model -> Html Msg
@@ -89,10 +81,19 @@ freeTextFooter model =
         ]
 
 
-viewMCA : MultiChoiceAction -> Html Msg
-viewMCA action =
+viewMCA : Bool -> MultiChoiceAction -> Html Msg
+viewMCA enabled action =
+    let
+        class =
+            case enabled of
+                True ->
+                    "multi_button"
+
+                False ->
+                    "multi_button disabled"
+    in
     Chip.span
-        [ Options.cs "multi_button"
+        [ Options.cs class
         , Options.onClick (MultiChoiceMsg action)
         ]
         [ Chip.text [] <| mcaName action ]

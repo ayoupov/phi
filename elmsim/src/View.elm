@@ -13,8 +13,8 @@ import View.InputFooter exposing (viewInputFooter)
 view : Model -> Html Msg
 view model =
     div [ class "chat_window" ]
-        [ ul [ id "toScroll", class "messages" ]
+        [ viewChatHeader model
+        , ul [ id "toScroll", class "messages" ]
             (List.map viewChatMessage (List.reverse model.messages))
-        , viewChatHeader model
         , viewInputFooter model
         ]

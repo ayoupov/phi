@@ -15,6 +15,7 @@ import Simulation.WeatherList exposing (restWeather)
 
 type alias Model =
     { input : String
+    , inputAvailable : Bool
     , inputType : InputType
     , messages : List ChatItem
     , network : PhiNetwork
@@ -36,6 +37,7 @@ initModel =
             initMap
     in
     Model ""
+        True
         FreeTextInput
         []
         (initGraph map)

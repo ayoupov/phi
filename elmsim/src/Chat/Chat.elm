@@ -80,7 +80,12 @@ handleMultiChoiceMessage action =
                     ( ProcessNarrative siteNarrative, 1 )
 
                 McaSkipIntro ->
-                    ( SendBotChatItem <| MultiChoiceItem <| MultiChoiceMessage "test" defaultMcaList, 0 )
+                    ( SendBotChatItem <|
+                        MultiChoiceItem <|
+                            MultiChoiceMessage
+                                "I guess you already know all about me :)"
+                                defaultMcaList , 0.5
+                    )
 
                 McaIntro1 ->
                     ( ProcessNarrative getStartedNarrative, 0.5 )

@@ -38,7 +38,7 @@ viewChatMessage chatItem =
                         MultiChoiceItem item ->
                             textContent item.text
             in
-            messageWrapper "bot-sent" <| [ messageHeader "Phi" ] ++ contents
+            messageWrapper "bot-sent" <| contents
 
 
 renderWidget : Widget -> List (Html Msg)
