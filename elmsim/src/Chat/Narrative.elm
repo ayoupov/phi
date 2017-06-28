@@ -1,6 +1,6 @@
 module Chat.Narrative exposing (..)
 
-import Action exposing (Msg(..))
+import Action exposing (Msg(..), NarrativeElement)
 import Chat.Helpers exposing (delayMessage)
 import Chat.Model exposing (BotChatItem(..), MultiChoiceAction(..), MultiChoiceMessage, defaultMcaList)
 import Html exposing (Html)
@@ -8,64 +8,92 @@ import Simulation.Model exposing (PhiNetwork)
 import Simulation.Simulation exposing (networkConsumedEnergy, networkGeneratedEnergy, networkStoredEnergy, networkTradedEnergy)
 
 
-introNarrative : List BotChatItem
+chatWithDelay : Float -> List Msg -> BotChatItem -> NarrativeElement
+chatWithDelay delay msgs botChatItem =
+    SendBotChatItem botChatItem
+        :: msgs
+        |> NarrativeElement delay
+
+
+introNarrative : List NarrativeElement
 introNarrative =
     [ BotMessage "Hello, I'm Phi."
+        |> chatWithDelay 0 []
     , BotMessage "Your interface to peer-to-peer energy."
-    , BotMessage "To get started, ask me what I can do."
-    , MultiChoiceItem <|
+        |> chatWithDelay 1 []
+    , (MultiChoiceItem <|
         MultiChoiceMessage
-            "You can always select from the multiple choice options."
-            [ McaIntro1, McaIntro2 ]
+            ("To get started, ask me what I can do. You can "
+                ++ "also always select from the multiple choice options"
+                ++ " above the text input."
+            )
+            [ McaIntro1, McaIntro2, McaSkipIntro ]
+      )
+        |> chatWithDelay 1 []
     ]
 
 
-getStartedNarrative : List BotChatItem
+getStartedNarrative : List NarrativeElement
 getStartedNarrative =
     [ BotMessage "I help you design, simulate, and manage renewable energy resources and biosensors."
-    , BotMessage """Here are some things you can tell me:
-                 /day advances the simulation to the next day.
-                 /weather aggregates a weather forecast from climate sensor data.
-                 /build enables design mode.
-                 """
-    , MultiChoiceItem <|
+        |> chatWithDelay 1 []
+    , BotMessage
+        """Here are some things you can tell me:
+/day advances the simulation to the next day.
+/weather aggregates a weather forecast from climate sensor data.
+/build enables design mode.
+"""
+        |> chatWithDelay 1 []
+    , (MultiChoiceItem <|
         MultiChoiceMessage
             "I've preloaded a site for you based on your location."
             [ McaLaunchSite ]
+      )
+        |> chatWithDelay 1 []
     ]
 
 
-siteNarrative : List BotChatItem
+siteNarrative : List NarrativeElement
 siteNarrative =
     [ BotMessage "Добро пожаловать в Усть-Карск."
+        |> chatWithDelay 1 []
     , BotMessage "Welcome to Ust-Karsk."
+        |> chatWithDelay 1 []
     , BotMessage "Population 1768."
-    , BotMessage <|
+        |> chatWithDelay 1 []
+    , (BotMessage <|
         "We’re in a small urban settlement on the northern bank of the "
             ++ "Shilka River, in the Sretensky District of Zabaykalsky Krai, Russia."
-    , BotMessage <|
+      )
+        |> chatWithDelay 1 []
+    , (BotMessage <|
         "The network has approved investment of 10,000 Phi Coin "
             ++ "to build renewable energy infrastructure in Ust-Karsk."
+      )
+        |> chatWithDelay 1 []
     , BotMessage "The Health meter compares the Joules requested by the Peer Community with the Joules available."
+        |> chatWithDelay 1 []
     , BotMessage "The Coverage meter compares the size of your Peer Community with the population of Ust-Karsk."
-    , MultiChoiceItem <|
+        |> chatWithDelay 1 []
+    , (MultiChoiceItem <|
         MultiChoiceMessage
             "Enable design mode to add peers to the network, and to purchase generators."
             defaultMcaList
+      )
+        |> chatWithDelay 1 []
     ]
 
 
-processNarrative : List BotChatItem -> Cmd Msg
+processNarrative : List NarrativeElement -> Cmd Msg
 processNarrative list =
     case list of
         [] ->
             Cmd.none
 
-        botMessage :: tail ->
-            [ ProcessNarrative tail
-            , SendBotChatItem botMessage
-            ]
-                |> List.map (delayMessage 1)
+        narrativeElt :: tail ->
+            ProcessNarrative tail
+                :: narrativeElt.updateMsgs
+                |> List.map (delayMessage narrativeElt.timeDelaySec)
                 |> Cmd.batch
 
 

@@ -24,7 +24,8 @@ viewInputFooter model =
                     multiChoiceFooter model
     in
     div [ class "input_footer" ]
-        [ multiChoiceFooter model
+        [ div [ class "tint_overlay" ] []
+        , multiChoiceFooter model
         , div [ class "input_wrapper" ] [ inputCountainer ]
         ]
 
@@ -48,7 +49,7 @@ multiChoiceFooter model =
         lastMultiChoiceActionList =
             List.filterMap toMultiChoiceActionList model.messages
                 |> List.head
-                |> Maybe.withDefault [ McaSkipIntro ]
+                |> Maybe.withDefault []
     in
     div [ class "mca_container" ]
         (List.map viewMCA lastMultiChoiceActionList)

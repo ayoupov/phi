@@ -64,6 +64,7 @@ body {
   stroke-opacity: 1;
   stroke-dasharray: 3,4;
   stroke-width: 1.5px;
+  stroke: rgb(0,0,117);
 }
 
 .wt_pulse {
@@ -114,6 +115,12 @@ body {
   100% {
     opacity: 0;
   }
+}
+
+.node.selected {
+  stroke-width: 1.5px;
+  stroke: #FFF;
+
 }
 
 .node.peer .energyIndicator{
