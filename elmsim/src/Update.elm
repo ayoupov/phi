@@ -129,6 +129,7 @@ update msg model =
                 , budget = addToFirstElement model.budget -10
             }
                 |> update RenderPhiNetwork
+                |> andThen update (SendBotChatItem <| BotMessage ("Each line costs 10 phicoins"))
 
         InitializeNetwork ->
             model ! initNetworkGenerators

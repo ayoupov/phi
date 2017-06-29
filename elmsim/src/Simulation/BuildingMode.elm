@@ -1,6 +1,8 @@
 port module Simulation.BuildingMode exposing (..)
 
 import Action exposing (Msg(..))
+import Chat.Helpers exposing (delayMessage)
+import Chat.Model exposing (BotChatItem(BotMessage))
 import Graph exposing (Edge, Node, NodeContext, NodeId)
 import Json.Decode as Decode
 import Json.Encode exposing (Value)
@@ -10,6 +12,7 @@ import Simulation.GraphUpdates exposing (addEdge, createEdge)
 import Simulation.Helpers exposing (getCoords)
 import Simulation.Init.Generators as Generators
 import Simulation.Model exposing (..)
+
 
 
 -- PORTS
@@ -102,7 +105,7 @@ handleConvertNode nodeId model =
             Graph.get nodeId model.network
                 |> Maybe.map (.node >> .label)
 
-        nodeGenerator : NodeLabel -> Maybe ( Cmd Msg, Phicoin )
+        nodeGenerator : NodeLabel -> Maybe ( Cmd Msg, (PotentialNodeType, Phicoin ))
         nodeGenerator nodeLabel =
             let
                 coords =
@@ -112,13 +115,13 @@ handleConvertNode nodeId model =
                 PotentialNode potential ->
                     case potential.nodeType of
                         PotentialWindTurbine ->
-                            Just ( Generators.generateWindTurbine AddGenerator coords, 200 )
+                            Just ( Generators.generateWindTurbine AddGenerator coords, (PotentialWindTurbine, 200 ))
 
                         PotentialSolarPanel ->
-                            Just ( Generators.generatePVPanel AddGenerator coords, 150 )
+                            Just ( Generators.generatePVPanel AddGenerator coords, (PotentialSolarPanel, 150 ))
 
                         PotentialPeer ->
-                            Just ( Generators.generatePeer AddPeer coords, 50 )
+                            Just ( Generators.generatePeer AddPeer coords, (PotentialPeer, 50 ))
 
                 _ ->
                     Nothing
@@ -132,12 +135,34 @@ handleConvertNode nodeId model =
                 |> Maybe.map Tuple.first
                 |> Maybe.withDefault Cmd.none
 
+        cost: Phicoin
         cost =
             cmdTuple
                 |> Maybe.map Tuple.second
+                |> Maybe.map Tuple.second
                 |> Maybe.withDefault 0
+
+        item : PotentialNodeType
+        item =
+            cmdTuple
+                |> Maybe.map Tuple.second
+                |> Maybe.map Tuple.first
+                |> Maybe.withDefault PotentialPeer
+
+        itemToMessage: PotentialNodeType -> Phicoin -> String
+        itemToMessage t c =
+            case t of
+                PotentialWindTurbine ->
+                     "You purchased a wind turbine, it costs " ++ (toString c ) ++ " phicoin which has been deducted from your budget"
+                PotentialSolarPanel ->
+                     "You purchased a solar panel, it costs " ++ (toString c) ++ " phicoin which has been deducted from your budget"
+                PotentialPeer ->
+                     "You enabled a peer, the connection costs " ++ (toString c) ++ " phicoin which has been deducted from your budget"
+
+        messageCmd: Cmd Msg
+        messageCmd = delayMessage 0 (SendBotChatItem <| BotMessage (itemToMessage item cost))
     in
-    { model | network = networkWithoutOldNode, budget = addToFirstElement model.budget -cost } ! [ cmd ]
+    { model | network = networkWithoutOldNode, budget = addToFirstElement model.budget -cost } ! [ cmd, messageCmd]
 
 
 handleNewLineRequest : NodeId -> NodeId -> PhiNetwork -> PhiNetwork
