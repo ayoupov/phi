@@ -164,13 +164,13 @@ var elizaKeywords = [
 
 ["clean energy", 0, [
   ["*", [
-      "go to renewable energy"
+      "goto renewable energy"
       ]]
     ]],
 
 ["renewable resources", 0, [
   ["*", [
-      "go to renewable energy", 
+      "goto renewable energy", 
       ]]
     ]],
 
