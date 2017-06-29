@@ -70,15 +70,19 @@ siteNarrative =
       )
         |> chatWithDelay 2.25 [ UpdateSitePopulation 1728]
     , (BotMessage <|
-        "You've received a Φ10,000 investment on behalf of 'ШИФТ Truckers' Peer Community"
-            ++ " to build a renewable energy network in Ust-Karsk."
+        "You've received a Φ10,000 investment to further develop the renewable energy network in Ust-Karsk."
       )
         |> chatWithDelay 5.5 [ InitializeBudget ]
-    , BotMessage "A network is made up of [symbol] peers, [symbol] solar panels, [symbol] wind turbines, and [symbol] cables."
+    , BotMessage
+        ("On the map to the right, you'll see the local Phi network in Ust-Karsk. Phi networks are made up of "
+            ++ "four types of components. [symbol] peers, [symbol] solar panels, [symbol] wind turbines, and [symbol] cables."
+        )
         |> chatWithDelay 5 [ InitializeNetwork ]
     , (MultiChoiceItem <|
         MultiChoiceMessage
-            "To begin building your network add [symbol] peers, buy [symbol] generators, and install [symbol] cables."
+            ("To begin building your network select from the buttons below to add [symbol] peers, buy [symbol] "
+                ++ "generators, and install [symbol] cables. Or you can ask me anything if you have specific questions."
+            )
             defaultMcaList
       )
         |> chatWithDelay 7 [ ToggleInputAvailable True ]
