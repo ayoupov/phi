@@ -75,13 +75,13 @@ siteNarrative =
         |> chatWithDelay 5.5 [ InitializeBudget ]
     , BotMessage
         ("On the map to the right, you'll see the local Phi network in Ust-Karsk. Phi networks are made up of "
-            ++ "four types of components. $$_PEER_$$ peers, $$_PANEL_$$ solar panels, $$_TURBINE_$$ wind turbines, and $$_CABLE_$$ cables."
+            ++ "four types of components. $$_PEER_$$ peers, $$_PANEL_$$ solar panels, $$_TURBINE_$$ wind turbines, and cables."
         )
         |> chatWithDelay 5 [ InitializeNetwork ]
     , (MultiChoiceItem <|
         MultiChoiceMessage
             ("To begin building your network select from the buttons below to add $$_PEER_$$ peers, buy $$_PANEL_$$ or $$_TURBINE_$$ "
-                ++ "generators, and install $$_CABLE_$$ cables. Or you can ask me anything if you have specific questions."
+                ++ "generators, and install cables. Or you can ask me anything if you have specific questions."
             )
             defaultMcaList
       )

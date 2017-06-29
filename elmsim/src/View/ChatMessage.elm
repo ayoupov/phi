@@ -17,11 +17,6 @@ viewChatMessage chatItem =
         messageHeader name =
             div [ class "message_header" ] [ text name ]
 
---        textContent msgText =
---            [ div [ class "text_wrapper" ]
---                [ div [ class "text" ] [ text msgText ] ]
---            ]
-
         textContent msgText =
             [ div [ class "text_wrapper" ]
                 [ div [ class "text" ]  (textToHtml msgText)  ]
