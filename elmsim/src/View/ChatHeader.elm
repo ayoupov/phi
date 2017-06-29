@@ -1,4 +1,4 @@
-module View.ChatHeader exposing (viewChatHeader)
+module View.ChatHeader exposing (viewChatHeader, NodeIcon(..), renderShape)
 
 import Charts
 import Html exposing (Html, b, br, div, p, span, text)

@@ -4,6 +4,7 @@ import Action exposing (Msg)
 import Chat.Model exposing (BotChatItem(..), ChatItem(..), Widget(..))
 import Html exposing (Html, div, img, li, text)
 import Html.Attributes exposing (class, src)
+import View.MessageRenderer exposing (textToHtml)
 
 
 viewChatMessage : ChatItem -> Html Msg
@@ -16,9 +17,14 @@ viewChatMessage chatItem =
         messageHeader name =
             div [ class "message_header" ] [ text name ]
 
+--        textContent msgText =
+--            [ div [ class "text_wrapper" ]
+--                [ div [ class "text" ] [ text msgText ] ]
+--            ]
+
         textContent msgText =
             [ div [ class "text_wrapper" ]
-                [ div [ class "text" ] [ text msgText ] ]
+                [ div [ class "text" ]  (textToHtml msgText)  ]
             ]
     in
     case chatItem of

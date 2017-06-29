@@ -75,13 +75,13 @@ siteNarrative =
         |> chatWithDelay 5.5 [ InitializeBudget ]
     , BotMessage
         ("On the map to the right, you'll see the local Phi network in Ust-Karsk. Phi networks are made up of "
-            ++ "four types of components. [symbol] peers, [symbol] solar panels, [symbol] wind turbines, and [symbol] cables."
+            ++ "four types of components. $$_PEER_$$ peers, $$_PANEL_$$ solar panels, $$_TURBINE_$$ wind turbines, and $$_CABLE_$$ cables."
         )
         |> chatWithDelay 5 [ InitializeNetwork ]
     , (MultiChoiceItem <|
         MultiChoiceMessage
-            ("To begin building your network select from the buttons below to add [symbol] peers, buy [symbol] "
-                ++ "generators, and install [symbol] cables. Or you can ask me anything if you have specific questions."
+            ("To begin building your network select from the buttons below to add $$_PEER_$$ peers, buy $$_PANEL_$$ or $$_TURBINE_$$ "
+                ++ "generators, and install $$_CABLE_$$ cables. Or you can ask me anything if you have specific questions."
             )
             defaultMcaList
       )
@@ -135,7 +135,7 @@ daySummary network =
 
 enterBuildModePeers : List NarrativeElement
 enterBuildModePeers =
-    [ BotMessage "Click [symbol] to add new peers."
+    [ BotMessage "Click $$_PEER_$$ to add new peers."
         |> chatWithDelay 1 []
     , BotMessage "Next click the button below to buy generators."
         |> chatWithDelay 6 []
@@ -146,8 +146,8 @@ enterBuildModeGenerators : BotChatItem
 enterBuildModeGenerators =
     let
         text =
-            "Click [symbol] to buy new solar panels."
-                ++ " Click [symbol] to buy new wind turbines."
+            "Click $$_PANEL_$$ to buy new solar panels."
+                ++ " Click $$_TURBINE_$$ to buy new wind turbines."
                 ++ " Next click the button to install cables."
     in
     MultiChoiceItem <|
@@ -163,7 +163,7 @@ enterBuildModeLines : BotChatItem
 enterBuildModeLines =
     let
         text =
-            "Nodes must be connected to share energy. Click from [symbol] to [symbol] or [symbol] to install distribution cables."
+            "Nodes must be connected to share energy. Click from $$_PEER_$$ to $$_PANEL_$$ or $$_TURBINE_$$ to install distribution cables."
                 ++ " Next click the button to go to the next day."
     in
     MultiChoiceItem <|
