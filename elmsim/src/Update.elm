@@ -159,6 +159,24 @@ update msg model =
         UpdateWeather weather ->
             update RenderPhiNetwork { model | weather = weather, weatherList = restWeather model.weatherList }
 
+        UpdateSiteName name ->
+            let
+                setName : String -> SiteInfo -> SiteInfo
+                setName name info =
+                    { info | name = name }
+                newSiteInfo = setName name model.siteInfo
+            in
+                {model | siteInfo = newSiteInfo} ! []
+
+        UpdateSitePopulation pop ->
+            let
+                setPop : Int -> SiteInfo -> SiteInfo
+                setPop pop info =
+                    { info | population = pop }
+                newSiteInfo = setPop pop model.siteInfo
+            in
+                {model | siteInfo = newSiteInfo} ! []
+
         RenderPhiNetwork ->
             ( model, renderPhiNetwork <| encodeGraph model.network )
 

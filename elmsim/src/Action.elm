@@ -42,6 +42,8 @@ type Msg
     | UpdateWeather Weather
     | CallTurn
     | StatsUpdate
+    | UpdateSiteName String
+    | UpdateSitePopulation Int
     | DaySummary
     | MultiChoiceMsg MultiChoiceAction
     | Mdl (Material.Msg Msg)

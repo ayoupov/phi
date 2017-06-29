@@ -86,6 +86,8 @@ handleMultiChoiceMessage action =
                             defaultMcaList
                 )
             , showMap ()
+            , delayMessage 0 (UpdateSiteName "Ust-Karsk")
+            , delayMessage 0 (UpdateSitePopulation 1728)
             , delayMessage 0.5 InitializeNetwork
             , delayMessage 0.5 InitializeBudget
             ]

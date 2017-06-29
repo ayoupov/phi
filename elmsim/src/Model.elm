@@ -70,8 +70,8 @@ defaultStats =
 
 initMap : SimMap
 initMap =
-    { name = "Kolionovo"
-    , population = 5523
+    { name = ""
+    , population = 0
     , initialNetwork = graphFromNodeList potentialNodesList
     , initialWeather =
         { sun = 0.5

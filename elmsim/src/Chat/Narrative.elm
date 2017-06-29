@@ -63,12 +63,12 @@ siteNarrative =
     , BotMessage "Добро пожаловать в Усть-Карск."
         |> chatWithDelay 1 [ ShowMap ]
     , BotMessage "Welcome to Ust-Karsk."
-        |> chatWithDelay 0 []
+        |> chatWithDelay 0 [ UpdateSiteName "Ust-Karsk" ]
     , (BotMessage <|
         "We’re in a small urban settlement on the northern bank of the "
             ++ "Shilka River, in the Sretensky District of Zabaykalsky Krai, Russia."
       )
-        |> chatWithDelay 2.25 []
+        |> chatWithDelay 2.25 [ UpdateSitePopulation 1728]
     , (BotMessage <|
         "You've received a Φ10,000 investment on behalf of 'ШИФТ Truckers' Peer Community"
             ++ " to build a renewable energy network in Ust-Karsk."
