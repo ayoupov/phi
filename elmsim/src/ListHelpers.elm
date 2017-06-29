@@ -17,3 +17,6 @@ takeTailDefaultEmpty list =
 
 addToFirstElement list value =
     takeFirstElementWithDefault0 list + value :: takeTailDefaultEmpty list
+
+updateFirstElement list value =
+    value :: takeTailDefaultEmpty list

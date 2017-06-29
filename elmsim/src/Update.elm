@@ -18,7 +18,7 @@ import Simulation.Init.Generators as Generators exposing (..)
 import Simulation.Model exposing (..)
 import Simulation.Simulation as Simulation exposing (..)
 import Simulation.SimulationInterop exposing (..)
-import Simulation.Stats exposing (updateStats)
+import Simulation.Stats exposing (updateStats, updateStatsThisDay)
 import Simulation.WeatherList exposing (restWeather, weatherTupleToWeather)
 import Task
 import Update.Extra exposing (andThen)
@@ -151,7 +151,8 @@ update msg model =
 
         AddPeer node ->
             { model | network = addNode (PeerNode node) model.network }
-                |> update RenderPhiNetwork
+                |> updateStatsThisDay
+                |> andThen update RenderPhiNetwork
 
         AddEdge edge ->
             { model | network = addEdge edge model.network }

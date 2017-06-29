@@ -2,7 +2,7 @@ module Simulation.Stats exposing (..)
 
 import Action exposing (Msg(NoOp))
 import Graph
-import ListHelpers exposing (takeFirstElementWithDefault0)
+import ListHelpers exposing (takeFirstElementWithDefault0, updateFirstElement)
 import Model exposing (Model)
 import Simulation.Helpers exposing (toPeer)
 import Simulation.Model exposing (..)
@@ -109,6 +109,19 @@ updateStats model =
         updatedStats : List Stats
         updatedStats =
             { health = health model.network, coverage = communityCoverage model.network } :: model.stats
+
+        updatedModel =
+            model
+                |> setStats updatedStats
+    in
+    updatedModel ! []
+
+updateStatsThisDay : Model -> (Model, Cmd Msg)
+updateStatsThisDay model =
+    let
+        updatedStats : List Stats
+        updatedStats =
+            updateFirstElement model.stats { health = health model.network, coverage = communityCoverage model.network }
 
         updatedModel =
             model
