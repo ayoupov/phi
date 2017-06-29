@@ -24,11 +24,7 @@ introNarrative : List NarrativeElement
 introNarrative =
     [ BotMessage "Hello, I'm Phi."
         |> chatWithDelay 1.5 []
-    , (MultiChoiceItem <|
-        MultiChoiceMessage
-            "Your interface to peer-to-peer energy."
-            [ McaIntro1, McaSkipIntro ]
-      )
+    , BotMessage "Your interface to peer-to-peer energy."
         |> chatWithDelay 2.25 []
     ]
 
@@ -49,9 +45,12 @@ getStartedNarrative =
     [ initMsg (ToggleInputAvailable False)
     , BotMessage "I can help you design, simulate, and manage renewable energy resources and biosensors."
         |> chatWithDelay 1 []
+    , BotMessage
+        "Currently, I'm running the simulation based on data collected in Ust-Karsk."
+        |> chatWithDelay 1 []
     , (MultiChoiceItem <|
         MultiChoiceMessage
-            "I've selected a site based on your location."
+            "Ust-Karsk is an off-grid community located in southeast Russian region with great potential for solar power."
             [ McaLaunchSite, McaAboutHealth ]
       )
         |> chatWithDelay 2.5 [ ToggleInputAvailable True ]
@@ -74,15 +73,15 @@ siteNarrative =
         "You've received a Φ10,000 investment on behalf of 'ШИФТ Truckers' Peer Community"
             ++ " to build a renewable energy network in Ust-Karsk."
       )
-        |> chatWithDelay 5.5 []
+        |> chatWithDelay 5.5 [ InitializeBudget ]
+    , BotMessage "A network is made up of [symbol] peers, [symbol] solar panels, [symbol] wind turbines, and [symbol] cables."
+        |> chatWithDelay 5 [ InitializeNetwork ]
     , (MultiChoiceItem <|
         MultiChoiceMessage
             "To begin building your network add [symbol] peers, buy [symbol] generators, and install [symbol] cables."
             defaultMcaList
       )
-        |> chatWithDelay 7 []
-    , BotMessage "A network is made up of [symbol] peers, [symbol] solar panels, [symbol] wind turbines, and [symbol] cables."
-        |> chatWithDelay 5 [ ToggleInputAvailable True ]
+        |> chatWithDelay 7 [ ToggleInputAvailable True ]
     ]
 
 

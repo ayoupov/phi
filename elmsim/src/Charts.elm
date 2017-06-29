@@ -52,21 +52,22 @@ donutChart size thickness percent =
 
 percentFormat : Float -> String
 percentFormat percent =
-    (100 * percent)
-        |> FormatNumber.format
-            { decimals = 0
-            , thousandSeparator = ","
-            , decimalSeparator = "."
-            }
-        |> (\x -> x ++ "%")
+    case percent of
+        0 ->
+            ""
+
+        _ ->
+            (100 * percent)
+                |> FormatNumber.format
+                    { decimals = 0
+                    , thousandSeparator = ","
+                    , decimalSeparator = "."
+                    }
+                |> (\x -> x ++ "%")
 
 
 donutWithPct : Int -> Int -> Float -> Html msg
 donutWithPct size thickness percent =
-    let
-        displayPct =
-            percent * 100
-    in
     div
         [ class "donut_chart"
         , width <| toString size
