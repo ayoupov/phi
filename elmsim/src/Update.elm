@@ -178,7 +178,7 @@ update msg model =
             case buildModeType of
                 "peers" ->
                     ( model, changeBuildMode "peers" )
-                        |> andThen update (SendBotChatItem <| Narrative.enterBuildModePeers)
+                        |> andThen update (ProcessNarrative <| Narrative.enterBuildModePeers)
 
                 "generators" ->
                     ( model, changeBuildMode "generators" )
@@ -277,12 +277,12 @@ weatherForecast model =
 
         chatMsg =
             BotMessage <|
-                "Tomorrow should have "
+                "I expect weather tomorrow to be "
                     ++ sunny
-                    ++ " amount of sun, "
+                    ++ " sun, "
                     ++ "and "
                     ++ windy
-                    ++ " amount of wind"
+                    ++ " wind."
     in
     update (SendBotChatItem chatMsg) model
         |> andThen update (ChangeBuildMode "none")

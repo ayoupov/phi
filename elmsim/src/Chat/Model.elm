@@ -46,6 +46,7 @@ type MultiChoiceAction
     | McaSkipIntro
     | McaIntro1
     | McaIntro2
+    | McaAboutHealth
 
 
 mcaName : MultiChoiceAction -> String
@@ -63,10 +64,10 @@ mcaName action =
             "Add Peers"
 
         McaAddGenerators ->
-            "Add Generators"
+            "Buy Generators"
 
         McaBuyCables ->
-            "Buy Cables"
+            "Install Cables"
 
         McaRunWeek ->
             "Next Week"
@@ -85,6 +86,8 @@ mcaName action =
 
         McaIntro2 ->
             "What can Phi do?"
+        McaAboutHealth ->
+            "More Info"
 
 
 type Widget
@@ -95,7 +98,7 @@ type Widget
 
 defaultMcaList : List MultiChoiceAction
 defaultMcaList =
-    [ McaAddPeers, McaAddGenerators, McaBuyCables, McaRunDay ]
+    [ McaAddPeers, McaAddGenerators, McaBuyCables, McaRunDay, McaAboutHealth ]
 
 
 initChat : ChatItem

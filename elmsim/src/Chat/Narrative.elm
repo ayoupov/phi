@@ -24,70 +24,67 @@ introNarrative : List NarrativeElement
 introNarrative =
     [ initMsg (ToggleInputAvailable False)
     , BotMessage "Hello, I'm Phi."
-        |> chatWithDelay 0 []
-    , BotMessage "Your interface to peer-to-peer energy."
-        |> chatWithDelay 1 []
+        |> chatWithDelay 1.5 []
     , (MultiChoiceItem <|
         MultiChoiceMessage
-            ("To get started, ask me what I can do. You can "
-                ++ "also always select from the multiple choice options"
-                ++ " above the text input."
-            )
-            [ McaIntro1, McaIntro2, McaSkipIntro ]
+            ("Your interface to peer-to-peer energy.")
+            [ McaIntro1, McaSkipIntro ]
       )
-        |> chatWithDelay 1 [ ToggleInputAvailable True ]
+        |> chatWithDelay 2.25 [ ToggleInputAvailable True ]
     ]
 
+aboutHealthNarrative : List NarrativeElement
+aboutHealthNarrative =
+    [ BotMessage "The Health meter compares the Joules requested by the Peer Community with the Joules available."
+              |> chatWithDelay 1.5 [ ToggleInputAvailable True ]
+          , BotMessage "The Coverage meter compares the size of your Peer Community with the population of Ust-Karsk."
+              |> chatWithDelay 2 []
+        , BotMessage "Click the button below to load the map."
+            |> chatWithDelay 3 []
+
+    ]
 
 getStartedNarrative : List NarrativeElement
 getStartedNarrative =
     [ initMsg (ToggleInputAvailable False)
-    , BotMessage "I help you design, simulate, and manage renewable energy resources and biosensors."
-        |> chatWithDelay 2 []
-    , BotMessage
-        """Here are some things you can tell me:
-/day advances the simulation to the next day.
-/weather aggregates a weather forecast from climate sensor data.
-/build enables design mode.
-"""
+    , BotMessage "I can help you design, simulate, and manage renewable energy resources and biosensors."
         |> chatWithDelay 1 []
     , (MultiChoiceItem <|
         MultiChoiceMessage
-            "I've preloaded a site for you based on your location."
-            [ McaLaunchSite ]
+            "I've selected a site based on your location."
+            [ McaLaunchSite, McaAboutHealth ]
       )
-        |> chatWithDelay 1 [ ToggleInputAvailable True ]
+        |> chatWithDelay 2.5 [ ToggleInputAvailable True ]
     ]
 
 
 siteNarrative : List NarrativeElement
 siteNarrative =
-    [ BotMessage "Добро пожаловать в Усть-Карск."
+    [ initMsg (ToggleInputAvailable False)
+    , BotMessage "Добро пожаловать в Усть-Карск."
         |> chatWithDelay 1 []
     , BotMessage "Welcome to Ust-Karsk."
-        |> chatWithDelay 1 []
-    , BotMessage "Population 1768."
-        |> chatWithDelay 1 []
+        |> chatWithDelay 0 []
     , (BotMessage <|
         "We’re in a small urban settlement on the northern bank of the "
             ++ "Shilka River, in the Sretensky District of Zabaykalsky Krai, Russia."
       )
-        |> chatWithDelay 1 []
+        |> chatWithDelay 2.25 []
     , (BotMessage <|
-        "The network has approved investment of 10,000 Phi Coin "
-            ++ "to build renewable energy infrastructure in Ust-Karsk."
+        "You've received a Φ10,000 investment on behalf of 'ШИФТ Truckers' Peer Community"
+            ++ " to build a renewable energy network in Ust-Karsk."
       )
-        |> chatWithDelay 1 []
-    , BotMessage "The Health meter compares the Joules requested by the Peer Community with the Joules available."
-        |> chatWithDelay 1 []
-    , BotMessage "The Coverage meter compares the size of your Peer Community with the population of Ust-Karsk."
-        |> chatWithDelay 1 []
+        |> chatWithDelay 5.5 []
     , (MultiChoiceItem <|
         MultiChoiceMessage
-            "Enable design mode to add peers to the network, and to purchase generators."
+            "To begin building your network add [symbol] peers, buy [symbol] generators, and install [symbol] cables."
             defaultMcaList
       )
-        |> chatWithDelay 1 []
+        |> chatWithDelay 7 [ToggleInputAvailable True]
+
+    , BotMessage "A network is made up of [symbol] peers, [symbol] solar panels, [symbol] wind turbines, and [symbol] cables."
+        |> chatWithDelay 5 []
+
     ]
 
 
@@ -117,15 +114,14 @@ daySummary network =
             toString <| networkStoredEnergy network
 
         text =
-            "Yesterday we have generated "
+            "Daily Briefing: "
                 ++ generatedEnergy
-                ++ " kWh in total, "
-                ++ "the community had consumed "
+                ++ " Joules created."
                 ++ totalConsumed
-                ++ " kWh of energy, and "
+                ++ " Joules burned."
                 ++ totalStored
-                ++ " kWh has stored in the batteries."
-                ++ " Do you want to know more before I go on?"
+                ++ " surplus stored in batteries."
+
     in
     MultiChoiceItem <|
         MultiChoiceMessage text
@@ -137,36 +133,29 @@ daySummary network =
             ]
 
 
-enterBuildModePeers : BotChatItem
+enterBuildModePeers : List NarrativeElement
 enterBuildModePeers =
-    let
-        text =
-            "Entering Build Mode! The newly illuminated nodes "
-                ++ "represent potential peers (circles) whom you can invite to your"
-                ++ "Phi community, and generators (squares) that you can purchase"
-                ++ " in order to provide more energy to your network."
-    in
-    MultiChoiceItem <|
-        MultiChoiceMessage text
-            [ McaWeatherForecast
-            , McaRunDay
-            , McaAddGenerators
-            , McaBuyCables
-            ]
-
+    [ BotMessage "Click [symbol] to add new peers."
+        |> chatWithDelay 1 []
+          , BotMessage "Next click the button below to buy generators."
+          |> chatWithDelay 6 []
+        ]
 
 enterBuildModeGenerators : BotChatItem
 enterBuildModeGenerators =
     let
         text =
-            "GENERATORS!!! "
+           "Click [symbol] to buy new solar panels."
+           ++ " Click [symbol] to buy new wind turbines."
+           ++ " Next click the button to install cables."
+
     in
     MultiChoiceItem <|
         MultiChoiceMessage text
-            [ McaWeatherForecast
-            , McaRunDay
+            [ McaRunDay
             , McaAddPeers
             , McaBuyCables
+            , McaWeatherForecast
             ]
 
 
@@ -174,17 +163,16 @@ enterBuildModeLines : BotChatItem
 enterBuildModeLines =
     let
         text =
-            "CABLES!!!! "
-                ++ "represent potential peers (circles) whom you can invite to your"
-                ++ "Phi community, and generators (squares) that you can purchase"
-                ++ " in order to provide more energy to your network."
+            "Nodes must be connected to share energy. Click from [symbol] to [symbol] or [symbol] to install distribution cables."
+            ++ " Next click the button to go to the next day."
+
     in
     MultiChoiceItem <|
         MultiChoiceMessage text
-            [ McaWeatherForecast
-            , McaRunDay
+            [ McaRunDay
             , McaAddPeers
             , McaAddGenerators
+            , McaWeatherForecast
             ]
 
 
@@ -192,15 +180,16 @@ exitBuildMode : BotChatItem
 exitBuildMode =
     let
         text =
-            "You've just added X pieces of Y, spending ZZZ PhiCoin."
+          "Daily Briefing:"
+            ++ " В пустой бочке звону больше. | An empty barrel rings loudly."
     in
     MultiChoiceItem <|
         MultiChoiceMessage text
-            [ McaWeatherForecast
-            , McaRunDay
+            [ McaRunDay
             , McaAddPeers
             , McaAddGenerators
             , McaBuyCables
+            , McaWeatherForecast
             ]
 
 
@@ -208,7 +197,7 @@ dayBeginning : PhiNetwork -> BotChatItem
 dayBeginning network =
     let
         text =
-            "Glorious new day in Arstotzka"
+            "Назвался груздем, полезай в кузов. | The mushroom climbed into the body."
     in
     BotMessage text
 
@@ -223,11 +212,11 @@ dayGenerated network =
             toString <| networkStoredEnergy network
 
         text =
-            "Today we have generated "
-                ++ generatedEnergy
-                ++ " kWh in total, "
-                ++ totalStored
-                ++ " kWh has stored in the batteries."
+          ""
+            ++ generatedEnergy
+            ++ " Joules created. "
+            ++ totalStored
+            ++ " surplus stored in batteries."
     in
     BotMessage text
 
@@ -239,9 +228,9 @@ dayConsumed network =
             toString <| networkConsumedEnergy network
 
         text =
-            "The community had consumed "
+            ""
                 ++ totalConsumed
-                ++ " kWh of energy"
+                ++ " Joules burned."
     in
     BotMessage text
 
@@ -253,16 +242,16 @@ dayTraded network =
             toString <| networkTradedEnergy network
 
         text =
-            "The community had traded "
+            ""
                 ++ totalTraded
-                ++ " kWh of energy"
+                ++ " Joules traded."
     in
     --        BotMessage text
     MultiChoiceItem <|
         MultiChoiceMessage text
-            [ McaWeatherForecast
-            , McaRunDay
+            [ McaRunDay
             , McaAddPeers
             , McaAddGenerators
             , McaBuyCables
+            , McaWeatherForecast
             ]
