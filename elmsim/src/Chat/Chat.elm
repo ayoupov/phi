@@ -3,7 +3,7 @@ port module Chat.Chat exposing (..)
 import Action exposing (Msg(..))
 import Chat.Helpers exposing (delayMessage)
 import Chat.Model exposing (..)
-import Chat.Narrative exposing (aboutHealthNarrative, getStartedNarrative, processNarrative, siteNarrative)
+import Chat.Narrative exposing (aboutHealthNarrative, getStartedNarrative, processNarrative, showMap, siteNarrative)
 import Model exposing (Model)
 import Process
 import Task
@@ -78,13 +78,18 @@ handleMultiChoiceMessage action =
             processNarrative siteNarrative
 
         McaSkipIntro ->
-            delayMessage 0.5
+            [ delayMessage 0.5
                 (SendBotChatItem <|
                     MultiChoiceItem <|
                         MultiChoiceMessage
                             "Добро пожаловать в Усть-Карск. | Welcome to Ust-Karsk."
                             defaultMcaList
                 )
+            , showMap ()
+            , delayMessage 0.5 InitializeNetwork
+            , delayMessage 0.5 InitializeBudget
+            ]
+                |> Cmd.batch
 
         McaIntro1 ->
             processNarrative getStartedNarrative

@@ -9,7 +9,7 @@ import Graph
 import Json.Encode exposing (encode)
 import ListHelpers exposing (addToFirstElement)
 import Material
-import Model exposing (Model)
+import Model exposing (Model, initNetworkGenerators)
 import Simulation.BuildingMode exposing (changeBuildMode, handleConvertNode, handleNewLineRequest)
 import Simulation.Encoding exposing (encodeEdge, encodeGraph, encodeNodeLabel)
 import Simulation.GraphUpdates exposing (addEdge, addNode, addNodeWithEdges, updateNodes)
@@ -91,6 +91,9 @@ update msg model =
         ProcessNarrative chatItems ->
             ( model, Narrative.processNarrative chatItems )
 
+        ShowMap ->
+            model ! [ Narrative.showMap () ]
+
         CheckWeather ->
             weatherForecast model
 
@@ -126,6 +129,12 @@ update msg model =
                 , budget = addToFirstElement model.budget -10
             }
                 |> update RenderPhiNetwork
+
+        InitializeNetwork ->
+            model ! initNetworkGenerators
+
+        InitializeBudget ->
+            { model | budget = 10000 :: model.budget } ! []
 
         AddGeneratorWithEdges searchRadius generator ->
             { model | network = addNodeWithEdges searchRadius (GeneratorNode generator) model.network }
@@ -302,8 +311,11 @@ weatherForecast model =
     in
     update (SendBotChatItem chatMsg) model
         |> andThen update (ChangeBuildMode "none")
-        |> andThen update
-            (SendBotChatItem <| WidgetItem WeatherWidget)
+
+
+
+--        |> andThen update
+--            (SendBotChatItem <| WidgetItem WeatherWidget)
 
 
 pregenerateWeather : List WeatherTuple -> Weather

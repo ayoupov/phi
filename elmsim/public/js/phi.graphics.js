@@ -106,9 +106,9 @@ function addClickAnimation(selector) {
               .transition()
               .ease(d3.easeElastic)
               .duration(600)
-              .attr("d", addBaseNode(250))
+              .attr("d", addBaseNode(300))
               .transition()
-              .ease(d3.easeSin)
+              .ease(d3.easeElastic)
               .duration(600)
               .attr("d", addBaseNode(150));
           });
@@ -118,14 +118,14 @@ function addHoverAnimation(selector) {
   selector.on("mouseover", function() {
             d3.select(this)
               .transition()
-              .ease(d3.easeSin)
+              .ease(d3.easeBack)
               .duration(400)
               .attr("d", addBaseNode(200));
           })
           .on("mouseout", function() {
             d3.select(this)
               .transition()
-              .ease(d3.easeQuad)
+              .ease(d3.easeBack)
               .duration(400)
               .attr("d", addBaseNode(150));
           });

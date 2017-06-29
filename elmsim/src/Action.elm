@@ -20,8 +20,11 @@ type Msg
     | ToggleInputAvailable Bool
     | SetMCAList (List MultiChoiceAction)
     | NoOp
+    | ShowMap
     | CheckWeather
     | CheckBudget
+    | InitializeNetwork
+    | InitializeBudget
     | DescribeNode Int
     | RequestConvertNode Int
     | RequestNewLine Int Int

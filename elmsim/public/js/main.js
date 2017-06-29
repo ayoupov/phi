@@ -1,9 +1,6 @@
 var phiNetwork;
 
-var svg = d3.select(".simulation")
-    .append("svg");
-
-var svg = d3.select("svg")
+var svg = d3.select(".simulation svg")
     .attr("height", window.innerHeight)
     .attr("width", window.innerWidth);
 
@@ -89,7 +86,7 @@ var container = svg.append("g")
     .attr("y", 0)
     .attr("width", 1920)
     .attr("height", 1080)
-    .attr("class", "container");
+    .attr("class", "container hidden");
 
 drawGridlines(svg, GRIDLINE_SIZE);
 
@@ -223,6 +220,11 @@ d3.xml("assets/map_large.svg").get(function (error, documentFragment) {
 
     var node = document.getElementById('elm-node');
     var app = Elm.Main.embed(node);
+
+    app.ports.showMap.subscribe(function() {
+        d3.selectAll("svg .container").classed("hidden", false);
+        d3.selectAll(".zoom-container").classed("hidden-zoom", false);
+    });
 
     app.ports.animateTrade.subscribe(function (model) {
         //d3.select(".simulationBackground").classed("dayCycle", true);
@@ -588,6 +590,17 @@ d3.xml("assets/map_large.svg").get(function (error, documentFragment) {
                 .attr('r', peerSize)
                 .attr("class", "peerFullCircle");
 
+            //add baseNode
+            nodeEnter.append("path")
+                .attr("d", addBaseNode(10))
+                .attr('transform', function (d) {
+                    return "translate(" + (setX(d)) + "," + (setY(d)) + ")";
+                })
+                .attr("class", "baseNode")
+                .transition()
+                .ease(d3.easeElastic)
+                .duration(2000)
+                .attr("d", addBaseNode(150));
 
             //add baseNode
             nodeEnter.append("path")

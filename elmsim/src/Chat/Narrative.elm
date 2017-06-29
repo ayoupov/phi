@@ -1,4 +1,4 @@
-module Chat.Narrative exposing (..)
+port module Chat.Narrative exposing (..)
 
 import Action exposing (Msg(..), NarrativeElement)
 import Chat.Helpers exposing (delayMessage)
@@ -22,15 +22,14 @@ initMsg msg =
 
 introNarrative : List NarrativeElement
 introNarrative =
-    [ initMsg (ToggleInputAvailable False)
-    , BotMessage "Hello, I'm Phi."
+    [ BotMessage "Hello, I'm Phi."
         |> chatWithDelay 1.5 []
     , (MultiChoiceItem <|
         MultiChoiceMessage
             "Your interface to peer-to-peer energy."
             [ McaIntro1, McaSkipIntro ]
       )
-        |> chatWithDelay 2.25 [ ToggleInputAvailable True ]
+        |> chatWithDelay 2.25 []
     ]
 
 
@@ -63,7 +62,7 @@ siteNarrative : List NarrativeElement
 siteNarrative =
     [ initMsg (ToggleInputAvailable False)
     , BotMessage "Добро пожаловать в Усть-Карск."
-        |> chatWithDelay 1 []
+        |> chatWithDelay 1 [ ShowMap ]
     , BotMessage "Welcome to Ust-Karsk."
         |> chatWithDelay 0 []
     , (BotMessage <|
@@ -252,3 +251,10 @@ dayTraded network =
             , McaBuyCables
             , McaWeatherForecast
             ]
+
+
+
+-- PORTS
+
+
+port showMap : () -> Cmd msg

@@ -85,7 +85,7 @@ viewChatHeader model =
 
         thisStats =
             List.head model.stats
-                |> Maybe.withDefault { health = 0, coverage = 0.15 }
+                |> Maybe.withDefault { health = 0, coverage = 0 }
     in
     div [ class "chat_header" ]
         [ div [ class "tint_overlay" ] []

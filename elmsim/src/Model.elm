@@ -38,7 +38,7 @@ initModel =
             initMap
     in
     Model ""
-        [ McaIntro1, McaIntro2, McaSkipIntro ]
+        [ McaIntro1, McaSkipIntro ]
         True
         []
         (initGraph map)
@@ -50,7 +50,7 @@ initModel =
         (initNegawattLimit map)
         (initStats map)
         Material.model
-        ! (processNarrative introNarrative :: initGenerators)
+        ! [ processNarrative introNarrative ]
 
 
 initSiteInfo : SimMap -> SiteInfo
@@ -61,7 +61,7 @@ initSiteInfo map =
 
 
 defaultStats =
-    { health = 0, coverage = 0.15 }
+    { health = 0, coverage = 0 }
 
 
 
@@ -79,7 +79,7 @@ initMap =
         }
     , initialWeatherList = restWeather []
     , narrative = initNarrative
-    , initialBudget = [ 10000 ]
+    , initialBudget = []
     , initialReputationRatio = { a = 1, b = 0 }
     , initialNegawattLimit = 21
     , initialStats = [ defaultStats ]
@@ -126,8 +126,8 @@ initStats map =
     map.initialStats
 
 
-initGenerators : List (Cmd Msg)
-initGenerators =
+initNetworkGenerators : List (Cmd Msg)
+initNetworkGenerators =
     let
         edgeSearchRadius =
             70

@@ -32,6 +32,19 @@ body {
   height: 100%;
 }
 
+.simulation .container {
+  opacity: 1;
+  visibility: visible;
+  transition: opacity 2s;
+}
+
+.simulation .container.hidden {
+  visibility: hidden;
+  opacity: 0;
+}
+
+
+
 .spIcon {
   fill: rgb(255,255,117);
 }
@@ -160,6 +173,12 @@ line.link {
   width: 100px;
   color: white;
   text-align: center;
+  transition: opacity 2s;
+  opacity: 1;
+}
+
+.zoom-container.hidden-zoom {
+  opacity: 0;
 }
 
 .zoom-controls {
