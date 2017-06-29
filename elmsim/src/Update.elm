@@ -235,6 +235,7 @@ update msg model =
 
                 _ ->
                     ( model, changeBuildMode "none" )
+                        |> andThen update (SendBotChatItem <| Narrative.exitBuildMode)
 
         StatsUpdate ->
             updateStats model
@@ -329,7 +330,14 @@ weatherForecast model =
                     ++ " wind."
     in
     update (SendBotChatItem chatMsg) model
-        |> andThen update (ChangeBuildMode "none")
+    |> andThen update (SetMCAList
+                [ McaRunDay
+                , McaAddPeers
+                , McaAddGenerators
+                , McaBuyCables
+                , McaWeatherForecast
+                ])
+    |> andThen update (ChangeBuildMode "none")
 
 
 
