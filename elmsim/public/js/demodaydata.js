@@ -153,8 +153,7 @@ var elizaKeywords = [
   "If you are asking how to use renewable energy in your house, please type install+ the kind of energy you are thinking. If you are asking for a local community, try using Phi to explore that with your neighbour."
   ]],
   ["why *", [
-  "Renewable energy is more sustainable compare to fossil energy, and it's much less polluting to our living enviorment.",
-  "It's cheaper for the long run and you get the social bonus of being progressive and caring ;)"
+  "It's cheaper in the long run and you get the social bonus of being progressive and caring."
   ]],
   ["*", [
   "What is your question about renewable energy?",
@@ -164,7 +163,7 @@ var elizaKeywords = [
 
 ["clean energy", 0, [
   ["*", [
-      "go to renewable energy"
+      "goto renewable energy"
       ]]
     ]],
 
@@ -175,12 +174,15 @@ var elizaKeywords = [
     ]],
 
 ["simulation", 4, [
- ["*", [
-     "The Phi Simulation is the initial phase of the Phi platform which allows users to design and test a clean-energy plan for a given location."
+  ["* real *", [
+     "It is both... one feeding into the other."
   ]],
   ["* how *", [
      "You can change the design of the simulation in every turn; when you do, your budget will change accordingly."
-      ]]
+  ]],
+ ["*", [
+     "The Phi Simulation is the initial phase of the Phi platform which allows users to design and test a clean-energy plan for a given location."
+  ]]
 ]],
 
 ["here", 2, [
@@ -679,9 +681,7 @@ var elizaKeywords = [
 
 ["bot", 5, [
  ["*", [
-     "Does me being a bot bothering you ?",
-     "What about bots worries you ?",
-     "You don't think I am just a bot, do you ?"
+     "No, I am actually a panda."
   ]]
 ]],
 ["am", 0, [

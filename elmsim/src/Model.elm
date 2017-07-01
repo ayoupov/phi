@@ -18,6 +18,7 @@ type alias Model =
     , mcaList : List MultiChoiceAction
     , inputAvailable : Bool
     , messages : List ChatItem
+    , dayCount : Int
     , network : PhiNetwork
     , weather : Weather
     , weatherList : List WeatherTuple
@@ -41,6 +42,7 @@ initModel =
         [ McaIntro1, McaSkipIntro ]
         True
         []
+        0
         (initGraph map)
         (initWeather map)
         (initWeatherList map)

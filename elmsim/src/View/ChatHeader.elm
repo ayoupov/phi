@@ -1,4 +1,4 @@
-module View.ChatHeader exposing (viewChatHeader, NodeIcon(..), renderShape)
+module View.ChatHeader exposing (NodeIcon(..), renderShape, viewChatHeader)
 
 import Charts
 import Html exposing (Html, b, br, div, p, span, text)
@@ -71,11 +71,24 @@ viewChatHeader model =
                 , text "coverage"
                 ]
 
-        statusTitle className iconName txt =
-            span [ class className ]
-                [ Icon.view iconName [ Icon.size18 ]
-                , pt txt
-                ]
+        statusTitleItem : String -> String -> String -> Maybe (Html msg)
+        statusTitleItem className iconName txt =
+            case txt of
+                "" ->
+                    Nothing
+
+                "0" ->
+                    Nothing
+
+                "Day 0" ->
+                    Nothing
+
+                _ ->
+                    span [ class className ]
+                        [ Icon.view iconName [ Icon.size18 ]
+                        , pt txt
+                        ]
+                        |> Just
 
         sitePop =
             intFmt model.siteInfo.population
@@ -86,15 +99,18 @@ viewChatHeader model =
         thisStats =
             List.head model.stats
                 |> Maybe.withDefault { health = 0, coverage = 0 }
+
+        statusTitleBar =
+            [ statusTitleItem "site_name" "location_city" siteName
+            , statusTitleItem "population" "people" sitePop
+            , statusTitleItem "week_no" "today" ("Day " ++ toString model.dayCount)
+            ]
+                |> List.filterMap identity
     in
     div [ class "chat_header" ]
         [ div [ class "tint_overlay" ] []
         , div [ class "map_status" ]
-            [ div [ class "title_bar" ]
-                [ statusTitle "site_name" "location_city" siteName
-                , statusTitle "population" "people" sitePop
-                , statusTitle "week_no" "today" "Week 20"
-                ]
+            [ div [ class "title_bar" ] statusTitleBar
             , div [ class "status_body" ]
                 [ div [ class "donut_legend" ] [ Charts.donutWithPct 40 3 (.health thisStats), text "health" ]
                 , div [ class "hline" ] []

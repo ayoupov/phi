@@ -67,9 +67,15 @@ function peerSize(d) {
     }
 }
 
-function peerSizeOuter(d) {
+function peerOutlineOuter(d) {
     if (d.label.nodeType == "peer") {
-        return 8 + 2 * (d.label.desiredConsumption || 0);
+        return 9.5 + 2 * (d.label.desiredConsumption || 0);
+    }
+}
+
+function peerOutlineInner(d) {
+    if (d.label.nodeType == "peer") {
+        return 6.5 + 2 * (d.label.desiredConsumption || 0);
     }
 }
 
@@ -81,10 +87,22 @@ function peerFullOutline() {
         .endAngle(2 * Math.PI);
 }
 
-function peerOutline() {
+function peerEnergyFill() {
     return d3.arc()
-        .innerRadius(peerSize)
-        .outerRadius(peerSizeOuter)
+        .innerRadius(0)
+        .outerRadius(peerSize)
+        .startAngle(0)
+        .endAngle(function(d){
+            return d.label.actualConsumption && d.label.actualConsumption.length
+                ? Math.min(2 * Math.PI, 2 * Math.PI * d.label.actualConsumption[0]/ d.label.desiredConsumption)
+                : 0
+        } );
+}
+
+function peerEnergyOutline() {
+    return d3.arc()
+        .innerRadius(peerOutlineInner)
+        .outerRadius(peerOutlineOuter)
         .startAngle(0)
         .endAngle(function(d){
             return d.label.actualConsumption && d.label.actualConsumption.length

@@ -26,6 +26,8 @@ introNarrative =
         |> chatWithDelay 1.5 []
     , BotMessage "Your interface to peer-to-peer energy."
         |> chatWithDelay 2.25 []
+    , BotMessage "I can help you design, simulate, and manage renewable energy resources and biosensors."
+        |> chatWithDelay 2.25 []
     ]
 
 
@@ -43,15 +45,10 @@ aboutHealthNarrative =
 getStartedNarrative : List NarrativeElement
 getStartedNarrative =
     [ initMsg (ToggleInputAvailable False)
-    , BotMessage "I can help you design, simulate, and manage renewable energy resources and biosensors."
-        |> chatWithDelay 1 []
-    , BotMessage
-        "Currently, I'm running the simulation based on data collected in Ust-Karsk."
-        |> chatWithDelay 1 []
     , (MultiChoiceItem <|
         MultiChoiceMessage
-            "Ust-Karsk is an off-grid community located in southeast Russian region with great potential for solar power."
-            [ McaLaunchSite, McaAboutHealth ]
+            "Please choose one of hte locations below to launch your simulation."
+            [ McaLaunchUstKarsk, McaLaunchValaam, McaLaunchMurmansk ]
       )
         |> chatWithDelay 2.5 [ ToggleInputAvailable True ]
     ]
@@ -62,17 +59,12 @@ siteNarrative =
     [ initMsg (ToggleInputAvailable False)
     , BotMessage "Добро пожаловать в Усть-Карск."
         |> chatWithDelay 1 [ ShowMap ]
-    , BotMessage "Welcome to Ust-Karsk."
-        |> chatWithDelay 0 [ UpdateSiteName "Ust-Karsk" ]
-    , (BotMessage <|
-        "We’re in a small urban settlement on the northern bank of the "
-            ++ "Shilka River, in the Sretensky District of Zabaykalsky Krai, Russia."
-      )
-        |> chatWithDelay 2.25 [ UpdateSitePopulation 1728]
+    , BotMessage "Welcome to Ust-Karsk, a remote off-grid community located in southeast Russian region with great potential for solar power."
+        |> chatWithDelay 1 [ UpdateSiteName "Ust-Karsk", UpdateSitePopulation 1728, IncrementDayCount ]
     , (BotMessage <|
         "You've received a Φ10,000 investment to further develop the renewable energy network in Ust-Karsk."
       )
-        |> chatWithDelay 5.5 [ InitializeBudget ]
+        |> chatWithDelay 3 [ InitializeBudget ]
     , BotMessage
         ("On the map to the right, you'll see the local Phi network in Ust-Karsk. Phi networks are made up of "
             ++ "four types of components. $$_PEER_$$ peers, $$_PANEL_$$ solar panels, $$_TURBINE_$$ wind turbines, and cables."
@@ -80,12 +72,13 @@ siteNarrative =
         |> chatWithDelay 5 [ InitializeNetwork ]
     , (MultiChoiceItem <|
         MultiChoiceMessage
-            ("To begin building your network select from the buttons below to add $$_PEER_$$ peers, buy $$_PANEL_$$ or $$_TURBINE_$$ "
-                ++ "generators, and install cables. Or you can ask me anything if you have specific questions."
-            )
+            "To begin building your network, select from the buttons below."
             defaultMcaList
       )
-        |> chatWithDelay 7 [ ToggleInputAvailable True ]
+        |> chatWithDelay 10 [ ToggleInputAvailable True ]
+    , BotMessage
+        "Don't forget, you can always ask me anything if you have specific questions."
+        |> chatWithDelay 3 []
     ]
 
 

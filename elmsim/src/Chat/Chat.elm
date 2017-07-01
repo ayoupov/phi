@@ -74,7 +74,7 @@ handleMultiChoiceMessage action =
         McaRunDay ->
             delayMessage 1 CallTurn
 
-        McaLaunchSite ->
+        McaLaunchUstKarsk ->
             processNarrative siteNarrative
 
         McaSkipIntro ->
@@ -88,6 +88,7 @@ handleMultiChoiceMessage action =
             , showMap ()
             , delayMessage 0 (UpdateSiteName "Ust-Karsk")
             , delayMessage 0 (UpdateSitePopulation 1728)
+            , delayMessage 0 IncrementDayCount
             , delayMessage 0.5 InitializeNetwork
             , delayMessage 0.5 InitializeBudget
             ]

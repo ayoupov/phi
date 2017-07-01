@@ -253,11 +253,19 @@ d3.xml("assets/map_large.svg").get(function (error, documentFragment) {
                 return d.id;
             });
 
-        nodes.select(".simulation .peer .energyIndicator")
+        peerIndicator = nodes.select(".simulation .peer .energyIndicator");
+
+        peerIndicator.select(".fillIndicator")
             .attr("d", function (d) {
-                return (peerOutline()(d));
-            })
-            .attr("stroke-opacity", "0")
+                return (peerEnergyFill()(d));
+            });
+
+        peerIndicator.select(".outlineIndicator")
+            .attr("d", function (d) {
+                return (peerEnergyOutline()(d));
+            });
+
+        peerIndicator.attr("stroke-opacity", "0")
             .attr("fill-opacity", "0")
             .style("opacity", "0")
             .transition(t)
@@ -580,7 +588,7 @@ d3.xml("assets/map_large.svg").get(function (error, documentFragment) {
                 })
                 .attr("d", addBaseNode(200));
 
-            //draw dotted outlines for peers
+            //draw persistent outlines for peers
             nodeEnter.filter(function (d) {
                     return d.label.nodeType == "peer"
                 })
@@ -590,17 +598,31 @@ d3.xml("assets/map_large.svg").get(function (error, documentFragment) {
                 .attr('r', peerSize)
                 .attr("class", "peerFullCircle");
 
-            //add baseNode
-            nodeEnter.append("path")
-                .attr("d", addBaseNode(10))
+            //add energy indicator for peers
+            var peerEnergyIndicator = nodeEnter.filter(function (d) {
+                    return d.label.nodeType == "peer"
+                }).append("g")
+
+            peerEnergyIndicator.append("path").attr("class", "fillIndicator")
+            peerEnergyIndicator.append("path").attr("class", "outlineIndicator")
+            peerEnergyIndicator.style("opacity", "0")
                 .attr('transform', function (d) {
                     return "translate(" + (setX(d)) + "," + (setY(d)) + ")";
                 })
-                .attr("class", "baseNode")
-                .transition()
-                .ease(d3.easeElastic)
-                .duration(2000)
-                .attr("d", addBaseNode(150));
+                .attr("class", "energyIndicator");
+
+            // add energy indicators for generators
+            nodeEnter.filter(function (d) {
+                    return d.label.nodeType == "generator"
+                }).append("path")
+                .attr("d", function (d) {
+                    return (generatorInitialShadow()(d));
+                })
+                .style("opacity", "0.7")
+                .attr('transform', function (d) {
+                    return "translate(" + (setX(d)) + "," + (setY(d)) + ")";
+                })
+                .attr("class", "energyIndicator");
 
             //add baseNode
             nodeEnter.append("path")
@@ -614,23 +636,11 @@ d3.xml("assets/map_large.svg").get(function (error, documentFragment) {
                 .duration(2000)
                 .attr("d", addBaseNode(100));
 
-            nodeEnter.append("path")
-                .attr("d", function (d) {
-                    return (generatorInitialShadow()(d));
-                })
-                .style("opacity", function (d) {
-                    return ((isGenerator(d)) ? "0.7" : "0");
-                })
-                .attr('transform', function (d) {
-                    return "translate(" + (setX(d)) + "," + (setY(d)) + ")";
-                })
-                .attr("class", "energyIndicator");
 
             nodes.select('.simulation .peer .energyIndicator')
                 .transition(t)
                 .style("opacity", "0");
-            //.call(endall, function () {
-            //});
+
             if (isInBuildingMode)
                 changeBuildModeFunction(lastBuildMode);
 

@@ -19,7 +19,7 @@ viewChatMessage chatItem =
 
         textContent msgText =
             [ div [ class "text_wrapper" ]
-                [ div [ class "text" ]  (textToHtml msgText)  ]
+                [ div [ class "text" ] (textToHtml msgText) ]
             ]
     in
     case chatItem of

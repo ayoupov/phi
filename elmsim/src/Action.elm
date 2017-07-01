@@ -44,6 +44,7 @@ type Msg
     | StatsUpdate
     | UpdateSiteName String
     | UpdateSitePopulation Int
+    | IncrementDayCount
     | DaySummary
     | MultiChoiceMsg MultiChoiceAction
     | Mdl (Material.Msg Msg)

@@ -37,7 +37,9 @@ type MultiChoiceAction
     | McaAddGenerators
     | McaBuyCables
     | McaLeaveBuildMode
-    | McaLaunchSite
+    | McaLaunchUstKarsk
+    | McaLaunchValaam
+    | McaLaunchMurmansk
     | McaSkipIntro
     | McaIntro1
     | McaIntro2
@@ -70,8 +72,14 @@ mcaName action =
         McaLeaveBuildMode ->
             "Leave Build Mode"
 
-        McaLaunchSite ->
+        McaLaunchUstKarsk ->
             "Load Ust-Karsk"
+
+        McaLaunchValaam ->
+            "Load Valaam"
+
+        McaLaunchMurmansk ->
+            "Load Murmansk"
 
         McaSkipIntro ->
             "Skip Intro"
@@ -109,4 +117,4 @@ Current available commands are:
 /turn (i move to the next day)
 /describe [nodeId] (i tell you some info about a specific node)
 """
-                [ McaLaunchSite, McaSkipIntro ]
+                [ McaLaunchUstKarsk, McaSkipIntro ]

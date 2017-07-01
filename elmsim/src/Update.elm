@@ -106,6 +106,7 @@ update msg model =
 
         CallTurn ->
             runDay model
+                |> andThen update IncrementDayCount
                 |> andThen update DaySummary
 
         DescribeNode n ->
@@ -129,7 +130,7 @@ update msg model =
                 , budget = addToFirstElement model.budget -10
             }
                 |> update RenderPhiNetwork
-                |> andThen update (SendBotChatItem <| BotMessage ("Each line costs 10 phicoins"))
+                |> andThen update (SendBotChatItem <| BotMessage "Each line costs 10 phicoins")
 
         InitializeNetwork ->
             model ! initNetworkGenerators
@@ -166,18 +167,25 @@ update msg model =
                 setName : String -> SiteInfo -> SiteInfo
                 setName name info =
                     { info | name = name }
-                newSiteInfo = setName name model.siteInfo
+
+                newSiteInfo =
+                    setName name model.siteInfo
             in
-                {model | siteInfo = newSiteInfo} ! []
+            { model | siteInfo = newSiteInfo } ! []
 
         UpdateSitePopulation pop ->
             let
                 setPop : Int -> SiteInfo -> SiteInfo
                 setPop pop info =
                     { info | population = pop }
-                newSiteInfo = setPop pop model.siteInfo
+
+                newSiteInfo =
+                    setPop pop model.siteInfo
             in
-                {model | siteInfo = newSiteInfo} ! []
+            { model | siteInfo = newSiteInfo } ! []
+
+        IncrementDayCount ->
+            { model | dayCount = model.dayCount + 1 } ! []
 
         RenderPhiNetwork ->
             ( model, renderPhiNetwork <| encodeGraph model.network )
@@ -331,14 +339,16 @@ weatherForecast model =
                     ++ " wind."
     in
     update (SendBotChatItem chatMsg) model
-    |> andThen update (SetMCAList
+        |> andThen update
+            (SetMCAList
                 [ McaRunDay
                 , McaAddPeers
                 , McaAddGenerators
                 , McaBuyCables
                 , McaWeatherForecast
-                ])
-    |> andThen update (ChangeBuildMode "none")
+                ]
+            )
+        |> andThen update (ChangeBuildMode "none")
 
 
 
