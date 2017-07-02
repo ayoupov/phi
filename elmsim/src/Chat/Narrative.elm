@@ -6,6 +6,7 @@ import Chat.Model exposing (BotChatItem(..), MultiChoiceAction(..), MultiChoiceM
 import Html exposing (Html)
 import Simulation.Model exposing (PhiNetwork)
 import Simulation.Simulation exposing (networkConsumedEnergy, networkGeneratedEnergy, networkStoredEnergy, networkTradedEnergy)
+import View.Helpers exposing (floatFmt)
 
 
 chatWithDelay : Float -> List Msg -> BotChatItem -> NarrativeElement
@@ -47,7 +48,7 @@ getStartedNarrative =
     [ initMsg (ToggleInputAvailable False)
     , (MultiChoiceItem <|
         MultiChoiceMessage
-            "Please choose one of hte locations below to launch your simulation."
+            "Please choose one of the locations below to launch your simulation."
             [ McaLaunchUstKarsk, McaLaunchValaam, McaLaunchMurmansk ]
       )
         |> chatWithDelay 2.5 [ ToggleInputAvailable True ]
@@ -99,13 +100,13 @@ daySummary : PhiNetwork -> BotChatItem
 daySummary network =
     let
         generatedEnergy =
-            toString <| networkGeneratedEnergy network
+            floatFmt <| networkGeneratedEnergy network
 
         totalConsumed =
-            toString <| networkConsumedEnergy network
+            floatFmt <| networkConsumedEnergy network
 
         totalStored =
-            toString <| networkStoredEnergy network
+            floatFmt <| networkStoredEnergy network
 
         text =
             "Daily Briefing: "
@@ -200,10 +201,10 @@ dayGenerated : PhiNetwork -> BotChatItem
 dayGenerated network =
     let
         generatedEnergy =
-            toString <| networkGeneratedEnergy network
+            floatFmt <| networkGeneratedEnergy network
 
         totalStored =
-            toString <| networkStoredEnergy network
+            floatFmt <| networkStoredEnergy network
 
         text =
             ""
@@ -219,7 +220,7 @@ dayConsumed : PhiNetwork -> BotChatItem
 dayConsumed network =
     let
         totalConsumed =
-            toString <| networkConsumedEnergy network
+            floatFmt <| networkConsumedEnergy network
 
         text =
             ""
@@ -233,7 +234,7 @@ dayTraded : PhiNetwork -> BotChatItem
 dayTraded network =
     let
         totalTraded =
-            toString <| networkTradedEnergy network
+            floatFmt <| networkTradedEnergy network
 
         text =
             ""

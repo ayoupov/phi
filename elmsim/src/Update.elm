@@ -107,8 +107,8 @@ update msg model =
         CallTurn ->
             runDay model
                 |> andThen update IncrementDayCount
-                |> andThen update DaySummary
 
+        --|> andThen update DaySummary
         DescribeNode n ->
             model
                 |> (Graph.get n model.network
@@ -244,8 +244,8 @@ update msg model =
 
                 _ ->
                     ( model, changeBuildMode "none" )
-                        |> andThen update (SendBotChatItem <| Narrative.exitBuildMode)
 
+        --|> andThen update (SendBotChatItem <| Narrative.exitBuildMode)
         StatsUpdate ->
             updateStats model
 

@@ -1,3 +1,16 @@
+ * {
+ /*CSS transitions*/
+ -o-transition-property: none !important;
+ -moz-transition-property: none !important;
+ -ms-transition-property: none !important;
+ /*CSS animations*/
+ -moz-animation: none !important;
+ -o-animation: none !important;
+ -ms-animation: none !important;
+}
+
+
+
 body {
   background: linear-gradient(to right, rgba(214,100,234,1), rgba(193,226,124,1));
 }
@@ -82,6 +95,7 @@ body {
   fill: rgb(114,236,245);
   transform-origin: center 66%;
   animation: out-pulse 5s ease infinite;
+  -webkit-animation: out-pulse 5s ease infinite;
   stroke-opacity: 0;
 }
 
@@ -89,17 +103,34 @@ body {
   fill: rgb(255,255,117);
   transform-origin: center center;
   animation: out-pulse 10s ease infinite;
+  -webkit-animation: out-pulse 10s ease infinite;
   stroke-opacity: 0;
 }
 
 .peer_pulse {
   fill: rgb(0,0,117);
   animation: in-pulse 10s ease infinite;
+  -webkit-animation: in-pulse 10s ease infinite;
   transform-origin: center center;
   stroke-opacity: 0;
 }
 
 @keyframes in-pulse {
+  0% {
+    transform: scale(1.5);
+    opacity: 0
+  }
+  80% {
+    transform: scale(0.5);
+    opacity: 1;
+  }
+  100% {
+    transform: scale(0.7);
+    opacity: 0;
+  }
+}
+
+@-webkit-keyframes in-pulse {
   0% {
     transform: scale(1.5);
     opacity: 0
@@ -128,7 +159,21 @@ body {
   }
 }
 
-.node.peer .energyIndicator{
+@-webkit-keyframes out-pulse {
+  0% {
+    transform: scale(0.7);
+    opacity: 1;
+  }
+  90% {
+    transform: scale(2);
+    opacity: 0;
+  }
+  100% {
+    opacity: 0;
+  }
+}
+
+.node.peer .energyIndicator {
   stroke: none;
   fill-opacity: 0.3;
   fill: rgb(0,0,117);
@@ -187,9 +232,12 @@ line.link {
 
 .zoom-controls {
   /*text-align: right;*/
-  opacity: 0.5;
+  margin-right: 6px;
   height: 50px;
   float: right;
+  font-size: 18px;
+  font-weight: 600;
+  line-height: 1em;
 }
 
 .zoom-scale {
@@ -200,10 +248,14 @@ line.link {
 .zoom-control {
   width: 20px;
   height: 20px;
-  background: rgb(93,93,93);
-  margin-top: 5px;
+  background: rgba(93,93,93,0.7);
+  margin-top: 0px;
   cursor: pointer;
   user-select: none;
+  box-sizing: content-box;
+}
+.zoom-control:last-child {
+  border-top: solid thin rgba(255,255,255,0.5);
 }
 
 .scaleText {

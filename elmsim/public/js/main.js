@@ -96,7 +96,7 @@ var $zoomCont = $(".zoom-container");
 
 function updateZoomPos() {
     var r = (Math.floor($(window).width() / GRIDLINE_SIZE) - 1 ) * GRIDLINE_SIZE;
-    var b = (Math.floor($(window).height() / GRIDLINE_SIZE) - 1 ) * GRIDLINE_SIZE - $zoomCont.height();
+    var b = (Math.floor($(window).height() / GRIDLINE_SIZE) ) * GRIDLINE_SIZE - $zoomCont.height();
     var scrollTop = $(".simulation").scrollTop() || 0;
     $zoomCont.css({
         'left': r,

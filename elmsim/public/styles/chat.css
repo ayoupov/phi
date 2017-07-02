@@ -339,11 +339,11 @@ body {
 .mca_container {
   position: relative;
   overflow: scroll;
+  justify-content: center;
+  align-items:center;
   display: flex;
-  width: 425px;
-  float: left;
+  width: 100%;
   margin-top: 0px;
-  padding: 5px 5px 5px 5px;
   height: 47px;
   background: rgba(0,0,0,0);
   -ms-overflow-style: none;  // IE 10+
@@ -357,12 +357,12 @@ body {
 .mca_container .multi_button {
   color: rgba(255,255,255,0.8);
   background: #33C;
-  font-family: "OpenSans Light", monospace;
+  font-family: "OpenSans Regular", monospace;
   font-weight: 10;
   border: none;
   outline: none;
   cursor: pointer;
-  margin: auto 2px auto 2px;
+  margin: auto 5px auto 5px;
 }
 
 .multi_button.disabled {

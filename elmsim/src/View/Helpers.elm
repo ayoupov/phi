@@ -14,6 +14,16 @@ intFmt num =
         (toFloat num)
 
 
+floatFmt : Float -> String
+floatFmt num =
+    format
+        { decimals = 2
+        , thousandSeparator = ","
+        , decimalSeparator = "."
+        }
+        num
+
+
 phiCoin : Budget -> String
 phiCoin budget =
     budget

@@ -175,7 +175,7 @@ var elizaKeywords = [
 
 ["simulation", 4, [
   ["* real *", [
-     "It is both... one feeding into the other."
+     "It is both. One feeding into the other."
   ]],
   ["* how *", [
      "You can change the design of the simulation in every turn; when you do, your budget will change accordingly."
@@ -184,7 +184,16 @@ var elizaKeywords = [
      "The Phi Simulation is the initial phase of the Phi platform which allows users to design and test a clean-energy plan for a given location."
   ]]
 ]],
-
+["real", 3, [
+  ["*", [
+    "At the moment I can only simulate networks based on real data. But in the future it would be possible to involve multiple users for decision-making on investment, voting and management of real-world energy networks."
+  ]]
+]],
+["generator", 3, [
+  ["* pick *", [
+    "Graphs are meant to be informative, not prescriptive. Follow your intuition."
+  ]]
+]],
 ["here", 2, [
   ["*what *", [
     "This is the initial phase of the Phi platform which you can play with clean-energy infrastructures for local planning."
