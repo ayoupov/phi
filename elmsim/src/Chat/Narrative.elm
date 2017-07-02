@@ -118,21 +118,26 @@ daySummary network =
     in
     MultiChoiceItem <|
         MultiChoiceMessage text
-            [ McaWeatherForecast
-            , McaRunDay
-            , McaAddPeers
+            [ McaAddPeers
             , McaAddGenerators
             , McaBuyCables
+            , McaRunDay
             ]
 
 
-enterBuildModePeers : List NarrativeElement
+enterBuildModePeers : BotChatItem
 enterBuildModePeers =
-    [ BotMessage "Click $$_PEER_$$ to add new peers."
-        |> chatWithDelay 1 []
-    , BotMessage "Next click the button below to buy generators."
-        |> chatWithDelay 6 []
-    ]
+    let
+        text =
+            "Click $$_PEER_$$ to add new peers."
+                ++ " Next click the button to install cables."
+    in
+    MultiChoiceItem <|
+        MultiChoiceMessage text
+            [ McaAddGenerators
+            , McaBuyCables
+            , McaRunDay
+            ]
 
 
 enterBuildModeGenerators : BotChatItem
@@ -145,10 +150,9 @@ enterBuildModeGenerators =
     in
     MultiChoiceItem <|
         MultiChoiceMessage text
-            [ McaRunDay
-            , McaAddPeers
+            [ McaAddPeers
             , McaBuyCables
-            , McaWeatherForecast
+            , McaRunDay
             ]
 
 
@@ -161,10 +165,9 @@ enterBuildModeLines =
     in
     MultiChoiceItem <|
         MultiChoiceMessage text
-            [ McaRunDay
-            , McaAddPeers
+            [ McaAddPeers
             , McaAddGenerators
-            , McaWeatherForecast
+            , McaRunDay
             ]
 
 
@@ -177,11 +180,10 @@ exitBuildMode =
     in
     MultiChoiceItem <|
         MultiChoiceMessage text
-            [ McaRunDay
-            , McaAddPeers
+            [ McaAddPeers
             , McaAddGenerators
             , McaBuyCables
-            , McaWeatherForecast
+            , McaRunDay
             ]
 
 
@@ -241,11 +243,10 @@ dayTraded network =
     --        BotMessage text
     MultiChoiceItem <|
         MultiChoiceMessage text
-            [ McaRunDay
-            , McaAddPeers
+            [ McaAddPeers
             , McaAddGenerators
             , McaBuyCables
-            , McaWeatherForecast
+            , McaRunDay
             ]
 
 

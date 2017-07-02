@@ -18,10 +18,12 @@ phiCoin : Budget -> String
 phiCoin budget =
     budget
         |> List.head
-        |> Maybe.withDefault 0
-        |> format
-            { decimals = 0
-            , thousandSeparator = ","
-            , decimalSeparator = "."
-            }
-        |> (++) "Φ"
+        |> Maybe.map
+            (format
+                { decimals = 0
+                , thousandSeparator = ","
+                , decimalSeparator = "."
+                }
+            )
+        |> Maybe.map ((++) "Φ")
+        |> Maybe.withDefault "--"

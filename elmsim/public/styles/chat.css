@@ -10,6 +10,10 @@
     font-family: "OpenSans Regular";
     src: url("../fonts/Open_Sans/OpenSans-Regular.ttf") format("truetype");
 }
+@font-face {
+    font-family: "OpenSans Semibold";
+    src: url("../fonts/Open_Sans/OpenSans-Semibold.ttf") format("truetype");
+}
 
 body {
   background-size: cover;
@@ -43,18 +47,19 @@ body {
   background: rgba(231,232,233,0.6);
   border-bottom: solid 1px rgba(231,232,233,0.4);
   width: 100%;
-  height: 115px;
+  height: 120px;
 }
 
 .chat_header .map_status {
+  font-family: "OpenSans Regular", monospace;
   overflow: hidden;
   position: absolute;
   top: 50%; left: 50%;
   transform: translate(-50%,-50%);
   display: flex;
   flex-flow: column nowrap;
-  width: 435px;
-  height: 95px;
+  width: 445px;
+  height: 100px;
   background: rgba(230,231,232,0.7);
   border-radius: 10px;
 }
@@ -65,7 +70,7 @@ body {
   padding: 0px;
   height: 20px;
   width: 100%;
-  background: rgba(171,172,204,0.6);
+  background: rgba(51,51,204,0.25);
   color: #336;
   padding-left: 5px;
   display: flex;
@@ -100,6 +105,7 @@ body {
 }
 
 .budget_status {
+  min-width: 80px;
   color: #336;
   text-align: center;
   font-size: 0.8em;
@@ -116,8 +122,36 @@ body {
   color: #336;
   flex-flow: column nowrap;
   stroke: #33C;
-  font-size: 12px;
+}
 
+.donut_legend .donut_chart {
+  position: relative;
+  display: inline-block;
+}
+
+.donut_text {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  display: flex;
+  flex-flow: column nowrap;
+  align-items: center;
+  justify-content: center;
+  font-size: 11px;
+}
+
+.donut_text span {
+  height: 1.5em;
+  line-height: 1.9em;
+  position: relative;
+  display: block;
+}
+
+.donut_text span b {
+  font-family: "OpenSans Semibold", monospace;
+  font-size: 1.6em;
 }
 
 .node_counts {
@@ -126,9 +160,13 @@ body {
   font-size: 0.9em;
 }
 
+.chat_header .peerIcon, .chat_header .spIcon, .chat_header .wtIcon {
+    width: 30px;
+}
+
 .peerIcon, .spIcon, .wtIcon {
-    margin: 0 5px 0 5px;
-    vertical-align: middle;
+  margin-left: 5px;
+  margin-right: 5px;
 }
 
 .node_count_row {
@@ -138,20 +176,8 @@ body {
 }
 
 .node_count {
-  padding-left: 10px;
+  padding: 0 5px 0 10px;
   margin-left: auto;
-}
-
-.donut_legend .donut_chart {
-  position: relative;
-  display: inline-block;
-}
-
-.donut_chart span {
-  font-size: 1.1em;
-  position: absolute;
-  top: 50%; left: 50%;
-  transform: translate(-50%,-50%);
 }
 
 .chat_header .status_body .status_section {

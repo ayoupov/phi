@@ -232,7 +232,7 @@ update msg model =
             case buildModeType of
                 "peers" ->
                     ( model, changeBuildMode "peers" )
-                        |> andThen update (ProcessNarrative <| Narrative.enterBuildModePeers)
+                        |> andThen update (SendBotChatItem <| Narrative.enterBuildModePeers)
 
                 "generators" ->
                     ( model, changeBuildMode "generators" )
@@ -341,11 +341,11 @@ weatherForecast model =
     update (SendBotChatItem chatMsg) model
         |> andThen update
             (SetMCAList
-                [ McaRunDay
-                , McaAddPeers
+                [ McaAddPeers
                 , McaAddGenerators
                 , McaBuyCables
                 , McaWeatherForecast
+                , McaRunDay
                 ]
             )
         |> andThen update (ChangeBuildMode "none")

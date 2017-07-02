@@ -55,21 +55,14 @@ viewChatHeader model =
             p [] [ text theText ]
 
         renderNodeCount num =
-            div [ class "node_count" ] [ text (toString num) ]
+            (case model.siteInfo.name of
+                "" ->
+                    "–"
 
-        phText =
-            div [ class "ph_text" ]
-                [ b [] [ text "PHI" ]
-                , br [] []
-                , text "health"
-                ]
-
-        ccText =
-            div [ class "cc_text" ]
-                [ b [] [ text "COMMUNITY" ]
-                , br [] []
-                , text "coverage"
-                ]
+                _ ->
+                    toString num
+            )
+                |> (\x -> div [ class "node_count" ] [ text x ])
 
         statusTitleItem : String -> String -> String -> Maybe (Html msg)
         statusTitleItem className iconName txt =
@@ -112,9 +105,9 @@ viewChatHeader model =
         , div [ class "map_status" ]
             [ div [ class "title_bar" ] statusTitleBar
             , div [ class "status_body" ]
-                [ div [ class "donut_legend" ] [ Charts.donutWithPct 40 3 (.health thisStats), text "health" ]
+                [ div [ class "donut_legend" ] [ Charts.donutWithPct "Health" 70 5 (.health thisStats) ]
                 , div [ class "hline" ] []
-                , div [ class "donut_legend" ] [ Charts.donutWithPct 40 3 (.coverage thisStats), text "coverage" ]
+                , div [ class "donut_legend" ] [ Charts.donutWithPct "Coverage" 70 5 (.coverage thisStats) ]
                 , div [ class "hline" ]
                     []
                 , div

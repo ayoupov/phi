@@ -102,7 +102,7 @@ type Widget
 
 defaultMcaList : List MultiChoiceAction
 defaultMcaList =
-    [ McaAddPeers, McaAddGenerators, McaBuyCables, McaRunDay, McaAboutHealth ]
+    [ McaAddPeers, McaAddGenerators, McaBuyCables, McaRunDay ]
 
 
 initChat : ChatItem

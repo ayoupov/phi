@@ -1,7 +1,7 @@
 module Charts exposing (donutChart, donutWithPct)
 
 import FormatNumber
-import Html exposing (Html, div, span, text)
+import Html exposing (Html, b, div, span, text)
 import Svg exposing (circle, svg)
 import Svg.Attributes exposing (..)
 
@@ -50,11 +50,11 @@ donutChart size thickness percent =
         ]
 
 
-percentFormat : Float -> String
+percentFormat : Float -> Maybe String
 percentFormat percent =
     case percent of
         0 ->
-            ""
+            Just "–"
 
         _ ->
             (100 * percent)
@@ -63,16 +63,25 @@ percentFormat percent =
                     , thousandSeparator = ","
                     , decimalSeparator = "."
                     }
-                |> (\x -> x ++ "%")
+                |> (\x -> Just (x ++ "%"))
 
 
-donutWithPct : Int -> Int -> Float -> Html msg
-donutWithPct size thickness percent =
+donutWithPct : String -> Int -> Int -> Float -> Html msg
+donutWithPct title size thickness percent =
+    let
+        donutTextDiv =
+            div [ class "donut_text" ]
+                ([ Maybe.map (\x -> span [] [ b [] [ text x ] ]) (percentFormat percent)
+                 , Just <| span [] [ text title ]
+                 ]
+                    |> List.filterMap identity
+                )
+    in
     div
         [ class "donut_chart"
         , width <| toString size
         , height <| toString size
         ]
         [ donutChart size thickness percent
-        , span [] [ text <| percentFormat percent ]
+        , donutTextDiv
         ]
