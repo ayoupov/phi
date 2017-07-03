@@ -186,12 +186,12 @@ var elizaKeywords = [
 ]],
 ["real", 3, [
   ["*", [
-    "At the moment I can only simulate networks based on real data. But in the future it would be possible to involve multiple users for decision-making on investment, voting and management of real-world energy networks."
+    "At the moment I can only simulate networks based on real data. But in the future it will be possible to involve multiple users for decision-making on investment, voting and management of real-world energy networks."
   ]]
 ]],
 ["generator", 3, [
   ["* pick *", [
-    "Graphs are meant to be informative, not prescriptive. Follow your intuition."
+    "It might seem hard to believe with all the rain lately, but I would recommend solar."
   ]]
 ]],
 ["here", 2, [
