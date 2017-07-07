@@ -6,3 +6,4 @@ elmsim/elm-stuff/*
 elmsim/public/js/elm.js
 /elmsim/js/simtest.js
 /elmsim/js/elm.js
+firebase-config.js

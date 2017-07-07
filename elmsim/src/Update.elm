@@ -2,6 +2,8 @@ module Update exposing (update)
 
 import Action exposing (Msg(..))
 import Chat.Chat as Chat
+import Chat.ChatLog exposing (logMessage)
+import Chat.Encoding exposing (encodeChatItem)
 import Chat.Model exposing (..)
 import Chat.Narrative as Narrative
 import Dom.Scroll as Scroll
@@ -21,7 +23,13 @@ import Simulation.SimulationInterop exposing (..)
 import Simulation.Stats exposing (updateStats, updateStatsThisDay)
 import Simulation.WeatherList exposing (restWeather, weatherTupleToWeather)
 import Task
-import Update.Extra exposing (andThen)
+import Update.Extra exposing (addCmd, andThen, updateModel)
+
+
+addChatItem : ChatItem -> Model -> ( Model, Cmd Msg )
+addChatItem chatMsg model =
+    { model | messages = chatMsg :: model.messages }
+        ! [ logMessage <| encodeChatItem chatMsg ]
 
 
 update : Msg -> Model -> ( Model, Cmd Msg )
@@ -32,9 +40,6 @@ update msg model =
 
         scrollDown =
             Task.attempt (always NoOp) <| Scroll.toBottom "toScroll"
-
-        addChatItem chatMsg model =
-            { model | messages = chatMsg :: model.messages }
     in
     case msg of
         NoOp ->
@@ -60,14 +65,13 @@ update msg model =
                     clearedInputModel =
                         { model | input = "" }
 
-                    newModel =
-                        addChatItem chatMsg clearedInputModel
-
                     botResponse : Cmd Msg
                     botResponse =
                         Chat.handleTextInputMessage model.input
                 in
-                newModel ! [ scrollDown, botResponse ]
+                addChatItem chatMsg clearedInputModel
+                    |> addCmd scrollDown
+                    |> addCmd botResponse
 
         SendBotChatItem chatItem ->
             let
@@ -79,11 +83,10 @@ update msg model =
                         _ ->
                             model
             in
-            (model
+            model
                 |> addChatItem (BotItem chatItem)
-                |> updateMcaList
-            )
-                ! [ scrollDown ]
+                |> updateModel updateMcaList
+                |> addCmd scrollDown
 
         SetMCAList mcaList ->
             { model | mcaList = mcaList } ! []
@@ -251,13 +254,12 @@ update msg model =
 
         MultiChoiceMsg multiChoiceAction ->
             let
-                newModel =
-                    addChatItem (UserMessage <| mcaName multiChoiceAction) model
-
                 botResponse =
                     Chat.handleMultiChoiceMessage multiChoiceAction
             in
-            newModel ! [ scrollDown, botResponse ]
+            addChatItem (UserMessage <| mcaName multiChoiceAction) model
+                |> addCmd scrollDown
+                |> addCmd botResponse
 
         SendToEliza userChatMessage ->
             model ! [ Chat.sendToEliza userChatMessage ]

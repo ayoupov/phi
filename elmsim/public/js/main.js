@@ -136,6 +136,45 @@ function zoomInit() {
     $(".zoom-minus").on('click', zoomOut);
 }
 
+var db;
+var sessionKey;
+var shouldLogChatMessage = false;
+
+function initFirebase() {
+    firebase.initializeApp(firebaseConfig);
+
+    db = firebase.database();
+
+    firebase.auth().signInAnonymously().catch(function(error) {
+      // Handle Errors here.
+      var errorCode = error.code;
+      var errorMessage = error.message;
+
+      console.log(errorCode + ": " + errorMessage);
+    });
+
+    // setup session event to log
+    var newSessionRef = db.ref('sessions').push();
+    sessionKey = newSessionRef.key;
+
+    var session = {
+        userAgent: navigator.userAgent,
+        windowWidth: window.innerWidth,
+        windowHeight: window.innerHeight,
+        ts: Date.now()
+    }
+
+
+    firebase.auth().onAuthStateChanged(function(user) {
+      if (user) {
+        anon_uid = user.uid;
+
+        session['uid'] = anon_uid;
+        newSessionRef.set(session);
+      }
+    });
+
+}
 var currentTransform = {k: 1.0, x: 0, y: 0};
 
 function zoomed() {
@@ -217,6 +256,8 @@ d3.xml("assets/map_large.svg").get(function (error, documentFragment) {
     });
 
     zoomInit();
+
+    initFirebase();
 
     var node = document.getElementById('elm-node');
     var app = Elm.Main.embed(node);
@@ -726,6 +767,23 @@ d3.xml("assets/map_large.svg").get(function (error, documentFragment) {
         var reply = eliza.transform(inputString);
 
         app.ports.elizaReply.send(reply);
+
+    });
+
+    app.ports.logMessage.subscribe(function (message) {
+
+        if (message.sender == "user") {
+            shouldLogChatMessage = true;
+        }
+
+        if (shouldLogChatMessage) {
+            var newMessageRef = db.ref('messages').push();
+
+            message['ts'] = Date.now();
+            message['sessionKey'] = sessionKey || "";
+
+            newMessageRef.set(message);
+        }
 
     });
 
