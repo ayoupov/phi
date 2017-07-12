@@ -1,9 +1,6 @@
-ipython/.ipynb_checkpoints/*
 .DS_Store
 *.mb
-elmsim/elm-stuff/*
+elm-stuff/*
 .idea
-elmsim/public/js/elm.js
-/elmsim/js/simtest.js
-/elmsim/js/elm.js
+public/js/elm.js
 firebase-config.js
