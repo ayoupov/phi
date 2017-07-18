@@ -38,8 +38,6 @@ type MultiChoiceAction
     | McaBuyCables
     | McaLeaveBuildMode
     | McaLaunchUstKarsk
-    | McaLaunchValaam
-    | McaLaunchMurmansk
     | McaSkipIntro
     | McaIntro1
     | McaIntro2
@@ -74,12 +72,6 @@ mcaName action =
 
         McaLaunchUstKarsk ->
             "Load Ust-Karsk"
-
-        McaLaunchValaam ->
-            "Load Valaam"
-
-        McaLaunchMurmansk ->
-            "Load Murmansk"
 
         McaSkipIntro ->
             "Skip Intro"

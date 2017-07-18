@@ -221,6 +221,7 @@ update msg model =
 
                 "tradeAnimated" ->
                     update (SendBotChatItem <| Narrative.dayTraded model.network) model
+                        |> andThen update (ToggleInputAvailable True)
 
                 "enterBuildModeAnimated" ->
                     update NoOp model

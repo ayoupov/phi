@@ -72,7 +72,10 @@ handleMultiChoiceMessage action =
             delayMessage 0 <| ChangeBuildMode "none"
 
         McaRunDay ->
-            delayMessage 1 CallTurn
+            [ delayMessage 0 (ToggleInputAvailable False)
+            , delayMessage 1 CallTurn
+            ]
+                |> Cmd.batch
 
         McaLaunchUstKarsk ->
             processNarrative siteNarrative

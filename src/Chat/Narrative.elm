@@ -48,8 +48,8 @@ getStartedNarrative =
     [ initMsg (ToggleInputAvailable False)
     , (MultiChoiceItem <|
         MultiChoiceMessage
-            "Please choose one of the locations below to launch your simulation."
-            [ McaLaunchUstKarsk, McaLaunchValaam, McaLaunchMurmansk ]
+            "Please click the location below to launch your simulation."
+            [ McaLaunchUstKarsk ]
       )
         |> chatWithDelay 2.5 [ ToggleInputAvailable True ]
     ]
