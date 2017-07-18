@@ -76,7 +76,7 @@ siteNarrative =
             "To begin building your network, select from the buttons below."
             defaultMcaList
       )
-        |> chatWithDelay 10 [ ToggleInputAvailable True ]
+        |> chatWithDelay 7 [ ToggleInputAvailable True ]
     , BotMessage
         "Don't forget, you can always ask me anything if you have specific questions."
         |> chatWithDelay 3 []
