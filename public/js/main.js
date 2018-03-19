@@ -607,6 +607,9 @@ d3.xml("assets/map_large.svg").get(function (error, documentFragment) {
                 .attr('cx', setX)
                 .attr('cy', setY)
                 .attr('r', 10)
+                .attr('style', function(d) {
+                  return "transform-origin: " + setX(d) + "px " + setY(d) + "px;";
+                })
                 .style('animation-delay', -20 * Math.random() + "s")
                 .attr("class", "peer_pulse");
 
@@ -621,6 +624,9 @@ d3.xml("assets/map_large.svg").get(function (error, documentFragment) {
                     } else if (d.label.generatorType == "solarPanel") {
                         return "sp_pulse";
                     }
+                })
+                .attr('style', function(d) {
+                  return "transform-origin: " + setX(d) + "px " + setY(d) + "px;";
                 })
                 .style('animation-delay', -20 * Math.random() + "s")
                 .append("path")

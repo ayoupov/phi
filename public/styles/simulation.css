@@ -93,7 +93,6 @@ body {
 
 .wt_pulse {
   fill: rgb(114,236,245);
-  transform-origin: center 66%;
   animation: out-pulse 5s ease infinite;
   -webkit-animation: out-pulse 5s ease infinite;
   stroke-opacity: 0;
@@ -101,7 +100,6 @@ body {
 
 .sp_pulse {
   fill: rgb(255,255,117);
-  transform-origin: center center;
   animation: out-pulse 10s ease infinite;
   -webkit-animation: out-pulse 10s ease infinite;
   stroke-opacity: 0;
@@ -111,7 +109,6 @@ body {
   fill: rgb(0,0,117);
   animation: in-pulse 10s ease infinite;
   -webkit-animation: in-pulse 10s ease infinite;
-  transform-origin: center center;
   stroke-opacity: 0;
 }
 
