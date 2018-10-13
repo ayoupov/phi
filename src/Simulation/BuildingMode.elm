@@ -86,13 +86,13 @@ handleConvertNode nodeId model =
                 PotentialNode potential ->
                     case potential.nodeType of
                         PotentialWPS ->
-                            Just ( Generators.generateWPS AddGenerator coords, ( PotentialWPS, 200 ) )
+                            Just ( Generators.generateWPS AddGenerator coords, ( PotentialWPS, 300 ) )
 
                         PotentialResilientHousing ->
-                            Just ( Generators.upgradeHousing UpgradeHousing coords, ( PotentialResilientHousing, 150 ) )
+                            Just ( Generators.upgradeHousing UpgradeHousing coords, ( PotentialResilientHousing, 200 ) )
 
                         PotentialHousing ->
-                            Just ( Generators.generateHousing AddHousing coords, ( PotentialHousing, 50 ) )
+                            Just ( Generators.generateHousing AddHousing coords, ( PotentialHousing, 200 ) )
 
 --                HousingNode housing ->
 --                        Just ( Generators.upgradeHousing UpgradeHousing coords, ( ResilientHousing, 50 ) )
@@ -130,10 +130,10 @@ handleConvertNode nodeId model =
                     "You purchased a wind turbine, it costs " ++ toString c ++ " phicoin which has been deducted from your budget"
 
                 PotentialResilientHousing ->
-                    "You purchased a solar panel, it costs " ++ toString c ++ " phicoin which has been deducted from your budget"
+                    "You upgraded housing to a resilient one, it costs " ++ toString c ++ " phicoin which has been deducted from your budget"
 
                 PotentialHousing ->
-                    "You enabled a peer, the connection costs " ++ toString c ++ " phicoin which has been deducted from your budget"
+                    "You built a housing, it costs " ++ toString c ++ " phicoin which has been deducted from your budget"
 
         messageCmd : Cmd Msg
         messageCmd =

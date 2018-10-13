@@ -141,38 +141,38 @@ var sessionKey;
 var shouldLogChatMessage = false;
 
 function initFirebase() {
-    firebase.initializeApp(firebaseConfig);
-
-    db = firebase.database();
-
-    firebase.auth().signInAnonymously().catch(function(error) {
-      // Handle Errors here.
-      var errorCode = error.code;
-      var errorMessage = error.message;
-
-      console.log(errorCode + ": " + errorMessage);
-    });
-
-    // setup session event to log
-    var newSessionRef = db.ref('sessions').push();
-    sessionKey = newSessionRef.key;
-
-    var session = {
-        userAgent: navigator.userAgent,
-        windowWidth: window.innerWidth,
-        windowHeight: window.innerHeight,
-        ts: Date.now()
-    }
-
-
-    firebase.auth().onAuthStateChanged(function(user) {
-      if (user) {
-        anon_uid = user.uid;
-
-        session['uid'] = anon_uid;
-        newSessionRef.set(session);
-      }
-    });
+//    firebase.initializeApp(firebaseConfig);
+//
+//    db = firebase.database();
+//
+//    firebase.auth().signInAnonymously().catch(function(error) {
+//      // Handle Errors here.
+//      var errorCode = error.code;
+//      var errorMessage = error.message;
+//
+//      console.log(errorCode + ": " + errorMessage);
+//    });
+//
+//    // setup session event to log
+//    var newSessionRef = db.ref('sessions').push();
+//    sessionKey = newSessionRef.key;
+//
+//    var session = {
+//        userAgent: navigator.userAgent,
+//        windowWidth: window.innerWidth,
+//        windowHeight: window.innerHeight,
+//        ts: Date.now()
+//    }
+//
+//
+//    firebase.auth().onAuthStateChanged(function(user) {
+//      if (user) {
+//        anon_uid = user.uid;
+//
+//        session['uid'] = anon_uid;
+//        newSessionRef.set(session);
+//      }
+//    });
 
 }
 var currentTransform = {k: 1.0, x: 0, y: 0};
@@ -778,18 +778,18 @@ d3.xml("assets/Barje-map-for-sim-big-01.svg").get(function (error, documentFragm
 
     app.ports.logMessage.subscribe(function (message) {
 
-        if (message.sender == "user") {
-            shouldLogChatMessage = true;
-        }
-
-        if (shouldLogChatMessage) {
-            var newMessageRef = db.ref('messages').push();
-
-            message['ts'] = Date.now();
-            message['sessionKey'] = sessionKey || "";
-
-            newMessageRef.set(message);
-        }
+//        if (message.sender == "user") {
+//            shouldLogChatMessage = true;
+//        }
+//
+//        if (shouldLogChatMessage) {
+//            var newMessageRef = db.ref('messages').push();
+//
+//            message['ts'] = Date.now();
+//            message['sessionKey'] = sessionKey || "";
+//
+//            newMessageRef.set(message);
+//        }
 
     });
 

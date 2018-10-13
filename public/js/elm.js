@@ -23779,7 +23779,7 @@ var _ayoupov$phi$Simulation_BuildingMode$handleConvertNode = F2(
 					case 'PotentialResilientHousing':
 						return A2(
 							_elm_lang$core$Basics_ops['++'],
-							'You purchased a solar panel, it costs ',
+							'You upgraded housing to a resilient one, it costs ',
 							A2(
 								_elm_lang$core$Basics_ops['++'],
 								_elm_lang$core$Basics$toString(c),
@@ -23787,7 +23787,7 @@ var _ayoupov$phi$Simulation_BuildingMode$handleConvertNode = F2(
 					default:
 						return A2(
 							_elm_lang$core$Basics_ops['++'],
-							'You enabled a peer, the connection costs ',
+							'You built a housing, it costs ',
 							A2(
 								_elm_lang$core$Basics_ops['++'],
 								_elm_lang$core$Basics$toString(c),
@@ -23805,21 +23805,21 @@ var _ayoupov$phi$Simulation_BuildingMode$handleConvertNode = F2(
 							{
 								ctor: '_Tuple2',
 								_0: A2(_ayoupov$phi$Simulation_Init_Generators$generateWPS, _ayoupov$phi$Action$AddGenerator, coords),
-								_1: {ctor: '_Tuple2', _0: _ayoupov$phi$Simulation_Model$PotentialWPS, _1: 200}
+								_1: {ctor: '_Tuple2', _0: _ayoupov$phi$Simulation_Model$PotentialWPS, _1: 300}
 							});
 					case 'PotentialResilientHousing':
 						return _elm_lang$core$Maybe$Just(
 							{
 								ctor: '_Tuple2',
 								_0: A2(_ayoupov$phi$Simulation_Init_Generators$upgradeHousing, _ayoupov$phi$Action$UpgradeHousing, coords),
-								_1: {ctor: '_Tuple2', _0: _ayoupov$phi$Simulation_Model$PotentialResilientHousing, _1: 150}
+								_1: {ctor: '_Tuple2', _0: _ayoupov$phi$Simulation_Model$PotentialResilientHousing, _1: 200}
 							});
 					default:
 						return _elm_lang$core$Maybe$Just(
 							{
 								ctor: '_Tuple2',
 								_0: A2(_ayoupov$phi$Simulation_Init_Generators$generateHousing, _ayoupov$phi$Action$AddHousing, coords),
-								_1: {ctor: '_Tuple2', _0: _ayoupov$phi$Simulation_Model$PotentialHousing, _1: 50}
+								_1: {ctor: '_Tuple2', _0: _ayoupov$phi$Simulation_Model$PotentialHousing, _1: 200}
 							});
 				}
 			} else {
