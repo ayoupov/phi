@@ -8,6 +8,19 @@ transformTuple ( x, y ) =
     ( x, y )
 
 
+potentialHousingList : Set ( Int, Int )
+potentialHousingList =
+    Set.diff housingList initialHousing
+
+potentialResilientList : Set ( Int, Int )
+potentialResilientList  =
+    housingList
+
+potentialWPSList : Set ( Int, Int )
+potentialWPSList =
+    Set.diff wpsList initialWPS
+
+
 initialHousing : Set ( Int, Int )
 initialHousing =
     Set.fromList
@@ -116,17 +129,6 @@ initialWPS =
           (4677,2034)
         ]
         |> Set.map transformTuple
-
-
-potentialHousingList : Set ( Int, Int )
-potentialHousingList =
-    Set.diff housingList initialHousing
-
-
-potentialWPSList : Set ( Int, Int )
-potentialWPSList =
-    Set.diff wpsList initialWPS
-
 
 housingList : Set ( Int, Int )
 housingList =

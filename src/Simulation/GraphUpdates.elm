@@ -5,7 +5,7 @@ import IntDict
 import Set
 import Simulation.Helpers exposing (distBetweenNodes, isLiveNode)
 import Simulation.Model exposing (NodeLabel(PotentialNode), PhiNetwork, Potential, PotentialNodeType(..), TransmissionLine, tupleToCoords)
-import Simulation.NodeList exposing (potentialHousingList, potentialWPSList)
+import Simulation.NodeList exposing (potentialHousingList, potentialResilientList, potentialWPSList)
 
 
 addNode : NodeLabel -> PhiNetwork -> PhiNetwork
@@ -108,6 +108,12 @@ potentialNodesList =
                 |> Set.toList
                 |> List.map
                     (PotentialNode << Potential PotentialHousing << tupleToCoords)
+
+        resilientList =
+            potentialResilientList
+                |> Set.toList
+                |> List.map
+                    (PotentialNode << Potential PotentialResilientHousing << tupleToCoords)
     in
-    wpsList ++ housingList
+    wpsList ++ housingList ++ resilientList
 --    spList ++ wpsList ++ housingList

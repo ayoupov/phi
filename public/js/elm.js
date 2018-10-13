@@ -19814,6 +19814,7 @@ var _ayoupov$phi$Simulation_NodeList$housingList = A2(
 			}
 		}));
 var _ayoupov$phi$Simulation_NodeList$potentialHousingList = A2(_elm_lang$core$Set$diff, _ayoupov$phi$Simulation_NodeList$housingList, _ayoupov$phi$Simulation_NodeList$initialHousing);
+var _ayoupov$phi$Simulation_NodeList$potentialResilientList = _ayoupov$phi$Simulation_NodeList$housingList;
 var _ayoupov$phi$Simulation_NodeList$wpsList = A2(
 	_elm_lang$core$Set$map,
 	_ayoupov$phi$Simulation_NodeList$transformTuple,
@@ -20010,35 +20011,48 @@ var _ayoupov$phi$Simulation_NodeList$wpsList = A2(
 var _ayoupov$phi$Simulation_NodeList$potentialWPSList = A2(_elm_lang$core$Set$diff, _ayoupov$phi$Simulation_NodeList$wpsList, _ayoupov$phi$Simulation_NodeList$initialWPS);
 
 var _ayoupov$phi$Simulation_GraphUpdates$potentialNodesList = function () {
-	var housingList = A2(
+	var resilientList = A2(
 		_elm_lang$core$List$map,
 		function (_p0) {
 			return _ayoupov$phi$Simulation_Model$PotentialNode(
 				A2(
 					_ayoupov$phi$Simulation_Model$Potential,
-					_ayoupov$phi$Simulation_Model$PotentialHousing,
+					_ayoupov$phi$Simulation_Model$PotentialResilientHousing,
 					_ayoupov$phi$Simulation_Model$tupleToCoords(_p0)));
 		},
-		_elm_lang$core$Set$toList(_ayoupov$phi$Simulation_NodeList$potentialHousingList));
-	var wpsList = A2(
+		_elm_lang$core$Set$toList(_ayoupov$phi$Simulation_NodeList$potentialResilientList));
+	var housingList = A2(
 		_elm_lang$core$List$map,
 		function (_p1) {
 			return _ayoupov$phi$Simulation_Model$PotentialNode(
 				A2(
 					_ayoupov$phi$Simulation_Model$Potential,
-					_ayoupov$phi$Simulation_Model$PotentialWPS,
+					_ayoupov$phi$Simulation_Model$PotentialHousing,
 					_ayoupov$phi$Simulation_Model$tupleToCoords(_p1)));
 		},
+		_elm_lang$core$Set$toList(_ayoupov$phi$Simulation_NodeList$potentialHousingList));
+	var wpsList = A2(
+		_elm_lang$core$List$map,
+		function (_p2) {
+			return _ayoupov$phi$Simulation_Model$PotentialNode(
+				A2(
+					_ayoupov$phi$Simulation_Model$Potential,
+					_ayoupov$phi$Simulation_Model$PotentialWPS,
+					_ayoupov$phi$Simulation_Model$tupleToCoords(_p2)));
+		},
 		_elm_lang$core$Set$toList(_ayoupov$phi$Simulation_NodeList$potentialWPSList));
-	return A2(_elm_lang$core$Basics_ops['++'], wpsList, housingList);
+	return A2(
+		_elm_lang$core$Basics_ops['++'],
+		wpsList,
+		A2(_elm_lang$core$Basics_ops['++'], housingList, resilientList));
 }();
 var _ayoupov$phi$Simulation_GraphUpdates$nodeUpdater = F2(
 	function (n, foundCtx) {
-		var _p2 = foundCtx;
-		if (_p2.ctor === 'Just') {
+		var _p3 = foundCtx;
+		if (_p3.ctor === 'Just') {
 			return _elm_lang$core$Maybe$Just(
 				_elm_lang$core$Native_Utils.update(
-					_p2._0,
+					_p3._0,
 					{node: n}));
 		} else {
 			return _elm_lang$core$Maybe$Nothing;
@@ -20048,16 +20062,16 @@ var _ayoupov$phi$Simulation_GraphUpdates$updateNodes = F2(
 	function (updatedNodeList, network) {
 		updateNodes:
 		while (true) {
-			var _p3 = updatedNodeList;
-			if (_p3.ctor === '[]') {
+			var _p4 = updatedNodeList;
+			if (_p4.ctor === '[]') {
 				return network;
 			} else {
-				var _p4 = _p3._0;
-				var _v2 = _p3._1,
+				var _p5 = _p4._0;
+				var _v2 = _p4._1,
 					_v3 = A3(
 					_elm_community$graph$Graph$update,
-					_p4.id,
-					_ayoupov$phi$Simulation_GraphUpdates$nodeUpdater(_p4),
+					_p5.id,
+					_ayoupov$phi$Simulation_GraphUpdates$nodeUpdater(_p5),
 					network);
 				updatedNodeList = _v2;
 				network = _v3;
@@ -20107,14 +20121,14 @@ var _ayoupov$phi$Simulation_GraphUpdates$addNodeWithEdges = F3(
 			0,
 			A2(
 				_elm_lang$core$Maybe$map,
-				function (_p5) {
+				function (_p6) {
 					return A2(
 						F2(
 							function (x, y) {
 								return x + y;
 							}),
 						1,
-						_elm_lang$core$Tuple$second(_p5));
+						_elm_lang$core$Tuple$second(_p6));
 				},
 				_elm_community$graph$Graph$nodeIdRange(network)));
 		var newNode = A2(_elm_community$graph$Graph$Node, nodeId, nodeLabel);
@@ -20139,13 +20153,13 @@ var _ayoupov$phi$Simulation_GraphUpdates$addNodeWithEdges = F3(
 				closeNodes));
 		var newEdges = A2(
 			_elm_lang$core$List$map,
-			function (_p6) {
+			function (_p7) {
 				return A2(
 					_ayoupov$phi$Simulation_GraphUpdates$createEdge,
 					nodeId,
 					function (_) {
 						return _.id;
-					}(_p6));
+					}(_p7));
 			},
 			closeNodes);
 		return A2(
@@ -20160,14 +20174,14 @@ var _ayoupov$phi$Simulation_GraphUpdates$addNode = F2(
 			0,
 			A2(
 				_elm_lang$core$Maybe$map,
-				function (_p7) {
+				function (_p8) {
 					return A2(
 						F2(
 							function (x, y) {
 								return x + y;
 							}),
 						1,
-						_elm_lang$core$Tuple$second(_p7));
+						_elm_lang$core$Tuple$second(_p8));
 				},
 				_elm_community$graph$Graph$nodeIdRange(network)));
 		var node = A2(_elm_community$graph$Graph$Node, nodeId, nodeLabel);
@@ -23627,7 +23641,7 @@ var _ayoupov$phi$Chat_Chat$handleMultiChoiceMessage = function (action) {
 			return A2(
 				_ayoupov$phi$Chat_Helpers$delayMessage,
 				0,
-				_ayoupov$phi$Action$ChangeBuildMode('installWP'));
+				_ayoupov$phi$Action$ChangeBuildMode('generators'));
 		case 'McaLeaveBuildMode':
 			return A2(
 				_ayoupov$phi$Chat_Helpers$delayMessage,

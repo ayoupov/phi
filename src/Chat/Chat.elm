@@ -66,7 +66,7 @@ handleMultiChoiceMessage action =
             delayMessage 0 <| ChangeBuildMode "upgrade"
 
         McaAddWP ->
-            delayMessage 0 <| ChangeBuildMode "installWP"
+            delayMessage 0 <| ChangeBuildMode "generators"
 
         McaLeaveBuildMode ->
             delayMessage 0 <| ChangeBuildMode "none"
