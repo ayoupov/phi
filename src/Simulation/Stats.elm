@@ -67,9 +67,9 @@ health : PhiNetwork -> Float
 health network =
     let
         reducer : Housing -> ( Float, Float ) -> ( Float, Float )
-        reducer peer tup =
-            ( takeFirstElementWithDefault0 peer.water.actualConsumption + first tup
-            , peer.water.desiredConsumption + second tup
+        reducer housing tup =
+            ( takeFirstElementWithDefault0 housing.water.actualConsumption + first tup
+            , housing.water.desiredConsumption + second tup
             )
 
         tupleToFraction : ( Float, Float ) -> Float

@@ -294,19 +294,19 @@ d3.xml("assets/Barje-map-for-sim-big-01.svg").get(function (error, documentFragm
                 return d.id;
             });
 
-        peerIndicator = nodes.select(".simulation .housing .energyIndicator");
+        housingIndicator = nodes.select(".simulation .housing .energyIndicator");
 
-        peerIndicator.select(".fillIndicator")
+        housingIndicator.select(".fillIndicator")
             .attr("d", function (d) {
                 return (peerEnergyFill()(d));
             });
 
-        peerIndicator.select(".outlineIndicator")
+        housingIndicator.select(".outlineIndicator")
             .attr("d", function (d) {
                 return (peerEnergyOutline()(d));
             });
 
-        peerIndicator.attr("stroke-opacity", "0")
+        housingIndicator.attr("stroke-opacity", "0")
             .attr("fill-opacity", "0")
             .style("opacity", "0")
             .transition(t)
@@ -334,14 +334,14 @@ d3.xml("assets/Barje-map-for-sim-big-01.svg").get(function (error, documentFragm
 
     var clickOnPotential = function (d) {
         app.ports.requestConvertNode.send(d.id);
-        var addendum = ".peer";
-        var currentSet = potentialPeers;
+        var addendum = ".housing";
+        var currentSet = potentialHousing;
         switch (lastBuildMode) {
-            case "peers":
-                potentialPeers = potentialPeers.filter(function (n) {
+            case "housing":
+                potentialHousing = potentialHousing.filter(function (n) {
                     return n.id !== d.id
                 });
-                currentSet = potentialPeers;
+                currentSet = potentialHousing;
                 break;
             case "generators" :
                 potentialGenerators = potentialGenerators.filter(function (n) {
@@ -359,7 +359,7 @@ d3.xml("assets/Barje-map-for-sim-big-01.svg").get(function (error, documentFragm
         drawPotentialNodes(nodes);
     };
 
-    var potentialPeers, potentialGenerators;
+    var potentialHousing, potentialGenerators;
 
     function drawPotentialNodes(nodes) {
 
@@ -378,7 +378,7 @@ d3.xml("assets/Barje-map-for-sim-big-01.svg").get(function (error, documentFragm
             })
             .attr("class", "baseNode");
 
-        var addendum = lastBuildMode == "peers" ? ".peer" : ".generator";
+        var addendum = lastBuildMode == "housing" ? ".housing" : ".generator";
 
         nodes.selectAll(".potential" + addendum)
             .attr("stroke-opacity", "0")
@@ -502,17 +502,17 @@ d3.xml("assets/Barje-map-for-sim-big-01.svg").get(function (error, documentFragm
     var changeBuildModeFunction = function (buildModeType) {
 
         switch (buildModeType) {
-            case "peers" :
+            case "housing" :
                 isInBuildingMode = true;
-                lastBuildMode = "peers";
-                var nodes = svg.select(".nodes").selectAll(".potential.peer")
-                    .data(potentialPeers, function (d) {
+                lastBuildMode = "housing";
+                var nodes = svg.select(".nodes").selectAll(".potential.housing")
+                    .data(potentialHousing, function (d) {
                         return d.id;
                     });
                 killPotentials();
                 drawPotentialNodes(nodes);
                 cancelHoverAnimation(svg.selectAll('.baseNode'));
-                addHoverAnimation(svg.selectAll('.potential.peer .baseNode'));
+                addHoverAnimation(svg.selectAll('.potential.housing .baseNode'));
                 break;
             case "generators" :
                 isInBuildingMode = true;
@@ -601,7 +601,7 @@ d3.xml("assets/Barje-map-for-sim-big-01.svg").get(function (error, documentFragm
 
             //add pulsating to peers
             nodeEnter.filter(function (d) {
-                    return d.label.nodeType == "peer"
+                    return d.label.nodeType == "housing"
                 })
                 .append("circle")
                 .attr('cx', setX)
@@ -611,7 +611,7 @@ d3.xml("assets/Barje-map-for-sim-big-01.svg").get(function (error, documentFragm
                   return "transform-origin: " + setX(d) + "px " + setY(d) + "px;";
                 })
                 .style('animation-delay', -20 * Math.random() + "s")
-                .attr("class", "peer_pulse");
+                .attr("class", "housing_pulse");
 
             //add pulsating to generators
             nodeEnter.filter(function (d) {
@@ -637,17 +637,17 @@ d3.xml("assets/Barje-map-for-sim-big-01.svg").get(function (error, documentFragm
 
             //draw persistent outlines for peers
             nodeEnter.filter(function (d) {
-                    return d.label.nodeType == "peer"
+                    return d.label.nodeType == "housing"
                 })
                 .append("circle")
                 .attr('cx', setX)
                 .attr('cy', setY)
                 .attr('r', peerSize)
-                .attr("class", "peerFullCircle");
+                .attr("class", "housingFullCircle");
 
             //add energy indicator for peers
             var peerEnergyIndicator = nodeEnter.filter(function (d) {
-                    return d.label.nodeType == "peer"
+                    return d.label.nodeType == "housing"
                 }).append("g")
 
             peerEnergyIndicator.append("path").attr("class", "fillIndicator")
@@ -684,7 +684,7 @@ d3.xml("assets/Barje-map-for-sim-big-01.svg").get(function (error, documentFragm
                 .attr("d", addBaseNode(100));
 
 
-            nodes.select('.simulation .peer .energyIndicator')
+            nodes.select('.simulation .housing .energyIndicator')
                 .transition(t)
                 .style("opacity", "0");
 
@@ -754,7 +754,7 @@ d3.xml("assets/Barje-map-for-sim-big-01.svg").get(function (error, documentFragm
             return (!node.label.isPotential);
         });
 
-        potentialPeers = phiNodes.filter(function (node) {
+        potentialHousing = phiNodes.filter(function (node) {
             return (node.label.isPotential && node.label.nodeType != 'generator');
         });
 

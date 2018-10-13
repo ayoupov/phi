@@ -197,8 +197,8 @@ type alias Housing =
     }
 
 
-defaultPeer : Housing
-defaultPeer =
+defaultHousing : Housing
+defaultHousing =
     { water = defaultHousingWater
     , reputation = [ 0 ]
     , pos = { x = 0, y = 0 }

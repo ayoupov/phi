@@ -128,6 +128,6 @@ initNetworkGenerators =
         asCoordsList =
             List.map tupleToCoords << Set.toList
     in
-    (List.map (Generators.generateHousing <| AddPeerWithEdges edgeSearchRadius) <| asCoordsList initialHousing)
+    (List.map (Generators.generateHousing <| AddHousingWithEdges edgeSearchRadius) <| asCoordsList initialHousing)
 --        ++ (List.map (Generators.generateRH <| AddGeneratorWithEdges edgeSearchRadius) <| asCoordsList initialSolarPanelList)
         ++ (List.map (Generators.generateWPS <| AddGeneratorWithEdges edgeSearchRadius) <| asCoordsList initialWPS)

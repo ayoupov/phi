@@ -145,8 +145,8 @@ update msg model =
             { model | network = addNodeWithEdges searchRadius (GeneratorNode generator) model.network }
                 |> update RenderPhiNetwork
 
-        AddPeerWithEdges searchRadius peer ->
-            { model | network = addNodeWithEdges searchRadius (HousingNode peer) model.network }
+        AddHousingWithEdges searchRadius housing ->
+            { model | network = addNodeWithEdges searchRadius (HousingNode housing) model.network }
                 |> update RenderPhiNetwork
 
         AddGenerator node ->
@@ -201,7 +201,7 @@ update msg model =
         AnimateGeneration ->
             ( model, animateGeneration <| encodeGraph model.network )
 
-        AnimatePeerConsumption ->
+        AnimateHousingConsumption ->
             ( model, animateHousingConsumption <| encodeGraph model.network )
 
         AnimateTrade ->
@@ -216,7 +216,7 @@ update msg model =
                     update (SendBotChatItem <| Narrative.dayGenerated model.network) model
                         |> andThen
                             update
-                            AnimatePeerConsumption
+                            AnimateHousingConsumption
 
                 "consumptionAnimated" ->
                     update (SendBotChatItem <| Narrative.dayConsumed model.network) model
@@ -239,17 +239,13 @@ update msg model =
 
         ChangeBuildMode buildModeType ->
             case buildModeType of
-                "peers" ->
-                    ( model, changeBuildMode "peers" )
-                        |> andThen update (SendBotChatItem <| Narrative.enterBuildModePeers)
+                "housing" ->
+                    ( model, changeBuildMode "housing" )
+                        |> andThen update (SendBotChatItem <| Narrative.enterBuildModeHousing)
 
                 "generators" ->
                     ( model, changeBuildMode "generators" )
                         |> andThen update (SendBotChatItem <| Narrative.enterBuildModeGenerators)
-
-                "lines" ->
-                    ( model, changeBuildMode "lines" )
-                        |> andThen update (SendBotChatItem <| Narrative.enterBuildModeLines)
 
                 _ ->
                     ( model, changeBuildMode "none" )

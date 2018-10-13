@@ -160,11 +160,11 @@ body {
   font-size: 0.9em;
 }
 
-.chat_header .peerIcon, .chat_header .spIcon, .chat_header .wtIcon {
+.chat_header .housingIcon, .chat_header .spIcon, .chat_header .wtIcon {
     width: 30px;
 }
 
-.peerIcon, .spIcon, .wtIcon {
+.housingIcon, .spIcon, .wtIcon {
   margin-left: 5px;
   margin-right: 5px;
 }

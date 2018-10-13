@@ -126,12 +126,12 @@ daySummary network =
             ]
 
 
-enterBuildModePeers : BotChatItem
-enterBuildModePeers =
+enterBuildModeHousing : BotChatItem
+enterBuildModeHousing =
     let
         text =
-            "Click $$_PEER_$$ to add new peers."
-                ++ " Next click the button to install cables."
+            "Click $$_PEER_$$ to add new housing."
+                ++ " Click on housing to make it resilient. "
     in
     MultiChoiceItem <|
         MultiChoiceMessage text

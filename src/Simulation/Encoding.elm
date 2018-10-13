@@ -35,7 +35,7 @@ encodeNodeLabel nodeLabel =
                 , ( "tradeBalance", encodeList Json.float label.water.tradeBalance )
                 , ( "reputationRating", encodeList Json.float label.reputation )
                 , ( "pos", encodeCoords label.pos )
-                , ( "nodeType", Json.string "peer" )
+                , ( "nodeType", Json.string "housing" )
                 ]
 
         BatNode label ->
@@ -51,7 +51,7 @@ encodeNodeLabel nodeLabel =
                 nodeTypeVal =
                     case label.nodeType of
                         PotentialHousing ->
-                            Json.string "peer"
+                            Json.string "housing"
 
                         _ ->
                             Json.string "generator"

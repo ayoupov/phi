@@ -60,7 +60,7 @@ handleMultiChoiceMessage action =
             delayMessage 1 CheckWeather
 
         McaBuildHousing ->
-            delayMessage 0 <| ChangeBuildMode "peer"
+            delayMessage 0 <| ChangeBuildMode "housing"
 
         McaUpgradeHousing ->
             delayMessage 0 <| ChangeBuildMode "upgrade"

@@ -25,8 +25,7 @@ renderShape icon size =
                 [ SVG.width (toString size)
                 , SVG.height (toString size)
                 , SVG.viewBox "0 0 31 31"
-                -- todo: change classes
-                , SVG.class "peerIcon"
+                , SVG.class "housingIcon"
                 ]
                 [ circle [ cx "15.5", cy "15.5", r "15" ] [] ]
 

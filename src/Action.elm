@@ -32,11 +32,11 @@ type Msg
     | AddHousing Housing
     | UpgradeHousing Housing
     | AddGeneratorWithEdges SearchRadius SimGenerator
-    | AddPeerWithEdges SearchRadius Housing
+    | AddHousingWithEdges SearchRadius Housing
     | AddEdge TransmissionLine
     | RenderPhiNetwork
     | AnimateGeneration
-    | AnimatePeerConsumption
+    | AnimateHousingConsumption
     | AnimateTrade
     | AnimationFinished AnimationPhase
     | ChangeBuildMode String
