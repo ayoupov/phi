@@ -7852,8 +7852,8 @@ var _elm_lang$html$Html$menu = _elm_lang$html$Html$node('menu');
 var _ayoupov$phi$Chat_Model$mcaName = function (action) {
 	var _p0 = action;
 	switch (_p0.ctor) {
-		case 'McaRunDay':
-			return 'Next Day';
+		case 'McaRunCycle':
+			return 'Next Week';
 		case 'McaWeatherForecast':
 			return 'Weather';
 		case 'McaBuildHousing':
@@ -7861,7 +7861,7 @@ var _ayoupov$phi$Chat_Model$mcaName = function (action) {
 		case 'McaUpgradeHousing':
 			return 'Upgrade Housing';
 		case 'McaAddWP':
-			return 'Water Processing';
+			return 'Water Purificator';
 		case 'McaRunWeek':
 			return 'Next Week';
 		case 'McaLeaveBuildMode':
@@ -7922,7 +7922,7 @@ var _ayoupov$phi$Chat_Model$McaUpgradeHousing = {ctor: 'McaUpgradeHousing'};
 var _ayoupov$phi$Chat_Model$McaBuildHousing = {ctor: 'McaBuildHousing'};
 var _ayoupov$phi$Chat_Model$McaWeatherForecast = {ctor: 'McaWeatherForecast'};
 var _ayoupov$phi$Chat_Model$McaRunWeek = {ctor: 'McaRunWeek'};
-var _ayoupov$phi$Chat_Model$McaRunDay = {ctor: 'McaRunDay'};
+var _ayoupov$phi$Chat_Model$McaRunCycle = {ctor: 'McaRunCycle'};
 var _ayoupov$phi$Chat_Model$defaultMcaList = {
 	ctor: '::',
 	_0: _ayoupov$phi$Chat_Model$McaBuildHousing,
@@ -7934,7 +7934,7 @@ var _ayoupov$phi$Chat_Model$defaultMcaList = {
 			_0: _ayoupov$phi$Chat_Model$McaAddWP,
 			_1: {
 				ctor: '::',
-				_0: _ayoupov$phi$Chat_Model$McaRunDay,
+				_0: _ayoupov$phi$Chat_Model$McaRunCycle,
 				_1: {ctor: '[]'}
 			}
 		}
@@ -17271,7 +17271,7 @@ var _ayoupov$phi$Action$MultiChoiceMsg = function (a) {
 	return {ctor: 'MultiChoiceMsg', _0: a};
 };
 var _ayoupov$phi$Action$DaySummary = {ctor: 'DaySummary'};
-var _ayoupov$phi$Action$IncrementDayCount = {ctor: 'IncrementDayCount'};
+var _ayoupov$phi$Action$IncrementCycleCount = {ctor: 'IncrementCycleCount'};
 var _ayoupov$phi$Action$UpdateSitePopulation = function (a) {
 	return {ctor: 'UpdateSitePopulation', _0: a};
 };
@@ -20793,7 +20793,7 @@ var _ayoupov$phi$View_Helpers$intFmt = function (num) {
 		_elm_lang$core$Basics$toFloat(num));
 };
 
-var _ayoupov$phi$Chat_Narrative$dayTraded = function (network) {
+var _ayoupov$phi$Chat_Narrative$cycleTraded = function (network) {
 	var totalTraded = _ayoupov$phi$View_Helpers$floatFmt(
 		_ayoupov$phi$Simulation_Simulation$networkTradedEnergy(network));
 	var text = A2(
@@ -20815,14 +20815,14 @@ var _ayoupov$phi$Chat_Narrative$dayTraded = function (network) {
 						_0: _ayoupov$phi$Chat_Model$McaAddWP,
 						_1: {
 							ctor: '::',
-							_0: _ayoupov$phi$Chat_Model$McaRunDay,
+							_0: _ayoupov$phi$Chat_Model$McaRunCycle,
 							_1: {ctor: '[]'}
 						}
 					}
 				}
 			}));
 };
-var _ayoupov$phi$Chat_Narrative$dayConsumed = function (network) {
+var _ayoupov$phi$Chat_Narrative$cycleConsumed = function (network) {
 	var totalConsumed = _ayoupov$phi$View_Helpers$floatFmt(
 		_ayoupov$phi$Simulation_Simulation$networkConsumedEnergy(network));
 	var text = A2(
@@ -20831,7 +20831,7 @@ var _ayoupov$phi$Chat_Narrative$dayConsumed = function (network) {
 		A2(_elm_lang$core$Basics_ops['++'], totalConsumed, ' Joules burned.'));
 	return _ayoupov$phi$Chat_Model$BotMessage(text);
 };
-var _ayoupov$phi$Chat_Narrative$dayGenerated = function (network) {
+var _ayoupov$phi$Chat_Narrative$cycleGenerated = function (network) {
 	var totalStored = _ayoupov$phi$View_Helpers$floatFmt(
 		_ayoupov$phi$Simulation_Simulation$networkStoredEnergy(network));
 	var generatedEnergy = _ayoupov$phi$View_Helpers$floatFmt(
@@ -20848,7 +20848,7 @@ var _ayoupov$phi$Chat_Narrative$dayGenerated = function (network) {
 				A2(_elm_lang$core$Basics_ops['++'], totalStored, ' surplus stored in batteries.'))));
 	return _ayoupov$phi$Chat_Model$BotMessage(text);
 };
-var _ayoupov$phi$Chat_Narrative$dayBeginning = function (network) {
+var _ayoupov$phi$Chat_Narrative$cycleBeginning = function (network) {
 	var text = 'Назвался груздем, полезай в кузов. | The mushroom climbed into the body.';
 	return _ayoupov$phi$Chat_Model$BotMessage(text);
 };
@@ -20869,29 +20869,9 @@ var _ayoupov$phi$Chat_Narrative$exitBuildMode = function () {
 						_0: _ayoupov$phi$Chat_Model$McaAddWP,
 						_1: {
 							ctor: '::',
-							_0: _ayoupov$phi$Chat_Model$McaRunDay,
+							_0: _ayoupov$phi$Chat_Model$McaRunCycle,
 							_1: {ctor: '[]'}
 						}
-					}
-				}
-			}));
-}();
-var _ayoupov$phi$Chat_Narrative$enterBuildModeLines = function () {
-	var text = A2(_elm_lang$core$Basics_ops['++'], 'Nodes must be connected to share energy. Click from $$_PEER_$$ to $$_PANEL_$$ or $$_TURBINE_$$ to install distribution cables.', ' Next click the button to go to the next day.');
-	return _ayoupov$phi$Chat_Model$MultiChoiceItem(
-		A2(
-			_ayoupov$phi$Chat_Model$MultiChoiceMessage,
-			text,
-			{
-				ctor: '::',
-				_0: _ayoupov$phi$Chat_Model$McaBuildHousing,
-				_1: {
-					ctor: '::',
-					_0: _ayoupov$phi$Chat_Model$McaAddWP,
-					_1: {
-						ctor: '::',
-						_0: _ayoupov$phi$Chat_Model$McaRunDay,
-						_1: {ctor: '[]'}
 					}
 				}
 			}));
@@ -20913,33 +20893,53 @@ var _ayoupov$phi$Chat_Narrative$enterBuildModeGenerators = function () {
 					_0: _ayoupov$phi$Chat_Model$McaUpgradeHousing,
 					_1: {
 						ctor: '::',
-						_0: _ayoupov$phi$Chat_Model$McaRunDay,
+						_0: _ayoupov$phi$Chat_Model$McaRunCycle,
 						_1: {ctor: '[]'}
 					}
 				}
 			}));
 }();
-var _ayoupov$phi$Chat_Narrative$enterBuildModeHousing = function () {
-	var text = A2(_elm_lang$core$Basics_ops['++'], 'Click $$_PEER_$$ to add new housing.', ' Click on housing to make it resilient. ');
+var _ayoupov$phi$Chat_Narrative$enterBuildModeUpgrade = function () {
+	var text = 'Click $$_PEER_$$ to make it resilient.';
 	return _ayoupov$phi$Chat_Model$MultiChoiceItem(
 		A2(
 			_ayoupov$phi$Chat_Model$MultiChoiceMessage,
 			text,
 			{
 				ctor: '::',
-				_0: _ayoupov$phi$Chat_Model$McaAddWP,
+				_0: _ayoupov$phi$Chat_Model$McaBuildHousing,
 				_1: {
 					ctor: '::',
-					_0: _ayoupov$phi$Chat_Model$McaUpgradeHousing,
+					_0: _ayoupov$phi$Chat_Model$McaAddWP,
 					_1: {
 						ctor: '::',
-						_0: _ayoupov$phi$Chat_Model$McaRunDay,
+						_0: _ayoupov$phi$Chat_Model$McaRunCycle,
 						_1: {ctor: '[]'}
 					}
 				}
 			}));
 }();
-var _ayoupov$phi$Chat_Narrative$daySummary = function (network) {
+var _ayoupov$phi$Chat_Narrative$enterBuildModeHousing = function () {
+	var text = 'Click $$_PEER_$$ to add new housing.';
+	return _ayoupov$phi$Chat_Model$MultiChoiceItem(
+		A2(
+			_ayoupov$phi$Chat_Model$MultiChoiceMessage,
+			text,
+			{
+				ctor: '::',
+				_0: _ayoupov$phi$Chat_Model$McaUpgradeHousing,
+				_1: {
+					ctor: '::',
+					_0: _ayoupov$phi$Chat_Model$McaAddWP,
+					_1: {
+						ctor: '::',
+						_0: _ayoupov$phi$Chat_Model$McaRunCycle,
+						_1: {ctor: '[]'}
+					}
+				}
+			}));
+}();
+var _ayoupov$phi$Chat_Narrative$cycleSummary = function (network) {
 	var totalStored = _ayoupov$phi$View_Helpers$floatFmt(
 		_ayoupov$phi$Simulation_Simulation$networkStoredEnergy(network));
 	var totalConsumed = _ayoupov$phi$View_Helpers$floatFmt(
@@ -20977,7 +20977,7 @@ var _ayoupov$phi$Chat_Narrative$daySummary = function (network) {
 						_0: _ayoupov$phi$Chat_Model$McaAddWP,
 						_1: {
 							ctor: '::',
-							_0: _ayoupov$phi$Chat_Model$McaRunDay,
+							_0: _ayoupov$phi$Chat_Model$McaRunCycle,
 							_1: {ctor: '[]'}
 						}
 					}
@@ -21130,7 +21130,7 @@ var _ayoupov$phi$Chat_Narrative$siteNarrative = {
 						_0: _ayoupov$phi$Action$UpdateSitePopulation(280310),
 						_1: {
 							ctor: '::',
-							_0: _ayoupov$phi$Action$IncrementDayCount,
+							_0: _ayoupov$phi$Action$IncrementCycleCount,
 							_1: {ctor: '[]'}
 						}
 					}
@@ -23515,7 +23515,7 @@ var _ayoupov$phi$Model$Model = function (a) {
 										return function (k) {
 											return function (l) {
 												return function (m) {
-													return {input: a, mcaList: b, inputAvailable: c, messages: d, dayCount: e, network: f, weather: g, weatherList: h, siteInfo: i, budget: j, reputationRatio: k, stats: l, mdl: m};
+													return {input: a, mcaList: b, inputAvailable: c, messages: d, cycleCount: e, network: f, weather: g, weatherList: h, siteInfo: i, budget: j, reputationRatio: k, stats: l, mdl: m};
 												};
 											};
 										};
@@ -23583,7 +23583,7 @@ var _ayoupov$phi$Chat_Chat$handleMultiChoiceMessage = function (action) {
 				_ayoupov$phi$Chat_Helpers$delayMessage,
 				0,
 				_ayoupov$phi$Action$ChangeBuildMode('none'));
-		case 'McaRunDay':
+		case 'McaRunCycle':
 			return _elm_lang$core$Platform_Cmd$batch(
 				{
 					ctor: '::',
@@ -23627,7 +23627,7 @@ var _ayoupov$phi$Chat_Chat$handleMultiChoiceMessage = function (action) {
 									_ayoupov$phi$Action$UpdateSitePopulation(280310)),
 								_1: {
 									ctor: '::',
-									_0: A2(_ayoupov$phi$Chat_Helpers$delayMessage, 0, _ayoupov$phi$Action$IncrementDayCount),
+									_0: A2(_ayoupov$phi$Chat_Helpers$delayMessage, 0, _ayoupov$phi$Action$IncrementCycleCount),
 									_1: {
 										ctor: '::',
 										_0: A2(_ayoupov$phi$Chat_Helpers$delayMessage, 0.5, _ayoupov$phi$Action$InitializeNetwork),
@@ -23678,7 +23678,7 @@ var _ayoupov$phi$Chat_Chat$handleTextInputMessage = function (chatMsg) {
 						A2(_elm_lang$core$List$drop, 1, _p2));
 				}(
 					A2(_elm_lang$core$String$split, ' ', chatMsg))))) : _ayoupov$phi$Action$SendBotChatItem(
-		_ayoupov$phi$Chat_Model$BotMessage('Sorry, I only respond to a few commands! Current available ones are:\n                        /weather (i tell you abt the weather today)\n                        /turn (i move to the next day)\n                        /describe [nodeId] (i tell you some info about a specific node)\n                        ')))))))));
+		_ayoupov$phi$Chat_Model$BotMessage('Sorry, I only respond to a few commands! Current available ones are:\n                        /weather (i tell you abt the weather today)\n                        /turn (i move to the next cycle)\n                        /describe [nodeId] (i tell you some info about a specific node)\n                        ')))))))));
 	return A2(_ayoupov$phi$Chat_Helpers$delayMessage, 2, msgToSend);
 };
 var _ayoupov$phi$Chat_Chat$sendToEliza = _elm_lang$core$Native_Platform.outgoingPort(
@@ -24338,7 +24338,7 @@ var _ayoupov$phi$Simulation_Stats$updateStats = function (model) {
 		updatedModel,
 		{ctor: '[]'});
 };
-var _ayoupov$phi$Simulation_Stats$updateStatsThisDay = function (model) {
+var _ayoupov$phi$Simulation_Stats$updateStatsThisCycle = function (model) {
 	var updatedStats = A2(
 		_ayoupov$phi$ListHelpers$updateFirstElement,
 		model.stats,
@@ -24492,7 +24492,7 @@ var _ayoupov$phi$Update$update = F2(
 					continue update;
 				case 'DaySummary':
 					var _v4 = _ayoupov$phi$Action$SendBotChatItem(
-						_ayoupov$phi$Chat_Narrative$dayBeginning(model.network)),
+						_ayoupov$phi$Chat_Narrative$cycleBeginning(model.network)),
 						_v5 = model;
 					msg = _v4;
 					model = _v5;
@@ -24501,7 +24501,7 @@ var _ayoupov$phi$Update$update = F2(
 					return A3(
 						_ccapndave$elm_update_extra$Update_Extra$andThen,
 						_ayoupov$phi$Update$update,
-						_ayoupov$phi$Action$IncrementDayCount,
+						_ayoupov$phi$Action$IncrementCycleCount,
 						_ayoupov$phi$Update$runDay(model));
 				case 'DescribeNode':
 					return _ayoupov$phi$Update$update(
@@ -24605,7 +24605,7 @@ var _ayoupov$phi$Update$update = F2(
 						_ccapndave$elm_update_extra$Update_Extra$andThen,
 						_ayoupov$phi$Update$update,
 						_ayoupov$phi$Action$RenderPhiNetwork,
-						_ayoupov$phi$Simulation_Stats$updateStatsThisDay(
+						_ayoupov$phi$Simulation_Stats$updateStatsThisCycle(
 							_elm_lang$core$Native_Utils.update(
 								model,
 								{
@@ -24619,7 +24619,7 @@ var _ayoupov$phi$Update$update = F2(
 						_ccapndave$elm_update_extra$Update_Extra$andThen,
 						_ayoupov$phi$Update$update,
 						_ayoupov$phi$Action$RenderPhiNetwork,
-						_ayoupov$phi$Simulation_Stats$updateStatsThisDay(
+						_ayoupov$phi$Simulation_Stats$updateStatsThisCycle(
 							_elm_lang$core$Native_Utils.update(
 								model,
 								{
@@ -24677,12 +24677,12 @@ var _ayoupov$phi$Update$update = F2(
 							model,
 							{siteInfo: newSiteInfo}),
 						{ctor: '[]'});
-				case 'IncrementDayCount':
+				case 'IncrementCycleCount':
 					return A2(
 						_elm_lang$core$Platform_Cmd_ops['!'],
 						_elm_lang$core$Native_Utils.update(
 							model,
-							{dayCount: model.dayCount + 1}),
+							{cycleCount: model.cycleCount + 1}),
 						{ctor: '[]'});
 				case 'RenderPhiNetwork':
 					return {
@@ -24729,7 +24729,7 @@ var _ayoupov$phi$Update$update = F2(
 								A2(
 									_ayoupov$phi$Update$update,
 									_ayoupov$phi$Action$SendBotChatItem(
-										_ayoupov$phi$Chat_Narrative$dayGenerated(model.network)),
+										_ayoupov$phi$Chat_Narrative$cycleGenerated(model.network)),
 									model));
 						case 'consumptionAnimated':
 							return A3(
@@ -24739,7 +24739,7 @@ var _ayoupov$phi$Update$update = F2(
 								A2(
 									_ayoupov$phi$Update$update,
 									_ayoupov$phi$Action$SendBotChatItem(
-										_ayoupov$phi$Chat_Narrative$dayConsumed(model.network)),
+										_ayoupov$phi$Chat_Narrative$cycleConsumed(model.network)),
 									model));
 						case 'tradeAnimated':
 							return A3(
@@ -24749,7 +24749,7 @@ var _ayoupov$phi$Update$update = F2(
 								A2(
 									_ayoupov$phi$Update$update,
 									_ayoupov$phi$Action$SendBotChatItem(
-										_ayoupov$phi$Chat_Narrative$dayTraded(model.network)),
+										_ayoupov$phi$Chat_Narrative$cycleTraded(model.network)),
 									model));
 						case 'enterBuildModeAnimated':
 							var _v19 = _ayoupov$phi$Action$NoOp,
@@ -24782,6 +24782,16 @@ var _ayoupov$phi$Update$update = F2(
 									ctor: '_Tuple2',
 									_0: model,
 									_1: _ayoupov$phi$Simulation_BuildingMode$changeBuildMode('housing')
+								});
+						case 'upgrade':
+							return A3(
+								_ccapndave$elm_update_extra$Update_Extra$andThen,
+								_ayoupov$phi$Update$update,
+								_ayoupov$phi$Action$SendBotChatItem(_ayoupov$phi$Chat_Narrative$enterBuildModeUpgrade),
+								{
+									ctor: '_Tuple2',
+									_0: model,
+									_1: _ayoupov$phi$Simulation_BuildingMode$changeBuildMode('upgrade')
 								});
 						case 'generators':
 							return A3(
@@ -24948,7 +24958,7 @@ var _ayoupov$phi$Update$weatherForecast = function (model) {
 								_0: _ayoupov$phi$Chat_Model$McaWeatherForecast,
 								_1: {
 									ctor: '::',
-									_0: _ayoupov$phi$Chat_Model$McaRunDay,
+									_0: _ayoupov$phi$Chat_Model$McaRunCycle,
 									_1: {ctor: '[]'}
 								}
 							}
@@ -25141,7 +25151,7 @@ var _ayoupov$phi$View_ChatHeader$viewChatHeader = function (model) {
 					return _elm_lang$core$Maybe$Nothing;
 				case '0':
 					return _elm_lang$core$Maybe$Nothing;
-				case 'Day 0':
+				case 'Week 0':
 					return _elm_lang$core$Maybe$Nothing;
 				default:
 					return _elm_lang$core$Maybe$Just(
@@ -25187,8 +25197,8 @@ var _ayoupov$phi$View_ChatHeader$viewChatHeader = function (model) {
 						'today',
 						A2(
 							_elm_lang$core$Basics_ops['++'],
-							'Day ',
-							_elm_lang$core$Basics$toString(model.dayCount))),
+							'Week ',
+							_elm_lang$core$Basics$toString(model.cycleCount))),
 					_1: {ctor: '[]'}
 				}
 			}

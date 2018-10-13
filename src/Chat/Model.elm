@@ -30,7 +30,7 @@ type alias MultiChoiceMessage =
 
 
 type MultiChoiceAction
-    = McaRunDay
+    = McaRunCycle
     | McaRunWeek
     | McaWeatherForecast
     | McaBuildHousing
@@ -47,8 +47,8 @@ type MultiChoiceAction
 mcaName : MultiChoiceAction -> String
 mcaName action =
     case action of
-        McaRunDay ->
-            "Next Day"
+        McaRunCycle ->
+            "Next Week"
 
         McaWeatherForecast ->
             "Weather"
@@ -62,10 +62,7 @@ mcaName action =
             "Upgrade Housing"
 
         McaAddWP ->
-            "Water Processing"
-
---        McaBuyCables ->
---            "Install Cables"
+            "Water Purificator"
 
         McaRunWeek ->
             "Next Week"
@@ -98,7 +95,7 @@ type Widget
 defaultMcaList : List MultiChoiceAction
 defaultMcaList =
 --    [ McaAddPeers, McaAddGenerators, McaBuyCables, McaRunDay ]
-    [ McaBuildHousing, McaUpgradeHousing, McaAddWP, McaRunDay ]
+    [ McaBuildHousing, McaUpgradeHousing, McaAddWP, McaRunCycle ]
 
 
 initChat : ChatItem

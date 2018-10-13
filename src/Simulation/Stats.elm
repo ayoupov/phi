@@ -116,8 +116,8 @@ updateStats model =
     updatedModel ! []
 
 
-updateStatsThisDay : Model -> ( Model, Cmd Msg )
-updateStatsThisDay model =
+updateStatsThisCycle : Model -> ( Model, Cmd Msg )
+updateStatsThisCycle model =
     let
         updatedStats : List Stats
         updatedStats =

@@ -75,7 +75,7 @@ viewChatHeader model =
                 "0" ->
                     Nothing
 
-                "Day 0" ->
+                "Week 0" ->
                     Nothing
 
                 _ ->
@@ -98,7 +98,7 @@ viewChatHeader model =
         statusTitleBar =
             [ statusTitleItem "site_name" "location_city" siteName
             , statusTitleItem "population" "people" sitePop
-            , statusTitleItem "week_no" "today" ("Day " ++ toString model.dayCount)
+            , statusTitleItem "week_no" "today" ("Week " ++ toString model.cycleCount)
             ]
                 |> List.filterMap identity
     in

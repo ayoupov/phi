@@ -61,7 +61,7 @@ siteNarrative =
     , BotMessage "Dobrodošli v Ljubljano"
         |> chatWithDelay 1 [ ShowMap ]
     , BotMessage "Welcome to Ljubljana, a remote off-grid community located in southeast Russian region with great potential for solar power."
-        |> chatWithDelay 1 [ UpdateSiteName "Ljubljana", UpdateSitePopulation 280310, IncrementDayCount ]
+        |> chatWithDelay 1 [ UpdateSiteName "Ljubljana", UpdateSitePopulation 280310, IncrementCycleCount ]
     , (BotMessage <|
         "You've received a Φ10,000 investment to further develop the renewable energy network in Ljubljana."
       )
@@ -96,8 +96,8 @@ processNarrative list =
                 |> Cmd.batch
 
 
-daySummary : PhiNetwork -> BotChatItem
-daySummary network =
+cycleSummary : PhiNetwork -> BotChatItem
+cycleSummary network =
     let
         generatedEnergy =
             floatFmt <| networkGeneratedEnergy network
@@ -122,7 +122,7 @@ daySummary network =
             [ McaBuildHousing
             , McaUpgradeHousing
             , McaAddWP
-            , McaRunDay
+            , McaRunCycle
             ]
 
 
@@ -131,13 +131,25 @@ enterBuildModeHousing =
     let
         text =
             "Click $$_PEER_$$ to add new housing."
-                ++ " Click on housing to make it resilient. "
     in
     MultiChoiceItem <|
         MultiChoiceMessage text
-            [ McaAddWP
-            , McaUpgradeHousing
-            , McaRunDay
+            [ McaUpgradeHousing
+            , McaAddWP
+            , McaRunCycle
+            ]
+
+enterBuildModeUpgrade : BotChatItem
+enterBuildModeUpgrade =
+    let
+        text =
+            "Click $$_PEER_$$ to make it resilient."
+    in
+    MultiChoiceItem <|
+        MultiChoiceMessage text
+            [ McaBuildHousing
+            , McaAddWP
+            , McaRunCycle
             ]
 
 
@@ -153,24 +165,8 @@ enterBuildModeGenerators =
         MultiChoiceMessage text
             [ McaBuildHousing
             , McaUpgradeHousing
-            , McaRunDay
+            , McaRunCycle
             ]
-
-
-enterBuildModeLines : BotChatItem
-enterBuildModeLines =
-    let
-        text =
-            "Nodes must be connected to share energy. Click from $$_PEER_$$ to $$_PANEL_$$ or $$_TURBINE_$$ to install distribution cables."
-                ++ " Next click the button to go to the next day."
-    in
-    MultiChoiceItem <|
-        MultiChoiceMessage text
-            [ McaBuildHousing
-            , McaAddWP
-            , McaRunDay
-            ]
-
 
 exitBuildMode : BotChatItem
 exitBuildMode =
@@ -184,12 +180,12 @@ exitBuildMode =
             [ McaBuildHousing
             , McaUpgradeHousing
             , McaAddWP
-            , McaRunDay
+            , McaRunCycle
             ]
 
 
-dayBeginning : PhiNetwork -> BotChatItem
-dayBeginning network =
+cycleBeginning : PhiNetwork -> BotChatItem
+cycleBeginning network =
     let
         text =
             "Назвался груздем, полезай в кузов. | The mushroom climbed into the body."
@@ -197,8 +193,8 @@ dayBeginning network =
     BotMessage text
 
 
-dayGenerated : PhiNetwork -> BotChatItem
-dayGenerated network =
+cycleGenerated : PhiNetwork -> BotChatItem
+cycleGenerated network =
     let
         generatedEnergy =
             floatFmt <| networkGeneratedEnergy network
@@ -216,8 +212,8 @@ dayGenerated network =
     BotMessage text
 
 
-dayConsumed : PhiNetwork -> BotChatItem
-dayConsumed network =
+cycleConsumed : PhiNetwork -> BotChatItem
+cycleConsumed network =
     let
         totalConsumed =
             floatFmt <| networkConsumedEnergy network
@@ -230,8 +226,8 @@ dayConsumed network =
     BotMessage text
 
 
-dayTraded : PhiNetwork -> BotChatItem
-dayTraded network =
+cycleTraded : PhiNetwork -> BotChatItem
+cycleTraded network =
     let
         totalTraded =
             floatFmt <| networkTradedEnergy network
@@ -247,7 +243,7 @@ dayTraded network =
             [ McaBuildHousing
             , McaUpgradeHousing
             , McaAddWP
-            , McaRunDay
+            , McaRunCycle
             ]
 
 

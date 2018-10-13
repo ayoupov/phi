@@ -44,7 +44,7 @@ handleTextInputMessage chatMsg =
             else
                 """Sorry, I only respond to a few commands! Current available ones are:
                         /weather (i tell you abt the weather today)
-                        /turn (i move to the next day)
+                        /turn (i move to the next cycle)
                         /describe [nodeId] (i tell you some info about a specific node)
                         """
                     |> BotMessage
@@ -71,7 +71,7 @@ handleMultiChoiceMessage action =
         McaLeaveBuildMode ->
             delayMessage 0 <| ChangeBuildMode "none"
 
-        McaRunDay ->
+        McaRunCycle ->
             [ delayMessage 0 (ToggleInputAvailable False)
             , delayMessage 1 CallTurn
             ]
@@ -91,7 +91,7 @@ handleMultiChoiceMessage action =
             , showMap ()
             , delayMessage 0 (UpdateSiteName "Ljubljana")
             , delayMessage 0 (UpdateSitePopulation 280310)
-            , delayMessage 0 IncrementDayCount
+            , delayMessage 0 IncrementCycleCount
             , delayMessage 0.5 InitializeNetwork
             , delayMessage 0.5 InitializeBudget
             ]

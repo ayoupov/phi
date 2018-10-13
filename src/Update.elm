@@ -20,7 +20,7 @@ import Simulation.Init.Generators as Generators exposing (..)
 import Simulation.Model exposing (..)
 import Simulation.Simulation as Simulation exposing (..)
 import Simulation.SimulationInterop exposing (..)
-import Simulation.Stats exposing (updateStats, updateStatsThisDay)
+import Simulation.Stats exposing (updateStats, updateStatsThisCycle)
 import Simulation.WeatherList exposing (restWeather, weatherTupleToWeather)
 import Task
 import Update.Extra exposing (addCmd, andThen, updateModel)
@@ -105,11 +105,11 @@ update msg model =
 
         DaySummary ->
             --            update (SendBotChatItem <| Narrative.daySummary model) model
-            update (SendBotChatItem <| Narrative.dayBeginning model.network) model
+            update (SendBotChatItem <| Narrative.cycleBeginning model.network) model
 
         CallTurn ->
             runDay model
-                |> andThen update IncrementDayCount
+                |> andThen update IncrementCycleCount
 
         --|> andThen update DaySummary
         DescribeNode n ->
@@ -155,12 +155,12 @@ update msg model =
 
         AddHousing node ->
             { model | network = addNode (HousingNode node) model.network }
-                |> updateStatsThisDay
+                |> updateStatsThisCycle
                 |> andThen update RenderPhiNetwork
 
         UpgradeHousing node ->
             { model | network = addNode (HousingNode node) model.network }
-                |> updateStatsThisDay
+                |> updateStatsThisCycle
                 |> andThen update RenderPhiNetwork
 
         AddEdge edge ->
@@ -192,8 +192,8 @@ update msg model =
             in
             { model | siteInfo = newSiteInfo } ! []
 
-        IncrementDayCount ->
-            { model | dayCount = model.dayCount + 1 } ! []
+        IncrementCycleCount ->
+            { model | cycleCount = model.cycleCount + 1 } ! []
 
         RenderPhiNetwork ->
             ( model, renderPhiNetwork <| encodeGraph model.network )
@@ -213,19 +213,19 @@ update msg model =
                     update AnimateGeneration model
 
                 "generatorsAnimated" ->
-                    update (SendBotChatItem <| Narrative.dayGenerated model.network) model
+                    update (SendBotChatItem <| Narrative.cycleGenerated model.network) model
                         |> andThen
                             update
                             AnimateHousingConsumption
 
                 "consumptionAnimated" ->
-                    update (SendBotChatItem <| Narrative.dayConsumed model.network) model
+                    update (SendBotChatItem <| Narrative.cycleConsumed model.network) model
                         |> andThen
                             update
                             AnimateTrade
 
                 "tradeAnimated" ->
-                    update (SendBotChatItem <| Narrative.dayTraded model.network) model
+                    update (SendBotChatItem <| Narrative.cycleTraded model.network) model
                         |> andThen update (ToggleInputAvailable True)
 
                 "enterBuildModeAnimated" ->
@@ -242,6 +242,10 @@ update msg model =
                 "housing" ->
                     ( model, changeBuildMode "housing" )
                         |> andThen update (SendBotChatItem <| Narrative.enterBuildModeHousing)
+
+                "upgrade" ->
+                    ( model, changeBuildMode "upgrade" )
+                        |> andThen update (SendBotChatItem <| Narrative.enterBuildModeUpgrade)
 
                 "generators" ->
                     ( model, changeBuildMode "generators" )
@@ -349,7 +353,7 @@ weatherForecast model =
                 , McaUpgradeHousing
                 , McaAddWP
                 , McaWeatherForecast
-                , McaRunDay
+                , McaRunCycle
                 ]
             )
         |> andThen update (ChangeBuildMode "none")

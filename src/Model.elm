@@ -18,7 +18,7 @@ type alias Model =
     , mcaList : List MultiChoiceAction
     , inputAvailable : Bool
     , messages : List ChatItem
-    , dayCount : Int
+    , cycleCount : Int
     , network : PhiNetwork
     , weather : Weather
     , weatherList : List WeatherTuple
