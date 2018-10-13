@@ -2,5 +2,5 @@
 *.mb
 elm-stuff/*
 .idea
-public/js/elm.js
-firebase-config.js
+#public/js/elm.js
+#firebase-config.js
