@@ -25,7 +25,7 @@ type alias SearchRadius =
 -- VARIABLES
 
 
-type alias KWHour =
+type alias Water =
     Float
 
 
@@ -35,11 +35,6 @@ type alias Latitude =
 
 type alias Longitude =
     Float
-
-
-type alias Negawatts =
-    Float
-
 
 type alias ReputationRating =
     Float
@@ -102,7 +97,6 @@ type alias SimMap =
     , narrative : Narrative
     , initialBudget : Budget
     , initialReputationRatio : ReputationRatio
-    , initialNegawattLimit : MapLimit
     , initialStats : List Stats
     }
 
@@ -132,7 +126,7 @@ type alias EncodedEdge =
 
 type NodeLabel
     = GeneratorNode SimGenerator
-    | PeerNode Peer
+    | HousingNode Housing
     | PotentialNode Potential
     | BatNode Battery
 
@@ -144,9 +138,9 @@ type alias Potential =
 
 
 type PotentialNodeType
-    = PotentialPeer
-    | PotentialSolarPanel
-    | PotentialWindTurbine
+    = PotentialHousing
+    | PotentialResilientHousing
+    | PotentialWPS
 
 
 
@@ -154,13 +148,13 @@ type PotentialNodeType
 
 
 type GeneratorType
-    = WindTurbine
-    | SolarPanel
+    = WaterPurificator
+    | ResilientHousing
 
 
 type alias SimGenerator =
-    { dailyGeneration : List KWHour
-    , maxGeneration : KWHour
+    { dailyGeneration : List Water
+    , maxGeneration : Water
     , pos : Coords
     , generatorType : GeneratorType
     }
@@ -171,43 +165,41 @@ defaultGenerator =
     { dailyGeneration = [ 0 ]
     , maxGeneration = 0.7
     , pos = { x = 0, y = 0 }
-    , generatorType = SolarPanel
+    , generatorType = ResilientHousing
     }
 
 
 type alias Battery =
-    { capacity : KWHour
-    , storage : KWHour
+    { capacity : Water
+    , storage : Water
     , pos : Coords
     }
 
 
-type alias PeerJoules =
-    { storedJoules : List KWHour
-    , actualConsumption : List KWHour
-    , desiredConsumption : KWHour
-    , seedRatingJoules : List KWHour
-    , tradeBalance : List KWHour
+type alias HousingWater =
+    { storedWater : List Water
+    , actualConsumption : List Water
+    , desiredConsumption : Water
+    , seedRatingWater : List Water
+    , tradeBalance : List Water
     }
 
 
-defaultPeerJoules : PeerJoules
-defaultPeerJoules =
-    PeerJoules [ 0 ] [ 0 ] 0.8 [ 0 ] [ 0 ]
+defaultHousingWater : HousingWater
+defaultHousingWater =
+    HousingWater [ 0 ] [ 0 ] 0.8 [ 0 ] [ 0 ]
 
 
-type alias Peer =
-    { joules : PeerJoules
-    , negawatts : List Negawatts
+type alias Housing =
+    { water : HousingWater
     , reputation : List ReputationRating
     , pos : Coords
     }
 
 
-defaultPeer : Peer
+defaultPeer : Housing
 defaultPeer =
-    { joules = defaultPeerJoules
-    , negawatts = [ 0 ]
+    { water = defaultHousingWater
     , reputation = [ 0 ]
     , pos = { x = 0, y = 0 }
     }
@@ -218,7 +210,7 @@ defaultPeer =
 
 
 type alias Weather =
-    { sun : Float
+    { water : Float
     , wind : Float
     }
 

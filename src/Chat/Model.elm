@@ -33,11 +33,11 @@ type MultiChoiceAction
     = McaRunDay
     | McaRunWeek
     | McaWeatherForecast
-    | McaAddPeers
-    | McaAddGenerators
-    | McaBuyCables
+    | McaBuildHousing
+    | McaUpgradeHousing
+    | McaAddWP
     | McaLeaveBuildMode
-    | McaLaunchUstKarsk
+    | McaLaunchLjubljana
     | McaSkipIntro
     | McaIntro1
     | McaIntro2
@@ -55,14 +55,17 @@ mcaName action =
 
         --        McaChangeDesign ->
         --            "Change Design"
-        McaAddPeers ->
-            "Add Peers"
+        McaBuildHousing ->
+            "Build Housing"
 
-        McaAddGenerators ->
-            "Buy Generators"
+        McaUpgradeHousing ->
+            "Upgrade Housing"
 
-        McaBuyCables ->
-            "Install Cables"
+        McaAddWP ->
+            "Water Processing"
+
+--        McaBuyCables ->
+--            "Install Cables"
 
         McaRunWeek ->
             "Next Week"
@@ -70,8 +73,8 @@ mcaName action =
         McaLeaveBuildMode ->
             "Leave Build Mode"
 
-        McaLaunchUstKarsk ->
-            "Load Ust-Karsk"
+        McaLaunchLjubljana ->
+            "Load Ljubljana"
 
         McaSkipIntro ->
             "Skip Intro"
@@ -94,7 +97,8 @@ type Widget
 
 defaultMcaList : List MultiChoiceAction
 defaultMcaList =
-    [ McaAddPeers, McaAddGenerators, McaBuyCables, McaRunDay ]
+--    [ McaAddPeers, McaAddGenerators, McaBuyCables, McaRunDay ]
+    [ McaBuildHousing, McaUpgradeHousing, McaAddWP, McaRunDay ]
 
 
 initChat : ChatItem
@@ -109,4 +113,4 @@ Current available commands are:
 /turn (i move to the next day)
 /describe [nodeId] (i tell you some info about a specific node)
 """
-                [ McaLaunchUstKarsk, McaSkipIntro ]
+                [ McaLaunchLjubljana, McaSkipIntro ]

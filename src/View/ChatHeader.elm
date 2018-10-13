@@ -5,44 +5,47 @@ import Html exposing (Html, b, br, div, p, span, text)
 import Html.Attributes exposing (class)
 import Material.Icon as Icon
 import Model exposing (Model)
-import Simulation.Stats exposing (communityCoverage, health, peerCount, spCount, wtCount)
+import Simulation.Stats exposing (communityCoverage, health, hCount, rhCount, wpCount)
 import Svg exposing (circle, polygon, rect, svg)
 import Svg.Attributes as SVG exposing (cx, cy, r, x, y)
 import View.Helpers exposing (intFmt, phiCoin)
 
-
+-- H: Housing, RH: Resilient housing, WP: Water processing
 type NodeIcon
-    = PeerIcon
-    | WTIcon
-    | SPIcon
+    = HIcon
+    | RHIcon
+    | WPIcon
 
 
 renderShape : NodeIcon -> Int -> Html msg
 renderShape icon size =
     case icon of
-        PeerIcon ->
+        HIcon ->
             svg
                 [ SVG.width (toString size)
                 , SVG.height (toString size)
                 , SVG.viewBox "0 0 31 31"
+                -- todo: change classes
                 , SVG.class "peerIcon"
                 ]
                 [ circle [ cx "15.5", cy "15.5", r "15" ] [] ]
 
-        WTIcon ->
+        RHIcon ->
             svg
                 [ SVG.width (toString size)
                 , SVG.height (toString size)
                 , SVG.viewBox "0 0 31 31"
+                -- todo: change classes
                 , SVG.class "wtIcon"
                 ]
                 [ polygon [ SVG.points "15,4 31,31 0,31" ] [] ]
 
-        SPIcon ->
+        WPIcon ->
             svg
                 [ SVG.width (toString size)
                 , SVG.height (toString size)
                 , SVG.viewBox "0 0 31 31"
+                -- todo: change classes
                 , SVG.class "spIcon"
                 ]
                 [ rect [ x "0", y "0", SVG.width "31", SVG.height "31" ] [] ]
@@ -112,9 +115,9 @@ viewChatHeader model =
                     []
                 , div
                     [ class "node_counts" ]
-                    [ div [ class "node_count_row" ] [ renderShape PeerIcon 10, text "Peers", renderNodeCount (peerCount model.network) ]
-                    , div [ class "node_count_row" ] [ renderShape SPIcon 10, text "Solar Panels", renderNodeCount (spCount model.network) ]
-                    , div [ class "node_count_row" ] [ renderShape WTIcon 12, text "Wind Turbines", renderNodeCount (wtCount model.network) ]
+                    [ div [ class "node_count_row" ] [ renderShape HIcon 10, text "Housing", renderNodeCount (hCount model.network) ]
+                    , div [ class "node_count_row" ] [ renderShape RHIcon 12, text "Resilient housing", renderNodeCount (rhCount model.network) ]
+                    , div [ class "node_count_row" ] [ renderShape WPIcon 10, text "Water processing", renderNodeCount (wpCount model.network) ]
                     ]
                 , div [ class "hline" ] []
                 , div [ class "budget_status" ]

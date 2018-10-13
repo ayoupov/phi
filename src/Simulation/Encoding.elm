@@ -26,14 +26,13 @@ encodeNodeLabel nodeLabel =
                 , ( "nodeType", Json.string "generator" )
                 ]
 
-        PeerNode label ->
+        HousingNode label ->
             Json.object
-                [ ( "actualConsumption", encodeList Json.float label.joules.actualConsumption )
-                , ( "storedJoules", encodeList Json.float label.joules.storedJoules )
-                , ( "desiredConsumption", Json.float label.joules.desiredConsumption )
-                , ( "negawatts", encodeList Json.float label.negawatts )
-                , ( "seedRating", encodeList Json.float label.joules.seedRatingJoules )
-                , ( "tradeBalance", encodeList Json.float label.joules.tradeBalance )
+                [ ( "actualConsumption", encodeList Json.float label.water.actualConsumption )
+                , ( "storedWater", encodeList Json.float label.water.storedWater )
+                , ( "desiredConsumption", Json.float label.water.desiredConsumption )
+                , ( "seedRating", encodeList Json.float label.water.seedRatingWater )
+                , ( "tradeBalance", encodeList Json.float label.water.tradeBalance )
                 , ( "reputationRating", encodeList Json.float label.reputation )
                 , ( "pos", encodeCoords label.pos )
                 , ( "nodeType", Json.string "peer" )
@@ -51,7 +50,7 @@ encodeNodeLabel nodeLabel =
             let
                 nodeTypeVal =
                     case label.nodeType of
-                        PotentialPeer ->
+                        PotentialHousing ->
                             Json.string "peer"
 
                         _ ->
@@ -59,11 +58,8 @@ encodeNodeLabel nodeLabel =
 
                 generatorTypeVal =
                     case label.nodeType of
-                        PotentialSolarPanel ->
-                            Json.string "solarPanel"
-
-                        PotentialWindTurbine ->
-                            Json.string "windTurbine"
+                        PotentialWPS ->
+                            Json.string "wps"
 
                         _ ->
                             Json.null
@@ -79,10 +75,10 @@ encodeNodeLabel nodeLabel =
 encodeGeneratorType : GeneratorType -> Json.Value
 encodeGeneratorType generatorType =
     case generatorType of
-        WindTurbine ->
+        WaterPurificator ->
             Json.string "windTurbine"
 
-        SolarPanel ->
+        ResilientHousing ->
             Json.string "solarPanel"
 
 

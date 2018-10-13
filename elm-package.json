@@ -1,7 +1,7 @@
 {
-    "version": "0.2.0",
+    "version": "0.2.1",
     "summary": "Phi.zone",
-    "repository": "http://github.com/strelka-2017/phi.git",
+    "repository": "http://github.com/ayoupov/phi.git",
     "license": "--",
     "source-directories": [
         "src"

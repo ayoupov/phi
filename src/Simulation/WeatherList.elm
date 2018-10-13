@@ -379,5 +379,5 @@ restWeather list =
 
 
 weatherTupleToWeather : ( Float, Float ) -> Weather
-weatherTupleToWeather ( sun, wind ) =
-    { sun = sun, wind = wind }
+weatherTupleToWeather ( water, wind ) =
+    { water = water, wind = wind}

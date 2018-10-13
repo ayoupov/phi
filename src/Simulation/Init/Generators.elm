@@ -29,28 +29,28 @@ generatePVPanel genMsgConstructor coords =
         -- maxGeneration
         (Random.constant coords)
         -- xy coordinates
-        (Random.constant SolarPanel)
+        (Random.constant ResilientHousing)
         -- generator type
         |> Random.generate genMsgConstructor
 
 
-generateWindTurbine : (SimGenerator -> Msg) -> Coords -> Cmd Msg
-generateWindTurbine genMsgConstructor coords =
+generateWPS : (SimGenerator -> Msg) -> Coords -> Cmd Msg
+generateWPS genMsgConstructor coords =
     Random.map4 SimGenerator
         (Random.constant [])
         -- dailyGeneration
         (Random.float 25 50)
         -- maxGeneration
         (Random.constant coords)
-        (Random.constant WindTurbine)
+        (Random.constant WaterPurificator)
         |> Random.generate genMsgConstructor
 
 
-generatePeer : (Peer -> Msg) -> Coords -> Cmd Msg
-generatePeer peerMsgConstructor coords =
-    Random.map4 Peer
+generateHousing : (Housing -> Msg) -> Coords -> Cmd Msg
+generateHousing peerMsgConstructor coords =
+    Random.map3 Housing
         --        generatePeerJoules
-        (Random.map5 PeerJoules
+        (Random.map5 HousingWater
             (Random.constant [ 0 ])
             -- actual consumption
             (Random.constant [ 0 ])
@@ -61,8 +61,26 @@ generatePeer peerMsgConstructor coords =
             -- initial trade balance
             (Random.constant [ 0 ])
         )
-        -- negawatts
-        (Random.constant [ 0 ])
+        -- initial reputation
+        (Random.constant [ 1 ])
+        (Random.constant coords)
+        |> Random.generate peerMsgConstructor
+
+upgradeHousing : (Housing -> Msg) -> Coords -> Cmd Msg
+upgradeHousing peerMsgConstructor coords =
+    Random.map3 Housing
+        --        generatePeerJoules
+        (Random.map5 HousingWater
+            (Random.constant [ 0 ])
+            -- actual consumption
+            (Random.constant [ 0 ])
+            -- desired consumption
+            (Random.float 5 10)
+            -- seedRating in joules?
+            (Random.constant [ 0 ])
+            -- initial trade balance
+            (Random.constant [ 0 ])
+        )
         -- initial reputation
         (Random.constant [ 1 ])
         (Random.constant coords)

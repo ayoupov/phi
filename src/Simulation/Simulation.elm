@@ -8,7 +8,7 @@ import Json.Encode as Json
 import List exposing (repeat)
 import ListHelpers exposing (takeFirstElementWithDefault0, takeFirstElementWithDefault1, takeTailDefaultEmpty)
 import Simulation.GraphUpdates exposing (updateNodes)
-import Simulation.Helpers exposing (toPeer)
+import Simulation.Helpers exposing (toHousing)
 import Simulation.Model exposing (..)
 import Svg exposing (..)
 import Svg.Attributes as SVG
@@ -18,14 +18,11 @@ import Update.Extra exposing (andThen)
 -- UPDATE
 
 
-joulesToGenerators : Weather -> PhiNetwork -> PhiNetwork
-joulesToGenerators weather network =
+waterToGenerators : Weather -> PhiNetwork -> PhiNetwork
+waterToGenerators weather network =
     let
-        sun =
-            weather.sun
-
-        wind =
-            weather.wind
+        water =
+            weather.water
 
         newDailyGeneration node weatherFactor =
             (node.maxGeneration
@@ -37,11 +34,11 @@ joulesToGenerators weather network =
             case node of
                 GeneratorNode node ->
                     case node.generatorType of
-                        SolarPanel ->
-                            GeneratorNode { node | dailyGeneration = newDailyGeneration node sun }
+                        ResilientHousing ->
+                            GeneratorNode { node | dailyGeneration = newDailyGeneration node water }
 
-                        WindTurbine ->
-                            GeneratorNode { node | dailyGeneration = newDailyGeneration node wind }
+                        WaterPurificator ->
+                            GeneratorNode { node | dailyGeneration = newDailyGeneration node water }
 
                 _ ->
                     node
@@ -49,13 +46,13 @@ joulesToGenerators weather network =
     Graph.mapNodes updateNode network
 
 
-networkStoredEnergy : PhiNetwork -> KWHour
+networkStoredEnergy : PhiNetwork -> Water
 networkStoredEnergy network =
     let
         nodeStoredEnergy { label, id } =
             case label of
-                PeerNode node ->
-                    List.head node.joules.storedJoules
+                HousingNode node ->
+                    List.head node.water.storedWater
 
                 _ ->
                     Nothing
@@ -65,13 +62,13 @@ networkStoredEnergy network =
         |> List.sum
 
 
-networkConsumedEnergy : PhiNetwork -> KWHour
+networkConsumedEnergy : PhiNetwork -> Water
 networkConsumedEnergy network =
     let
         nodeConsumedEnergy { label, id } =
             case label of
-                PeerNode node ->
-                    List.head node.joules.actualConsumption
+                HousingNode node ->
+                    List.head node.water.actualConsumption
 
                 _ ->
                     Nothing
@@ -81,15 +78,15 @@ networkConsumedEnergy network =
         |> List.sum
 
 
-networkTradedEnergy : PhiNetwork -> KWHour
+networkTradedEnergy : PhiNetwork -> Water
 networkTradedEnergy network =
     let
         nodeTradedEnergy { label, id } =
             case label of
-                PeerNode node ->
+                HousingNode node ->
                     let
                         balance =
-                            List.head node.joules.tradeBalance
+                            List.head node.water.tradeBalance
                     in
                     if Maybe.withDefault 0 balance > 0 then
                         balance
@@ -104,7 +101,7 @@ networkTradedEnergy network =
         |> List.sum
 
 
-networkGeneratedEnergy : PhiNetwork -> KWHour
+networkGeneratedEnergy : PhiNetwork -> Water
 networkGeneratedEnergy network =
     let
         nodeGeneratedEnergy { label, id } =
@@ -125,87 +122,80 @@ networkGeneratedEnergy network =
 -- update helpers
 
 
-setActualConsumption : List KWHour -> PeerJoules -> PeerJoules
-setActualConsumption ac joules =
-    { joules | actualConsumption = ac }
+setActualConsumption : List Water -> HousingWater -> HousingWater
+setActualConsumption ac water =
+    { water | actualConsumption = ac }
 
 
-asActualConsumptionIn : PeerJoules -> List KWHour -> PeerJoules
+asActualConsumptionIn : HousingWater -> List Water -> HousingWater
 asActualConsumptionIn =
     flip setActualConsumption
 
 
-setStoredJoules : List KWHour -> PeerJoules -> PeerJoules
-setStoredJoules sjl joules =
-    { joules | storedJoules = sjl }
+setStoredWater : List Water -> HousingWater -> HousingWater
+setStoredWater sjl water =
+    { water | storedWater = sjl }
 
 
-asStoredJoulesIn : PeerJoules -> List KWHour -> PeerJoules
-asStoredJoulesIn =
-    flip setStoredJoules
+asStoredWaterIn : HousingWater -> List Water -> HousingWater
+asStoredWaterIn =
+    flip setStoredWater
 
 
-setTradeBalance : List KWHour -> PeerJoules -> PeerJoules
-setTradeBalance tb joules =
-    { joules | tradeBalance = tb }
+setTradeBalance : List Water -> HousingWater -> HousingWater
+setTradeBalance tb water =
+    { water | tradeBalance = tb }
 
 
-setJoules : PeerJoules -> Peer -> Peer
-setJoules newJoules peer =
-    { peer | joules = newJoules }
+setWater : HousingWater -> Housing -> Housing
+setWater newWater housing =
+    { housing | water = newWater }
 
 
-asJoulesIn : Peer -> PeerJoules -> Peer
-asJoulesIn =
-    flip setJoules
+asWaterIn : Housing -> HousingWater -> Housing
+asWaterIn =
+    flip setWater
 
 
-setNegawatts : List KWHour -> Peer -> Peer
-setNegawatts newNW peer =
-    { peer | negawatts = newNW }
-
-
-setNegawattsStoredJoulesAndBalance : ( List KWHour, List KWHour, List KWHour ) -> Peer -> Peer
-setNegawattsStoredJoulesAndBalance ( newNW, newSJ, newTB ) peer =
-    peer.joules
-        |> setStoredJoules newSJ
+setStoredWaterAndBalance : ( List Water, List Water ) -> Housing -> Housing
+setStoredWaterAndBalance ( newSW, newTB ) housing =
+    housing.water
+        |> setStoredWater newSW
         |> setTradeBalance newTB
-        |> asJoulesIn peer
-        |> setNegawatts newNW
+        |> asWaterIn housing
 
-
-setNegawattsActualConsumptionAndBalance : ( List KWHour, List KWHour, List KWHour ) -> Peer -> Peer
-setNegawattsActualConsumptionAndBalance ( newNW, newAC, newTB ) peer =
-    peer.joules
+setWaterActualConsumptionAndBalance : ( List Water, List Water ) -> Housing -> Housing
+setWaterActualConsumptionAndBalance ( newAC, newTB ) housing =
+    housing.water
         |> setActualConsumption newAC
         |> setTradeBalance newTB
-        |> asJoulesIn peer
-        |> setNegawatts newNW
+        |> asWaterIn housing
 
 
 
 -- phases
 
 
-distributeGeneratedJoules : MapLimit -> ReputationRatio -> PhiNetwork -> PhiNetwork
-distributeGeneratedJoules limit ratio network =
+distributeGeneratedWater : MapLimit -> ReputationRatio -> PhiNetwork -> PhiNetwork
+distributeGeneratedWater limit ratio network =
     let
         totalGeneratedEnergy =
             networkGeneratedEnergy network
 
-        weightedNegawatts peer negawattsFactor =
-            negawattsFactor * takeFirstElementWithDefault0 peer.negawatts
+        weightedNegawatts housing negawattsFactor =
+            negawattsFactor * takeFirstElementWithDefault0 housing.negawatts
 
-        weightedSeed peer seedFactor =
+        weightedSeed housing seedFactor =
             seedFactor * 0
 
-        reputationRating peer =
-            1 + weightedNegawatts peer ratio.a + weightedSeed peer ratio.b
+        reputationRating housing =
+            1
+            --+ weightedNegawatts housing ratio.a + weightedSeed housing ratio.b
 
         weightConstant =
             Graph.nodes network
                 --                |> Debug.log "nodes"
-                |> List.filterMap (toPeer >> Maybe.map (\x -> x.joules.desiredConsumption * reputationRating x))
+                |> List.filterMap (toHousing >> Maybe.map (\x -> x.water.desiredConsumption * reputationRating x))
                 --                |> Debug.log "map"
                 |> List.sum
                 --                |> Debug.log "sum"
@@ -214,50 +204,46 @@ distributeGeneratedJoules limit ratio network =
         --                |> Debug.log "wc"
         networkDesiredEnergy =
             Graph.nodes network
-                |> List.filterMap (toPeer >> Maybe.map (.joules >> .desiredConsumption))
+                |> List.filterMap (toHousing >> Maybe.map (.water >> .desiredConsumption))
                 |> List.sum
 
-        allocatedJoules : Peer -> KWHour
-        allocatedJoules peer =
+        allocatedWater : Housing -> Water
+        allocatedWater housing =
             weightConstant
-                * peer.joules.desiredConsumption
-                * reputationRating peer
+                * housing.water.desiredConsumption
+                * reputationRating housing
                 * totalGeneratedEnergy
 
         --                |> Debug.log "aj"
-        updatePeer : Peer -> Peer
-        updatePeer peer =
+        updateHousing : Housing -> Housing
+        updateHousing housing =
             let
-                myAllocatedJoules =
-                    allocatedJoules peer
+                myAllocatedWater =
+                    allocatedWater housing
 
-                joulesForStorage =
-                    myAllocatedJoules
-                        - peer.joules.desiredConsumption
+                waterForStorage =
+                    myAllocatedWater
+                        - housing.water.desiredConsumption
                         |> Basics.max 0
 
-                newStoredJoules =
-                    joulesForStorage + takeFirstElementWithDefault0 peer.joules.storedJoules
+                newStoredWater =
+                    waterForStorage + takeFirstElementWithDefault0 housing.water.storedWater
 
                 newConsumption =
-                    myAllocatedJoules - joulesForStorage
+                    myAllocatedWater - waterForStorage
 
-                negawattAllocation =
-                    (limit - newConsumption)
-                        |> Basics.max 0
             in
-            peer.joules
-                |> setActualConsumption (newConsumption :: peer.joules.actualConsumption)
-                |> setStoredJoules (newStoredJoules :: peer.joules.storedJoules)
-                |> asJoulesIn peer
-                |> setNegawatts (negawattAllocation :: peer.negawatts)
+            housing.water
+                |> setActualConsumption (newConsumption :: housing.water.actualConsumption)
+                |> setStoredWater (newStoredWater :: housing.water.storedWater)
+                |> asWaterIn housing
 
         --                |> Debug.log "after allocation "
         updateNode : NodeLabel -> NodeLabel
         updateNode node =
             case node of
-                PeerNode peer ->
-                    PeerNode <| updatePeer peer
+                HousingNode housing ->
+                    HousingNode <| updateHousing housing
 
                 _ ->
                     node
@@ -266,34 +252,34 @@ distributeGeneratedJoules limit ratio network =
         |> Graph.mapNodes updateNode
 
 
-maxDesiredTrade : Peer -> Float
-maxDesiredTrade peerInNeed =
-    peerInNeed.joules.desiredConsumption
-        - takeFirstElementWithDefault0 peerInNeed.joules.actualConsumption
+maxDesiredTrade : Housing -> Float
+maxDesiredTrade housingInNeed =
+    housingInNeed.water.desiredConsumption
+        - takeFirstElementWithDefault0 housingInNeed.water.actualConsumption
 
 
 consumeFromStorage : NodeLabel -> NodeLabel
 consumeFromStorage node =
     case node of
-        PeerNode peer ->
+        HousingNode housing ->
             let
                 actualConsumption =
-                    takeFirstElementWithDefault0 peer.joules.actualConsumption
+                    takeFirstElementWithDefault0 housing.water.actualConsumption
 
                 remainingDesiredConsumption =
-                    Basics.max 0 <| peer.joules.desiredConsumption - actualConsumption
+                    Basics.max 0 <| housing.water.desiredConsumption - actualConsumption
 
-                storedJoules =
-                    takeFirstElementWithDefault0 peer.joules.storedJoules
+                storedWater =
+                    takeFirstElementWithDefault0 housing.water.storedWater
 
                 toConsume =
-                    Basics.min remainingDesiredConsumption storedJoules
+                    Basics.min remainingDesiredConsumption storedWater
             in
             (actualConsumption + toConsume)
-                :: (Maybe.withDefault [] <| List.tail peer.joules.actualConsumption)
-                |> asActualConsumptionIn peer.joules
-                |> asJoulesIn peer
-                |> PeerNode
+                :: (Maybe.withDefault [] <| List.tail housing.water.actualConsumption)
+                |> asActualConsumptionIn housing.water
+                |> asWaterIn housing
+                |> HousingNode
 
         _ ->
             node
@@ -304,32 +290,28 @@ tradingPhase network =
     let
         getInitialPool =
             Graph.nodes network
-                |> List.filterMap (toPeer >> Maybe.map (.joules >> .storedJoules >> takeFirstElementWithDefault0))
+                |> List.filterMap (toHousing >> Maybe.map (.water >> .storedWater >> takeFirstElementWithDefault0))
                 |> List.sum
 
         --        currentPool = initialPool
-        newDemandChanges : Float -> Peer -> ( List KWHour, List KWHour, List KWHour, Float )
-        newDemandChanges pool peer =
+        newDemandChanges : Float -> Housing -> ( List Water, List Water, Float )
+        newDemandChanges pool housing =
             let
-                currentNW =
-                    takeFirstElementWithDefault0 peer.negawatts
 
                 currentAC =
-                    takeFirstElementWithDefault0 peer.joules.actualConsumption
+                    takeFirstElementWithDefault0 housing.water.actualConsumption
 
                 currentDesired =
-                    maxDesiredTrade peer
+                    maxDesiredTrade housing
 
-                -- todo: currentNW is used in actualTradeConsumption!
                 actualTradeConsumption =
-                    Basics.min pool (Basics.min currentNW currentDesired)
+                    Basics.min pool currentDesired
 
                 newPool =
                     pool - actualTradeConsumption
             in
-            ( currentNW - actualTradeConsumption :: takeTailDefaultEmpty peer.negawatts
-            , currentAC + actualTradeConsumption :: takeTailDefaultEmpty peer.joules.actualConsumption
-            , -actualTradeConsumption :: takeTailDefaultEmpty peer.joules.tradeBalance
+            ( currentAC + actualTradeConsumption :: takeTailDefaultEmpty housing.water.actualConsumption
+            , -actualTradeConsumption :: takeTailDefaultEmpty housing.water.tradeBalance
             , newPool
             )
 
@@ -342,7 +324,7 @@ tradingPhase network =
                 x :: xs ->
                     -- take tail and recurse
                     case x.label of
-                        PeerNode p ->
+                        HousingNode p ->
                             let
                                 ( newPool, updatedNode ) =
                                     updateNodeDemand pool p
@@ -350,46 +332,43 @@ tradingPhase network =
                                 ( restPool, tail ) =
                                     updateNodeListDemand newPool xs
                             in
-                            ( restPool, { x | label = PeerNode updatedNode } :: tail )
+                            ( restPool, { x | label = HousingNode updatedNode } :: tail )
 
                         _ ->
                             updateNodeListDemand pool xs
 
-        updateNodeDemand : Float -> Peer -> ( Float, Peer )
-        updateNodeDemand pool peer =
+        updateNodeDemand : Float -> Housing -> ( Float, Housing )
+        updateNodeDemand pool housing =
             let
-                ( newNW, newAC, newTB, newPool ) =
-                    newDemandChanges pool peer
+                ( newAC, newTB, newPool ) =
+                    newDemandChanges pool housing
 
-                updatedPeer =
-                    setNegawattsActualConsumptionAndBalance ( newNW, newAC, newTB ) peer
+                updatedHousing =
+                    setWaterActualConsumptionAndBalance ( newAC, newTB ) housing
             in
-            ( newPool, updatedPeer )
+            ( newPool, updatedHousing )
 
-        newSupplyChanges : Float -> Peer -> ( List KWHour, List KWHour, List KWHour )
-        newSupplyChanges tradeRatio peer =
+        newSupplyChanges : Float -> Housing -> ( List Water, List Water )
+        newSupplyChanges tradeRatio housing =
             let
-                currentNW =
-                    takeFirstElementWithDefault0 peer.negawatts
 
                 currentSJ =
-                    takeFirstElementWithDefault0 peer.joules.storedJoules
+                    takeFirstElementWithDefault0 housing.water.storedWater
             in
-            ( currentNW + currentNW * tradeRatio :: takeTailDefaultEmpty peer.negawatts
-            , currentSJ - currentSJ * tradeRatio :: takeTailDefaultEmpty peer.joules.storedJoules
-            , currentSJ * tradeRatio :: takeTailDefaultEmpty peer.joules.tradeBalance
+            ( currentSJ - currentSJ * tradeRatio :: takeTailDefaultEmpty housing.water.storedWater
+            , currentSJ * tradeRatio :: takeTailDefaultEmpty housing.water.tradeBalance
             )
 
-        updateNodeSupplyReward : Float -> Peer -> Peer
-        updateNodeSupplyReward tradeRatio peer =
+        updateNodeSupplyReward : Float -> Housing -> Housing
+        updateNodeSupplyReward tradeRatio housing =
             let
-                ( newNW, newSJ, newTB ) =
-                    newSupplyChanges tradeRatio peer
+                ( newSJ, newTB ) =
+                    newSupplyChanges tradeRatio housing
 
-                updatedPeer =
-                    setNegawattsStoredJoulesAndBalance ( newNW, newSJ, newTB ) peer
+                updatedHousing =
+                    setStoredWaterAndBalance ( newSJ, newTB ) housing
             in
-            updatedPeer
+            updatedHousing
 
         updateNodeListSupply : Float -> List (Node NodeLabel) -> List (Node NodeLabel)
         updateNodeListSupply tradeRatio list =
@@ -400,7 +379,7 @@ tradingPhase network =
                 x :: xs ->
                     -- take tail and recurse
                     case x.label of
-                        PeerNode p ->
+                        HousingNode p ->
                             let
                                 updatedNode =
                                     updateNodeSupplyReward tradeRatio p
@@ -408,7 +387,7 @@ tradingPhase network =
                                 tail =
                                     updateNodeListSupply tradeRatio xs
                             in
-                            { x | label = PeerNode updatedNode } :: tail
+                            { x | label = HousingNode updatedNode } :: tail
 
                         _ ->
                             updateNodeListSupply tradeRatio xs
@@ -416,9 +395,9 @@ tradingPhase network =
         demandNodesFilter : Node NodeLabel -> Bool
         demandNodesFilter { label, id } =
             case label of
-                PeerNode peer ->
-                    takeFirstElementWithDefault0 peer.joules.actualConsumption
-                        - peer.joules.desiredConsumption
+                HousingNode housing ->
+                    takeFirstElementWithDefault0 housing.water.actualConsumption
+                        - housing.water.desiredConsumption
                         < 0
 
                 _ ->
@@ -427,8 +406,8 @@ tradingPhase network =
         supplyNodesFilter : Node NodeLabel -> Bool
         supplyNodesFilter { label, id } =
             case label of
-                PeerNode peer ->
-                    takeFirstElementWithDefault0 peer.joules.storedJoules
+                HousingNode housing ->
+                    takeFirstElementWithDefault0 housing.water.storedWater
                         > 0
 
                 _ ->
@@ -475,10 +454,10 @@ tradingPhase network =
 updateBudget : PhiNetwork -> Budget -> Budget
 updateBudget network budget =
     let
-        joulesToPhiQuotient =
+        waterToPhiQuotient =
             150
     in
-    (networkTradedEnergy network * joulesToPhiQuotient + takeFirstElementWithDefault0 budget) :: budget
+    (networkTradedEnergy network * waterToPhiQuotient + takeFirstElementWithDefault0 budget) :: budget
 
 
 
@@ -491,7 +470,7 @@ port renderPhiNetwork : ( List (Node Json.Value), List EncodedEdge ) -> Cmd msg
 port animateGeneration : ( List (Node Json.Value), List EncodedEdge ) -> Cmd msg
 
 
-port animatePeerConsumption : ( List (Node Json.Value), List EncodedEdge ) -> Cmd msg
+port animateHousingConsumption : ( List (Node Json.Value), List EncodedEdge ) -> Cmd msg
 
 
 port animateTrade : ( List (Node Json.Value), List EncodedEdge ) -> Cmd msg

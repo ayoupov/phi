@@ -2,7 +2,7 @@ module Action exposing (Msg(..), NarrativeElement)
 
 import Chat.Model exposing (BotChatItem, MultiChoiceAction, UserChatMessage)
 import Material
-import Simulation.Model exposing (GeneratorType, Peer, SearchRadius, SimGenerator, TransmissionLine, Weather)
+import Simulation.Model exposing (GeneratorType, Housing, SearchRadius, SimGenerator, TransmissionLine, Weather)
 import Simulation.SimulationInterop exposing (AnimationPhase)
 
 
@@ -29,9 +29,10 @@ type Msg
     | RequestConvertNode Int
     | RequestNewLine Int Int
     | AddGenerator SimGenerator
-    | AddPeer Peer
+    | AddHousing Housing
+    | UpgradeHousing Housing
     | AddGeneratorWithEdges SearchRadius SimGenerator
-    | AddPeerWithEdges SearchRadius Peer
+    | AddPeerWithEdges SearchRadius Housing
     | AddEdge TransmissionLine
     | RenderPhiNetwork
     | AnimateGeneration

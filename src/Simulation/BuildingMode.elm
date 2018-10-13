@@ -85,14 +85,17 @@ handleConvertNode nodeId model =
             case nodeLabel of
                 PotentialNode potential ->
                     case potential.nodeType of
-                        PotentialWindTurbine ->
-                            Just ( Generators.generateWindTurbine AddGenerator coords, ( PotentialWindTurbine, 200 ) )
+                        PotentialWPS ->
+                            Just ( Generators.generateWPS AddGenerator coords, ( PotentialWPS, 200 ) )
 
-                        PotentialSolarPanel ->
-                            Just ( Generators.generatePVPanel AddGenerator coords, ( PotentialSolarPanel, 150 ) )
+                        PotentialResilientHousing ->
+                            Just ( Generators.upgradeHousing UpgradeHousing coords, ( PotentialResilientHousing, 150 ) )
 
-                        PotentialPeer ->
-                            Just ( Generators.generatePeer AddPeer coords, ( PotentialPeer, 50 ) )
+                        PotentialHousing ->
+                            Just ( Generators.generateHousing AddHousing coords, ( PotentialHousing, 50 ) )
+
+--                HousingNode housing ->
+--                        Just ( Generators.upgradeHousing UpgradeHousing coords, ( ResilientHousing, 50 ) )
 
                 _ ->
                     Nothing
@@ -118,18 +121,18 @@ handleConvertNode nodeId model =
             cmdTuple
                 |> Maybe.map Tuple.second
                 |> Maybe.map Tuple.first
-                |> Maybe.withDefault PotentialPeer
+                |> Maybe.withDefault PotentialHousing
 
         itemToMessage : PotentialNodeType -> Phicoin -> String
         itemToMessage t c =
             case t of
-                PotentialWindTurbine ->
+                PotentialWPS ->
                     "You purchased a wind turbine, it costs " ++ toString c ++ " phicoin which has been deducted from your budget"
 
-                PotentialSolarPanel ->
+                PotentialResilientHousing ->
                     "You purchased a solar panel, it costs " ++ toString c ++ " phicoin which has been deducted from your budget"
 
-                PotentialPeer ->
+                PotentialHousing ->
                     "You enabled a peer, the connection costs " ++ toString c ++ " phicoin which has been deducted from your budget"
 
         messageCmd : Cmd Msg

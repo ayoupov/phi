@@ -1,7 +1,7 @@
 module View.InputFooter exposing (viewInputFooter)
 
 import Action exposing (Msg(..))
-import Chat.Model exposing (BotChatItem(MultiChoiceItem), ChatItem(BotItem), MultiChoiceAction(McaAddGenerators, McaAddPeers, McaBuyCables, McaRunDay, McaSkipIntro), defaultMcaList, mcaName)
+import Chat.Model exposing (BotChatItem(MultiChoiceItem), ChatItem(BotItem), MultiChoiceAction(McaAddWP, McaBuildHousing, McaUpgradeHousing, McaRunDay, McaSkipIntro), defaultMcaList, mcaName)
 import Html exposing (Html, div, input, text)
 import Html.Attributes exposing (autofocus, class, style, value)
 import Html.Events exposing (keyCode, on, onInput)

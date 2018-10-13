@@ -87,8 +87,8 @@ potentialSolarPanelList =
     Set.diff solarPanelList initialSolarPanelList
 
 
-potentialWindTurbineList : Set ( Int, Int )
-potentialWindTurbineList =
+potentialWPSList : Set ( Int, Int )
+potentialWPSList =
     Set.diff windTurbineList initialWindTurbineList
 
 

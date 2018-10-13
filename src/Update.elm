@@ -146,15 +146,20 @@ update msg model =
                 |> update RenderPhiNetwork
 
         AddPeerWithEdges searchRadius peer ->
-            { model | network = addNodeWithEdges searchRadius (PeerNode peer) model.network }
+            { model | network = addNodeWithEdges searchRadius (HousingNode peer) model.network }
                 |> update RenderPhiNetwork
 
         AddGenerator node ->
             { model | network = addNode (GeneratorNode node) model.network }
                 |> update RenderPhiNetwork
 
-        AddPeer node ->
-            { model | network = addNode (PeerNode node) model.network }
+        AddHousing node ->
+            { model | network = addNode (HousingNode node) model.network }
+                |> updateStatsThisDay
+                |> andThen update RenderPhiNetwork
+
+        UpgradeHousing node ->
+            { model | network = addNode (HousingNode node) model.network }
                 |> updateStatsThisDay
                 |> andThen update RenderPhiNetwork
 
@@ -197,7 +202,7 @@ update msg model =
             ( model, animateGeneration <| encodeGraph model.network )
 
         AnimatePeerConsumption ->
-            ( model, animatePeerConsumption <| encodeGraph model.network )
+            ( model, animateHousingConsumption <| encodeGraph model.network )
 
         AnimateTrade ->
             ( model, animateTrade <| encodeGraph model.network )
@@ -276,8 +281,8 @@ runDay model =
         applyPhases : PhiNetwork -> PhiNetwork
         applyPhases network =
             network
-                |> Simulation.joulesToGenerators model.weather
-                |> Simulation.distributeGeneratedJoules model.negawattLimit model.reputationRatio
+                |> Simulation.waterToGenerators model.weather
+                |> Simulation.distributeGeneratedWater 100 model.reputationRatio
                 |> Graph.mapNodes Simulation.consumeFromStorage
                 |> Simulation.tradingPhase
 
@@ -327,7 +332,7 @@ weatherForecast model =
             pregenerateWeather model.weatherList
 
         sunny =
-            toString weather.sun
+            toString weather.water
 
         windy =
             toString weather.wind
@@ -344,9 +349,9 @@ weatherForecast model =
     update (SendBotChatItem chatMsg) model
         |> andThen update
             (SetMCAList
-                [ McaAddPeers
-                , McaAddGenerators
-                , McaBuyCables
+                [ McaBuildHousing
+                , McaUpgradeHousing
+                , McaAddWP
                 , McaWeatherForecast
                 , McaRunDay
                 ]

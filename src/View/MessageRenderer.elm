@@ -17,13 +17,13 @@ textToHtml input =
             case token of
                 "_PEER_" ->
                     --                    span [class "peer"] [text "PEER"]
-                    renderShape PeerIcon 10
+                    renderShape HIcon 10
 
                 "_PANEL_" ->
-                    renderShape SPIcon 10
+                    renderShape WPIcon 10
 
                 "_TURBINE_" ->
-                    renderShape WTIcon 10
+                    renderShape RHIcon 10
 
                 "_CABLE_" ->
                     span [ class "cable" ] [ text "CABLE" ]

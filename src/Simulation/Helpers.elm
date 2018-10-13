@@ -1,7 +1,7 @@
 module Simulation.Helpers exposing (..)
 
 import Graph exposing (Node)
-import Simulation.Model exposing (Coords, NodeLabel(..), Peer, PhiNetwork)
+import Simulation.Model exposing (Coords, NodeLabel(..), Housing, PhiNetwork)
 
 
 getCoords : NodeLabel -> Coords
@@ -13,7 +13,7 @@ getCoords nodeLabel =
         BatNode n ->
             n.pos
 
-        PeerNode n ->
+        HousingNode n ->
             n.pos
 
         PotentialNode n ->
@@ -50,11 +50,11 @@ liveNodeNetwork network =
         |> (\idList -> Graph.inducedSubgraph idList network)
 
 
-toPeer : Node NodeLabel -> Maybe Peer
-toPeer { label, id } =
+toHousing : Node NodeLabel -> Maybe Housing
+toHousing { label, id } =
     case label of
-        PeerNode peer ->
-            Just peer
+        HousingNode housing ->
+            Just housing
 
         _ ->
             Nothing

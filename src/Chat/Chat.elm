@@ -59,14 +59,14 @@ handleMultiChoiceMessage action =
         McaWeatherForecast ->
             delayMessage 1 CheckWeather
 
-        McaAddPeers ->
-            delayMessage 0 <| ChangeBuildMode "peers"
+        McaBuildHousing ->
+            delayMessage 0 <| ChangeBuildMode "housing"
 
-        McaAddGenerators ->
-            delayMessage 0 <| ChangeBuildMode "generators"
+        McaUpgradeHousing ->
+            delayMessage 0 <| ChangeBuildMode "upgrade"
 
-        McaBuyCables ->
-            delayMessage 0 <| ChangeBuildMode "lines"
+        McaAddWP ->
+            delayMessage 0 <| ChangeBuildMode "installWP"
 
         McaLeaveBuildMode ->
             delayMessage 0 <| ChangeBuildMode "none"
@@ -77,7 +77,7 @@ handleMultiChoiceMessage action =
             ]
                 |> Cmd.batch
 
-        McaLaunchUstKarsk ->
+        McaLaunchLjubljana ->
             processNarrative siteNarrative
 
         McaSkipIntro ->
@@ -85,12 +85,12 @@ handleMultiChoiceMessage action =
                 (SendBotChatItem <|
                     MultiChoiceItem <|
                         MultiChoiceMessage
-                            "Добро пожаловать в Усть-Карск. | Welcome to Ust-Karsk."
+                            "Dobrodošli v Ljubljano | Welcome to Ljubljana."
                             defaultMcaList
                 )
             , showMap ()
-            , delayMessage 0 (UpdateSiteName "Ust-Karsk")
-            , delayMessage 0 (UpdateSitePopulation 1728)
+            , delayMessage 0 (UpdateSiteName "Ljubljana")
+            , delayMessage 0 (UpdateSitePopulation 280310)
             , delayMessage 0 IncrementDayCount
             , delayMessage 0.5 InitializeNetwork
             , delayMessage 0.5 InitializeBudget

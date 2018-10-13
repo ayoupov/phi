@@ -25,7 +25,6 @@ type alias Model =
     , siteInfo : SiteInfo
     , budget : Budget
     , reputationRatio : ReputationRatio
-    , negawattLimit : MapLimit
     , stats : List Stats
     , mdl : Material.Model
     }
@@ -49,7 +48,6 @@ initModel =
         (initSiteInfo map)
         (initBudget map)
         (initReputation map)
-        (initNegawattLimit map)
         (initStats map)
         Material.model
         ! [ processNarrative introNarrative ]
@@ -76,14 +74,13 @@ initMap =
     , population = 0
     , initialNetwork = graphFromNodeList potentialNodesList
     , initialWeather =
-        { sun = 0.5
+        { water = 0.5
         , wind = 0.5
         }
     , initialWeatherList = restWeather []
     , narrative = initNarrative
     , initialBudget = []
     , initialReputationRatio = { a = 1, b = 0 }
-    , initialNegawattLimit = 21
     , initialStats = [ defaultStats ]
     }
 
@@ -117,12 +114,6 @@ initReputation : SimMap -> ReputationRatio
 initReputation map =
     map.initialReputationRatio
 
-
-initNegawattLimit : SimMap -> MapLimit
-initNegawattLimit map =
-    map.initialNegawattLimit
-
-
 initStats : SimMap -> List Stats
 initStats map =
     map.initialStats
@@ -137,6 +128,6 @@ initNetworkGenerators =
         asCoordsList =
             List.map tupleToCoords << Set.toList
     in
-    (List.map (Generators.generatePeer <| AddPeerWithEdges edgeSearchRadius) <| asCoordsList initialPeerList)
+    (List.map (Generators.generateHousing <| AddPeerWithEdges edgeSearchRadius) <| asCoordsList initialPeerList)
         ++ (List.map (Generators.generatePVPanel <| AddGeneratorWithEdges edgeSearchRadius) <| asCoordsList initialSolarPanelList)
-        ++ (List.map (Generators.generateWindTurbine <| AddGeneratorWithEdges edgeSearchRadius) <| asCoordsList initialWindTurbineList)
+        ++ (List.map (Generators.generateWPS <| AddGeneratorWithEdges edgeSearchRadius) <| asCoordsList initialWindTurbineList)

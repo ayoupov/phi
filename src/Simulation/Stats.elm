@@ -4,17 +4,17 @@ import Action exposing (Msg(NoOp))
 import Graph
 import ListHelpers exposing (takeFirstElementWithDefault0, updateFirstElement)
 import Model exposing (Model)
-import Simulation.Helpers exposing (toPeer)
+import Simulation.Helpers exposing (toHousing)
 import Simulation.Model exposing (..)
 import Tuple exposing (first, second)
 
 
-peerCount : PhiNetwork -> Int
-peerCount network =
+hCount : PhiNetwork -> Int
+hCount network =
     let
         reducer node sum =
             case node.label of
-                PeerNode _ ->
+                HousingNode _ ->
                     1 + sum
 
                 _ ->
@@ -23,15 +23,14 @@ peerCount network =
     Graph.nodes network
         |> List.foldr reducer 0
 
-
-wtCount : PhiNetwork -> Int
-wtCount network =
+rhCount : PhiNetwork -> Int
+rhCount network =
     let
         reducer node sum =
             case node.label of
                 GeneratorNode gen ->
                     case gen.generatorType of
-                        WindTurbine ->
+                        ResilientHousing ->
                             1 + sum
 
                         _ ->
@@ -43,15 +42,14 @@ wtCount network =
     Graph.nodes network
         |> List.foldr reducer 0
 
-
-spCount : PhiNetwork -> Int
-spCount network =
+wpCount : PhiNetwork -> Int
+wpCount network =
     let
         reducer node sum =
             case node.label of
                 GeneratorNode gen ->
                     case gen.generatorType of
-                        SolarPanel ->
+                        WaterPurificator ->
                             1 + sum
 
                         _ ->
@@ -62,15 +60,16 @@ spCount network =
     in
     Graph.nodes network
         |> List.foldr reducer 0
+
 
 
 health : PhiNetwork -> Float
 health network =
     let
-        reducer : Peer -> ( Float, Float ) -> ( Float, Float )
+        reducer : Housing -> ( Float, Float ) -> ( Float, Float )
         reducer peer tup =
-            ( takeFirstElementWithDefault0 peer.joules.actualConsumption + first tup
-            , peer.joules.desiredConsumption + second tup
+            ( takeFirstElementWithDefault0 peer.water.actualConsumption + first tup
+            , peer.water.desiredConsumption + second tup
             )
 
         tupleToFraction : ( Float, Float ) -> Float
@@ -83,14 +82,14 @@ health network =
                     first tuple / second tuple
     in
     Graph.nodes network
-        |> List.filterMap toPeer
+        |> List.filterMap toHousing
         |> List.foldr reducer ( 0, 0 )
         |> tupleToFraction
 
-
+-- todo: change total node count
 communityCoverage : PhiNetwork -> Float
 communityCoverage network =
-    toFloat (peerCount network) / 156
+    toFloat (hCount network) / 156
 
 
 setStats : List Stats -> Model -> Model

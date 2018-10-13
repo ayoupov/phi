@@ -49,7 +49,7 @@ getStartedNarrative =
     , (MultiChoiceItem <|
         MultiChoiceMessage
             "Please click the location below to launch your simulation."
-            [ McaLaunchUstKarsk ]
+            [ McaLaunchLjubljana ]
       )
         |> chatWithDelay 2.5 [ ToggleInputAvailable True ]
     ]
@@ -58,16 +58,16 @@ getStartedNarrative =
 siteNarrative : List NarrativeElement
 siteNarrative =
     [ initMsg (ToggleInputAvailable False)
-    , BotMessage "Добро пожаловать в Усть-Карск."
+    , BotMessage "Dobrodošli v Ljubljano"
         |> chatWithDelay 1 [ ShowMap ]
-    , BotMessage "Welcome to Ust-Karsk, a remote off-grid community located in southeast Russian region with great potential for solar power."
-        |> chatWithDelay 1 [ UpdateSiteName "Ust-Karsk", UpdateSitePopulation 1728, IncrementDayCount ]
+    , BotMessage "Welcome to Ljubljana, a remote off-grid community located in southeast Russian region with great potential for solar power."
+        |> chatWithDelay 1 [ UpdateSiteName "Ljubljana", UpdateSitePopulation 280310, IncrementDayCount ]
     , (BotMessage <|
-        "You've received a Φ10,000 investment to further develop the renewable energy network in Ust-Karsk."
+        "You've received a Φ10,000 investment to further develop the renewable energy network in Ljubljana."
       )
         |> chatWithDelay 3 [ InitializeBudget ]
     , BotMessage
-        ("On the map to the right, you'll see the local Phi network in Ust-Karsk. Phi networks are made up of "
+        ("On the map to the right, you'll see the local Phi network in Ljubljana. Phi networks are made up of "
             ++ "four types of components. $$_PEER_$$ peers, $$_PANEL_$$ solar panels, $$_TURBINE_$$ wind turbines, and cables."
         )
         |> chatWithDelay 5 [ InitializeNetwork ]
@@ -119,9 +119,9 @@ daySummary network =
     in
     MultiChoiceItem <|
         MultiChoiceMessage text
-            [ McaAddPeers
-            , McaAddGenerators
-            , McaBuyCables
+            [ McaBuildHousing
+            , McaUpgradeHousing
+            , McaAddWP
             , McaRunDay
             ]
 
@@ -135,8 +135,8 @@ enterBuildModePeers =
     in
     MultiChoiceItem <|
         MultiChoiceMessage text
-            [ McaAddGenerators
-            , McaBuyCables
+            [ McaAddWP
+            , McaUpgradeHousing
             , McaRunDay
             ]
 
@@ -151,8 +151,8 @@ enterBuildModeGenerators =
     in
     MultiChoiceItem <|
         MultiChoiceMessage text
-            [ McaAddPeers
-            , McaBuyCables
+            [ McaBuildHousing
+            , McaUpgradeHousing
             , McaRunDay
             ]
 
@@ -166,8 +166,8 @@ enterBuildModeLines =
     in
     MultiChoiceItem <|
         MultiChoiceMessage text
-            [ McaAddPeers
-            , McaAddGenerators
+            [ McaBuildHousing
+            , McaAddWP
             , McaRunDay
             ]
 
@@ -181,9 +181,9 @@ exitBuildMode =
     in
     MultiChoiceItem <|
         MultiChoiceMessage text
-            [ McaAddPeers
-            , McaAddGenerators
-            , McaBuyCables
+            [ McaBuildHousing
+            , McaUpgradeHousing
+            , McaAddWP
             , McaRunDay
             ]
 
@@ -244,9 +244,9 @@ dayTraded network =
     --        BotMessage text
     MultiChoiceItem <|
         MultiChoiceMessage text
-            [ McaAddPeers
-            , McaAddGenerators
-            , McaBuyCables
+            [ McaBuildHousing
+            , McaUpgradeHousing
+            , McaAddWP
             , McaRunDay
             ]
 
