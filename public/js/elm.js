@@ -20011,48 +20011,35 @@ var _ayoupov$phi$Simulation_NodeList$wpsList = A2(
 var _ayoupov$phi$Simulation_NodeList$potentialWPSList = A2(_elm_lang$core$Set$diff, _ayoupov$phi$Simulation_NodeList$wpsList, _ayoupov$phi$Simulation_NodeList$initialWPS);
 
 var _ayoupov$phi$Simulation_GraphUpdates$potentialNodesList = function () {
-	var resilientList = A2(
+	var housingList = A2(
 		_elm_lang$core$List$map,
 		function (_p0) {
 			return _ayoupov$phi$Simulation_Model$PotentialNode(
 				A2(
 					_ayoupov$phi$Simulation_Model$Potential,
-					_ayoupov$phi$Simulation_Model$PotentialResilientHousing,
+					_ayoupov$phi$Simulation_Model$PotentialHousing,
 					_ayoupov$phi$Simulation_Model$tupleToCoords(_p0)));
 		},
-		_elm_lang$core$Set$toList(_ayoupov$phi$Simulation_NodeList$potentialResilientList));
-	var housingList = A2(
+		_elm_lang$core$Set$toList(_ayoupov$phi$Simulation_NodeList$potentialHousingList));
+	var wpsList = A2(
 		_elm_lang$core$List$map,
 		function (_p1) {
 			return _ayoupov$phi$Simulation_Model$PotentialNode(
 				A2(
 					_ayoupov$phi$Simulation_Model$Potential,
-					_ayoupov$phi$Simulation_Model$PotentialHousing,
+					_ayoupov$phi$Simulation_Model$PotentialWPS,
 					_ayoupov$phi$Simulation_Model$tupleToCoords(_p1)));
 		},
-		_elm_lang$core$Set$toList(_ayoupov$phi$Simulation_NodeList$potentialHousingList));
-	var wpsList = A2(
-		_elm_lang$core$List$map,
-		function (_p2) {
-			return _ayoupov$phi$Simulation_Model$PotentialNode(
-				A2(
-					_ayoupov$phi$Simulation_Model$Potential,
-					_ayoupov$phi$Simulation_Model$PotentialWPS,
-					_ayoupov$phi$Simulation_Model$tupleToCoords(_p2)));
-		},
 		_elm_lang$core$Set$toList(_ayoupov$phi$Simulation_NodeList$potentialWPSList));
-	return A2(
-		_elm_lang$core$Basics_ops['++'],
-		wpsList,
-		A2(_elm_lang$core$Basics_ops['++'], housingList, resilientList));
+	return A2(_elm_lang$core$Basics_ops['++'], wpsList, housingList);
 }();
 var _ayoupov$phi$Simulation_GraphUpdates$nodeUpdater = F2(
 	function (n, foundCtx) {
-		var _p3 = foundCtx;
-		if (_p3.ctor === 'Just') {
+		var _p2 = foundCtx;
+		if (_p2.ctor === 'Just') {
 			return _elm_lang$core$Maybe$Just(
 				_elm_lang$core$Native_Utils.update(
-					_p3._0,
+					_p2._0,
 					{node: n}));
 		} else {
 			return _elm_lang$core$Maybe$Nothing;
@@ -20062,16 +20049,16 @@ var _ayoupov$phi$Simulation_GraphUpdates$updateNodes = F2(
 	function (updatedNodeList, network) {
 		updateNodes:
 		while (true) {
-			var _p4 = updatedNodeList;
-			if (_p4.ctor === '[]') {
+			var _p3 = updatedNodeList;
+			if (_p3.ctor === '[]') {
 				return network;
 			} else {
-				var _p5 = _p4._0;
-				var _v2 = _p4._1,
+				var _p4 = _p3._0;
+				var _v2 = _p3._1,
 					_v3 = A3(
 					_elm_community$graph$Graph$update,
-					_p5.id,
-					_ayoupov$phi$Simulation_GraphUpdates$nodeUpdater(_p5),
+					_p4.id,
+					_ayoupov$phi$Simulation_GraphUpdates$nodeUpdater(_p4),
 					network);
 				updatedNodeList = _v2;
 				network = _v3;
@@ -20121,14 +20108,14 @@ var _ayoupov$phi$Simulation_GraphUpdates$addNodeWithEdges = F3(
 			0,
 			A2(
 				_elm_lang$core$Maybe$map,
-				function (_p6) {
+				function (_p5) {
 					return A2(
 						F2(
 							function (x, y) {
 								return x + y;
 							}),
 						1,
-						_elm_lang$core$Tuple$second(_p6));
+						_elm_lang$core$Tuple$second(_p5));
 				},
 				_elm_community$graph$Graph$nodeIdRange(network)));
 		var newNode = A2(_elm_community$graph$Graph$Node, nodeId, nodeLabel);
@@ -20153,13 +20140,13 @@ var _ayoupov$phi$Simulation_GraphUpdates$addNodeWithEdges = F3(
 				closeNodes));
 		var newEdges = A2(
 			_elm_lang$core$List$map,
-			function (_p7) {
+			function (_p6) {
 				return A2(
 					_ayoupov$phi$Simulation_GraphUpdates$createEdge,
 					nodeId,
 					function (_) {
 						return _.id;
-					}(_p7));
+					}(_p6));
 			},
 			closeNodes);
 		return A2(
@@ -20174,14 +20161,14 @@ var _ayoupov$phi$Simulation_GraphUpdates$addNode = F2(
 			0,
 			A2(
 				_elm_lang$core$Maybe$map,
-				function (_p8) {
+				function (_p7) {
 					return A2(
 						F2(
 							function (x, y) {
 								return x + y;
 							}),
 						1,
-						_elm_lang$core$Tuple$second(_p8));
+						_elm_lang$core$Tuple$second(_p7));
 				},
 				_elm_community$graph$Graph$nodeIdRange(network)));
 		var node = A2(_elm_community$graph$Graph$Node, nodeId, nodeLabel);
@@ -20861,7 +20848,7 @@ var _ayoupov$phi$Chat_Narrative$cycleTraded = function (network) {
 	var text = A2(
 		_elm_lang$core$Basics_ops['++'],
 		'',
-		A2(_elm_lang$core$Basics_ops['++'], totalTraded, ' Joules traded.'));
+		A2(_elm_lang$core$Basics_ops['++'], totalTraded, ' water traded.'));
 	return _ayoupov$phi$Chat_Model$MultiChoiceItem(
 		A2(
 			_ayoupov$phi$Chat_Model$MultiChoiceMessage,
@@ -20890,7 +20877,7 @@ var _ayoupov$phi$Chat_Narrative$cycleConsumed = function (network) {
 	var text = A2(
 		_elm_lang$core$Basics_ops['++'],
 		'',
-		A2(_elm_lang$core$Basics_ops['++'], totalConsumed, ' Joules burned.'));
+		A2(_elm_lang$core$Basics_ops['++'], totalConsumed, ' water consumed.'));
 	return _ayoupov$phi$Chat_Model$BotMessage(text);
 };
 var _ayoupov$phi$Chat_Narrative$cycleGenerated = function (network) {
@@ -20906,8 +20893,8 @@ var _ayoupov$phi$Chat_Narrative$cycleGenerated = function (network) {
 			generatedEnergy,
 			A2(
 				_elm_lang$core$Basics_ops['++'],
-				' Joules created. ',
-				A2(_elm_lang$core$Basics_ops['++'], totalStored, ' surplus stored in batteries.'))));
+				' water purified. ',
+				A2(_elm_lang$core$Basics_ops['++'], totalStored, ' surplus stored in canisters.'))));
 	return _ayoupov$phi$Chat_Model$BotMessage(text);
 };
 var _ayoupov$phi$Chat_Narrative$cycleBeginning = function (network) {
@@ -20939,10 +20926,7 @@ var _ayoupov$phi$Chat_Narrative$exitBuildMode = function () {
 			}));
 }();
 var _ayoupov$phi$Chat_Narrative$enterBuildModeGenerators = function () {
-	var text = A2(
-		_elm_lang$core$Basics_ops['++'],
-		'Click $$_PANEL_$$ to buy new solar panels.',
-		A2(_elm_lang$core$Basics_ops['++'], ' Click $$_TURBINE_$$ to buy new wind turbines.', ' Next click the button to install cables.'));
+	var text = 'Click $$_PANEL_$$ to buy new water purificators. ';
 	return _ayoupov$phi$Chat_Model$MultiChoiceItem(
 		A2(
 			_ayoupov$phi$Chat_Model$MultiChoiceMessage,
@@ -21119,14 +21103,14 @@ var _ayoupov$phi$Chat_Narrative$aboutHealthNarrative = {
 			_0: _ayoupov$phi$Action$ToggleInputAvailable(true),
 			_1: {ctor: '[]'}
 		},
-		_ayoupov$phi$Chat_Model$BotMessage('The Health meter compares the Joules requested by the Peer Community with the Joules available.')),
+		_ayoupov$phi$Chat_Model$BotMessage('The Health meter compares the water requested by the Community with the water available.')),
 	_1: {
 		ctor: '::',
 		_0: A3(
 			_ayoupov$phi$Chat_Narrative$chatWithDelay,
 			2,
 			{ctor: '[]'},
-			_ayoupov$phi$Chat_Model$BotMessage('The Coverage meter compares the size of your Peer Community with the population of Ust-Karsk.')),
+			_ayoupov$phi$Chat_Model$BotMessage('The Coverage meter compares the size of your Community with the population of the area.')),
 		_1: {
 			ctor: '::',
 			_0: A3(
@@ -23636,7 +23620,7 @@ var _ayoupov$phi$Chat_Chat$handleMultiChoiceMessage = function (action) {
 			return A2(
 				_ayoupov$phi$Chat_Helpers$delayMessage,
 				0,
-				_ayoupov$phi$Action$ChangeBuildMode('upgrade'));
+				_ayoupov$phi$Action$ChangeBuildMode('resilient'));
 		case 'McaAddWP':
 			return A2(
 				_ayoupov$phi$Chat_Helpers$delayMessage,
@@ -23835,27 +23819,27 @@ var _ayoupov$phi$Simulation_BuildingMode$handleConvertNode = F2(
 					case 'PotentialWPS':
 						return A2(
 							_elm_lang$core$Basics_ops['++'],
-							'You purchased a wind turbine, it costs ',
+							'You purchased a water purificator, it costs Φ',
 							A2(
 								_elm_lang$core$Basics_ops['++'],
 								_elm_lang$core$Basics$toString(c),
-								' phicoin which has been deducted from your budget'));
+								' which has been deducted from your budget'));
 					case 'PotentialResilientHousing':
 						return A2(
 							_elm_lang$core$Basics_ops['++'],
-							'You upgraded housing to a resilient one, it costs ',
+							'You upgraded housing to a resilient one, it costs Φ',
 							A2(
 								_elm_lang$core$Basics_ops['++'],
 								_elm_lang$core$Basics$toString(c),
-								' phicoin which has been deducted from your budget'));
+								' which has been deducted from your budget'));
 					default:
 						return A2(
 							_elm_lang$core$Basics_ops['++'],
-							'You built a housing, it costs ',
+							'You built a housing, it costs Φ',
 							A2(
 								_elm_lang$core$Basics_ops['++'],
 								_elm_lang$core$Basics$toString(c),
-								' phicoin which has been deducted from your budget'));
+								' which has been deducted from your budget'));
 				}
 			});
 		var nodeGenerator = function (nodeLabel) {
@@ -24896,7 +24880,7 @@ var _ayoupov$phi$Update$update = F2(
 									_0: model,
 									_1: _ayoupov$phi$Simulation_BuildingMode$changeBuildMode('housing')
 								});
-						case 'upgrade':
+						case 'resilient':
 							return A3(
 								_ccapndave$elm_update_extra$Update_Extra$andThen,
 								_ayoupov$phi$Update$update,
@@ -24904,7 +24888,7 @@ var _ayoupov$phi$Update$update = F2(
 								{
 									ctor: '_Tuple2',
 									_0: model,
-									_1: _ayoupov$phi$Simulation_BuildingMode$changeBuildMode('upgrade')
+									_1: _ayoupov$phi$Simulation_BuildingMode$changeBuildMode('resilient')
 								});
 						case 'generators':
 							return A3(

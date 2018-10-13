@@ -179,7 +179,7 @@ body {
   fill-opacity: 1;
 }
 
-.node.potential {
+.node.potential:not(.resilient) {
   fill: rgba(127,127,127,0.6);
   stroke: rgba(127,127,127,0.6);
 }

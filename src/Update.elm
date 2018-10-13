@@ -243,8 +243,8 @@ update msg model =
                     ( model, changeBuildMode "housing" )
                         |> andThen update (SendBotChatItem <| Narrative.enterBuildModeHousing)
 
-                "upgrade" ->
-                    ( model, changeBuildMode "upgrade" )
+                "resilient" ->
+                    ( model, changeBuildMode "resilient" )
                         |> andThen update (SendBotChatItem <| Narrative.enterBuildModeUpgrade)
 
                 "generators" ->

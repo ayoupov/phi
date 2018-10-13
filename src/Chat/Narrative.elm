@@ -34,9 +34,9 @@ introNarrative =
 
 aboutHealthNarrative : List NarrativeElement
 aboutHealthNarrative =
-    [ BotMessage "The Health meter compares the Joules requested by the Peer Community with the Joules available."
+    [ BotMessage "The Health meter compares the water requested by the Community with the water available."
         |> chatWithDelay 1.5 [ ToggleInputAvailable True ]
-    , BotMessage "The Coverage meter compares the size of your Peer Community with the population of Ust-Karsk."
+    , BotMessage "The Coverage meter compares the size of your Community with the population of the area."
         |> chatWithDelay 2 []
     , BotMessage "Click the button below to load the map."
         |> chatWithDelay 3 []
@@ -157,9 +157,7 @@ enterBuildModeGenerators : BotChatItem
 enterBuildModeGenerators =
     let
         text =
-            "Click $$_PANEL_$$ to buy new solar panels."
-                ++ " Click $$_TURBINE_$$ to buy new wind turbines."
-                ++ " Next click the button to install cables."
+            "Click $$_PANEL_$$ to buy new water purificators. "
     in
     MultiChoiceItem <|
         MultiChoiceMessage text
@@ -205,9 +203,9 @@ cycleGenerated network =
         text =
             ""
                 ++ generatedEnergy
-                ++ " Joules created. "
+                ++ " water purified. "
                 ++ totalStored
-                ++ " surplus stored in batteries."
+                ++ " surplus stored in canisters."
     in
     BotMessage text
 
@@ -221,7 +219,7 @@ cycleConsumed network =
         text =
             ""
                 ++ totalConsumed
-                ++ " Joules burned."
+                ++ " water consumed."
     in
     BotMessage text
 
@@ -235,7 +233,7 @@ cycleTraded network =
         text =
             ""
                 ++ totalTraded
-                ++ " Joules traded."
+                ++ " water traded."
     in
     --        BotMessage text
     MultiChoiceItem <|
@@ -245,7 +243,6 @@ cycleTraded network =
             , McaAddWP
             , McaRunCycle
             ]
-
 
 
 -- PORTS

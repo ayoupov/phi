@@ -317,7 +317,7 @@ d3.xml("assets/Barje-map-for-sim-big-01.svg").get(function (error, documentFragm
                 return "translate(" + (setX(d)) + "," + (setY(d)) + ")";
             });
 
-        nodes.select(".simulation .generator .energyIndicator")
+        nodes.select(".simulation .wps .energyIndicator")
             .transition(t)
             .attr("d", function (d) {
                 //return "M0,0";
@@ -348,6 +348,7 @@ d3.xml("assets/Barje-map-for-sim-big-01.svg").get(function (error, documentFragm
                     return n.id !== d.id
                 });
                 currentSet = potentialResilient;
+                addendum = ".resilient";
                 break;
             case "generators" :
                 potentialGenerators = potentialGenerators.filter(function (n) {
@@ -384,7 +385,14 @@ d3.xml("assets/Barje-map-for-sim-big-01.svg").get(function (error, documentFragm
             })
             .attr("class", "baseNode");
 
-        var addendum = lastBuildMode == "housing" ? ".housing" : ".generator";
+        // instead of housing/generator
+        var addendum ;
+        switch (lastBuildMode) {
+            case "housing": addendum = ".housing"; break;
+            case "resilient": addendum = ".resilient"; break;
+            case "generators": addendum = ".wps"; break;
+            default: addendum = ".housing"
+        }
 
         nodes.selectAll(".potential" + addendum)
             .attr("stroke-opacity", "0")
@@ -411,7 +419,7 @@ d3.xml("assets/Barje-map-for-sim-big-01.svg").get(function (error, documentFragm
 
 
     function killPotentials() {
-        d3.selectAll(".potential")
+        d3.selectAll(".potential:not(.resilient)")
             .remove();
 
         app.ports.animationFinished.send("exitBuildModeAnimated");
@@ -519,30 +527,35 @@ d3.xml("assets/Barje-map-for-sim-big-01.svg").get(function (error, documentFragm
                 drawPotentialNodes(nodes);
                 cancelHoverAnimation(svg.selectAll('.baseNode'));
                 addHoverAnimation(svg.selectAll('.potential.housing .baseNode'));
+//                nodes.attr("class", function(d){
+//                    return "node housing potential";
+//                });
                 break;
-            case "upgrade" :
+            case "resilient" :
                 isInBuildingMode = true;
-                lastBuildMode = "upgrade";
-                var nodes = svg.select(".nodes").selectAll(".potential.resilient")
+                lastBuildMode = "resilient";
+                var nodes = svg.select(".nodes").selectAll(".housing:not(.potential)")
                     .data(potentialResilient, function (d) {
                         return d.id;
                     });
                 killPotentials();
-                drawPotentialNodes(nodes);
                 cancelHoverAnimation(svg.selectAll('.baseNode'));
-                addHoverAnimation(svg.selectAll('.potential.resilient .baseNode'));
+                addHoverAnimation(svg.selectAll('.housing:not(.potential) .baseNode'));
+//                nodes.attr("class", function(d){
+//                    return "node potential resilient"
+//                });
                 break;
             case "generators" :
                 isInBuildingMode = true;
                 lastBuildMode = "generators";
-                var nodes = svg.select(".nodes").selectAll(".potential.generator")
+                var nodes = svg.select(".nodes").selectAll(".potential.wps")
                     .data(potentialGenerators, function (d) {
                         return d.id;
                     });
                 killPotentials();
                 drawPotentialNodes(nodes);
                 cancelHoverAnimation(svg.selectAll('.baseNode'));
-                addHoverAnimation(svg.selectAll('.potential.generator .baseNode'));
+                addHoverAnimation(svg.selectAll('.potential.wps .baseNode'));
                 break;
             case "lines" :
                 isInBuildingMode = true;
@@ -581,7 +594,7 @@ d3.xml("assets/Barje-map-for-sim-big-01.svg").get(function (error, documentFragm
                 return d.id;
             });
 
-        nodes.select(".simulation .generator .energyIndicator")
+        nodes.select(".simulation .wps .energyIndicator")
             .transition(t)
             .attr("d", function (d) {
                 return (transactionShadow()(d));
@@ -611,8 +624,8 @@ d3.xml("assets/Barje-map-for-sim-big-01.svg").get(function (error, documentFragm
             var nodeEnter = nodes.enter().append("g")
                 .attr("class", function (d) {
                     var classStr = "node " + d.label.nodeType;
-                    if (d.label.nodeType == "generator") {
-                        classStr += (" " + d.label.generatorType);
+                    if (d.label.nodeType == "wps") {
+                        classStr += (" wps");
                     }
                     return classStr;
                 });
@@ -631,17 +644,19 @@ d3.xml("assets/Barje-map-for-sim-big-01.svg").get(function (error, documentFragm
                 .style('animation-delay', -20 * Math.random() + "s")
                 .attr("class", "housing_pulse");
 
+            //todo: additional draw to resilient?
+
             //add pulsating to generators
             nodeEnter.filter(function (d) {
-                    return (d.label.nodeType == "generator")
+                    return (d.label.nodeType == "wps")
                 })
                 .append("g")
                 .attr("class", function (d) {
-                    if (d.label.generatorType == "resilient") {
-                        return "resilient_pulse";
-                    } else if (d.label.generatorType == "wps") {
+//                    if (d.label.generatorType == "resilient") {
+//                        return "resilient_pulse";
+//                    } else if (d.label.generatorType == "wps") {
                         return "wps_pulse";
-                    }
+//                    }
                 })
                 .attr('style', function(d) {
                   return "transform-origin: " + setX(d) + "px " + setY(d) + "px;";
@@ -678,7 +693,7 @@ d3.xml("assets/Barje-map-for-sim-big-01.svg").get(function (error, documentFragm
 
             // add energy indicators for generators
             nodeEnter.filter(function (d) {
-                    return d.label.nodeType == "generator"
+                    return d.label.nodeType == "wps"
                 }).append("path")
                 .attr("d", function (d) {
                     return (generatorInitialShadow()(d));
@@ -777,7 +792,7 @@ d3.xml("assets/Barje-map-for-sim-big-01.svg").get(function (error, documentFragm
         });
 
         potentialResilient = phiNodes.filter(function (node) {
-            return (node.label.isPotential && node.label.nodeType == 'resilient');
+            return (!node.label.isPotential && node.label.nodeType == 'housing');
         });
 
         potentialGenerators = phiNodes.filter(function (node) {

@@ -109,11 +109,11 @@ potentialNodesList =
                 |> List.map
                     (PotentialNode << Potential PotentialHousing << tupleToCoords)
 
-        resilientList =
-            potentialResilientList
-                |> Set.toList
-                |> List.map
-                    (PotentialNode << Potential PotentialResilientHousing << tupleToCoords)
+--        resilientList =
+--            potentialResilientList
+--                |> Set.toList
+--                |> List.map
+--                    (PotentialNode << Potential PotentialResilientHousing << tupleToCoords)
     in
-    wpsList ++ housingList ++ resilientList
+    wpsList ++ housingList
 --    spList ++ wpsList ++ housingList

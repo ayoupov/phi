@@ -15,7 +15,7 @@ function setY(node) {
 }
 
 function isGenerator(d) {
-    return d.label.nodeType == "generator" && ["solarPanel", "windTurbine"].indexOf(d.label.generatorType > -1);
+    return d.label.nodeType == "wps" || d.label.nodeType == "resilient" ;
 }
 
 function generatorInitialShadow()
@@ -40,19 +40,14 @@ function transactionShadow() {
 function nodeShape(d) {
     var defaultSymbol = d3.symbolCircle;
     switch (d.label.nodeType) {
-        case "peer":
+        case "housing":
             return d3.symbolCircle;
 
-        case "generator" :
-            switch (d.label.generatorType) {
-                case "windTurbine":
-                    return d3.symbolTriangle;
-                case "solarPanel":
-                    return d3.symbolSquare;
-                default:
-                    //return defaultSymbol;
-                    return d3.symbolSquare;
-            }
+        case "wps" :
+            return d3.symbolSquare;
+
+        case "resilient" :
+            return d3.symbolTriangle;
 
         default:
             return defaultSymbol;

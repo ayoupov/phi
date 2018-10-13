@@ -127,13 +127,13 @@ handleConvertNode nodeId model =
         itemToMessage t c =
             case t of
                 PotentialWPS ->
-                    "You purchased a wind turbine, it costs " ++ toString c ++ " phicoin which has been deducted from your budget"
+                    "You purchased a water purificator, it costs Φ" ++ toString c ++ " which has been deducted from your budget"
 
                 PotentialResilientHousing ->
-                    "You upgraded housing to a resilient one, it costs " ++ toString c ++ " phicoin which has been deducted from your budget"
+                    "You upgraded housing to a resilient one, it costs Φ" ++ toString c ++ " which has been deducted from your budget"
 
                 PotentialHousing ->
-                    "You built a housing, it costs " ++ toString c ++ " phicoin which has been deducted from your budget"
+                    "You built a housing, it costs Φ" ++ toString c ++ " which has been deducted from your budget"
 
         messageCmd : Cmd Msg
         messageCmd =

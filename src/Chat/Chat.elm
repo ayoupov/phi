@@ -63,7 +63,7 @@ handleMultiChoiceMessage action =
             delayMessage 0 <| ChangeBuildMode "housing"
 
         McaUpgradeHousing ->
-            delayMessage 0 <| ChangeBuildMode "upgrade"
+            delayMessage 0 <| ChangeBuildMode "resilient"
 
         McaAddWP ->
             delayMessage 0 <| ChangeBuildMode "generators"
