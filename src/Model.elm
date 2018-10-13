@@ -9,7 +9,7 @@ import Set exposing (Set)
 import Simulation.GraphUpdates exposing (graphFromNodeList, potentialNodesList)
 import Simulation.Init.Generators as Generators
 import Simulation.Model exposing (Budget, MapLimit, Narrative, NarrativeItem, PhiNetwork, ReputationRatio, SimMap, SiteInfo, Stats, Weather, WeatherTuple, tupleToCoords)
-import Simulation.NodeList exposing (initialPeerList, initialSolarPanelList, initialWindTurbineList)
+import Simulation.NodeList exposing (initialHousing, initialWPS)
 import Simulation.WeatherList exposing (restWeather)
 
 
@@ -123,11 +123,11 @@ initNetworkGenerators : List (Cmd Msg)
 initNetworkGenerators =
     let
         edgeSearchRadius =
-            70
+            0
 
         asCoordsList =
             List.map tupleToCoords << Set.toList
     in
-    (List.map (Generators.generateHousing <| AddPeerWithEdges edgeSearchRadius) <| asCoordsList initialPeerList)
-        ++ (List.map (Generators.generatePVPanel <| AddGeneratorWithEdges edgeSearchRadius) <| asCoordsList initialSolarPanelList)
-        ++ (List.map (Generators.generateWPS <| AddGeneratorWithEdges edgeSearchRadius) <| asCoordsList initialWindTurbineList)
+    (List.map (Generators.generateHousing <| AddPeerWithEdges edgeSearchRadius) <| asCoordsList initialHousing)
+--        ++ (List.map (Generators.generateRH <| AddGeneratorWithEdges edgeSearchRadius) <| asCoordsList initialSolarPanelList)
+        ++ (List.map (Generators.generateWPS <| AddGeneratorWithEdges edgeSearchRadius) <| asCoordsList initialWPS)

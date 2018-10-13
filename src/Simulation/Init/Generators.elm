@@ -19,21 +19,6 @@ import Simulation.WeatherList exposing (restWeather, weatherTupleToWeather)
 --        (Random.float 0 1)
 --        |> Random.generate UpdateWeather
 
-
-generatePVPanel : (SimGenerator -> Msg) -> Coords -> Cmd Msg
-generatePVPanel genMsgConstructor coords =
-    Random.map4 SimGenerator
-        (Random.constant [])
-        -- dailyGeneration
-        (Random.float 15 30)
-        -- maxGeneration
-        (Random.constant coords)
-        -- xy coordinates
-        (Random.constant ResilientHousing)
-        -- generator type
-        |> Random.generate genMsgConstructor
-
-
 generateWPS : (SimGenerator -> Msg) -> Coords -> Cmd Msg
 generateWPS genMsgConstructor coords =
     Random.map4 SimGenerator

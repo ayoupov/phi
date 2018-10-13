@@ -283,7 +283,7 @@ d3.xml("assets/Barje-map-for-sim-big-01.svg").get(function (error, documentFragm
 
     });
 
-    app.ports.animatePeerConsumption.subscribe(function (model) {
+    app.ports.animateHousingConsumption.subscribe(function (model) {
         var t = d3.transition().duration(1500);
 
         phiNetwork = model;
@@ -294,7 +294,7 @@ d3.xml("assets/Barje-map-for-sim-big-01.svg").get(function (error, documentFragm
                 return d.id;
             });
 
-        peerIndicator = nodes.select(".simulation .peer .energyIndicator");
+        peerIndicator = nodes.select(".simulation .housing .energyIndicator");
 
         peerIndicator.select(".fillIndicator")
             .attr("d", function (d) {
