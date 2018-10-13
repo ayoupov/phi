@@ -19,23 +19,24 @@ import Simulation.WeatherList exposing (restWeather, weatherTupleToWeather)
 --        (Random.float 0 1)
 --        |> Random.generate UpdateWeather
 
-generateWPS : (SimGenerator -> Msg) -> Coords -> Cmd Msg
+generateWPS : (WaterPurificator -> Msg) -> Coords -> Cmd Msg
 generateWPS genMsgConstructor coords =
-    Random.map4 SimGenerator
+    Random.map3 WaterPurificator
+        -- daily
         (Random.constant [])
-        -- dailyGeneration
-        (Random.float 25 50)
         -- maxGeneration
+        (Random.float 10 30)
+        -- coords
         (Random.constant coords)
-        (Random.constant WaterPurificator)
         |> Random.generate genMsgConstructor
 
 
 generateHousing : (Housing -> Msg) -> Coords -> Cmd Msg
-generateHousing peerMsgConstructor coords =
+generateHousing housingMsgConstructor coords =
     Random.map3 Housing
         --        generatePeerJoules
         (Random.map5 HousingWater
+            -- stored
             (Random.constant [ 0 ])
             -- actual consumption
             (Random.constant [ 0 ])
@@ -49,11 +50,11 @@ generateHousing peerMsgConstructor coords =
         -- initial reputation
         (Random.constant [ 1 ])
         (Random.constant coords)
-        |> Random.generate peerMsgConstructor
+        |> Random.generate housingMsgConstructor
 
-upgradeHousing : (Housing -> Msg) -> Coords -> Cmd Msg
-upgradeHousing peerMsgConstructor coords =
-    Random.map3 Housing
+upgradeHousing : (ResilientHousing -> Msg) -> Coords -> Cmd Msg
+upgradeHousing resilientMsgConstructor coords =
+    Random.map5 ResilientHousing
         --        generatePeerJoules
         (Random.map5 HousingWater
             (Random.constant [ 0 ])
@@ -67,6 +68,10 @@ upgradeHousing peerMsgConstructor coords =
             (Random.constant [ 0 ])
         )
         -- initial reputation
-        (Random.constant [ 1 ])
+        (Random.constant [1])
+        -- dailyGeneration
+        (Random.constant [])
+        -- maxGen
+        (Random.float 2 6)
         (Random.constant coords)
-        |> Random.generate peerMsgConstructor
+        |> Random.generate resilientMsgConstructor

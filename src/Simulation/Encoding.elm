@@ -22,8 +22,7 @@ encodeNodeLabel nodeLabel =
                 [ ( "maxGeneration", Json.float label.maxGeneration )
                 , ( "dailyGeneration", encodeList Json.float label.dailyGeneration )
                 , ( "pos", encodeCoords label.pos )
-                , ( "generatorType", encodeGeneratorType label.generatorType )
-                , ( "nodeType", Json.string "generator" )
+                , ( "nodeType", Json.string "wps" )
                 ]
 
         HousingNode label ->
@@ -36,6 +35,20 @@ encodeNodeLabel nodeLabel =
                 , ( "reputationRating", encodeList Json.float label.reputation )
                 , ( "pos", encodeCoords label.pos )
                 , ( "nodeType", Json.string "housing" )
+                ]
+
+        ResilientHousingNode label ->
+            Json.object
+                [ ( "maxGeneration", Json.float label.maxGeneration )
+                , ( "dailyGeneration", encodeList Json.float label.dailyGeneration )
+                , ( "actualConsumption", encodeList Json.float label.water.actualConsumption )
+                , ( "storedWater", encodeList Json.float label.water.storedWater )
+                , ( "desiredConsumption", Json.float label.water.desiredConsumption )
+                , ( "seedRating", encodeList Json.float label.water.seedRatingWater )
+                , ( "tradeBalance", encodeList Json.float label.water.tradeBalance )
+                , ( "reputationRating", encodeList Json.float label.reputation )
+                , ( "pos", encodeCoords label.pos )
+                , ( "nodeType", Json.string "resilient" )
                 ]
 
         BatNode label ->
@@ -53,33 +66,18 @@ encodeNodeLabel nodeLabel =
                         PotentialHousing ->
                             Json.string "housing"
 
-                        _ ->
-                            Json.string "generator"
-
-                generatorTypeVal =
-                    case label.nodeType of
                         PotentialWPS ->
                             Json.string "wps"
 
-                        _ ->
-                            Json.null
+                        PotentialResilientHousing ->
+                            Json.string "resilient"
+
             in
             Json.object
                 [ ( "pos", encodeCoords label.pos )
                 , ( "nodeType", nodeTypeVal )
-                , ( "generatorType", generatorTypeVal )
                 , ( "isPotential", Json.bool True )
                 ]
-
-
-encodeGeneratorType : GeneratorType -> Json.Value
-encodeGeneratorType generatorType =
-    case generatorType of
-        WaterPurificator ->
-            Json.string "windTurbine"
-
-        ResilientHousing ->
-            Json.string "solarPanel"
 
 
 encodeNode : Node NodeLabel -> Node Json.Value

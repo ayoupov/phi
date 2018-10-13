@@ -96,11 +96,6 @@ graphFromNodeList nodes =
 potentialNodesList : List NodeLabel
 potentialNodesList =
     let
---        spList =
---            potentialSolarPanelList
---                |> Set.toList
---                |> List.map
---                    (PotentialNode << Potential PotentialResilientHousing << tupleToCoords)
 
         wpsList =
             potentialWPSList

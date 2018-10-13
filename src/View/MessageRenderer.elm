@@ -20,10 +20,10 @@ textToHtml input =
                     renderShape HIcon 10
 
                 "_PANEL_" ->
-                    renderShape WPIcon 10
+                    renderShape WPSIcon 10
 
                 "_TURBINE_" ->
-                    renderShape RHIcon 10
+                    renderShape ResilientIcon 10
 
                 "_CABLE_" ->
                     span [ class "cable" ] [ text "CABLE" ]

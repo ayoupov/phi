@@ -343,6 +343,12 @@ d3.xml("assets/Barje-map-for-sim-big-01.svg").get(function (error, documentFragm
                 });
                 currentSet = potentialHousing;
                 break;
+            case "resilient":
+                potentialResilient = potentialResilient.filter(function (n) {
+                    return n.id !== d.id
+                });
+                currentSet = potentialResilient;
+                break;
             case "generators" :
                 potentialGenerators = potentialGenerators.filter(function (n) {
                     return n.id !== d.id
@@ -359,7 +365,7 @@ d3.xml("assets/Barje-map-for-sim-big-01.svg").get(function (error, documentFragm
         drawPotentialNodes(nodes);
     };
 
-    var potentialHousing, potentialGenerators;
+    var potentialHousing, potentialGenerators, potentialResilient;
 
     function drawPotentialNodes(nodes) {
 
@@ -514,6 +520,18 @@ d3.xml("assets/Barje-map-for-sim-big-01.svg").get(function (error, documentFragm
                 cancelHoverAnimation(svg.selectAll('.baseNode'));
                 addHoverAnimation(svg.selectAll('.potential.housing .baseNode'));
                 break;
+            case "upgrade" :
+                isInBuildingMode = true;
+                lastBuildMode = "upgrade";
+                var nodes = svg.select(".nodes").selectAll(".potential.resilient")
+                    .data(potentialResilient, function (d) {
+                        return d.id;
+                    });
+                killPotentials();
+                drawPotentialNodes(nodes);
+                cancelHoverAnimation(svg.selectAll('.baseNode'));
+                addHoverAnimation(svg.selectAll('.potential.resilient .baseNode'));
+                break;
             case "generators" :
                 isInBuildingMode = true;
                 lastBuildMode = "generators";
@@ -619,10 +637,10 @@ d3.xml("assets/Barje-map-for-sim-big-01.svg").get(function (error, documentFragm
                 })
                 .append("g")
                 .attr("class", function (d) {
-                    if (d.label.generatorType == "windTurbine") {
-                        return "wt_pulse";
-                    } else if (d.label.generatorType == "solarPanel") {
-                        return "sp_pulse";
+                    if (d.label.generatorType == "resilient") {
+                        return "resilient_pulse";
+                    } else if (d.label.generatorType == "wps") {
+                        return "wps_pulse";
                     }
                 })
                 .attr('style', function(d) {
@@ -755,11 +773,15 @@ d3.xml("assets/Barje-map-for-sim-big-01.svg").get(function (error, documentFragm
         });
 
         potentialHousing = phiNodes.filter(function (node) {
-            return (node.label.isPotential && node.label.nodeType != 'generator');
+            return (node.label.isPotential && node.label.nodeType == 'housing');
+        });
+
+        potentialResilient = phiNodes.filter(function (node) {
+            return (node.label.isPotential && node.label.nodeType == 'resilient');
         });
 
         potentialGenerators = phiNodes.filter(function (node) {
-            return (node.label.isPotential && node.label.nodeType == 'generator');
+            return (node.label.isPotential && node.label.nodeType == 'wps');
         });
 
         drawNodes(liveNodes);

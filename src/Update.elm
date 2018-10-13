@@ -159,7 +159,7 @@ update msg model =
                 |> andThen update RenderPhiNetwork
 
         UpgradeHousing node ->
-            { model | network = addNode (HousingNode node) model.network }
+            { model | network = addNode (ResilientHousingNode node) model.network }
                 |> updateStatsThisCycle
                 |> andThen update RenderPhiNetwork
 

@@ -16,6 +16,9 @@ getCoords nodeLabel =
         HousingNode n ->
             n.pos
 
+        ResilientHousingNode n ->
+            n.pos
+
         PotentialNode n ->
             n.pos
 

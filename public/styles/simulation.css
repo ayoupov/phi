@@ -9,8 +9,6 @@
  -ms-animation: none !important;
 }
 
-
-
 body {
   background: linear-gradient(to right, rgba(214,100,234,1), rgba(193,226,124,1));
 }
@@ -56,21 +54,21 @@ body {
   opacity: 0;
 }
 
-.spIcon {
+.wpsIcon {
   fill: rgb(255,255,117);
 }
 
-.node.solarPanel {
+.node.wps {
   fill: rgb(255,255,117);
   stroke: rgb(255,255,117);
 }
 
-.node.windTurbine {
+.node.resilient {
   fill: rgb(114,236,245);
   stroke: rgb(114,236,245);
 }
 
-.wtIcon {
+.resilientIcon {
   fill: rgb(114,236,245);
 }
 
@@ -91,14 +89,14 @@ body {
   stroke: rgb(0,0,117);
 }
 
-.wt_pulse {
+.resilient_pulse {
   fill: rgb(114,236,245);
   animation: out-pulse 5s ease infinite;
   -webkit-animation: out-pulse 5s ease infinite;
   stroke-opacity: 0;
 }
 
-.sp_pulse {
+.wps_pulse {
   fill: rgb(255,255,117);
   animation: out-pulse 10s ease infinite;
   -webkit-animation: out-pulse 10s ease infinite;

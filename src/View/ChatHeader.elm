@@ -13,8 +13,8 @@ import View.Helpers exposing (intFmt, phiCoin)
 -- H: Housing, RH: Resilient housing, WP: Water processing
 type NodeIcon
     = HIcon
-    | RHIcon
-    | WPIcon
+    | ResilientIcon
+    | WPSIcon
 
 
 renderShape : NodeIcon -> Int -> Html msg
@@ -29,23 +29,23 @@ renderShape icon size =
                 ]
                 [ circle [ cx "15.5", cy "15.5", r "15" ] [] ]
 
-        RHIcon ->
+        ResilientIcon ->
             svg
                 [ SVG.width (toString size)
                 , SVG.height (toString size)
                 , SVG.viewBox "0 0 31 31"
                 -- todo: change classes
-                , SVG.class "wtIcon"
+                , SVG.class "resilientIcon"
                 ]
                 [ polygon [ SVG.points "15,4 31,31 0,31" ] [] ]
 
-        WPIcon ->
+        WPSIcon ->
             svg
                 [ SVG.width (toString size)
                 , SVG.height (toString size)
                 , SVG.viewBox "0 0 31 31"
                 -- todo: change classes
-                , SVG.class "spIcon"
+                , SVG.class "wpsIcon"
                 ]
                 [ rect [ x "0", y "0", SVG.width "31", SVG.height "31" ] [] ]
 
@@ -115,8 +115,8 @@ viewChatHeader model =
                 , div
                     [ class "node_counts" ]
                     [ div [ class "node_count_row" ] [ renderShape HIcon 10, text "Housing", renderNodeCount (hCount model.network) ]
-                    , div [ class "node_count_row" ] [ renderShape RHIcon 12, text "Resilient housing", renderNodeCount (rhCount model.network) ]
-                    , div [ class "node_count_row" ] [ renderShape WPIcon 10, text "Water processing", renderNodeCount (wpCount model.network) ]
+                    , div [ class "node_count_row" ] [ renderShape ResilientIcon 12, text "Resilient housing", renderNodeCount (rhCount model.network) ]
+                    , div [ class "node_count_row" ] [ renderShape WPSIcon 10, text "Water processing", renderNodeCount (wpCount model.network) ]
                     ]
                 , div [ class "hline" ] []
                 , div [ class "budget_status" ]

@@ -17132,6 +17132,15 @@ var _elm_community$graph$Graph$heightLevels = function (graph) {
 		graph);
 };
 
+var _ayoupov$phi$Simulation_Model$defaultGenerator = {
+	dailyGeneration: {
+		ctor: '::',
+		_0: 0,
+		_1: {ctor: '[]'}
+	},
+	maxGeneration: 0.7,
+	pos: {x: 0, y: 0}
+};
 var _ayoupov$phi$Simulation_Model$tupleToCoords = function (_p0) {
 	var _p1 = _p0;
 	return {
@@ -17175,9 +17184,9 @@ var _ayoupov$phi$Simulation_Model$Potential = F2(
 	function (a, b) {
 		return {nodeType: a, pos: b};
 	});
-var _ayoupov$phi$Simulation_Model$SimGenerator = F4(
-	function (a, b, c, d) {
-		return {dailyGeneration: a, maxGeneration: b, pos: c, generatorType: d};
+var _ayoupov$phi$Simulation_Model$WaterPurificator = F3(
+	function (a, b, c) {
+		return {dailyGeneration: a, maxGeneration: b, pos: c};
 	});
 var _ayoupov$phi$Simulation_Model$Battery = F3(
 	function (a, b, c) {
@@ -17219,9 +17228,28 @@ var _ayoupov$phi$Simulation_Model$defaultHousing = {
 	},
 	pos: {x: 0, y: 0}
 };
+var _ayoupov$phi$Simulation_Model$defaultResilientHousing = {
+	water: _ayoupov$phi$Simulation_Model$defaultHousingWater,
+	reputation: {
+		ctor: '::',
+		_0: 0,
+		_1: {ctor: '[]'}
+	},
+	dailyGeneration: {
+		ctor: '::',
+		_0: 0,
+		_1: {ctor: '[]'}
+	},
+	maxGeneration: 0.7,
+	pos: {x: 0, y: 0}
+};
 var _ayoupov$phi$Simulation_Model$Housing = F3(
 	function (a, b, c) {
 		return {water: a, reputation: b, pos: c};
+	});
+var _ayoupov$phi$Simulation_Model$ResilientHousing = F5(
+	function (a, b, c, d, e) {
+		return {water: a, reputation: b, dailyGeneration: c, maxGeneration: d, pos: e};
 	});
 var _ayoupov$phi$Simulation_Model$Weather = F2(
 	function (a, b) {
@@ -17233,6 +17261,9 @@ var _ayoupov$phi$Simulation_Model$BatNode = function (a) {
 var _ayoupov$phi$Simulation_Model$PotentialNode = function (a) {
 	return {ctor: 'PotentialNode', _0: a};
 };
+var _ayoupov$phi$Simulation_Model$ResilientHousingNode = function (a) {
+	return {ctor: 'ResilientHousingNode', _0: a};
+};
 var _ayoupov$phi$Simulation_Model$HousingNode = function (a) {
 	return {ctor: 'HousingNode', _0: a};
 };
@@ -17242,18 +17273,6 @@ var _ayoupov$phi$Simulation_Model$GeneratorNode = function (a) {
 var _ayoupov$phi$Simulation_Model$PotentialWPS = {ctor: 'PotentialWPS'};
 var _ayoupov$phi$Simulation_Model$PotentialResilientHousing = {ctor: 'PotentialResilientHousing'};
 var _ayoupov$phi$Simulation_Model$PotentialHousing = {ctor: 'PotentialHousing'};
-var _ayoupov$phi$Simulation_Model$ResilientHousing = {ctor: 'ResilientHousing'};
-var _ayoupov$phi$Simulation_Model$defaultGenerator = {
-	dailyGeneration: {
-		ctor: '::',
-		_0: 0,
-		_1: {ctor: '[]'}
-	},
-	maxGeneration: 0.7,
-	pos: {x: 0, y: 0},
-	generatorType: _ayoupov$phi$Simulation_Model$ResilientHousing
-};
-var _ayoupov$phi$Simulation_Model$WaterPurificator = {ctor: 'WaterPurificator'};
 
 var _ayoupov$phi$Simulation_SimulationInterop$animationFinished = _elm_lang$core$Native_Platform.incomingPort('animationFinished', _elm_lang$core$Json_Decode$string);
 
@@ -18557,6 +18576,8 @@ var _ayoupov$phi$Simulation_Helpers$getCoords = function (nodeLabel) {
 			return _p5._0.pos;
 		case 'HousingNode':
 			return _p5._0.pos;
+		case 'ResilientHousingNode':
+			return _p5._0.pos;
 		default:
 			return _p5._0.pos;
 	}
@@ -18936,30 +18957,26 @@ var _ayoupov$phi$Simulation_NodeList$initialWPS = A2(
 	_elm_lang$core$Set$fromList(
 		{
 			ctor: '::',
-			_0: {ctor: '_Tuple2', _0: 852, _1: 427},
+			_0: {ctor: '_Tuple2', _0: 4205, _1: 1217},
 			_1: {
 				ctor: '::',
-				_0: {ctor: '_Tuple2', _0: 852, _1: 427},
+				_0: {ctor: '_Tuple2', _0: 4014, _1: 1461},
 				_1: {
 					ctor: '::',
-					_0: {ctor: '_Tuple2', _0: 1005, _1: 502},
+					_0: {ctor: '_Tuple2', _0: 3948, _1: 1334},
 					_1: {
 						ctor: '::',
-						_0: {ctor: '_Tuple2', _0: 847, _1: 707},
+						_0: {ctor: '_Tuple2', _0: 4442, _1: 1582},
 						_1: {
 							ctor: '::',
-							_0: {ctor: '_Tuple2', _0: 975, _1: 202},
+							_0: {ctor: '_Tuple2', _0: 4498, _1: 1697},
 							_1: {
 								ctor: '::',
-								_0: {ctor: '_Tuple2', _0: 1096, _1: 197},
+								_0: {ctor: '_Tuple2', _0: 4678, _1: 2137},
 								_1: {
 									ctor: '::',
-									_0: {ctor: '_Tuple2', _0: 1208, _1: 164},
-									_1: {
-										ctor: '::',
-										_0: {ctor: '_Tuple2', _0: 1248, _1: 123},
-										_1: {ctor: '[]'}
-									}
+									_0: {ctor: '_Tuple2', _0: 4677, _1: 2034},
+									_1: {ctor: '[]'}
 								}
 							}
 						}
@@ -19803,122 +19820,154 @@ var _ayoupov$phi$Simulation_NodeList$wpsList = A2(
 	_elm_lang$core$Set$fromList(
 		{
 			ctor: '::',
-			_0: {ctor: '_Tuple2', _0: 1868, _1: 514},
+			_0: {ctor: '_Tuple2', _0: 3198, _1: 1802},
 			_1: {
 				ctor: '::',
-				_0: {ctor: '_Tuple2', _0: 1538, _1: 154},
+				_0: {ctor: '_Tuple2', _0: 2809, _1: 1972},
 				_1: {
 					ctor: '::',
-					_0: {ctor: '_Tuple2', _0: 503, _1: 700},
+					_0: {ctor: '_Tuple2', _0: 3006, _1: 2115},
 					_1: {
 						ctor: '::',
-						_0: {ctor: '_Tuple2', _0: 1414, _1: 310},
+						_0: {ctor: '_Tuple2', _0: 3431, _1: 1954},
 						_1: {
 							ctor: '::',
-							_0: {ctor: '_Tuple2', _0: 571, _1: 633},
+							_0: {ctor: '_Tuple2', _0: 3210, _1: 2010},
 							_1: {
 								ctor: '::',
-								_0: {ctor: '_Tuple2', _0: 1673, _1: 286},
+								_0: {ctor: '_Tuple2', _0: 3030, _1: 1873},
 								_1: {
 									ctor: '::',
-									_0: {ctor: '_Tuple2', _0: 1096, _1: 197},
+									_0: {ctor: '_Tuple2', _0: 3779, _1: 1601},
 									_1: {
 										ctor: '::',
-										_0: {ctor: '_Tuple2', _0: 1574, _1: 174},
+										_0: {ctor: '_Tuple2', _0: 4103, _1: 1474},
 										_1: {
 											ctor: '::',
-											_0: {ctor: '_Tuple2', _0: 852, _1: 427},
+											_0: {ctor: '_Tuple2', _0: 4205, _1: 1217},
 											_1: {
 												ctor: '::',
-												_0: {ctor: '_Tuple2', _0: 975, _1: 202},
+												_0: {ctor: '_Tuple2', _0: 4014, _1: 1461},
 												_1: {
 													ctor: '::',
-													_0: {ctor: '_Tuple2', _0: 588, _1: 714},
+													_0: {ctor: '_Tuple2', _0: 3948, _1: 1334},
 													_1: {
 														ctor: '::',
-														_0: {ctor: '_Tuple2', _0: 1690, _1: 385},
+														_0: {ctor: '_Tuple2', _0: 4442, _1: 1582},
 														_1: {
 															ctor: '::',
-															_0: {ctor: '_Tuple2', _0: 1864, _1: 540},
+															_0: {ctor: '_Tuple2', _0: 4618, _1: 1690},
 															_1: {
 																ctor: '::',
-																_0: {ctor: '_Tuple2', _0: 847, _1: 707},
+																_0: {ctor: '_Tuple2', _0: 4556, _1: 2004},
 																_1: {
 																	ctor: '::',
-																	_0: {ctor: '_Tuple2', _0: 1005, _1: 502},
+																	_0: {ctor: '_Tuple2', _0: 4522, _1: 2219},
 																	_1: {
 																		ctor: '::',
-																		_0: {ctor: '_Tuple2', _0: 1790, _1: 108},
+																		_0: {ctor: '_Tuple2', _0: 4498, _1: 1697},
 																		_1: {
 																			ctor: '::',
-																			_0: {ctor: '_Tuple2', _0: 1502, _1: 228},
+																			_0: {ctor: '_Tuple2', _0: 4678, _1: 2137},
 																			_1: {
 																				ctor: '::',
-																				_0: {ctor: '_Tuple2', _0: 891, _1: 355},
+																				_0: {ctor: '_Tuple2', _0: 4677, _1: 2034},
 																				_1: {
 																					ctor: '::',
-																					_0: {ctor: '_Tuple2', _0: 1435, _1: 225},
+																					_0: {ctor: '_Tuple2', _0: 3900, _1: 1641},
 																					_1: {
 																						ctor: '::',
-																						_0: {ctor: '_Tuple2', _0: 1438, _1: 276},
+																						_0: {ctor: '_Tuple2', _0: 4519, _1: 1039},
 																						_1: {
 																							ctor: '::',
-																							_0: {ctor: '_Tuple2', _0: 1248, _1: 123},
+																							_0: {ctor: '_Tuple2', _0: 4292, _1: 821},
 																							_1: {
 																								ctor: '::',
-																								_0: {ctor: '_Tuple2', _0: 1645, _1: 86},
+																								_0: {ctor: '_Tuple2', _0: 4509, _1: 1311},
 																								_1: {
 																									ctor: '::',
-																									_0: {ctor: '_Tuple2', _0: 1563, _1: 98},
+																									_0: {ctor: '_Tuple2', _0: 4201, _1: 631},
 																									_1: {
 																										ctor: '::',
-																										_0: {ctor: '_Tuple2', _0: 1370, _1: 1065},
+																										_0: {ctor: '_Tuple2', _0: 4471, _1: 855},
 																										_1: {
 																											ctor: '::',
-																											_0: {ctor: '_Tuple2', _0: 1208, _1: 164},
+																											_0: {ctor: '_Tuple2', _0: 4310, _1: 1048},
 																											_1: {
 																												ctor: '::',
-																												_0: {ctor: '_Tuple2', _0: 1629, _1: 20},
+																												_0: {ctor: '_Tuple2', _0: 4580, _1: 2547},
 																												_1: {
 																													ctor: '::',
-																													_0: {ctor: '_Tuple2', _0: 1160, _1: 189},
+																													_0: {ctor: '_Tuple2', _0: 4272, _1: 2455},
 																													_1: {
 																														ctor: '::',
-																														_0: {ctor: '_Tuple2', _0: 1083, _1: 886},
+																														_0: {ctor: '_Tuple2', _0: 4736, _1: 2352},
 																														_1: {
 																															ctor: '::',
-																															_0: {ctor: '_Tuple2', _0: 1816, _1: 530},
+																															_0: {ctor: '_Tuple2', _0: 4699, _1: 2772},
 																															_1: {
 																																ctor: '::',
-																																_0: {ctor: '_Tuple2', _0: 1801, _1: 482},
+																																_0: {ctor: '_Tuple2', _0: 4484, _1: 2820},
 																																_1: {
 																																	ctor: '::',
-																																	_0: {ctor: '_Tuple2', _0: 285, _1: 528},
+																																	_0: {ctor: '_Tuple2', _0: 4774, _1: 3021},
 																																	_1: {
 																																		ctor: '::',
-																																		_0: {ctor: '_Tuple2', _0: 1677, _1: 102},
+																																		_0: {ctor: '_Tuple2', _0: 4646, _1: 2962},
 																																		_1: {
 																																			ctor: '::',
-																																			_0: {ctor: '_Tuple2', _0: 1376, _1: 367},
+																																			_0: {ctor: '_Tuple2', _0: 4780, _1: 2561},
 																																			_1: {
 																																				ctor: '::',
-																																				_0: {ctor: '_Tuple2', _0: 1538, _1: 231},
+																																				_0: {ctor: '_Tuple2', _0: 3695, _1: 1481},
 																																				_1: {
 																																					ctor: '::',
-																																					_0: {ctor: '_Tuple2', _0: 1649, _1: 280},
+																																					_0: {ctor: '_Tuple2', _0: 3481, _1: 1575},
 																																					_1: {
 																																						ctor: '::',
-																																						_0: {ctor: '_Tuple2', _0: 1767, _1: 474},
+																																						_0: {ctor: '_Tuple2', _0: 3363, _1: 1670},
 																																						_1: {
 																																							ctor: '::',
-																																							_0: {ctor: '_Tuple2', _0: 1593, _1: 269},
+																																							_0: {ctor: '_Tuple2', _0: 3737, _1: 1825},
 																																							_1: {
 																																								ctor: '::',
-																																								_0: {ctor: '_Tuple2', _0: 1600, _1: 101},
+																																								_0: {ctor: '_Tuple2', _0: 2577, _1: 2152},
 																																								_1: {
 																																									ctor: '::',
-																																									_0: {ctor: '_Tuple2', _0: 1687, _1: 349},
-																																									_1: {ctor: '[]'}
+																																									_0: {ctor: '_Tuple2', _0: 2760, _1: 2193},
+																																									_1: {
+																																										ctor: '::',
+																																										_0: {ctor: '_Tuple2', _0: 2267, _1: 2484},
+																																										_1: {
+																																											ctor: '::',
+																																											_0: {ctor: '_Tuple2', _0: 2367, _1: 2499},
+																																											_1: {
+																																												ctor: '::',
+																																												_0: {ctor: '_Tuple2', _0: 1618, _1: 2825},
+																																												_1: {
+																																													ctor: '::',
+																																													_0: {ctor: '_Tuple2', _0: 1902, _1: 2698},
+																																													_1: {
+																																														ctor: '::',
+																																														_0: {ctor: '_Tuple2', _0: 1879, _1: 2515},
+																																														_1: {
+																																															ctor: '::',
+																																															_0: {ctor: '_Tuple2', _0: 1537, _1: 2769},
+																																															_1: {
+																																																ctor: '::',
+																																																_0: {ctor: '_Tuple2', _0: 2124, _1: 2660},
+																																																_1: {
+																																																	ctor: '::',
+																																																	_0: {ctor: '_Tuple2', _0: 2427, _1: 2176},
+																																																	_1: {ctor: '[]'}
+																																																}
+																																															}
+																																														}
+																																													}
+																																												}
+																																											}
+																																										}
+																																									}
 																																								}
 																																							}
 																																						}
@@ -20659,26 +20708,25 @@ var _ayoupov$phi$Simulation_Simulation$waterToGenerators = F2(
 		var water = weather.water;
 		var updateNode = function (node) {
 			var _p45 = node;
-			if (_p45.ctor === 'GeneratorNode') {
-				var _p47 = _p45._0;
-				var _p46 = _p47.generatorType;
-				if (_p46.ctor === 'ResilientHousing') {
+			switch (_p45.ctor) {
+				case 'GeneratorNode':
+					var _p46 = _p45._0;
 					return _ayoupov$phi$Simulation_Model$GeneratorNode(
+						_elm_lang$core$Native_Utils.update(
+							_p46,
+							{
+								dailyGeneration: A2(newDailyGeneration, _p46, water)
+							}));
+				case 'ResilientHousingNode':
+					var _p47 = _p45._0;
+					return _ayoupov$phi$Simulation_Model$ResilientHousingNode(
 						_elm_lang$core$Native_Utils.update(
 							_p47,
 							{
 								dailyGeneration: A2(newDailyGeneration, _p47, water)
 							}));
-				} else {
-					return _ayoupov$phi$Simulation_Model$GeneratorNode(
-						_elm_lang$core$Native_Utils.update(
-							_p47,
-							{
-								dailyGeneration: A2(newDailyGeneration, _p47, water)
-							}));
-				}
-			} else {
-				return node;
+				default:
+					return node;
 			}
 		};
 		return A2(_elm_community$graph$Graph$mapNodes, updateNode, network);
@@ -23336,13 +23384,13 @@ var _ayoupov$phi$Simulation_WeatherList$restWeather = function (list) {
 };
 
 var _ayoupov$phi$Simulation_Init_Generators$upgradeHousing = F2(
-	function (peerMsgConstructor, coords) {
+	function (resilientMsgConstructor, coords) {
 		return A2(
 			_elm_lang$core$Random$generate,
-			peerMsgConstructor,
-			A4(
-				_elm_lang$core$Random$map3,
-				_ayoupov$phi$Simulation_Model$Housing,
+			resilientMsgConstructor,
+			A6(
+				_elm_lang$core$Random$map5,
+				_ayoupov$phi$Simulation_Model$ResilientHousing,
 				A6(
 					_elm_lang$core$Random$map5,
 					_ayoupov$phi$Simulation_Model$HousingWater,
@@ -23377,13 +23425,16 @@ var _ayoupov$phi$Simulation_Init_Generators$upgradeHousing = F2(
 						_0: 1,
 						_1: {ctor: '[]'}
 					}),
+				_elm_community$random_extra$Random_Extra$constant(
+					{ctor: '[]'}),
+				A2(_elm_lang$core$Random$float, 2, 6),
 				_elm_community$random_extra$Random_Extra$constant(coords)));
 	});
 var _ayoupov$phi$Simulation_Init_Generators$generateHousing = F2(
-	function (peerMsgConstructor, coords) {
+	function (housingMsgConstructor, coords) {
 		return A2(
 			_elm_lang$core$Random$generate,
-			peerMsgConstructor,
+			housingMsgConstructor,
 			A4(
 				_elm_lang$core$Random$map3,
 				_ayoupov$phi$Simulation_Model$Housing,
@@ -23428,14 +23479,13 @@ var _ayoupov$phi$Simulation_Init_Generators$generateWPS = F2(
 		return A2(
 			_elm_lang$core$Random$generate,
 			genMsgConstructor,
-			A5(
-				_elm_lang$core$Random$map4,
-				_ayoupov$phi$Simulation_Model$SimGenerator,
+			A4(
+				_elm_lang$core$Random$map3,
+				_ayoupov$phi$Simulation_Model$WaterPurificator,
 				_elm_community$random_extra$Random_Extra$constant(
 					{ctor: '[]'}),
-				A2(_elm_lang$core$Random$float, 25, 50),
-				_elm_community$random_extra$Random_Extra$constant(coords),
-				_elm_community$random_extra$Random_Extra$constant(_ayoupov$phi$Simulation_Model$WaterPurificator)));
+				A2(_elm_lang$core$Random$float, 10, 30),
+				_elm_community$random_extra$Random_Extra$constant(coords)));
 	});
 
 var _ayoupov$phi$Model$initNetworkGenerators = function () {
@@ -23998,117 +24048,101 @@ var _ayoupov$phi$Simulation_Encoding$encodeCoords = function (pos) {
 			}
 		});
 };
-var _ayoupov$phi$Simulation_Encoding$encodeGeneratorType = function (generatorType) {
-	var _p2 = generatorType;
-	if (_p2.ctor === 'WaterPurificator') {
-		return _elm_lang$core$Json_Encode$string('windTurbine');
-	} else {
-		return _elm_lang$core$Json_Encode$string('solarPanel');
-	}
-};
 var _ayoupov$phi$Simulation_Encoding$encodeList = F2(
 	function (encoder, list) {
 		return _elm_lang$core$Json_Encode$list(
 			A2(_elm_lang$core$List$map, encoder, list));
 	});
 var _ayoupov$phi$Simulation_Encoding$encodeNodeLabel = function (nodeLabel) {
-	var _p3 = nodeLabel;
-	switch (_p3.ctor) {
+	var _p2 = nodeLabel;
+	switch (_p2.ctor) {
 		case 'GeneratorNode':
-			var _p4 = _p3._0;
+			var _p3 = _p2._0;
 			return _elm_lang$core$Json_Encode$object(
 				{
 					ctor: '::',
 					_0: {
 						ctor: '_Tuple2',
 						_0: 'maxGeneration',
-						_1: _elm_lang$core$Json_Encode$float(_p4.maxGeneration)
+						_1: _elm_lang$core$Json_Encode$float(_p3.maxGeneration)
 					},
 					_1: {
 						ctor: '::',
 						_0: {
 							ctor: '_Tuple2',
 							_0: 'dailyGeneration',
-							_1: A2(_ayoupov$phi$Simulation_Encoding$encodeList, _elm_lang$core$Json_Encode$float, _p4.dailyGeneration)
+							_1: A2(_ayoupov$phi$Simulation_Encoding$encodeList, _elm_lang$core$Json_Encode$float, _p3.dailyGeneration)
 						},
 						_1: {
 							ctor: '::',
 							_0: {
 								ctor: '_Tuple2',
 								_0: 'pos',
-								_1: _ayoupov$phi$Simulation_Encoding$encodeCoords(_p4.pos)
+								_1: _ayoupov$phi$Simulation_Encoding$encodeCoords(_p3.pos)
 							},
 							_1: {
 								ctor: '::',
 								_0: {
 									ctor: '_Tuple2',
-									_0: 'generatorType',
-									_1: _ayoupov$phi$Simulation_Encoding$encodeGeneratorType(_p4.generatorType)
+									_0: 'nodeType',
+									_1: _elm_lang$core$Json_Encode$string('wps')
 								},
-								_1: {
-									ctor: '::',
-									_0: {
-										ctor: '_Tuple2',
-										_0: 'nodeType',
-										_1: _elm_lang$core$Json_Encode$string('generator')
-									},
-									_1: {ctor: '[]'}
-								}
+								_1: {ctor: '[]'}
 							}
 						}
 					}
 				});
 		case 'HousingNode':
-			var _p5 = _p3._0;
+			var _p4 = _p2._0;
 			return _elm_lang$core$Json_Encode$object(
 				{
 					ctor: '::',
 					_0: {
 						ctor: '_Tuple2',
 						_0: 'actualConsumption',
-						_1: A2(_ayoupov$phi$Simulation_Encoding$encodeList, _elm_lang$core$Json_Encode$float, _p5.water.actualConsumption)
+						_1: A2(_ayoupov$phi$Simulation_Encoding$encodeList, _elm_lang$core$Json_Encode$float, _p4.water.actualConsumption)
 					},
 					_1: {
 						ctor: '::',
 						_0: {
 							ctor: '_Tuple2',
 							_0: 'storedWater',
-							_1: A2(_ayoupov$phi$Simulation_Encoding$encodeList, _elm_lang$core$Json_Encode$float, _p5.water.storedWater)
+							_1: A2(_ayoupov$phi$Simulation_Encoding$encodeList, _elm_lang$core$Json_Encode$float, _p4.water.storedWater)
 						},
 						_1: {
 							ctor: '::',
 							_0: {
 								ctor: '_Tuple2',
 								_0: 'desiredConsumption',
-								_1: _elm_lang$core$Json_Encode$float(_p5.water.desiredConsumption)
+								_1: _elm_lang$core$Json_Encode$float(_p4.water.desiredConsumption)
 							},
 							_1: {
 								ctor: '::',
 								_0: {
 									ctor: '_Tuple2',
 									_0: 'seedRating',
-									_1: A2(_ayoupov$phi$Simulation_Encoding$encodeList, _elm_lang$core$Json_Encode$float, _p5.water.seedRatingWater)
+									_1: A2(_ayoupov$phi$Simulation_Encoding$encodeList, _elm_lang$core$Json_Encode$float, _p4.water.seedRatingWater)
 								},
 								_1: {
 									ctor: '::',
 									_0: {
 										ctor: '_Tuple2',
 										_0: 'tradeBalance',
-										_1: A2(_ayoupov$phi$Simulation_Encoding$encodeList, _elm_lang$core$Json_Encode$float, _p5.water.tradeBalance)
+										_1: A2(_ayoupov$phi$Simulation_Encoding$encodeList, _elm_lang$core$Json_Encode$float, _p4.water.tradeBalance)
 									},
 									_1: {
 										ctor: '::',
 										_0: {
 											ctor: '_Tuple2',
 											_0: 'reputationRating',
-											_1: A2(_ayoupov$phi$Simulation_Encoding$encodeList, _elm_lang$core$Json_Encode$float, _p5.reputation)
+											_1: A2(_ayoupov$phi$Simulation_Encoding$encodeList, _elm_lang$core$Json_Encode$float, _p4.reputation)
 										},
 										_1: {
 											ctor: '::',
 											_0: {
 												ctor: '_Tuple2',
 												_0: 'pos',
-												_1: _ayoupov$phi$Simulation_Encoding$encodeCoords(_p5.pos)
+												_1: _ayoupov$phi$Simulation_Encoding$encodeCoords(_p4.pos)
 											},
 											_1: {
 												ctor: '::',
@@ -24126,8 +24160,92 @@ var _ayoupov$phi$Simulation_Encoding$encodeNodeLabel = function (nodeLabel) {
 						}
 					}
 				});
+		case 'ResilientHousingNode':
+			var _p5 = _p2._0;
+			return _elm_lang$core$Json_Encode$object(
+				{
+					ctor: '::',
+					_0: {
+						ctor: '_Tuple2',
+						_0: 'maxGeneration',
+						_1: _elm_lang$core$Json_Encode$float(_p5.maxGeneration)
+					},
+					_1: {
+						ctor: '::',
+						_0: {
+							ctor: '_Tuple2',
+							_0: 'dailyGeneration',
+							_1: A2(_ayoupov$phi$Simulation_Encoding$encodeList, _elm_lang$core$Json_Encode$float, _p5.dailyGeneration)
+						},
+						_1: {
+							ctor: '::',
+							_0: {
+								ctor: '_Tuple2',
+								_0: 'actualConsumption',
+								_1: A2(_ayoupov$phi$Simulation_Encoding$encodeList, _elm_lang$core$Json_Encode$float, _p5.water.actualConsumption)
+							},
+							_1: {
+								ctor: '::',
+								_0: {
+									ctor: '_Tuple2',
+									_0: 'storedWater',
+									_1: A2(_ayoupov$phi$Simulation_Encoding$encodeList, _elm_lang$core$Json_Encode$float, _p5.water.storedWater)
+								},
+								_1: {
+									ctor: '::',
+									_0: {
+										ctor: '_Tuple2',
+										_0: 'desiredConsumption',
+										_1: _elm_lang$core$Json_Encode$float(_p5.water.desiredConsumption)
+									},
+									_1: {
+										ctor: '::',
+										_0: {
+											ctor: '_Tuple2',
+											_0: 'seedRating',
+											_1: A2(_ayoupov$phi$Simulation_Encoding$encodeList, _elm_lang$core$Json_Encode$float, _p5.water.seedRatingWater)
+										},
+										_1: {
+											ctor: '::',
+											_0: {
+												ctor: '_Tuple2',
+												_0: 'tradeBalance',
+												_1: A2(_ayoupov$phi$Simulation_Encoding$encodeList, _elm_lang$core$Json_Encode$float, _p5.water.tradeBalance)
+											},
+											_1: {
+												ctor: '::',
+												_0: {
+													ctor: '_Tuple2',
+													_0: 'reputationRating',
+													_1: A2(_ayoupov$phi$Simulation_Encoding$encodeList, _elm_lang$core$Json_Encode$float, _p5.reputation)
+												},
+												_1: {
+													ctor: '::',
+													_0: {
+														ctor: '_Tuple2',
+														_0: 'pos',
+														_1: _ayoupov$phi$Simulation_Encoding$encodeCoords(_p5.pos)
+													},
+													_1: {
+														ctor: '::',
+														_0: {
+															ctor: '_Tuple2',
+															_0: 'nodeType',
+															_1: _elm_lang$core$Json_Encode$string('resilient')
+														},
+														_1: {ctor: '[]'}
+													}
+												}
+											}
+										}
+									}
+								}
+							}
+						}
+					}
+				});
 		case 'BatNode':
-			var _p6 = _p3._0;
+			var _p6 = _p2._0;
 			return _elm_lang$core$Json_Encode$object(
 				{
 					ctor: '::',
@@ -24163,21 +24281,16 @@ var _ayoupov$phi$Simulation_Encoding$encodeNodeLabel = function (nodeLabel) {
 					}
 				});
 		default:
-			var _p9 = _p3._0;
-			var generatorTypeVal = function () {
-				var _p7 = _p9.nodeType;
-				if (_p7.ctor === 'PotentialWPS') {
-					return _elm_lang$core$Json_Encode$string('wps');
-				} else {
-					return _elm_lang$core$Json_Encode$null;
-				}
-			}();
+			var _p8 = _p2._0;
 			var nodeTypeVal = function () {
-				var _p8 = _p9.nodeType;
-				if (_p8.ctor === 'PotentialHousing') {
-					return _elm_lang$core$Json_Encode$string('housing');
-				} else {
-					return _elm_lang$core$Json_Encode$string('generator');
+				var _p7 = _p8.nodeType;
+				switch (_p7.ctor) {
+					case 'PotentialHousing':
+						return _elm_lang$core$Json_Encode$string('housing');
+					case 'PotentialWPS':
+						return _elm_lang$core$Json_Encode$string('wps');
+					default:
+						return _elm_lang$core$Json_Encode$string('resilient');
 				}
 			}();
 			return _elm_lang$core$Json_Encode$object(
@@ -24186,34 +24299,30 @@ var _ayoupov$phi$Simulation_Encoding$encodeNodeLabel = function (nodeLabel) {
 					_0: {
 						ctor: '_Tuple2',
 						_0: 'pos',
-						_1: _ayoupov$phi$Simulation_Encoding$encodeCoords(_p9.pos)
+						_1: _ayoupov$phi$Simulation_Encoding$encodeCoords(_p8.pos)
 					},
 					_1: {
 						ctor: '::',
 						_0: {ctor: '_Tuple2', _0: 'nodeType', _1: nodeTypeVal},
 						_1: {
 							ctor: '::',
-							_0: {ctor: '_Tuple2', _0: 'generatorType', _1: generatorTypeVal},
-							_1: {
-								ctor: '::',
-								_0: {
-									ctor: '_Tuple2',
-									_0: 'isPotential',
-									_1: _elm_lang$core$Json_Encode$bool(true)
-								},
-								_1: {ctor: '[]'}
-							}
+							_0: {
+								ctor: '_Tuple2',
+								_0: 'isPotential',
+								_1: _elm_lang$core$Json_Encode$bool(true)
+							},
+							_1: {ctor: '[]'}
 						}
 					}
 				});
 	}
 };
-var _ayoupov$phi$Simulation_Encoding$encodeNode = function (_p10) {
-	var _p11 = _p10;
+var _ayoupov$phi$Simulation_Encoding$encodeNode = function (_p9) {
+	var _p10 = _p9;
 	return A2(
 		_elm_community$graph$Graph$Node,
-		_p11.id,
-		_ayoupov$phi$Simulation_Encoding$encodeNodeLabel(_p11.label));
+		_p10.id,
+		_ayoupov$phi$Simulation_Encoding$encodeNodeLabel(_p10.label));
 };
 var _ayoupov$phi$Simulation_Encoding$encodeGraph = function (graph) {
 	var tLines = A2(
@@ -24266,12 +24375,7 @@ var _ayoupov$phi$Simulation_Stats$wpCount = function (network) {
 		function (node, sum) {
 			var _p1 = node.label;
 			if (_p1.ctor === 'GeneratorNode') {
-				var _p2 = _p1._0.generatorType;
-				if (_p2.ctor === 'WaterPurificator') {
-					return 1 + sum;
-				} else {
-					return sum;
-				}
+				return 1 + sum;
 			} else {
 				return sum;
 			}
@@ -24285,14 +24389,9 @@ var _ayoupov$phi$Simulation_Stats$wpCount = function (network) {
 var _ayoupov$phi$Simulation_Stats$rhCount = function (network) {
 	var reducer = F2(
 		function (node, sum) {
-			var _p3 = node.label;
-			if (_p3.ctor === 'GeneratorNode') {
-				var _p4 = _p3._0.generatorType;
-				if (_p4.ctor === 'ResilientHousing') {
-					return 1 + sum;
-				} else {
-					return sum;
-				}
+			var _p2 = node.label;
+			if (_p2.ctor === 'ResilientHousingNode') {
+				return 1 + sum;
 			} else {
 				return sum;
 			}
@@ -24306,8 +24405,8 @@ var _ayoupov$phi$Simulation_Stats$rhCount = function (network) {
 var _ayoupov$phi$Simulation_Stats$hCount = function (network) {
 	var reducer = F2(
 		function (node, sum) {
-			var _p5 = node.label;
-			if (_p5.ctor === 'HousingNode') {
+			var _p3 = node.label;
+			if (_p3.ctor === 'HousingNode') {
 				return 1 + sum;
 			} else {
 				return sum;
@@ -24625,7 +24724,7 @@ var _ayoupov$phi$Update$update = F2(
 								{
 									network: A2(
 										_ayoupov$phi$Simulation_GraphUpdates$addNode,
-										_ayoupov$phi$Simulation_Model$HousingNode(_p0._0),
+										_ayoupov$phi$Simulation_Model$ResilientHousingNode(_p0._0),
 										model.network)
 								})));
 				case 'AddEdge':
@@ -25017,7 +25116,7 @@ var _ayoupov$phi$View_ChatHeader$renderShape = F2(
 							{ctor: '[]'}),
 						_1: {ctor: '[]'}
 					});
-			case 'RHIcon':
+			case 'ResilientIcon':
 				return A2(
 					_elm_lang$svg$Svg$svg,
 					{
@@ -25033,7 +25132,7 @@ var _ayoupov$phi$View_ChatHeader$renderShape = F2(
 								_0: _elm_lang$svg$Svg_Attributes$viewBox('0 0 31 31'),
 								_1: {
 									ctor: '::',
-									_0: _elm_lang$svg$Svg_Attributes$class('wtIcon'),
+									_0: _elm_lang$svg$Svg_Attributes$class('resilientIcon'),
 									_1: {ctor: '[]'}
 								}
 							}
@@ -25067,7 +25166,7 @@ var _ayoupov$phi$View_ChatHeader$renderShape = F2(
 								_0: _elm_lang$svg$Svg_Attributes$viewBox('0 0 31 31'),
 								_1: {
 									ctor: '::',
-									_0: _elm_lang$svg$Svg_Attributes$class('spIcon'),
+									_0: _elm_lang$svg$Svg_Attributes$class('wpsIcon'),
 									_1: {ctor: '[]'}
 								}
 							}
@@ -25099,8 +25198,8 @@ var _ayoupov$phi$View_ChatHeader$renderShape = F2(
 					});
 		}
 	});
-var _ayoupov$phi$View_ChatHeader$WPIcon = {ctor: 'WPIcon'};
-var _ayoupov$phi$View_ChatHeader$RHIcon = {ctor: 'RHIcon'};
+var _ayoupov$phi$View_ChatHeader$WPSIcon = {ctor: 'WPSIcon'};
+var _ayoupov$phi$View_ChatHeader$ResilientIcon = {ctor: 'ResilientIcon'};
 var _ayoupov$phi$View_ChatHeader$HIcon = {ctor: 'HIcon'};
 var _ayoupov$phi$View_ChatHeader$viewChatHeader = function (model) {
 	var thisStats = A2(
@@ -25353,7 +25452,7 @@ var _ayoupov$phi$View_ChatHeader$viewChatHeader = function (model) {
 																	},
 																	{
 																		ctor: '::',
-																		_0: A2(_ayoupov$phi$View_ChatHeader$renderShape, _ayoupov$phi$View_ChatHeader$RHIcon, 12),
+																		_0: A2(_ayoupov$phi$View_ChatHeader$renderShape, _ayoupov$phi$View_ChatHeader$ResilientIcon, 12),
 																		_1: {
 																			ctor: '::',
 																			_0: _elm_lang$html$Html$text('Resilient housing'),
@@ -25376,7 +25475,7 @@ var _ayoupov$phi$View_ChatHeader$viewChatHeader = function (model) {
 																		},
 																		{
 																			ctor: '::',
-																			_0: A2(_ayoupov$phi$View_ChatHeader$renderShape, _ayoupov$phi$View_ChatHeader$WPIcon, 10),
+																			_0: A2(_ayoupov$phi$View_ChatHeader$renderShape, _ayoupov$phi$View_ChatHeader$WPSIcon, 10),
 																			_1: {
 																				ctor: '::',
 																				_0: _elm_lang$html$Html$text('Water processing'),
@@ -25462,9 +25561,9 @@ var _ayoupov$phi$View_MessageRenderer$textToHtml = function (input) {
 			case '_PEER_':
 				return A2(_ayoupov$phi$View_ChatHeader$renderShape, _ayoupov$phi$View_ChatHeader$HIcon, 10);
 			case '_PANEL_':
-				return A2(_ayoupov$phi$View_ChatHeader$renderShape, _ayoupov$phi$View_ChatHeader$WPIcon, 10);
+				return A2(_ayoupov$phi$View_ChatHeader$renderShape, _ayoupov$phi$View_ChatHeader$WPSIcon, 10);
 			case '_TURBINE_':
-				return A2(_ayoupov$phi$View_ChatHeader$renderShape, _ayoupov$phi$View_ChatHeader$RHIcon, 10);
+				return A2(_ayoupov$phi$View_ChatHeader$renderShape, _ayoupov$phi$View_ChatHeader$ResilientIcon, 10);
 			case '_CABLE_':
 				return A2(
 					_elm_lang$html$Html$span,

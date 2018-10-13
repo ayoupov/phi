@@ -33,12 +33,10 @@ waterToGenerators weather network =
         updateNode node =
             case node of
                 GeneratorNode node ->
-                    case node.generatorType of
-                        ResilientHousing ->
-                            GeneratorNode { node | dailyGeneration = newDailyGeneration node water }
+                    GeneratorNode { node | dailyGeneration = newDailyGeneration node water }
 
-                        WaterPurificator ->
-                            GeneratorNode { node | dailyGeneration = newDailyGeneration node water }
+                ResilientHousingNode node ->
+                    ResilientHousingNode { node | dailyGeneration = newDailyGeneration node water }
 
                 _ ->
                     node

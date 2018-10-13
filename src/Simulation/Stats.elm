@@ -28,13 +28,8 @@ rhCount network =
     let
         reducer node sum =
             case node.label of
-                GeneratorNode gen ->
-                    case gen.generatorType of
-                        ResilientHousing ->
-                            1 + sum
-
-                        _ ->
-                            sum
+                ResilientHousingNode resilient->
+                    1 + sum
 
                 _ ->
                     sum
@@ -48,13 +43,7 @@ wpCount network =
         reducer node sum =
             case node.label of
                 GeneratorNode gen ->
-                    case gen.generatorType of
-                        WaterPurificator ->
-                            1 + sum
-
-                        _ ->
-                            sum
-
+                    1 + sum
                 _ ->
                     sum
     in

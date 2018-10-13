@@ -125,8 +125,9 @@ type alias EncodedEdge =
 
 
 type NodeLabel
-    = GeneratorNode SimGenerator
+    = GeneratorNode WaterPurificator
     | HousingNode Housing
+    | ResilientHousingNode ResilientHousing
     | PotentialNode Potential
     | BatNode Battery
 
@@ -147,25 +148,18 @@ type PotentialNodeType
 -- NODES
 
 
-type GeneratorType
-    = WaterPurificator
-    | ResilientHousing
-
-
-type alias SimGenerator =
+type alias WaterPurificator =
     { dailyGeneration : List Water
     , maxGeneration : Water
     , pos : Coords
-    , generatorType : GeneratorType
     }
 
 
-defaultGenerator : SimGenerator
+defaultGenerator : WaterPurificator
 defaultGenerator =
     { dailyGeneration = [ 0 ]
     , maxGeneration = 0.7
     , pos = { x = 0, y = 0 }
-    , generatorType = ResilientHousing
     }
 
 
@@ -196,7 +190,6 @@ type alias Housing =
     , pos : Coords
     }
 
-
 defaultHousing : Housing
 defaultHousing =
     { water = defaultHousingWater
@@ -204,6 +197,22 @@ defaultHousing =
     , pos = { x = 0, y = 0 }
     }
 
+type alias ResilientHousing =
+    { water : HousingWater
+    , reputation : List ReputationRating
+    , dailyGeneration : List Water
+    , maxGeneration : Water
+    , pos : Coords
+    }
+
+defaultResilientHousing : ResilientHousing
+defaultResilientHousing =
+    { water = defaultHousingWater
+    , reputation = [ 0 ]
+    , dailyGeneration =  [ 0 ]
+    , maxGeneration = 0.7
+    , pos = { x = 0, y = 0 }
+    }
 
 
 -- WEATHER
