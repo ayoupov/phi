@@ -64,10 +64,6 @@ defaultStats =
     { health = 0, coverage = 0 }
 
 
-
--- less hardcode??
-
-
 initMap : SimMap
 initMap =
     { name = ""
@@ -75,7 +71,7 @@ initMap =
     , initialNetwork = graphFromNodeList potentialNodesList
     , initialWeather =
         { water = 0.5
-        , wind = 0.5
+        , floodLevel = 5
         }
     , initialWeatherList = restWeather []
     , narrative = initNarrative

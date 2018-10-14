@@ -221,9 +221,9 @@ defaultResilientHousing =
 
 type alias Weather =
     { water : Float
-    , wind : Float
+    , floodLevel : Int
     }
 
 
 type alias WeatherTuple =
-    ( Float, Float )
+    ( Float, Int )

@@ -331,20 +331,20 @@ weatherForecast model =
         weather =
             pregenerateWeather model.weatherList
 
-        sunny =
+        water =
             toString weather.water
 
-        windy =
-            toString weather.wind
+        floodLevel =
+            toString weather.floodLevel
 
         chatMsg =
             BotMessage <|
-                "I expect weather tomorrow to be "
-                    ++ sunny
-                    ++ " sun, "
-                    ++ "and "
-                    ++ windy
-                    ++ " wind."
+                "I expect "
+                    ++ water
+                    ++ " humidity, "
+                    ++ "and level of flood "
+                    ++ floodLevel
+                    ++ "."
     in
     update (SendBotChatItem chatMsg) model
         |> andThen update
@@ -370,9 +370,9 @@ pregenerateWeather list =
         currentWeather =
             list
                 |> List.tail
-                |> Maybe.withDefault [ ( 0.5, 0.5 ) ]
+                |> Maybe.withDefault [ ( 0.5, 0 ) ]
                 |> List.head
-                |> Maybe.withDefault ( 0.5, 0.5 )
+                |> Maybe.withDefault ( 0.5, 0 )
                 |> weatherTupleToWeather
     in
     currentWeather
@@ -387,7 +387,7 @@ generateWeather list =
         currentWeather =
             currentList
                 |> List.head
-                |> Maybe.withDefault ( 0.5, 0.5 )
+                |> Maybe.withDefault ( 0.5, 0 )
                 |> weatherTupleToWeather
     in
     update (UpdateWeather currentWeather)
