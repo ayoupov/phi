@@ -333,7 +333,7 @@ d3.xml("assets/Barje-map-for-sim-big-01.svg").get(function (error, documentFragm
     });
 
     var clickOnPotential = function (d) {
-        app.ports.requestConvertNode.send(d.id);
+        app.ports.requestConvertNode.send({id: d.id, isUpgrade: lastBuildMode == "resilient"});
         var addendum = ".housing";
         var currentSet = potentialHousing;
         switch (lastBuildMode) {
@@ -362,7 +362,7 @@ d3.xml("assets/Barje-map-for-sim-big-01.svg").get(function (error, documentFragm
             .data(currentSet, function (d) {
                 return d.id;
             });
-        //killPotentials();
+//        killPotentials();
         drawPotentialNodes(nodes);
     };
 
@@ -393,8 +393,9 @@ d3.xml("assets/Barje-map-for-sim-big-01.svg").get(function (error, documentFragm
             case "generators": addendum = ".wps"; break;
             default: addendum = ".housing"
         }
+        var selectClass = (lastBuildMode != "resilient") ? ".potential" + addendum : ".housing:not(.potential)";
 
-        nodes.selectAll(".potential" + addendum)
+        nodes.selectAll(selectClass)
             .attr("stroke-opacity", "0")
             .attr("fill-opacity", "0")
             .style("opacity", "0")
@@ -409,7 +410,7 @@ d3.xml("assets/Barje-map-for-sim-big-01.svg").get(function (error, documentFragm
                 app.ports.animationFinished.send("enterBuildModeAnimated");
             });
 
-        var potentials = d3.selectAll(".potential" + addendum);
+        var potentials = d3.selectAll(selectClass);
         potentials
             .on("click", clickOnPotential);
 
@@ -539,6 +540,7 @@ d3.xml("assets/Barje-map-for-sim-big-01.svg").get(function (error, documentFragm
                         return d.id;
                     });
                 killPotentials();
+                drawPotentialNodes(nodes);
                 cancelHoverAnimation(svg.selectAll('.baseNode'));
                 addHoverAnimation(svg.selectAll('.housing:not(.potential) .baseNode'));
 //                nodes.attr("class", function(d){

@@ -12,7 +12,7 @@ import Simulation.GraphUpdates exposing (addEdge, createEdge)
 import Simulation.Helpers exposing (getCoords)
 import Simulation.Init.Generators as Generators
 import Simulation.Model exposing (..)
-
+import Debug
 
 -- PORTS
 
@@ -26,18 +26,26 @@ port requestConvertNode : (Value -> msg) -> Sub msg
 port requestNewLine : (Value -> msg) -> Sub msg
 
 
+type alias NodeRequest = { id : NodeId, isUpgrade : Bool }
+
+req : Decode.Decoder NodeRequest
+req =
+  Decode.map2 NodeRequest
+    (Decode.field "id" Decode.int)
+    (Decode.field "isUpgrade" Decode.bool)
+
 parseConvertNodeRequest : Value -> Msg
 parseConvertNodeRequest x =
     let
         result =
-            Decode.decodeValue Decode.int x
+            Decode.decodeValue req x
     in
     case result of
-        Ok nodeId ->
-            RequestConvertNode nodeId
+        Ok req ->
+            RequestConvertNode req.id req.isUpgrade
 
         Err _ ->
-            NoOp
+            Debug.log (toString x) NoOp
 
 
 parseConvertNewLine : Value -> Msg
@@ -66,8 +74,8 @@ parseConvertNewLine x =
             NoOp
 
 
-handleConvertNode : NodeId -> Model -> ( Model, Cmd Msg )
-handleConvertNode nodeId model =
+handleConvertNode : NodeId -> Bool -> Model -> ( Model, Cmd Msg )
+handleConvertNode nodeId isUpgrade model =
     let
         networkWithoutOldNode =
             Graph.remove nodeId model.network
@@ -82,23 +90,27 @@ handleConvertNode nodeId model =
                 coords =
                     getCoords nodeLabel
             in
-            case nodeLabel of
-                PotentialNode potential ->
-                    case potential.nodeType of
-                        PotentialWPS ->
-                            Just ( Generators.generateWPS AddGenerator coords, ( PotentialWPS, 300 ) )
+            if isUpgrade then
+                Debug.log "resilient" Just ( Generators.upgradeHousing UpgradeHousing coords, ( PotentialResilientHousing, 200 ) )
+            else
+                case nodeLabel of
+                    PotentialNode potential ->
+                        case potential.nodeType of
+                            PotentialWPS ->
+                                Debug.log "wps" Just ( Generators.generateWPS AddGenerator coords, ( PotentialWPS, 300 ) )
 
-                        PotentialResilientHousing ->
-                            Just ( Generators.upgradeHousing UpgradeHousing coords, ( PotentialResilientHousing, 200 ) )
+                            PotentialHousing ->
+                                Debug.log "housing" Just ( Generators.generateHousing AddHousing coords, ( PotentialHousing, 200 ) )
 
-                        PotentialHousing ->
-                            Just ( Generators.generateHousing AddHousing coords, ( PotentialHousing, 200 ) )
+                            PotentialResilientHousing ->
+                                -- not really getting here
+                                Debug.log "resilient" Just ( Generators.upgradeHousing UpgradeHousing coords, ( PotentialResilientHousing, 200 ) )
 
---                HousingNode housing ->
---                        Just ( Generators.upgradeHousing UpgradeHousing coords, ( ResilientHousing, 50 ) )
+                            PotentialNothing ->
+                                Debug.log "nothing" Nothing
 
-                _ ->
-                    Nothing
+                    _ ->
+                        Debug.log "nothing" Nothing
 
         cmdTuple =
             maybeNodeLabel
@@ -121,7 +133,7 @@ handleConvertNode nodeId model =
             cmdTuple
                 |> Maybe.map Tuple.second
                 |> Maybe.map Tuple.first
-                |> Maybe.withDefault PotentialHousing
+                |> Maybe.withDefault PotentialNothing
 
         itemToMessage : PotentialNodeType -> Phicoin -> String
         itemToMessage t c =
@@ -135,9 +147,16 @@ handleConvertNode nodeId model =
                 PotentialHousing ->
                     "You built a housing, it costs Φ" ++ toString c ++ " which has been deducted from your budget"
 
+                PotentialNothing ->
+                    ""
+
         messageCmd : Cmd Msg
         messageCmd =
-            delayMessage 0 (SendBotChatItem <| BotMessage (itemToMessage item cost))
+            case item of
+                PotentialNothing ->
+                    delayMessage 0 NoOp
+                _ ->
+                    delayMessage 0 (SendBotChatItem <| BotMessage (itemToMessage item cost))
     in
     { model | network = networkWithoutOldNode, budget = addToFirstElement model.budget -cost } ! [ cmd, messageCmd ]
 

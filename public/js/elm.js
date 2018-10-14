@@ -17270,6 +17270,7 @@ var _ayoupov$phi$Simulation_Model$HousingNode = function (a) {
 var _ayoupov$phi$Simulation_Model$GeneratorNode = function (a) {
 	return {ctor: 'GeneratorNode', _0: a};
 };
+var _ayoupov$phi$Simulation_Model$PotentialNothing = {ctor: 'PotentialNothing'};
 var _ayoupov$phi$Simulation_Model$PotentialWPS = {ctor: 'PotentialWPS'};
 var _ayoupov$phi$Simulation_Model$PotentialResilientHousing = {ctor: 'PotentialResilientHousing'};
 var _ayoupov$phi$Simulation_Model$PotentialHousing = {ctor: 'PotentialHousing'};
@@ -17336,9 +17337,10 @@ var _ayoupov$phi$Action$RequestNewLine = F2(
 	function (a, b) {
 		return {ctor: 'RequestNewLine', _0: a, _1: b};
 	});
-var _ayoupov$phi$Action$RequestConvertNode = function (a) {
-	return {ctor: 'RequestConvertNode', _0: a};
-};
+var _ayoupov$phi$Action$RequestConvertNode = F2(
+	function (a, b) {
+		return {ctor: 'RequestConvertNode', _0: a, _1: b};
+	});
 var _ayoupov$phi$Action$DescribeNode = function (a) {
 	return {ctor: 'DescribeNode', _0: a};
 };
@@ -23810,8 +23812,8 @@ var _ayoupov$phi$Simulation_BuildingMode$handleNewLineRequest = F3(
 			A2(_ayoupov$phi$Simulation_GraphUpdates$createEdge, a, b),
 			phiNetwork);
 	});
-var _ayoupov$phi$Simulation_BuildingMode$handleConvertNode = F2(
-	function (nodeId, model) {
+var _ayoupov$phi$Simulation_BuildingMode$handleConvertNode = F3(
+	function (nodeId, isUpgrade, model) {
 		var itemToMessage = F2(
 			function (t, c) {
 				var _p0 = t;
@@ -23832,7 +23834,7 @@ var _ayoupov$phi$Simulation_BuildingMode$handleConvertNode = F2(
 								_elm_lang$core$Basics_ops['++'],
 								_elm_lang$core$Basics$toString(c),
 								' which has been deducted from your budget'));
-					default:
+					case 'PotentialHousing':
 						return A2(
 							_elm_lang$core$Basics_ops['++'],
 							'You built a housing, it costs Φ',
@@ -23840,38 +23842,63 @@ var _ayoupov$phi$Simulation_BuildingMode$handleConvertNode = F2(
 								_elm_lang$core$Basics_ops['++'],
 								_elm_lang$core$Basics$toString(c),
 								' which has been deducted from your budget'));
+					default:
+						return '';
 				}
 			});
 		var nodeGenerator = function (nodeLabel) {
 			var coords = _ayoupov$phi$Simulation_Helpers$getCoords(nodeLabel);
-			var _p1 = nodeLabel;
-			if (_p1.ctor === 'PotentialNode') {
-				var _p2 = _p1._0.nodeType;
-				switch (_p2.ctor) {
-					case 'PotentialWPS':
-						return _elm_lang$core$Maybe$Just(
-							{
-								ctor: '_Tuple2',
-								_0: A2(_ayoupov$phi$Simulation_Init_Generators$generateWPS, _ayoupov$phi$Action$AddGenerator, coords),
-								_1: {ctor: '_Tuple2', _0: _ayoupov$phi$Simulation_Model$PotentialWPS, _1: 300}
-							});
-					case 'PotentialResilientHousing':
-						return _elm_lang$core$Maybe$Just(
-							{
-								ctor: '_Tuple2',
-								_0: A2(_ayoupov$phi$Simulation_Init_Generators$upgradeHousing, _ayoupov$phi$Action$UpgradeHousing, coords),
-								_1: {ctor: '_Tuple2', _0: _ayoupov$phi$Simulation_Model$PotentialResilientHousing, _1: 200}
-							});
-					default:
-						return _elm_lang$core$Maybe$Just(
-							{
-								ctor: '_Tuple2',
-								_0: A2(_ayoupov$phi$Simulation_Init_Generators$generateHousing, _ayoupov$phi$Action$AddHousing, coords),
-								_1: {ctor: '_Tuple2', _0: _ayoupov$phi$Simulation_Model$PotentialHousing, _1: 200}
-							});
-				}
+			if (isUpgrade) {
+				return A3(
+					_elm_lang$core$Debug$log,
+					'resilient',
+					_elm_lang$core$Maybe$Just,
+					{
+						ctor: '_Tuple2',
+						_0: A2(_ayoupov$phi$Simulation_Init_Generators$upgradeHousing, _ayoupov$phi$Action$UpgradeHousing, coords),
+						_1: {ctor: '_Tuple2', _0: _ayoupov$phi$Simulation_Model$PotentialResilientHousing, _1: 200}
+					});
 			} else {
-				return _elm_lang$core$Maybe$Nothing;
+				var _p1 = nodeLabel;
+				if (_p1.ctor === 'PotentialNode') {
+					var _p2 = _p1._0.nodeType;
+					switch (_p2.ctor) {
+						case 'PotentialWPS':
+							return A3(
+								_elm_lang$core$Debug$log,
+								'wps',
+								_elm_lang$core$Maybe$Just,
+								{
+									ctor: '_Tuple2',
+									_0: A2(_ayoupov$phi$Simulation_Init_Generators$generateWPS, _ayoupov$phi$Action$AddGenerator, coords),
+									_1: {ctor: '_Tuple2', _0: _ayoupov$phi$Simulation_Model$PotentialWPS, _1: 300}
+								});
+						case 'PotentialHousing':
+							return A3(
+								_elm_lang$core$Debug$log,
+								'housing',
+								_elm_lang$core$Maybe$Just,
+								{
+									ctor: '_Tuple2',
+									_0: A2(_ayoupov$phi$Simulation_Init_Generators$generateHousing, _ayoupov$phi$Action$AddHousing, coords),
+									_1: {ctor: '_Tuple2', _0: _ayoupov$phi$Simulation_Model$PotentialHousing, _1: 200}
+								});
+						case 'PotentialResilientHousing':
+							return A3(
+								_elm_lang$core$Debug$log,
+								'resilient',
+								_elm_lang$core$Maybe$Just,
+								{
+									ctor: '_Tuple2',
+									_0: A2(_ayoupov$phi$Simulation_Init_Generators$upgradeHousing, _ayoupov$phi$Action$UpgradeHousing, coords),
+									_1: {ctor: '_Tuple2', _0: _ayoupov$phi$Simulation_Model$PotentialResilientHousing, _1: 200}
+								});
+						default:
+							return A2(_elm_lang$core$Debug$log, 'nothing', _elm_lang$core$Maybe$Nothing);
+					}
+				} else {
+					return A2(_elm_lang$core$Debug$log, 'nothing', _elm_lang$core$Maybe$Nothing);
+				}
 			}
 		};
 		var maybeNodeLabel = A2(
@@ -23899,17 +23926,24 @@ var _ayoupov$phi$Simulation_BuildingMode$handleConvertNode = F2(
 				A2(_elm_lang$core$Maybe$map, _elm_lang$core$Tuple$second, cmdTuple)));
 		var item = A2(
 			_elm_lang$core$Maybe$withDefault,
-			_ayoupov$phi$Simulation_Model$PotentialHousing,
+			_ayoupov$phi$Simulation_Model$PotentialNothing,
 			A2(
 				_elm_lang$core$Maybe$map,
 				_elm_lang$core$Tuple$first,
 				A2(_elm_lang$core$Maybe$map, _elm_lang$core$Tuple$second, cmdTuple)));
-		var messageCmd = A2(
-			_ayoupov$phi$Chat_Helpers$delayMessage,
-			0,
-			_ayoupov$phi$Action$SendBotChatItem(
-				_ayoupov$phi$Chat_Model$BotMessage(
-					A2(itemToMessage, item, cost))));
+		var messageCmd = function () {
+			var _p4 = item;
+			if (_p4.ctor === 'PotentialNothing') {
+				return A2(_ayoupov$phi$Chat_Helpers$delayMessage, 0, _ayoupov$phi$Action$NoOp);
+			} else {
+				return A2(
+					_ayoupov$phi$Chat_Helpers$delayMessage,
+					0,
+					_ayoupov$phi$Action$SendBotChatItem(
+						_ayoupov$phi$Chat_Model$BotMessage(
+							A2(itemToMessage, item, cost))));
+			}
+		}();
 		var networkWithoutOldNode = A2(_elm_community$graph$Graph$remove, nodeId, model.network);
 		return A2(
 			_elm_lang$core$Platform_Cmd_ops['!'],
@@ -23934,28 +23968,19 @@ var _ayoupov$phi$Simulation_BuildingMode$parseConvertNewLine = function (x) {
 		_elm_lang$core$Json_Decode$decodeValue,
 		_elm_lang$core$Json_Decode$list(_elm_lang$core$Json_Decode$int),
 		x);
-	var _p4 = result;
-	if (_p4.ctor === 'Ok') {
-		var _p5 = _p4._0;
-		if (_p5.ctor === '::') {
+	var _p5 = result;
+	if (_p5.ctor === 'Ok') {
+		var _p6 = _p5._0;
+		if (_p6.ctor === '::') {
 			var second = A2(
 				_elm_lang$core$Debug$log,
 				'second',
-				_ayoupov$phi$ListHelpers$takeFirstElementWithDefault0(_p5._1));
-			var first = A2(_elm_lang$core$Debug$log, 'first', _p5._0);
+				_ayoupov$phi$ListHelpers$takeFirstElementWithDefault0(_p6._1));
+			var first = A2(_elm_lang$core$Debug$log, 'first', _p6._0);
 			return A2(_ayoupov$phi$Action$RequestNewLine, first, second);
 		} else {
 			return _ayoupov$phi$Action$NoOp;
 		}
-	} else {
-		return _ayoupov$phi$Action$NoOp;
-	}
-};
-var _ayoupov$phi$Simulation_BuildingMode$parseConvertNodeRequest = function (x) {
-	var result = A2(_elm_lang$core$Json_Decode$decodeValue, _elm_lang$core$Json_Decode$int, x);
-	var _p6 = result;
-	if (_p6.ctor === 'Ok') {
-		return _ayoupov$phi$Action$RequestConvertNode(_p6._0);
 	} else {
 		return _ayoupov$phi$Action$NoOp;
 	}
@@ -23967,6 +23992,28 @@ var _ayoupov$phi$Simulation_BuildingMode$changeBuildMode = _elm_lang$core$Native
 	});
 var _ayoupov$phi$Simulation_BuildingMode$requestConvertNode = _elm_lang$core$Native_Platform.incomingPort('requestConvertNode', _elm_lang$core$Json_Decode$value);
 var _ayoupov$phi$Simulation_BuildingMode$requestNewLine = _elm_lang$core$Native_Platform.incomingPort('requestNewLine', _elm_lang$core$Json_Decode$value);
+var _ayoupov$phi$Simulation_BuildingMode$NodeRequest = F2(
+	function (a, b) {
+		return {id: a, isUpgrade: b};
+	});
+var _ayoupov$phi$Simulation_BuildingMode$req = A3(
+	_elm_lang$core$Json_Decode$map2,
+	_ayoupov$phi$Simulation_BuildingMode$NodeRequest,
+	A2(_elm_lang$core$Json_Decode$field, 'id', _elm_lang$core$Json_Decode$int),
+	A2(_elm_lang$core$Json_Decode$field, 'isUpgrade', _elm_lang$core$Json_Decode$bool));
+var _ayoupov$phi$Simulation_BuildingMode$parseConvertNodeRequest = function (x) {
+	var result = A2(_elm_lang$core$Json_Decode$decodeValue, _ayoupov$phi$Simulation_BuildingMode$req, x);
+	var _p7 = result;
+	if (_p7.ctor === 'Ok') {
+		var _p8 = _p7._0;
+		return A2(_ayoupov$phi$Action$RequestConvertNode, _p8.id, _p8.isUpgrade);
+	} else {
+		return A2(
+			_elm_lang$core$Debug$log,
+			_elm_lang$core$Basics$toString(x),
+			_ayoupov$phi$Action$NoOp);
+	}
+};
 
 var _elm_lang$dom$Dom$blur = _elm_lang$dom$Native_Dom.blur;
 var _elm_lang$dom$Dom$focus = _elm_lang$dom$Native_Dom.focus;
@@ -24287,8 +24334,10 @@ var _ayoupov$phi$Simulation_Encoding$encodeNodeLabel = function (nodeLabel) {
 						return _elm_lang$core$Json_Encode$string('housing');
 					case 'PotentialWPS':
 						return _elm_lang$core$Json_Encode$string('wps');
-					default:
+					case 'PotentialResilientHousing':
 						return _elm_lang$core$Json_Encode$string('resilient');
+					default:
+						return _elm_lang$core$Json_Encode$string('');
 				}
 			}();
 			return _elm_lang$core$Json_Encode$object(
@@ -24629,7 +24678,7 @@ var _ayoupov$phi$Update$update = F2(
 						_ccapndave$elm_update_extra$Update_Extra$andThen,
 						_ayoupov$phi$Update$update,
 						_ayoupov$phi$Action$RenderPhiNetwork,
-						A2(_ayoupov$phi$Simulation_BuildingMode$handleConvertNode, _p0._0, model));
+						A3(_ayoupov$phi$Simulation_BuildingMode$handleConvertNode, _p0._0, _p0._1, model));
 				case 'RequestNewLine':
 					return A3(
 						_ccapndave$elm_update_extra$Update_Extra$andThen,

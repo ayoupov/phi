@@ -72,6 +72,9 @@ encodeNodeLabel nodeLabel =
                         PotentialResilientHousing ->
                             Json.string "resilient"
 
+                        _ ->
+                            Json.string ""
+
             in
             Json.object
                 [ ( "pos", encodeCoords label.pos )

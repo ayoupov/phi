@@ -121,9 +121,9 @@ update msg model =
                         |> update
                    )
 
-        RequestConvertNode nodeId ->
+        RequestConvertNode nodeId isUpgrade ->
             -- NEED LOGIC TO HANDLE BUDGET
-            handleConvertNode nodeId model
+            handleConvertNode nodeId isUpgrade model
                 |> andThen update RenderPhiNetwork
 
         RequestNewLine nodeId1 nodeId2 ->

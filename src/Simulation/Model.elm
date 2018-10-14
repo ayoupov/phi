@@ -142,6 +142,7 @@ type PotentialNodeType
     = PotentialHousing
     | PotentialResilientHousing
     | PotentialWPS
+    | PotentialNothing
 
 
 

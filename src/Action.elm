@@ -26,7 +26,7 @@ type Msg
     | InitializeNetwork
     | InitializeBudget
     | DescribeNode Int
-    | RequestConvertNode Int
+    | RequestConvertNode Int Bool
     | RequestNewLine Int Int
     | AddGenerator WaterPurificator
     | AddHousing Housing
