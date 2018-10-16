@@ -369,8 +369,6 @@ d3.xml("assets/Barje-map-for-sim-big-01.svg").get(function (error, documentFragm
         drawPotentialNodes(nodes);
     };
 
-    var potentialHousing, potentialGenerators, potentialResilient;
-
     function drawPotentialNodes(nodes) {
 
         var t = d3.transition().duration(1000);
@@ -425,6 +423,12 @@ d3.xml("assets/Barje-map-for-sim-big-01.svg").get(function (error, documentFragm
     function killPotentials() {
         d3.selectAll(".potential:not(.resilient)")
             .remove();
+
+        var nodes = svg.select(".nodes").selectAll(".node")
+                .data(potentialHousing, function (d) {
+                    return (d) ? d.id : null;
+                });
+        nodes.remove();
 
         app.ports.animationFinished.send("exitBuildModeAnimated");
     }
@@ -637,7 +641,7 @@ d3.xml("assets/Barje-map-for-sim-big-01.svg").get(function (error, documentFragm
 
             //add pulsating to peers
             nodeEnter.filter(function (d) {
-                    return d.label.nodeType == "housing"
+                    return d.label.nodeType == "housing" && !d.label.isPotential
                 })
                 .append("circle")
                 .attr('cx', setX)
@@ -788,7 +792,7 @@ d3.xml("assets/Barje-map-for-sim-big-01.svg").get(function (error, documentFragm
 
         }
 
-        var liveNodes = phiNodes.filter(function (node) {
+        liveNodes = phiNodes.filter(function (node) {
             return (!node.label.isPotential);
         });
 
@@ -803,6 +807,8 @@ d3.xml("assets/Barje-map-for-sim-big-01.svg").get(function (error, documentFragm
         potentialGenerators = phiNodes.filter(function (node) {
             return (node.label.isPotential && node.label.nodeType == 'wps');
         });
+
+        // ugly
 
         drawNodes(liveNodes);
         drawLinks(phiEdges);
@@ -860,3 +866,5 @@ d3.xml("assets/Barje-map-for-sim-big-01.svg").get(function (error, documentFragm
 });
 
 var prevFloodLevel = 0;
+var potentialHousing, potentialGenerators, potentialResilient, liveNodes;
+

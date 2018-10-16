@@ -71,7 +71,7 @@ initMap =
     , initialNetwork = graphFromNodeList potentialNodesList
     , initialWeather =
         { water = 0.5
-        , floodLevel = 5
+        , floodLevel = 0
         }
     , initialWeatherList = restWeather []
     , narrative = initNarrative

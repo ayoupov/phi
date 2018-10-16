@@ -10,7 +10,7 @@ restWeather : List WeatherTuple -> List WeatherTuple
 restWeather list =
     let
         initialList =
-            [ (0.29, 2)
+            [ (0.29, 1)
             , (0.155, 2)
             , (0.58, 3)
             , (0.29, 4)

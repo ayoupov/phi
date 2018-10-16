@@ -24556,7 +24556,7 @@ var _ayoupov$phi$Simulation_WeatherList$weatherTupleToWeather = function (_p0) {
 var _ayoupov$phi$Simulation_WeatherList$restWeather = function (list) {
 	var initialList = {
 		ctor: '::',
-		_0: {ctor: '_Tuple2', _0: 0.29, _1: 2},
+		_0: {ctor: '_Tuple2', _0: 0.29, _1: 1},
 		_1: {
 			ctor: '::',
 			_0: {ctor: '_Tuple2', _0: 0.155, _1: 2},
@@ -26167,7 +26167,7 @@ var _ayoupov$phi$Model$initMap = {
 	name: '',
 	population: 0,
 	initialNetwork: _ayoupov$phi$Simulation_GraphUpdates$graphFromNodeList(_ayoupov$phi$Simulation_GraphUpdates$potentialNodesList),
-	initialWeather: {water: 0.5, floodLevel: 5},
+	initialWeather: {water: 0.5, floodLevel: 0},
 	initialWeatherList: _ayoupov$phi$Simulation_WeatherList$restWeather(
 		{ctor: '[]'}),
 	narrative: _ayoupov$phi$Model$initNarrative,
