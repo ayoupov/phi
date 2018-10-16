@@ -27,6 +27,8 @@ handleTextInputMessage chatMsg =
                 SendToEliza chatMsg
             else if chatMsg == "/weather" then
                 CheckWeather
+            else if chatMsg == "/reload" then
+                Reload
             else if chatMsg == "/turn" then
                 CallTurn
             else if chatMsg == "/budget" then

@@ -19,6 +19,10 @@ textToHtml input =
                     --                    span [class "peer"] [text "PEER"]
                     renderShape HIcon 10
 
+                "_NEW_PEER_" ->
+                    --                    span [class "peer"] [text "PEER"]
+                    renderShape ExtraHIcon 10
+
                 "_PANEL_" ->
                     renderShape WPSIcon 10
 

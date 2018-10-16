@@ -7857,11 +7857,11 @@ var _ayoupov$phi$Chat_Model$mcaName = function (action) {
 		case 'McaWeatherForecast':
 			return 'Weather';
 		case 'McaBuildHousing':
-			return 'Simple housing';
+			return 'Build housing';
 		case 'McaUpgradeHousing':
-			return 'Upgrade';
+			return 'Upgrade housing';
 		case 'McaAddWP':
-			return 'WPS';
+			return 'Buy WPS';
 		case 'McaRunWeek':
 			return 'Next Week';
 		case 'McaLeaveBuildMode':
@@ -17281,6 +17281,7 @@ var _ayoupov$phi$Action$NarrativeElement = F2(
 	function (a, b) {
 		return {timeDelaySec: a, updateMsgs: b};
 	});
+var _ayoupov$phi$Action$Reload = {ctor: 'Reload'};
 var _ayoupov$phi$Action$SendToEliza = function (a) {
 	return {ctor: 'SendToEliza', _0: a};
 };
@@ -23400,6 +23401,11 @@ var _ayoupov$phi$Simulation_Simulation$animateGeneration = _elm_lang$core$Native
 			})
 		];
 	});
+var _ayoupov$phi$Simulation_Simulation$reloadPort = _elm_lang$core$Native_Platform.outgoingPort(
+	'reloadPort',
+	function (v) {
+		return v;
+	});
 var _ayoupov$phi$Simulation_Simulation$animateHousingConsumption = _elm_lang$core$Native_Platform.outgoingPort(
 	'animateHousingConsumption',
 	function (v) {
@@ -23594,7 +23600,7 @@ var _ayoupov$phi$Chat_Narrative$enterBuildModeUpgrade = function () {
 			}));
 }();
 var _ayoupov$phi$Chat_Narrative$enterBuildModeHousing = function () {
-	var text = 'Click $$_PEER_$$ to add new housing.';
+	var text = 'Click $$_NEW_PEER_$$ to add new housing.';
 	return _ayoupov$phi$Chat_Model$MultiChoiceItem(
 		A2(
 			_ayoupov$phi$Chat_Model$MultiChoiceMessage,
@@ -26336,7 +26342,7 @@ var _ayoupov$phi$Chat_Chat$handleTextInputMessage = function (chatMsg) {
 	var msgToSend = A2(_elm_lang$core$String$contains, 'budget', chatMsg) ? _ayoupov$phi$Action$SendBotChatItem(
 		imgWidgetWithUrl('assets/widget_budget_forecast.png')) : (A2(_elm_lang$core$String$contains, 'wind', chatMsg) ? _ayoupov$phi$Action$SendBotChatItem(
 		imgWidgetWithUrl('assets/widget_weather_data.png')) : (A2(_elm_lang$core$String$contains, 'calculate', chatMsg) ? _ayoupov$phi$Action$SendBotChatItem(
-		imgWidgetWithUrl('assets/widget_consumption_math.png')) : ((!A2(_elm_lang$core$String$startsWith, '/', chatMsg)) ? _ayoupov$phi$Action$SendToEliza(chatMsg) : (_elm_lang$core$Native_Utils.eq(chatMsg, '/weather') ? _ayoupov$phi$Action$CheckWeather : (_elm_lang$core$Native_Utils.eq(chatMsg, '/turn') ? _ayoupov$phi$Action$CallTurn : (_elm_lang$core$Native_Utils.eq(chatMsg, '/budget') ? _ayoupov$phi$Action$CheckBudget : (A2(_elm_lang$core$String$startsWith, '/describe', chatMsg) ? A2(
+		imgWidgetWithUrl('assets/widget_consumption_math.png')) : ((!A2(_elm_lang$core$String$startsWith, '/', chatMsg)) ? _ayoupov$phi$Action$SendToEliza(chatMsg) : (_elm_lang$core$Native_Utils.eq(chatMsg, '/weather') ? _ayoupov$phi$Action$CheckWeather : (_elm_lang$core$Native_Utils.eq(chatMsg, '/reload') ? _ayoupov$phi$Action$Reload : (_elm_lang$core$Native_Utils.eq(chatMsg, '/turn') ? _ayoupov$phi$Action$CallTurn : (_elm_lang$core$Native_Utils.eq(chatMsg, '/budget') ? _ayoupov$phi$Action$CheckBudget : (A2(_elm_lang$core$String$startsWith, '/describe', chatMsg) ? A2(
 		_elm_lang$core$Maybe$withDefault,
 		_ayoupov$phi$Action$SendBotChatItem(
 			_ayoupov$phi$Chat_Model$BotMessage('I can\'t find that node!')),
@@ -26354,7 +26360,7 @@ var _ayoupov$phi$Chat_Chat$handleTextInputMessage = function (chatMsg) {
 						A2(_elm_lang$core$List$drop, 1, _p2));
 				}(
 					A2(_elm_lang$core$String$split, ' ', chatMsg))))) : _ayoupov$phi$Action$SendBotChatItem(
-		_ayoupov$phi$Chat_Model$BotMessage('Sorry, I only respond to a few commands! Current available ones are:\n                        /weather (i tell you abt the weather today)\n                        /turn (i move to the next cycle)\n                        /describe [nodeId] (i tell you some info about a specific node)\n                        ')))))))));
+		_ayoupov$phi$Chat_Model$BotMessage('Sorry, I only respond to a few commands! Current available ones are:\n                        /weather (i tell you abt the weather today)\n                        /turn (i move to the next cycle)\n                        /describe [nodeId] (i tell you some info about a specific node)\n                        '))))))))));
 	return A2(_ayoupov$phi$Chat_Helpers$delayMessage, 2, msgToSend);
 };
 var _ayoupov$phi$Chat_Chat$sendToEliza = _elm_lang$core$Native_Platform.outgoingPort(
@@ -27605,7 +27611,7 @@ var _ayoupov$phi$Update$update = F2(
 								_ayoupov$phi$Chat_Model$UserMessage(
 									_ayoupov$phi$Chat_Model$mcaName(_p7)),
 								model)));
-				default:
+				case 'SendToEliza':
 					return A2(
 						_elm_lang$core$Platform_Cmd_ops['!'],
 						model,
@@ -27614,6 +27620,12 @@ var _ayoupov$phi$Update$update = F2(
 							_0: _ayoupov$phi$Chat_Chat$sendToEliza(_p0._0),
 							_1: {ctor: '[]'}
 						});
+				default:
+					return {
+						ctor: '_Tuple2',
+						_0: model,
+						_1: _ayoupov$phi$Simulation_Simulation$reloadPort(true)
+					};
 			}
 		}
 	});
@@ -27778,6 +27790,48 @@ var _ayoupov$phi$View_ChatHeader$renderShape = F2(
 							{ctor: '[]'}),
 						_1: {ctor: '[]'}
 					});
+			case 'ExtraHIcon':
+				return A2(
+					_elm_lang$svg$Svg$svg,
+					{
+						ctor: '::',
+						_0: _elm_lang$svg$Svg_Attributes$width(
+							_elm_lang$core$Basics$toString(size)),
+						_1: {
+							ctor: '::',
+							_0: _elm_lang$svg$Svg_Attributes$height(
+								_elm_lang$core$Basics$toString(size)),
+							_1: {
+								ctor: '::',
+								_0: _elm_lang$svg$Svg_Attributes$viewBox('0 0 31 31'),
+								_1: {
+									ctor: '::',
+									_0: _elm_lang$svg$Svg_Attributes$class('node potential'),
+									_1: {ctor: '[]'}
+								}
+							}
+						}
+					},
+					{
+						ctor: '::',
+						_0: A2(
+							_elm_lang$svg$Svg$circle,
+							{
+								ctor: '::',
+								_0: _elm_lang$svg$Svg_Attributes$cx('15.5'),
+								_1: {
+									ctor: '::',
+									_0: _elm_lang$svg$Svg_Attributes$cy('15.5'),
+									_1: {
+										ctor: '::',
+										_0: _elm_lang$svg$Svg_Attributes$r('15'),
+										_1: {ctor: '[]'}
+									}
+								}
+							},
+							{ctor: '[]'}),
+						_1: {ctor: '[]'}
+					});
 			case 'ResilientIcon':
 				return A2(
 					_elm_lang$svg$Svg$svg,
@@ -27862,6 +27916,7 @@ var _ayoupov$phi$View_ChatHeader$renderShape = F2(
 	});
 var _ayoupov$phi$View_ChatHeader$WPSIcon = {ctor: 'WPSIcon'};
 var _ayoupov$phi$View_ChatHeader$ResilientIcon = {ctor: 'ResilientIcon'};
+var _ayoupov$phi$View_ChatHeader$ExtraHIcon = {ctor: 'ExtraHIcon'};
 var _ayoupov$phi$View_ChatHeader$HIcon = {ctor: 'HIcon'};
 var _ayoupov$phi$View_ChatHeader$viewChatHeader = function (model) {
 	var thisStats = A2(
@@ -28222,6 +28277,8 @@ var _ayoupov$phi$View_MessageRenderer$textToHtml = function (input) {
 		switch (_p0) {
 			case '_PEER_':
 				return A2(_ayoupov$phi$View_ChatHeader$renderShape, _ayoupov$phi$View_ChatHeader$HIcon, 10);
+			case '_NEW_PEER_':
+				return A2(_ayoupov$phi$View_ChatHeader$renderShape, _ayoupov$phi$View_ChatHeader$ExtraHIcon, 10);
 			case '_PANEL_':
 				return A2(_ayoupov$phi$View_ChatHeader$renderShape, _ayoupov$phi$View_ChatHeader$WPSIcon, 10);
 			case '_TURBINE_':

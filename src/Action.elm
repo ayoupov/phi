@@ -51,3 +51,4 @@ type Msg
     | MultiChoiceMsg MultiChoiceAction
     | Mdl (Material.Msg Msg)
     | SendToEliza UserChatMessage
+    | Reload

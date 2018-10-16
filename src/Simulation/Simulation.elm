@@ -518,6 +518,8 @@ port renderPhiNetwork : ( List (Node Json.Value), List EncodedEdge ) -> Cmd msg
 
 port animateGeneration : ( List (Node Json.Value), List EncodedEdge ) -> Cmd msg
 
+port reloadPort : Bool -> Cmd msg
+
 
 port animateHousingConsumption : ( List (Node Json.Value), List EncodedEdge ) -> Cmd msg
 

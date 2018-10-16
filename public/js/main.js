@@ -830,19 +830,6 @@ d3.xml("assets/Barje-map-for-sim-big-river-01.svg").get(function (error, documen
 
     app.ports.logMessage.subscribe(function (message) {
 
-//        if (message.sender == "user") {
-//            shouldLogChatMessage = true;
-//        }
-//
-//        if (shouldLogChatMessage) {
-//            var newMessageRef = db.ref('messages').push();
-//
-//            message['ts'] = Date.now();
-//            message['sessionKey'] = sessionKey || "";
-//
-//            newMessageRef.set(message);
-//        }
-
     });
 
     app.ports.changeFloodLevel.subscribe(function (floodLevel) {
@@ -854,7 +841,10 @@ d3.xml("assets/Barje-map-for-sim-big-river-01.svg").get(function (error, documen
         prevFloodLevel = floodLevel;
     });
 
-
+    app.ports.reloadPort.subscribe(function (message) {
+        if (message)
+            location.reload(true);
+    });
 
 });
 

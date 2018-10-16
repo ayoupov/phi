@@ -130,7 +130,7 @@ enterBuildModeHousing : BotChatItem
 enterBuildModeHousing =
     let
         text =
-            "Click $$_PEER_$$ to add new housing."
+            "Click $$_NEW_PEER_$$ to add new housing."
     in
     MultiChoiceItem <|
         MultiChoiceMessage text

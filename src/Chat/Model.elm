@@ -53,16 +53,14 @@ mcaName action =
         McaWeatherForecast ->
             "Weather"
 
-        --        McaChangeDesign ->
-        --            "Change Design"
         McaBuildHousing ->
-            "Simple housing"
+            "Build housing"
 
         McaUpgradeHousing ->
-            "Upgrade"
+            "Upgrade housing"
 
         McaAddWP ->
-            "WPS"
+            "Buy WPS"
 
         McaRunWeek ->
             "Next Week"

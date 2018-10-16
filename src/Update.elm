@@ -272,6 +272,9 @@ update msg model =
         SendToEliza userChatMessage ->
             model ! [ Chat.sendToEliza userChatMessage ]
 
+        Reload ->
+            (model, reloadPort True)
+
 
 
 -- HELPERS

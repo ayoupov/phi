@@ -13,6 +13,7 @@ import View.Helpers exposing (intFmt, phiCoin)
 -- H: Housing, RH: Resilient housing, WP: Water processing
 type NodeIcon
     = HIcon
+    | ExtraHIcon
     | ResilientIcon
     | WPSIcon
 
@@ -26,6 +27,15 @@ renderShape icon size =
                 , SVG.height (toString size)
                 , SVG.viewBox "0 0 31 31"
                 , SVG.class "housingIcon"
+                ]
+                [ circle [ cx "15.5", cy "15.5", r "15" ] [] ]
+
+        ExtraHIcon ->
+            svg
+                [ SVG.width (toString size)
+                , SVG.height (toString size)
+                , SVG.viewBox "0 0 31 31"
+                , SVG.class "node potential"
                 ]
                 [ circle [ cx "15.5", cy "15.5", r "15" ] [] ]
 
