@@ -28,7 +28,7 @@ processFlood weather network =
         downgradeNode node =
             case node.label of
                 HousingNode l ->
-                    Debug.log "downgrading: " ({node | label = PotentialNode (Potential PotentialHousing  l.pos)})
+                    {node | label = PotentialNode (Potential PotentialHousing  l.pos)}
                 _ ->
                     node
 
@@ -388,11 +388,11 @@ tradingPhase network =
         newSupplyChanges tradeRatio housing =
             let
 
-                currentSJ =
+                currentSW =
                     takeFirstElementWithDefault0 housing.water.storedWater
             in
-            ( currentSJ - currentSJ * tradeRatio :: takeTailDefaultEmpty housing.water.storedWater
-            , currentSJ * tradeRatio :: takeTailDefaultEmpty housing.water.tradeBalance
+            ( currentSW - currentSW * tradeRatio :: takeTailDefaultEmpty housing.water.storedWater
+            , currentSW * tradeRatio :: takeTailDefaultEmpty housing.water.tradeBalance
             )
 
         updateNodeSupplyReward : Float -> Housing -> Housing
@@ -491,7 +491,7 @@ updateBudget : PhiNetwork -> Budget -> Budget
 updateBudget network budget =
     let
         waterToPhiQuotient =
-            150
+            2
     in
     (networkTradedEnergy network * waterToPhiQuotient + takeFirstElementWithDefault0 budget) :: budget
 
