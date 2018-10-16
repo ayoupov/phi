@@ -5,7 +5,7 @@ import IntDict
 import Set
 import Simulation.Helpers exposing (distBetweenNodes, isLiveNode)
 import Simulation.Model exposing (NodeLabel(PotentialNode), PhiNetwork, Potential, PotentialNodeType(..), TransmissionLine, tupleToCoords)
-import Simulation.NodeList exposing (potentialHousingList, potentialResilientList, potentialWPSList)
+import Simulation.NodeList exposing (potentialHousingList, potentialWPSList)
 
 
 addNode : NodeLabel -> PhiNetwork -> PhiNetwork

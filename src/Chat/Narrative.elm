@@ -5,7 +5,7 @@ import Chat.Helpers exposing (delayMessage)
 import Chat.Model exposing (BotChatItem(..), MultiChoiceAction(..), MultiChoiceMessage, defaultMcaList)
 import Html exposing (Html)
 import Simulation.Model exposing (PhiNetwork)
-import Simulation.Simulation exposing (networkConsumedEnergy, networkGeneratedEnergy, networkStoredEnergy, networkTradedEnergy)
+import Simulation.Simulation exposing (networkConsumedEnergy, networkGeneratedWater, networkStoredEnergy, networkTradedEnergy)
 import View.Helpers exposing (floatFmt)
 
 
@@ -100,7 +100,7 @@ cycleSummary : PhiNetwork -> BotChatItem
 cycleSummary network =
     let
         generatedEnergy =
-            floatFmt <| networkGeneratedEnergy network
+            floatFmt <| networkGeneratedWater network
 
         totalConsumed =
             floatFmt <| networkConsumedEnergy network
@@ -195,7 +195,7 @@ cycleGenerated : PhiNetwork -> BotChatItem
 cycleGenerated network =
     let
         generatedEnergy =
-            floatFmt <| networkGeneratedEnergy network
+            floatFmt <| networkGeneratedWater network
 
         totalStored =
             floatFmt <| networkStoredEnergy network

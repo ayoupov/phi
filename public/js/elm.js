@@ -17300,6 +17300,9 @@ var _ayoupov$phi$Action$UpdateSiteName = function (a) {
 };
 var _ayoupov$phi$Action$StatsUpdate = {ctor: 'StatsUpdate'};
 var _ayoupov$phi$Action$CallTurn = {ctor: 'CallTurn'};
+var _ayoupov$phi$Action$UpdateFloodMap = function (a) {
+	return {ctor: 'UpdateFloodMap', _0: a};
+};
 var _ayoupov$phi$Action$UpdateWeather = function (a) {
 	return {ctor: 'UpdateWeather', _0: a};
 };
@@ -18536,62 +18539,6 @@ var _elm_lang$core$Set$partition = F2(
 		};
 	});
 
-var _ayoupov$phi$Simulation_Helpers$toHousing = function (_p0) {
-	var _p1 = _p0;
-	var _p2 = _p1.label;
-	if (_p2.ctor === 'HousingNode') {
-		return _elm_lang$core$Maybe$Just(_p2._0);
-	} else {
-		return _elm_lang$core$Maybe$Nothing;
-	}
-};
-var _ayoupov$phi$Simulation_Helpers$isLiveNode = function (node) {
-	var _p3 = node.label;
-	if (_p3.ctor === 'PotentialNode') {
-		return _elm_lang$core$Maybe$Nothing;
-	} else {
-		return _elm_lang$core$Maybe$Just(node);
-	}
-};
-var _ayoupov$phi$Simulation_Helpers$liveNodeNetwork = function (network) {
-	return function (idList) {
-		return A2(_elm_community$graph$Graph$inducedSubgraph, idList, network);
-	}(
-		A2(
-			_elm_lang$core$List$filterMap,
-			function (_p4) {
-				return A2(
-					_elm_lang$core$Maybe$map,
-					function (_) {
-						return _.id;
-					},
-					_ayoupov$phi$Simulation_Helpers$isLiveNode(_p4));
-			},
-			_elm_community$graph$Graph$nodes(network)));
-};
-var _ayoupov$phi$Simulation_Helpers$getCoords = function (nodeLabel) {
-	var _p5 = nodeLabel;
-	switch (_p5.ctor) {
-		case 'GeneratorNode':
-			return _p5._0.pos;
-		case 'BatNode':
-			return _p5._0.pos;
-		case 'HousingNode':
-			return _p5._0.pos;
-		case 'ResilientHousingNode':
-			return _p5._0.pos;
-		default:
-			return _p5._0.pos;
-	}
-};
-var _ayoupov$phi$Simulation_Helpers$distBetweenNodes = F2(
-	function (nodeA, nodeB) {
-		var bPos = _ayoupov$phi$Simulation_Helpers$getCoords(nodeB.label);
-		var aPos = _ayoupov$phi$Simulation_Helpers$getCoords(nodeA.label);
-		return _elm_lang$core$Basics$sqrt(
-			Math.pow(bPos.x - aPos.x, 2) + Math.pow(bPos.y - aPos.y, 2));
-	});
-
 var _ayoupov$phi$Simulation_NodeList$transformTuple = function (_p0) {
 	var _p1 = _p0;
 	return {ctor: '_Tuple2', _0: _p1._0, _1: _p1._1};
@@ -19816,7 +19763,6 @@ var _ayoupov$phi$Simulation_NodeList$housingList = A2(
 			}
 		}));
 var _ayoupov$phi$Simulation_NodeList$potentialHousingList = A2(_elm_lang$core$Set$diff, _ayoupov$phi$Simulation_NodeList$housingList, _ayoupov$phi$Simulation_NodeList$initialHousing);
-var _ayoupov$phi$Simulation_NodeList$potentialResilientList = _ayoupov$phi$Simulation_NodeList$housingList;
 var _ayoupov$phi$Simulation_NodeList$wpsList = A2(
 	_elm_lang$core$Set$map,
 	_ayoupov$phi$Simulation_NodeList$transformTuple,
@@ -20011,6 +19957,2632 @@ var _ayoupov$phi$Simulation_NodeList$wpsList = A2(
 			}
 		}));
 var _ayoupov$phi$Simulation_NodeList$potentialWPSList = A2(_elm_lang$core$Set$diff, _ayoupov$phi$Simulation_NodeList$wpsList, _ayoupov$phi$Simulation_NodeList$initialWPS);
+var _ayoupov$phi$Simulation_NodeList$flood1List = A2(
+	_elm_lang$core$Set$map,
+	_ayoupov$phi$Simulation_NodeList$transformTuple,
+	_elm_lang$core$Set$fromList(
+		{
+			ctor: '::',
+			_0: {ctor: '_Tuple2', _0: 2062, _1: 2518},
+			_1: {
+				ctor: '::',
+				_0: {ctor: '_Tuple2', _0: 2098, _1: 2531},
+				_1: {
+					ctor: '::',
+					_0: {ctor: '_Tuple2', _0: 2022, _1: 2541},
+					_1: {
+						ctor: '::',
+						_0: {ctor: '_Tuple2', _0: 2003, _1: 2584},
+						_1: {
+							ctor: '::',
+							_0: {ctor: '_Tuple2', _0: 1960, _1: 2579},
+							_1: {
+								ctor: '::',
+								_0: {ctor: '_Tuple2', _0: 1891, _1: 2621},
+								_1: {
+									ctor: '::',
+									_0: {ctor: '_Tuple2', _0: 1858, _1: 2647},
+									_1: {
+										ctor: '::',
+										_0: {ctor: '_Tuple2', _0: 1803, _1: 2674},
+										_1: {
+											ctor: '::',
+											_0: {ctor: '_Tuple2', _0: 1942, _1: 2650},
+											_1: {
+												ctor: '::',
+												_0: {ctor: '_Tuple2', _0: 1716, _1: 2729},
+												_1: {
+													ctor: '::',
+													_0: {ctor: '_Tuple2', _0: 1736, _1: 2761},
+													_1: {
+														ctor: '::',
+														_0: {ctor: '_Tuple2', _0: 1654, _1: 2773},
+														_1: {
+															ctor: '::',
+															_0: {ctor: '_Tuple2', _0: 1701, _1: 2800},
+															_1: {ctor: '[]'}
+														}
+													}
+												}
+											}
+										}
+									}
+								}
+							}
+						}
+					}
+				}
+			}
+		}));
+var _ayoupov$phi$Simulation_NodeList$flood2List = A2(
+	_elm_lang$core$Set$map,
+	_ayoupov$phi$Simulation_NodeList$transformTuple,
+	_elm_lang$core$Set$fromList(
+		{
+			ctor: '::',
+			_0: {ctor: '_Tuple2', _0: 3124, _1: 1819},
+			_1: {
+				ctor: '::',
+				_0: {ctor: '_Tuple2', _0: 2863, _1: 1994},
+				_1: {
+					ctor: '::',
+					_0: {ctor: '_Tuple2', _0: 2806, _1: 2029},
+					_1: {
+						ctor: '::',
+						_0: {ctor: '_Tuple2', _0: 2845, _1: 2028},
+						_1: {
+							ctor: '::',
+							_0: {ctor: '_Tuple2', _0: 2901, _1: 2064},
+							_1: {
+								ctor: '::',
+								_0: {ctor: '_Tuple2', _0: 2950, _1: 2053},
+								_1: {
+									ctor: '::',
+									_0: {ctor: '_Tuple2', _0: 3032, _1: 2034},
+									_1: {
+										ctor: '::',
+										_0: {ctor: '_Tuple2', _0: 3106, _1: 1955},
+										_1: {
+											ctor: '::',
+											_0: {ctor: '_Tuple2', _0: 3167, _1: 1931},
+											_1: {
+												ctor: '::',
+												_0: {ctor: '_Tuple2', _0: 3200, _1: 1902},
+												_1: {
+													ctor: '::',
+													_0: {ctor: '_Tuple2', _0: 3213, _1: 1939},
+													_1: {
+														ctor: '::',
+														_0: {ctor: '_Tuple2', _0: 3522, _1: 1765},
+														_1: {
+															ctor: '::',
+															_0: {ctor: '_Tuple2', _0: 3630, _1: 1776},
+															_1: {
+																ctor: '::',
+																_0: {ctor: '_Tuple2', _0: 3555, _1: 1812},
+																_1: {
+																	ctor: '::',
+																	_0: {ctor: '_Tuple2', _0: 3579, _1: 1851},
+																	_1: {
+																		ctor: '::',
+																		_0: {ctor: '_Tuple2', _0: 3657, _1: 1812},
+																		_1: {
+																			ctor: '::',
+																			_0: {ctor: '_Tuple2', _0: 3606, _1: 1822},
+																			_1: {
+																				ctor: '::',
+																				_0: {ctor: '_Tuple2', _0: 3626, _1: 1937},
+																				_1: {
+																					ctor: '::',
+																					_0: {ctor: '_Tuple2', _0: 3703, _1: 1885},
+																					_1: {
+																						ctor: '::',
+																						_0: {ctor: '_Tuple2', _0: 3676, _1: 1994},
+																						_1: {
+																							ctor: '::',
+																							_0: {ctor: '_Tuple2', _0: 3693, _1: 1941},
+																							_1: {
+																								ctor: '::',
+																								_0: {ctor: '_Tuple2', _0: 3661, _1: 1917},
+																								_1: {
+																									ctor: '::',
+																									_0: {ctor: '_Tuple2', _0: 3752, _1: 1773},
+																									_1: {
+																										ctor: '::',
+																										_0: {ctor: '_Tuple2', _0: 3689, _1: 1776},
+																										_1: {
+																											ctor: '::',
+																											_0: {ctor: '_Tuple2', _0: 3670, _1: 1628},
+																											_1: {
+																												ctor: '::',
+																												_0: {ctor: '_Tuple2', _0: 3719, _1: 1683},
+																												_1: {
+																													ctor: '::',
+																													_0: {ctor: '_Tuple2', _0: 3646, _1: 1565},
+																													_1: {
+																														ctor: '::',
+																														_0: {ctor: '_Tuple2', _0: 3684, _1: 1529},
+																														_1: {
+																															ctor: '::',
+																															_0: {ctor: '_Tuple2', _0: 4597, _1: 1121},
+																															_1: {
+																																ctor: '::',
+																																_0: {ctor: '_Tuple2', _0: 4639, _1: 1097},
+																																_1: {
+																																	ctor: '::',
+																																	_0: {ctor: '_Tuple2', _0: 2800, _1: 2116},
+																																	_1: {
+																																		ctor: '::',
+																																		_0: {ctor: '_Tuple2', _0: 2765, _1: 2136},
+																																		_1: {
+																																			ctor: '::',
+																																			_0: {ctor: '_Tuple2', _0: 2849, _1: 2116},
+																																			_1: {
+																																				ctor: '::',
+																																				_0: {ctor: '_Tuple2', _0: 2798, _1: 2174},
+																																				_1: {
+																																					ctor: '::',
+																																					_0: {ctor: '_Tuple2', _0: 2524, _1: 2274},
+																																					_1: {
+																																						ctor: '::',
+																																						_0: {ctor: '_Tuple2', _0: 2451, _1: 2211},
+																																						_1: {
+																																							ctor: '::',
+																																							_0: {ctor: '_Tuple2', _0: 2456, _1: 2310},
+																																							_1: {
+																																								ctor: '::',
+																																								_0: {ctor: '_Tuple2', _0: 2358, _1: 2347},
+																																								_1: {
+																																									ctor: '::',
+																																									_0: {ctor: '_Tuple2', _0: 2357, _1: 2287},
+																																									_1: {
+																																										ctor: '::',
+																																										_0: {ctor: '_Tuple2', _0: 2378, _1: 2257},
+																																										_1: {
+																																											ctor: '::',
+																																											_0: {ctor: '_Tuple2', _0: 2420, _1: 2247},
+																																											_1: {
+																																												ctor: '::',
+																																												_0: {ctor: '_Tuple2', _0: 2170, _1: 2371},
+																																												_1: {
+																																													ctor: '::',
+																																													_0: {ctor: '_Tuple2', _0: 2162, _1: 2467},
+																																													_1: {
+																																														ctor: '::',
+																																														_0: {ctor: '_Tuple2', _0: 2080, _1: 2432},
+																																														_1: {
+																																															ctor: '::',
+																																															_0: {ctor: '_Tuple2', _0: 2106, _1: 2492},
+																																															_1: {
+																																																ctor: '::',
+																																																_0: {ctor: '_Tuple2', _0: 2031, _1: 2464},
+																																																_1: {
+																																																	ctor: '::',
+																																																	_0: {ctor: '_Tuple2', _0: 1956, _1: 2507},
+																																																	_1: {
+																																																		ctor: '::',
+																																																		_0: {ctor: '_Tuple2', _0: 1978, _1: 2473},
+																																																		_1: {
+																																																			ctor: '::',
+																																																			_0: {ctor: '_Tuple2', _0: 1972, _1: 2403},
+																																																			_1: {
+																																																				ctor: '::',
+																																																				_0: {ctor: '_Tuple2', _0: 1903, _1: 2541},
+																																																				_1: {
+																																																					ctor: '::',
+																																																					_0: {ctor: '_Tuple2', _0: 1873, _1: 2570},
+																																																					_1: {
+																																																						ctor: '::',
+																																																						_0: {ctor: '_Tuple2', _0: 1711, _1: 2638},
+																																																						_1: {
+																																																							ctor: '::',
+																																																							_0: {ctor: '_Tuple2', _0: 1746, _1: 2643},
+																																																							_1: {
+																																																								ctor: '::',
+																																																								_0: {ctor: '_Tuple2', _0: 1656, _1: 2704},
+																																																								_1: {
+																																																									ctor: '::',
+																																																									_0: {ctor: '_Tuple2', _0: 1613, _1: 2717},
+																																																									_1: {
+																																																										ctor: '::',
+																																																										_0: {ctor: '_Tuple2', _0: 2062, _1: 2518},
+																																																										_1: {
+																																																											ctor: '::',
+																																																											_0: {ctor: '_Tuple2', _0: 2098, _1: 2531},
+																																																											_1: {
+																																																												ctor: '::',
+																																																												_0: {ctor: '_Tuple2', _0: 2022, _1: 2541},
+																																																												_1: {
+																																																													ctor: '::',
+																																																													_0: {ctor: '_Tuple2', _0: 2003, _1: 2584},
+																																																													_1: {
+																																																														ctor: '::',
+																																																														_0: {ctor: '_Tuple2', _0: 1960, _1: 2579},
+																																																														_1: {
+																																																															ctor: '::',
+																																																															_0: {ctor: '_Tuple2', _0: 1891, _1: 2621},
+																																																															_1: {
+																																																																ctor: '::',
+																																																																_0: {ctor: '_Tuple2', _0: 1858, _1: 2647},
+																																																																_1: {
+																																																																	ctor: '::',
+																																																																	_0: {ctor: '_Tuple2', _0: 1803, _1: 2674},
+																																																																	_1: {
+																																																																		ctor: '::',
+																																																																		_0: {ctor: '_Tuple2', _0: 1942, _1: 2650},
+																																																																		_1: {
+																																																																			ctor: '::',
+																																																																			_0: {ctor: '_Tuple2', _0: 1716, _1: 2729},
+																																																																			_1: {
+																																																																				ctor: '::',
+																																																																				_0: {ctor: '_Tuple2', _0: 1736, _1: 2761},
+																																																																				_1: {
+																																																																					ctor: '::',
+																																																																					_0: {ctor: '_Tuple2', _0: 1654, _1: 2773},
+																																																																					_1: {
+																																																																						ctor: '::',
+																																																																						_0: {ctor: '_Tuple2', _0: 1701, _1: 2800},
+																																																																						_1: {ctor: '[]'}
+																																																																					}
+																																																																				}
+																																																																			}
+																																																																		}
+																																																																	}
+																																																																}
+																																																															}
+																																																														}
+																																																													}
+																																																												}
+																																																											}
+																																																										}
+																																																									}
+																																																								}
+																																																							}
+																																																						}
+																																																					}
+																																																				}
+																																																			}
+																																																		}
+																																																	}
+																																																}
+																																															}
+																																														}
+																																													}
+																																												}
+																																											}
+																																										}
+																																									}
+																																								}
+																																							}
+																																						}
+																																					}
+																																				}
+																																			}
+																																		}
+																																	}
+																																}
+																															}
+																														}
+																													}
+																												}
+																											}
+																										}
+																									}
+																								}
+																							}
+																						}
+																					}
+																				}
+																			}
+																		}
+																	}
+																}
+															}
+														}
+													}
+												}
+											}
+										}
+									}
+								}
+							}
+						}
+					}
+				}
+			}
+		}));
+var _ayoupov$phi$Simulation_NodeList$flood3List = A2(
+	_elm_lang$core$Set$map,
+	_ayoupov$phi$Simulation_NodeList$transformTuple,
+	_elm_lang$core$Set$fromList(
+		{
+			ctor: '::',
+			_0: {ctor: '_Tuple2', _0: 3124, _1: 1819},
+			_1: {
+				ctor: '::',
+				_0: {ctor: '_Tuple2', _0: 2863, _1: 1994},
+				_1: {
+					ctor: '::',
+					_0: {ctor: '_Tuple2', _0: 2806, _1: 2029},
+					_1: {
+						ctor: '::',
+						_0: {ctor: '_Tuple2', _0: 2845, _1: 2028},
+						_1: {
+							ctor: '::',
+							_0: {ctor: '_Tuple2', _0: 2901, _1: 2064},
+							_1: {
+								ctor: '::',
+								_0: {ctor: '_Tuple2', _0: 2950, _1: 2053},
+								_1: {
+									ctor: '::',
+									_0: {ctor: '_Tuple2', _0: 3032, _1: 2034},
+									_1: {
+										ctor: '::',
+										_0: {ctor: '_Tuple2', _0: 3106, _1: 1955},
+										_1: {
+											ctor: '::',
+											_0: {ctor: '_Tuple2', _0: 3167, _1: 1931},
+											_1: {
+												ctor: '::',
+												_0: {ctor: '_Tuple2', _0: 3200, _1: 1902},
+												_1: {
+													ctor: '::',
+													_0: {ctor: '_Tuple2', _0: 3213, _1: 1939},
+													_1: {
+														ctor: '::',
+														_0: {ctor: '_Tuple2', _0: 3522, _1: 1765},
+														_1: {
+															ctor: '::',
+															_0: {ctor: '_Tuple2', _0: 3630, _1: 1776},
+															_1: {
+																ctor: '::',
+																_0: {ctor: '_Tuple2', _0: 3555, _1: 1812},
+																_1: {
+																	ctor: '::',
+																	_0: {ctor: '_Tuple2', _0: 3579, _1: 1851},
+																	_1: {
+																		ctor: '::',
+																		_0: {ctor: '_Tuple2', _0: 3657, _1: 1812},
+																		_1: {
+																			ctor: '::',
+																			_0: {ctor: '_Tuple2', _0: 3606, _1: 1822},
+																			_1: {
+																				ctor: '::',
+																				_0: {ctor: '_Tuple2', _0: 3626, _1: 1937},
+																				_1: {
+																					ctor: '::',
+																					_0: {ctor: '_Tuple2', _0: 3703, _1: 1885},
+																					_1: {
+																						ctor: '::',
+																						_0: {ctor: '_Tuple2', _0: 3676, _1: 1994},
+																						_1: {
+																							ctor: '::',
+																							_0: {ctor: '_Tuple2', _0: 3693, _1: 1941},
+																							_1: {
+																								ctor: '::',
+																								_0: {ctor: '_Tuple2', _0: 3661, _1: 1917},
+																								_1: {
+																									ctor: '::',
+																									_0: {ctor: '_Tuple2', _0: 3752, _1: 1773},
+																									_1: {
+																										ctor: '::',
+																										_0: {ctor: '_Tuple2', _0: 3689, _1: 1776},
+																										_1: {
+																											ctor: '::',
+																											_0: {ctor: '_Tuple2', _0: 3670, _1: 1628},
+																											_1: {
+																												ctor: '::',
+																												_0: {ctor: '_Tuple2', _0: 3719, _1: 1683},
+																												_1: {
+																													ctor: '::',
+																													_0: {ctor: '_Tuple2', _0: 3646, _1: 1565},
+																													_1: {
+																														ctor: '::',
+																														_0: {ctor: '_Tuple2', _0: 3684, _1: 1529},
+																														_1: {
+																															ctor: '::',
+																															_0: {ctor: '_Tuple2', _0: 4597, _1: 1121},
+																															_1: {
+																																ctor: '::',
+																																_0: {ctor: '_Tuple2', _0: 4639, _1: 1097},
+																																_1: {
+																																	ctor: '::',
+																																	_0: {ctor: '_Tuple2', _0: 2800, _1: 2116},
+																																	_1: {
+																																		ctor: '::',
+																																		_0: {ctor: '_Tuple2', _0: 2765, _1: 2136},
+																																		_1: {
+																																			ctor: '::',
+																																			_0: {ctor: '_Tuple2', _0: 2849, _1: 2116},
+																																			_1: {
+																																				ctor: '::',
+																																				_0: {ctor: '_Tuple2', _0: 2798, _1: 2174},
+																																				_1: {
+																																					ctor: '::',
+																																					_0: {ctor: '_Tuple2', _0: 2524, _1: 2274},
+																																					_1: {
+																																						ctor: '::',
+																																						_0: {ctor: '_Tuple2', _0: 2451, _1: 2211},
+																																						_1: {
+																																							ctor: '::',
+																																							_0: {ctor: '_Tuple2', _0: 2456, _1: 2310},
+																																							_1: {
+																																								ctor: '::',
+																																								_0: {ctor: '_Tuple2', _0: 2358, _1: 2347},
+																																								_1: {
+																																									ctor: '::',
+																																									_0: {ctor: '_Tuple2', _0: 2357, _1: 2287},
+																																									_1: {
+																																										ctor: '::',
+																																										_0: {ctor: '_Tuple2', _0: 2378, _1: 2257},
+																																										_1: {
+																																											ctor: '::',
+																																											_0: {ctor: '_Tuple2', _0: 2420, _1: 2247},
+																																											_1: {
+																																												ctor: '::',
+																																												_0: {ctor: '_Tuple2', _0: 2170, _1: 2371},
+																																												_1: {
+																																													ctor: '::',
+																																													_0: {ctor: '_Tuple2', _0: 2162, _1: 2467},
+																																													_1: {
+																																														ctor: '::',
+																																														_0: {ctor: '_Tuple2', _0: 2080, _1: 2432},
+																																														_1: {
+																																															ctor: '::',
+																																															_0: {ctor: '_Tuple2', _0: 2106, _1: 2492},
+																																															_1: {
+																																																ctor: '::',
+																																																_0: {ctor: '_Tuple2', _0: 2031, _1: 2464},
+																																																_1: {
+																																																	ctor: '::',
+																																																	_0: {ctor: '_Tuple2', _0: 1956, _1: 2507},
+																																																	_1: {
+																																																		ctor: '::',
+																																																		_0: {ctor: '_Tuple2', _0: 1978, _1: 2473},
+																																																		_1: {
+																																																			ctor: '::',
+																																																			_0: {ctor: '_Tuple2', _0: 1972, _1: 2403},
+																																																			_1: {
+																																																				ctor: '::',
+																																																				_0: {ctor: '_Tuple2', _0: 1903, _1: 2541},
+																																																				_1: {
+																																																					ctor: '::',
+																																																					_0: {ctor: '_Tuple2', _0: 1873, _1: 2570},
+																																																					_1: {
+																																																						ctor: '::',
+																																																						_0: {ctor: '_Tuple2', _0: 1711, _1: 2638},
+																																																						_1: {
+																																																							ctor: '::',
+																																																							_0: {ctor: '_Tuple2', _0: 1746, _1: 2643},
+																																																							_1: {
+																																																								ctor: '::',
+																																																								_0: {ctor: '_Tuple2', _0: 1656, _1: 2704},
+																																																								_1: {
+																																																									ctor: '::',
+																																																									_0: {ctor: '_Tuple2', _0: 1613, _1: 2717},
+																																																									_1: {
+																																																										ctor: '::',
+																																																										_0: {ctor: '_Tuple2', _0: 2062, _1: 2518},
+																																																										_1: {
+																																																											ctor: '::',
+																																																											_0: {ctor: '_Tuple2', _0: 2098, _1: 2531},
+																																																											_1: {
+																																																												ctor: '::',
+																																																												_0: {ctor: '_Tuple2', _0: 2022, _1: 2541},
+																																																												_1: {
+																																																													ctor: '::',
+																																																													_0: {ctor: '_Tuple2', _0: 2003, _1: 2584},
+																																																													_1: {
+																																																														ctor: '::',
+																																																														_0: {ctor: '_Tuple2', _0: 1960, _1: 2579},
+																																																														_1: {
+																																																															ctor: '::',
+																																																															_0: {ctor: '_Tuple2', _0: 1891, _1: 2621},
+																																																															_1: {
+																																																																ctor: '::',
+																																																																_0: {ctor: '_Tuple2', _0: 1858, _1: 2647},
+																																																																_1: {
+																																																																	ctor: '::',
+																																																																	_0: {ctor: '_Tuple2', _0: 1803, _1: 2674},
+																																																																	_1: {
+																																																																		ctor: '::',
+																																																																		_0: {ctor: '_Tuple2', _0: 1942, _1: 2650},
+																																																																		_1: {
+																																																																			ctor: '::',
+																																																																			_0: {ctor: '_Tuple2', _0: 1716, _1: 2729},
+																																																																			_1: {
+																																																																				ctor: '::',
+																																																																				_0: {ctor: '_Tuple2', _0: 1736, _1: 2761},
+																																																																				_1: {
+																																																																					ctor: '::',
+																																																																					_0: {ctor: '_Tuple2', _0: 1654, _1: 2773},
+																																																																					_1: {
+																																																																						ctor: '::',
+																																																																						_0: {ctor: '_Tuple2', _0: 1701, _1: 2800},
+																																																																						_1: {
+																																																																							ctor: '::',
+																																																																							_0: {ctor: '_Tuple2', _0: 2328, _1: 2366},
+																																																																							_1: {
+																																																																								ctor: '::',
+																																																																								_0: {ctor: '_Tuple2', _0: 2348, _1: 2401},
+																																																																								_1: {
+																																																																									ctor: '::',
+																																																																									_0: {ctor: '_Tuple2', _0: 2302, _1: 2297},
+																																																																									_1: {
+																																																																										ctor: '::',
+																																																																										_0: {ctor: '_Tuple2', _0: 2308, _1: 2253},
+																																																																										_1: {
+																																																																											ctor: '::',
+																																																																											_0: {ctor: '_Tuple2', _0: 2248, _1: 2332},
+																																																																											_1: {
+																																																																												ctor: '::',
+																																																																												_0: {ctor: '_Tuple2', _0: 2228, _1: 2279},
+																																																																												_1: {
+																																																																													ctor: '::',
+																																																																													_0: {ctor: '_Tuple2', _0: 2234, _1: 2421},
+																																																																													_1: {
+																																																																														ctor: '::',
+																																																																														_0: {ctor: '_Tuple2', _0: 2719, _1: 2216},
+																																																																														_1: {
+																																																																															ctor: '::',
+																																																																															_0: {ctor: '_Tuple2', _0: 2688, _1: 2180},
+																																																																															_1: {
+																																																																																ctor: '::',
+																																																																																_0: {ctor: '_Tuple2', _0: 2660, _1: 2104},
+																																																																																_1: {
+																																																																																	ctor: '::',
+																																																																																	_0: {ctor: '_Tuple2', _0: 2582, _1: 2234},
+																																																																																	_1: {
+																																																																																		ctor: '::',
+																																																																																		_0: {ctor: '_Tuple2', _0: 2624, _1: 2228},
+																																																																																		_1: {
+																																																																																			ctor: '::',
+																																																																																			_0: {ctor: '_Tuple2', _0: 2646, _1: 2192},
+																																																																																			_1: {
+																																																																																				ctor: '::',
+																																																																																				_0: {ctor: '_Tuple2', _0: 2636, _1: 2259},
+																																																																																				_1: {
+																																																																																					ctor: '::',
+																																																																																					_0: {ctor: '_Tuple2', _0: 2543, _1: 2179},
+																																																																																					_1: {
+																																																																																						ctor: '::',
+																																																																																						_0: {ctor: '_Tuple2', _0: 2528, _1: 2114},
+																																																																																						_1: {
+																																																																																							ctor: '::',
+																																																																																							_0: {ctor: '_Tuple2', _0: 3190, _1: 1672},
+																																																																																							_1: {
+																																																																																								ctor: '::',
+																																																																																								_0: {ctor: '_Tuple2', _0: 3384, _1: 1695},
+																																																																																								_1: {
+																																																																																									ctor: '::',
+																																																																																									_0: {ctor: '_Tuple2', _0: 3370, _1: 1733},
+																																																																																									_1: {
+																																																																																										ctor: '::',
+																																																																																										_0: {ctor: '_Tuple2', _0: 3294, _1: 1761},
+																																																																																										_1: {
+																																																																																											ctor: '::',
+																																																																																											_0: {ctor: '_Tuple2', _0: 3309, _1: 1720},
+																																																																																											_1: {
+																																																																																												ctor: '::',
+																																																																																												_0: {ctor: '_Tuple2', _0: 3256, _1: 1795},
+																																																																																												_1: {
+																																																																																													ctor: '::',
+																																																																																													_0: {ctor: '_Tuple2', _0: 3183, _1: 1846},
+																																																																																													_1: {
+																																																																																														ctor: '::',
+																																																																																														_0: {ctor: '_Tuple2', _0: 3048, _1: 1916},
+																																																																																														_1: {
+																																																																																															ctor: '::',
+																																																																																															_0: {ctor: '_Tuple2', _0: 2955, _1: 1929},
+																																																																																															_1: {
+																																																																																																ctor: '::',
+																																																																																																_0: {ctor: '_Tuple2', _0: 2987, _1: 1952},
+																																																																																																_1: {
+																																																																																																	ctor: '::',
+																																																																																																	_0: {ctor: '_Tuple2', _0: 3015, _1: 1999},
+																																																																																																	_1: {
+																																																																																																		ctor: '::',
+																																																																																																		_0: {ctor: '_Tuple2', _0: 3064, _1: 1980},
+																																																																																																		_1: {
+																																																																																																			ctor: '::',
+																																																																																																			_0: {ctor: '_Tuple2', _0: 3262, _1: 1864},
+																																																																																																			_1: {
+																																																																																																				ctor: '::',
+																																																																																																				_0: {ctor: '_Tuple2', _0: 3345, _1: 1880},
+																																																																																																				_1: {
+																																																																																																					ctor: '::',
+																																																																																																					_0: {ctor: '_Tuple2', _0: 3320, _1: 1834},
+																																																																																																					_1: {
+																																																																																																						ctor: '::',
+																																																																																																						_0: {ctor: '_Tuple2', _0: 3386, _1: 1802},
+																																																																																																						_1: {
+																																																																																																							ctor: '::',
+																																																																																																							_0: {ctor: '_Tuple2', _0: 3411, _1: 1776},
+																																																																																																							_1: {
+																																																																																																								ctor: '::',
+																																																																																																								_0: {ctor: '_Tuple2', _0: 3447, _1: 1776},
+																																																																																																								_1: {
+																																																																																																									ctor: '::',
+																																																																																																									_0: {ctor: '_Tuple2', _0: 3492, _1: 1615},
+																																																																																																									_1: {
+																																																																																																										ctor: '::',
+																																																																																																										_0: {ctor: '_Tuple2', _0: 3499, _1: 1656},
+																																																																																																										_1: {
+																																																																																																											ctor: '::',
+																																																																																																											_0: {ctor: '_Tuple2', _0: 3497, _1: 1721},
+																																																																																																											_1: {
+																																																																																																												ctor: '::',
+																																																																																																												_0: {ctor: '_Tuple2', _0: 3579, _1: 1575},
+																																																																																																												_1: {
+																																																																																																													ctor: '::',
+																																																																																																													_0: {ctor: '_Tuple2', _0: 3598, _1: 1600},
+																																																																																																													_1: {
+																																																																																																														ctor: '::',
+																																																																																																														_0: {ctor: '_Tuple2', _0: 3608, _1: 1739},
+																																																																																																														_1: {
+																																																																																																															ctor: '::',
+																																																																																																															_0: {ctor: '_Tuple2', _0: 3563, _1: 1767},
+																																																																																																															_1: {
+																																																																																																																ctor: '::',
+																																																																																																																_0: {ctor: '_Tuple2', _0: 3653, _1: 1716},
+																																																																																																																_1: {
+																																																																																																																	ctor: '::',
+																																																																																																																	_0: {ctor: '_Tuple2', _0: 3813, _1: 1548},
+																																																																																																																	_1: {
+																																																																																																																		ctor: '::',
+																																																																																																																		_0: {ctor: '_Tuple2', _0: 3791, _1: 1466},
+																																																																																																																		_1: {
+																																																																																																																			ctor: '::',
+																																																																																																																			_0: {ctor: '_Tuple2', _0: 3868, _1: 1550},
+																																																																																																																			_1: {
+																																																																																																																				ctor: '::',
+																																																																																																																				_0: {ctor: '_Tuple2', _0: 3905, _1: 1489},
+																																																																																																																				_1: {
+																																																																																																																					ctor: '::',
+																																																																																																																					_0: {ctor: '_Tuple2', _0: 3962, _1: 1484},
+																																																																																																																					_1: {
+																																																																																																																						ctor: '::',
+																																																																																																																						_0: {ctor: '_Tuple2', _0: 3943, _1: 1377},
+																																																																																																																						_1: {
+																																																																																																																							ctor: '::',
+																																																																																																																							_0: {ctor: '_Tuple2', _0: 4092, _1: 1414},
+																																																																																																																							_1: {
+																																																																																																																								ctor: '::',
+																																																																																																																								_0: {ctor: '_Tuple2', _0: 4115, _1: 1367},
+																																																																																																																								_1: {
+																																																																																																																									ctor: '::',
+																																																																																																																									_0: {ctor: '_Tuple2', _0: 4170, _1: 1354},
+																																																																																																																									_1: {
+																																																																																																																										ctor: '::',
+																																																																																																																										_0: {ctor: '_Tuple2', _0: 4131, _1: 1269},
+																																																																																																																										_1: {
+																																																																																																																											ctor: '::',
+																																																																																																																											_0: {ctor: '_Tuple2', _0: 4202, _1: 1315},
+																																																																																																																											_1: {
+																																																																																																																												ctor: '::',
+																																																																																																																												_0: {ctor: '_Tuple2', _0: 4261, _1: 2516},
+																																																																																																																												_1: {
+																																																																																																																													ctor: '::',
+																																																																																																																													_0: {ctor: '_Tuple2', _0: 4484, _1: 2436},
+																																																																																																																													_1: {
+																																																																																																																														ctor: '::',
+																																																																																																																														_0: {ctor: '_Tuple2', _0: 4467, _1: 2480},
+																																																																																																																														_1: {
+																																																																																																																															ctor: '::',
+																																																																																																																															_0: {ctor: '_Tuple2', _0: 4430, _1: 2454},
+																																																																																																																															_1: {
+																																																																																																																																ctor: '::',
+																																																																																																																																_0: {ctor: '_Tuple2', _0: 4403, _1: 2504},
+																																																																																																																																_1: {
+																																																																																																																																	ctor: '::',
+																																																																																																																																	_0: {ctor: '_Tuple2', _0: 4382, _1: 2470},
+																																																																																																																																	_1: {
+																																																																																																																																		ctor: '::',
+																																																																																																																																		_0: {ctor: '_Tuple2', _0: 4358, _1: 2516},
+																																																																																																																																		_1: {
+																																																																																																																																			ctor: '::',
+																																																																																																																																			_0: {ctor: '_Tuple2', _0: 4312, _1: 2492},
+																																																																																																																																			_1: {
+																																																																																																																																				ctor: '::',
+																																																																																																																																				_0: {ctor: '_Tuple2', _0: 4325, _1: 2530},
+																																																																																																																																				_1: {
+																																																																																																																																					ctor: '::',
+																																																																																																																																					_0: {ctor: '_Tuple2', _0: 4453, _1: 1206},
+																																																																																																																																					_1: {
+																																																																																																																																						ctor: '::',
+																																																																																																																																						_0: {ctor: '_Tuple2', _0: 4460, _1: 1157},
+																																																																																																																																						_1: {
+																																																																																																																																							ctor: '::',
+																																																																																																																																							_0: {ctor: '_Tuple2', _0: 4510, _1: 1168},
+																																																																																																																																							_1: {
+																																																																																																																																								ctor: '::',
+																																																																																																																																								_0: {ctor: '_Tuple2', _0: 4442, _1: 1104},
+																																																																																																																																								_1: {
+																																																																																																																																									ctor: '::',
+																																																																																																																																									_0: {ctor: '_Tuple2', _0: 4465, _1: 1076},
+																																																																																																																																									_1: {
+																																																																																																																																										ctor: '::',
+																																																																																																																																										_0: {ctor: '_Tuple2', _0: 4439, _1: 1045},
+																																																																																																																																										_1: {
+																																																																																																																																											ctor: '::',
+																																																																																																																																											_0: {ctor: '_Tuple2', _0: 4404, _1: 967},
+																																																																																																																																											_1: {
+																																																																																																																																												ctor: '::',
+																																																																																																																																												_0: {ctor: '_Tuple2', _0: 4409, _1: 818},
+																																																																																																																																												_1: {
+																																																																																																																																													ctor: '::',
+																																																																																																																																													_0: {ctor: '_Tuple2', _0: 4368, _1: 752},
+																																																																																																																																													_1: {
+																																																																																																																																														ctor: '::',
+																																																																																																																																														_0: {ctor: '_Tuple2', _0: 4356, _1: 698},
+																																																																																																																																														_1: {
+																																																																																																																																															ctor: '::',
+																																																																																																																																															_0: {ctor: '_Tuple2', _0: 4331, _1: 612},
+																																																																																																																																															_1: {
+																																																																																																																																																ctor: '::',
+																																																																																																																																																_0: {ctor: '_Tuple2', _0: 4394, _1: 882},
+																																																																																																																																																_1: {
+																																																																																																																																																	ctor: '::',
+																																																																																																																																																	_0: {ctor: '_Tuple2', _0: 4435, _1: 1008},
+																																																																																																																																																	_1: {
+																																																																																																																																																		ctor: '::',
+																																																																																																																																																		_0: {ctor: '_Tuple2', _0: 4494, _1: 882},
+																																																																																																																																																		_1: {
+																																																																																																																																																			ctor: '::',
+																																																																																																																																																			_0: {ctor: '_Tuple2', _0: 4457, _1: 907},
+																																																																																																																																																			_1: {ctor: '[]'}
+																																																																																																																																																		}
+																																																																																																																																																	}
+																																																																																																																																																}
+																																																																																																																																															}
+																																																																																																																																														}
+																																																																																																																																													}
+																																																																																																																																												}
+																																																																																																																																											}
+																																																																																																																																										}
+																																																																																																																																									}
+																																																																																																																																								}
+																																																																																																																																							}
+																																																																																																																																						}
+																																																																																																																																					}
+																																																																																																																																				}
+																																																																																																																																			}
+																																																																																																																																		}
+																																																																																																																																	}
+																																																																																																																																}
+																																																																																																																															}
+																																																																																																																														}
+																																																																																																																													}
+																																																																																																																												}
+																																																																																																																											}
+																																																																																																																										}
+																																																																																																																									}
+																																																																																																																								}
+																																																																																																																							}
+																																																																																																																						}
+																																																																																																																					}
+																																																																																																																				}
+																																																																																																																			}
+																																																																																																																		}
+																																																																																																																	}
+																																																																																																																}
+																																																																																																															}
+																																																																																																														}
+																																																																																																													}
+																																																																																																												}
+																																																																																																											}
+																																																																																																										}
+																																																																																																									}
+																																																																																																								}
+																																																																																																							}
+																																																																																																						}
+																																																																																																					}
+																																																																																																				}
+																																																																																																			}
+																																																																																																		}
+																																																																																																	}
+																																																																																																}
+																																																																																															}
+																																																																																														}
+																																																																																													}
+																																																																																												}
+																																																																																											}
+																																																																																										}
+																																																																																									}
+																																																																																								}
+																																																																																							}
+																																																																																						}
+																																																																																					}
+																																																																																				}
+																																																																																			}
+																																																																																		}
+																																																																																	}
+																																																																																}
+																																																																															}
+																																																																														}
+																																																																													}
+																																																																												}
+																																																																											}
+																																																																										}
+																																																																									}
+																																																																								}
+																																																																							}
+																																																																						}
+																																																																					}
+																																																																				}
+																																																																			}
+																																																																		}
+																																																																	}
+																																																																}
+																																																															}
+																																																														}
+																																																													}
+																																																												}
+																																																											}
+																																																										}
+																																																									}
+																																																								}
+																																																							}
+																																																						}
+																																																					}
+																																																				}
+																																																			}
+																																																		}
+																																																	}
+																																																}
+																																															}
+																																														}
+																																													}
+																																												}
+																																											}
+																																										}
+																																									}
+																																								}
+																																							}
+																																						}
+																																					}
+																																				}
+																																			}
+																																		}
+																																	}
+																																}
+																															}
+																														}
+																													}
+																												}
+																											}
+																										}
+																									}
+																								}
+																							}
+																						}
+																					}
+																				}
+																			}
+																		}
+																	}
+																}
+															}
+														}
+													}
+												}
+											}
+										}
+									}
+								}
+							}
+						}
+					}
+				}
+			}
+		}));
+var _ayoupov$phi$Simulation_NodeList$flood4List = A2(
+	_elm_lang$core$Set$map,
+	_ayoupov$phi$Simulation_NodeList$transformTuple,
+	_elm_lang$core$Set$fromList(
+		{
+			ctor: '::',
+			_0: {ctor: '_Tuple2', _0: 3124, _1: 1819},
+			_1: {
+				ctor: '::',
+				_0: {ctor: '_Tuple2', _0: 2863, _1: 1994},
+				_1: {
+					ctor: '::',
+					_0: {ctor: '_Tuple2', _0: 2806, _1: 2029},
+					_1: {
+						ctor: '::',
+						_0: {ctor: '_Tuple2', _0: 2845, _1: 2028},
+						_1: {
+							ctor: '::',
+							_0: {ctor: '_Tuple2', _0: 2901, _1: 2064},
+							_1: {
+								ctor: '::',
+								_0: {ctor: '_Tuple2', _0: 2950, _1: 2053},
+								_1: {
+									ctor: '::',
+									_0: {ctor: '_Tuple2', _0: 3032, _1: 2034},
+									_1: {
+										ctor: '::',
+										_0: {ctor: '_Tuple2', _0: 3106, _1: 1955},
+										_1: {
+											ctor: '::',
+											_0: {ctor: '_Tuple2', _0: 3167, _1: 1931},
+											_1: {
+												ctor: '::',
+												_0: {ctor: '_Tuple2', _0: 3200, _1: 1902},
+												_1: {
+													ctor: '::',
+													_0: {ctor: '_Tuple2', _0: 3213, _1: 1939},
+													_1: {
+														ctor: '::',
+														_0: {ctor: '_Tuple2', _0: 3522, _1: 1765},
+														_1: {
+															ctor: '::',
+															_0: {ctor: '_Tuple2', _0: 3630, _1: 1776},
+															_1: {
+																ctor: '::',
+																_0: {ctor: '_Tuple2', _0: 3555, _1: 1812},
+																_1: {
+																	ctor: '::',
+																	_0: {ctor: '_Tuple2', _0: 3579, _1: 1851},
+																	_1: {
+																		ctor: '::',
+																		_0: {ctor: '_Tuple2', _0: 3657, _1: 1812},
+																		_1: {
+																			ctor: '::',
+																			_0: {ctor: '_Tuple2', _0: 3606, _1: 1822},
+																			_1: {
+																				ctor: '::',
+																				_0: {ctor: '_Tuple2', _0: 3626, _1: 1937},
+																				_1: {
+																					ctor: '::',
+																					_0: {ctor: '_Tuple2', _0: 3703, _1: 1885},
+																					_1: {
+																						ctor: '::',
+																						_0: {ctor: '_Tuple2', _0: 3676, _1: 1994},
+																						_1: {
+																							ctor: '::',
+																							_0: {ctor: '_Tuple2', _0: 3693, _1: 1941},
+																							_1: {
+																								ctor: '::',
+																								_0: {ctor: '_Tuple2', _0: 3661, _1: 1917},
+																								_1: {
+																									ctor: '::',
+																									_0: {ctor: '_Tuple2', _0: 3752, _1: 1773},
+																									_1: {
+																										ctor: '::',
+																										_0: {ctor: '_Tuple2', _0: 3689, _1: 1776},
+																										_1: {
+																											ctor: '::',
+																											_0: {ctor: '_Tuple2', _0: 3670, _1: 1628},
+																											_1: {
+																												ctor: '::',
+																												_0: {ctor: '_Tuple2', _0: 3719, _1: 1683},
+																												_1: {
+																													ctor: '::',
+																													_0: {ctor: '_Tuple2', _0: 3646, _1: 1565},
+																													_1: {
+																														ctor: '::',
+																														_0: {ctor: '_Tuple2', _0: 3684, _1: 1529},
+																														_1: {
+																															ctor: '::',
+																															_0: {ctor: '_Tuple2', _0: 4597, _1: 1121},
+																															_1: {
+																																ctor: '::',
+																																_0: {ctor: '_Tuple2', _0: 4639, _1: 1097},
+																																_1: {
+																																	ctor: '::',
+																																	_0: {ctor: '_Tuple2', _0: 2800, _1: 2116},
+																																	_1: {
+																																		ctor: '::',
+																																		_0: {ctor: '_Tuple2', _0: 2765, _1: 2136},
+																																		_1: {
+																																			ctor: '::',
+																																			_0: {ctor: '_Tuple2', _0: 2849, _1: 2116},
+																																			_1: {
+																																				ctor: '::',
+																																				_0: {ctor: '_Tuple2', _0: 2798, _1: 2174},
+																																				_1: {
+																																					ctor: '::',
+																																					_0: {ctor: '_Tuple2', _0: 2524, _1: 2274},
+																																					_1: {
+																																						ctor: '::',
+																																						_0: {ctor: '_Tuple2', _0: 2451, _1: 2211},
+																																						_1: {
+																																							ctor: '::',
+																																							_0: {ctor: '_Tuple2', _0: 2456, _1: 2310},
+																																							_1: {
+																																								ctor: '::',
+																																								_0: {ctor: '_Tuple2', _0: 2358, _1: 2347},
+																																								_1: {
+																																									ctor: '::',
+																																									_0: {ctor: '_Tuple2', _0: 2357, _1: 2287},
+																																									_1: {
+																																										ctor: '::',
+																																										_0: {ctor: '_Tuple2', _0: 2378, _1: 2257},
+																																										_1: {
+																																											ctor: '::',
+																																											_0: {ctor: '_Tuple2', _0: 2420, _1: 2247},
+																																											_1: {
+																																												ctor: '::',
+																																												_0: {ctor: '_Tuple2', _0: 2170, _1: 2371},
+																																												_1: {
+																																													ctor: '::',
+																																													_0: {ctor: '_Tuple2', _0: 2162, _1: 2467},
+																																													_1: {
+																																														ctor: '::',
+																																														_0: {ctor: '_Tuple2', _0: 2080, _1: 2432},
+																																														_1: {
+																																															ctor: '::',
+																																															_0: {ctor: '_Tuple2', _0: 2106, _1: 2492},
+																																															_1: {
+																																																ctor: '::',
+																																																_0: {ctor: '_Tuple2', _0: 2031, _1: 2464},
+																																																_1: {
+																																																	ctor: '::',
+																																																	_0: {ctor: '_Tuple2', _0: 1956, _1: 2507},
+																																																	_1: {
+																																																		ctor: '::',
+																																																		_0: {ctor: '_Tuple2', _0: 1978, _1: 2473},
+																																																		_1: {
+																																																			ctor: '::',
+																																																			_0: {ctor: '_Tuple2', _0: 1972, _1: 2403},
+																																																			_1: {
+																																																				ctor: '::',
+																																																				_0: {ctor: '_Tuple2', _0: 1903, _1: 2541},
+																																																				_1: {
+																																																					ctor: '::',
+																																																					_0: {ctor: '_Tuple2', _0: 1873, _1: 2570},
+																																																					_1: {
+																																																						ctor: '::',
+																																																						_0: {ctor: '_Tuple2', _0: 1711, _1: 2638},
+																																																						_1: {
+																																																							ctor: '::',
+																																																							_0: {ctor: '_Tuple2', _0: 1746, _1: 2643},
+																																																							_1: {
+																																																								ctor: '::',
+																																																								_0: {ctor: '_Tuple2', _0: 1656, _1: 2704},
+																																																								_1: {
+																																																									ctor: '::',
+																																																									_0: {ctor: '_Tuple2', _0: 1613, _1: 2717},
+																																																									_1: {
+																																																										ctor: '::',
+																																																										_0: {ctor: '_Tuple2', _0: 2062, _1: 2518},
+																																																										_1: {
+																																																											ctor: '::',
+																																																											_0: {ctor: '_Tuple2', _0: 2098, _1: 2531},
+																																																											_1: {
+																																																												ctor: '::',
+																																																												_0: {ctor: '_Tuple2', _0: 2022, _1: 2541},
+																																																												_1: {
+																																																													ctor: '::',
+																																																													_0: {ctor: '_Tuple2', _0: 2003, _1: 2584},
+																																																													_1: {
+																																																														ctor: '::',
+																																																														_0: {ctor: '_Tuple2', _0: 1960, _1: 2579},
+																																																														_1: {
+																																																															ctor: '::',
+																																																															_0: {ctor: '_Tuple2', _0: 1891, _1: 2621},
+																																																															_1: {
+																																																																ctor: '::',
+																																																																_0: {ctor: '_Tuple2', _0: 1858, _1: 2647},
+																																																																_1: {
+																																																																	ctor: '::',
+																																																																	_0: {ctor: '_Tuple2', _0: 1803, _1: 2674},
+																																																																	_1: {
+																																																																		ctor: '::',
+																																																																		_0: {ctor: '_Tuple2', _0: 1942, _1: 2650},
+																																																																		_1: {
+																																																																			ctor: '::',
+																																																																			_0: {ctor: '_Tuple2', _0: 1716, _1: 2729},
+																																																																			_1: {
+																																																																				ctor: '::',
+																																																																				_0: {ctor: '_Tuple2', _0: 1736, _1: 2761},
+																																																																				_1: {
+																																																																					ctor: '::',
+																																																																					_0: {ctor: '_Tuple2', _0: 1654, _1: 2773},
+																																																																					_1: {
+																																																																						ctor: '::',
+																																																																						_0: {ctor: '_Tuple2', _0: 1701, _1: 2800},
+																																																																						_1: {
+																																																																							ctor: '::',
+																																																																							_0: {ctor: '_Tuple2', _0: 2328, _1: 2366},
+																																																																							_1: {
+																																																																								ctor: '::',
+																																																																								_0: {ctor: '_Tuple2', _0: 2348, _1: 2401},
+																																																																								_1: {
+																																																																									ctor: '::',
+																																																																									_0: {ctor: '_Tuple2', _0: 2302, _1: 2297},
+																																																																									_1: {
+																																																																										ctor: '::',
+																																																																										_0: {ctor: '_Tuple2', _0: 2308, _1: 2253},
+																																																																										_1: {
+																																																																											ctor: '::',
+																																																																											_0: {ctor: '_Tuple2', _0: 2248, _1: 2332},
+																																																																											_1: {
+																																																																												ctor: '::',
+																																																																												_0: {ctor: '_Tuple2', _0: 2228, _1: 2279},
+																																																																												_1: {
+																																																																													ctor: '::',
+																																																																													_0: {ctor: '_Tuple2', _0: 2234, _1: 2421},
+																																																																													_1: {
+																																																																														ctor: '::',
+																																																																														_0: {ctor: '_Tuple2', _0: 2719, _1: 2216},
+																																																																														_1: {
+																																																																															ctor: '::',
+																																																																															_0: {ctor: '_Tuple2', _0: 2688, _1: 2180},
+																																																																															_1: {
+																																																																																ctor: '::',
+																																																																																_0: {ctor: '_Tuple2', _0: 2660, _1: 2104},
+																																																																																_1: {
+																																																																																	ctor: '::',
+																																																																																	_0: {ctor: '_Tuple2', _0: 2582, _1: 2234},
+																																																																																	_1: {
+																																																																																		ctor: '::',
+																																																																																		_0: {ctor: '_Tuple2', _0: 2624, _1: 2228},
+																																																																																		_1: {
+																																																																																			ctor: '::',
+																																																																																			_0: {ctor: '_Tuple2', _0: 2646, _1: 2192},
+																																																																																			_1: {
+																																																																																				ctor: '::',
+																																																																																				_0: {ctor: '_Tuple2', _0: 2636, _1: 2259},
+																																																																																				_1: {
+																																																																																					ctor: '::',
+																																																																																					_0: {ctor: '_Tuple2', _0: 2543, _1: 2179},
+																																																																																					_1: {
+																																																																																						ctor: '::',
+																																																																																						_0: {ctor: '_Tuple2', _0: 2528, _1: 2114},
+																																																																																						_1: {
+																																																																																							ctor: '::',
+																																																																																							_0: {ctor: '_Tuple2', _0: 3190, _1: 1672},
+																																																																																							_1: {
+																																																																																								ctor: '::',
+																																																																																								_0: {ctor: '_Tuple2', _0: 3384, _1: 1695},
+																																																																																								_1: {
+																																																																																									ctor: '::',
+																																																																																									_0: {ctor: '_Tuple2', _0: 3370, _1: 1733},
+																																																																																									_1: {
+																																																																																										ctor: '::',
+																																																																																										_0: {ctor: '_Tuple2', _0: 3294, _1: 1761},
+																																																																																										_1: {
+																																																																																											ctor: '::',
+																																																																																											_0: {ctor: '_Tuple2', _0: 3309, _1: 1720},
+																																																																																											_1: {
+																																																																																												ctor: '::',
+																																																																																												_0: {ctor: '_Tuple2', _0: 3256, _1: 1795},
+																																																																																												_1: {
+																																																																																													ctor: '::',
+																																																																																													_0: {ctor: '_Tuple2', _0: 3183, _1: 1846},
+																																																																																													_1: {
+																																																																																														ctor: '::',
+																																																																																														_0: {ctor: '_Tuple2', _0: 3048, _1: 1916},
+																																																																																														_1: {
+																																																																																															ctor: '::',
+																																																																																															_0: {ctor: '_Tuple2', _0: 2955, _1: 1929},
+																																																																																															_1: {
+																																																																																																ctor: '::',
+																																																																																																_0: {ctor: '_Tuple2', _0: 2987, _1: 1952},
+																																																																																																_1: {
+																																																																																																	ctor: '::',
+																																																																																																	_0: {ctor: '_Tuple2', _0: 3015, _1: 1999},
+																																																																																																	_1: {
+																																																																																																		ctor: '::',
+																																																																																																		_0: {ctor: '_Tuple2', _0: 3064, _1: 1980},
+																																																																																																		_1: {
+																																																																																																			ctor: '::',
+																																																																																																			_0: {ctor: '_Tuple2', _0: 3262, _1: 1864},
+																																																																																																			_1: {
+																																																																																																				ctor: '::',
+																																																																																																				_0: {ctor: '_Tuple2', _0: 3345, _1: 1880},
+																																																																																																				_1: {
+																																																																																																					ctor: '::',
+																																																																																																					_0: {ctor: '_Tuple2', _0: 3320, _1: 1834},
+																																																																																																					_1: {
+																																																																																																						ctor: '::',
+																																																																																																						_0: {ctor: '_Tuple2', _0: 3386, _1: 1802},
+																																																																																																						_1: {
+																																																																																																							ctor: '::',
+																																																																																																							_0: {ctor: '_Tuple2', _0: 3411, _1: 1776},
+																																																																																																							_1: {
+																																																																																																								ctor: '::',
+																																																																																																								_0: {ctor: '_Tuple2', _0: 3447, _1: 1776},
+																																																																																																								_1: {
+																																																																																																									ctor: '::',
+																																																																																																									_0: {ctor: '_Tuple2', _0: 3492, _1: 1615},
+																																																																																																									_1: {
+																																																																																																										ctor: '::',
+																																																																																																										_0: {ctor: '_Tuple2', _0: 3499, _1: 1656},
+																																																																																																										_1: {
+																																																																																																											ctor: '::',
+																																																																																																											_0: {ctor: '_Tuple2', _0: 3497, _1: 1721},
+																																																																																																											_1: {
+																																																																																																												ctor: '::',
+																																																																																																												_0: {ctor: '_Tuple2', _0: 3579, _1: 1575},
+																																																																																																												_1: {
+																																																																																																													ctor: '::',
+																																																																																																													_0: {ctor: '_Tuple2', _0: 3598, _1: 1600},
+																																																																																																													_1: {
+																																																																																																														ctor: '::',
+																																																																																																														_0: {ctor: '_Tuple2', _0: 3608, _1: 1739},
+																																																																																																														_1: {
+																																																																																																															ctor: '::',
+																																																																																																															_0: {ctor: '_Tuple2', _0: 3563, _1: 1767},
+																																																																																																															_1: {
+																																																																																																																ctor: '::',
+																																																																																																																_0: {ctor: '_Tuple2', _0: 3653, _1: 1716},
+																																																																																																																_1: {
+																																																																																																																	ctor: '::',
+																																																																																																																	_0: {ctor: '_Tuple2', _0: 3813, _1: 1548},
+																																																																																																																	_1: {
+																																																																																																																		ctor: '::',
+																																																																																																																		_0: {ctor: '_Tuple2', _0: 3791, _1: 1466},
+																																																																																																																		_1: {
+																																																																																																																			ctor: '::',
+																																																																																																																			_0: {ctor: '_Tuple2', _0: 3868, _1: 1550},
+																																																																																																																			_1: {
+																																																																																																																				ctor: '::',
+																																																																																																																				_0: {ctor: '_Tuple2', _0: 3905, _1: 1489},
+																																																																																																																				_1: {
+																																																																																																																					ctor: '::',
+																																																																																																																					_0: {ctor: '_Tuple2', _0: 3962, _1: 1484},
+																																																																																																																					_1: {
+																																																																																																																						ctor: '::',
+																																																																																																																						_0: {ctor: '_Tuple2', _0: 3943, _1: 1377},
+																																																																																																																						_1: {
+																																																																																																																							ctor: '::',
+																																																																																																																							_0: {ctor: '_Tuple2', _0: 4092, _1: 1414},
+																																																																																																																							_1: {
+																																																																																																																								ctor: '::',
+																																																																																																																								_0: {ctor: '_Tuple2', _0: 4115, _1: 1367},
+																																																																																																																								_1: {
+																																																																																																																									ctor: '::',
+																																																																																																																									_0: {ctor: '_Tuple2', _0: 4170, _1: 1354},
+																																																																																																																									_1: {
+																																																																																																																										ctor: '::',
+																																																																																																																										_0: {ctor: '_Tuple2', _0: 4131, _1: 1269},
+																																																																																																																										_1: {
+																																																																																																																											ctor: '::',
+																																																																																																																											_0: {ctor: '_Tuple2', _0: 4202, _1: 1315},
+																																																																																																																											_1: {
+																																																																																																																												ctor: '::',
+																																																																																																																												_0: {ctor: '_Tuple2', _0: 4261, _1: 2516},
+																																																																																																																												_1: {
+																																																																																																																													ctor: '::',
+																																																																																																																													_0: {ctor: '_Tuple2', _0: 4484, _1: 2436},
+																																																																																																																													_1: {
+																																																																																																																														ctor: '::',
+																																																																																																																														_0: {ctor: '_Tuple2', _0: 4467, _1: 2480},
+																																																																																																																														_1: {
+																																																																																																																															ctor: '::',
+																																																																																																																															_0: {ctor: '_Tuple2', _0: 4430, _1: 2454},
+																																																																																																																															_1: {
+																																																																																																																																ctor: '::',
+																																																																																																																																_0: {ctor: '_Tuple2', _0: 4403, _1: 2504},
+																																																																																																																																_1: {
+																																																																																																																																	ctor: '::',
+																																																																																																																																	_0: {ctor: '_Tuple2', _0: 4382, _1: 2470},
+																																																																																																																																	_1: {
+																																																																																																																																		ctor: '::',
+																																																																																																																																		_0: {ctor: '_Tuple2', _0: 4358, _1: 2516},
+																																																																																																																																		_1: {
+																																																																																																																																			ctor: '::',
+																																																																																																																																			_0: {ctor: '_Tuple2', _0: 4312, _1: 2492},
+																																																																																																																																			_1: {
+																																																																																																																																				ctor: '::',
+																																																																																																																																				_0: {ctor: '_Tuple2', _0: 4325, _1: 2530},
+																																																																																																																																				_1: {
+																																																																																																																																					ctor: '::',
+																																																																																																																																					_0: {ctor: '_Tuple2', _0: 4453, _1: 1206},
+																																																																																																																																					_1: {
+																																																																																																																																						ctor: '::',
+																																																																																																																																						_0: {ctor: '_Tuple2', _0: 4460, _1: 1157},
+																																																																																																																																						_1: {
+																																																																																																																																							ctor: '::',
+																																																																																																																																							_0: {ctor: '_Tuple2', _0: 4510, _1: 1168},
+																																																																																																																																							_1: {
+																																																																																																																																								ctor: '::',
+																																																																																																																																								_0: {ctor: '_Tuple2', _0: 4442, _1: 1104},
+																																																																																																																																								_1: {
+																																																																																																																																									ctor: '::',
+																																																																																																																																									_0: {ctor: '_Tuple2', _0: 4465, _1: 1076},
+																																																																																																																																									_1: {
+																																																																																																																																										ctor: '::',
+																																																																																																																																										_0: {ctor: '_Tuple2', _0: 4439, _1: 1045},
+																																																																																																																																										_1: {
+																																																																																																																																											ctor: '::',
+																																																																																																																																											_0: {ctor: '_Tuple2', _0: 4404, _1: 967},
+																																																																																																																																											_1: {
+																																																																																																																																												ctor: '::',
+																																																																																																																																												_0: {ctor: '_Tuple2', _0: 4409, _1: 818},
+																																																																																																																																												_1: {
+																																																																																																																																													ctor: '::',
+																																																																																																																																													_0: {ctor: '_Tuple2', _0: 4368, _1: 752},
+																																																																																																																																													_1: {
+																																																																																																																																														ctor: '::',
+																																																																																																																																														_0: {ctor: '_Tuple2', _0: 4356, _1: 698},
+																																																																																																																																														_1: {
+																																																																																																																																															ctor: '::',
+																																																																																																																																															_0: {ctor: '_Tuple2', _0: 4331, _1: 612},
+																																																																																																																																															_1: {
+																																																																																																																																																ctor: '::',
+																																																																																																																																																_0: {ctor: '_Tuple2', _0: 4394, _1: 882},
+																																																																																																																																																_1: {
+																																																																																																																																																	ctor: '::',
+																																																																																																																																																	_0: {ctor: '_Tuple2', _0: 4435, _1: 1008},
+																																																																																																																																																	_1: {
+																																																																																																																																																		ctor: '::',
+																																																																																																																																																		_0: {ctor: '_Tuple2', _0: 4494, _1: 882},
+																																																																																																																																																		_1: {
+																																																																																																																																																			ctor: '::',
+																																																																																																																																																			_0: {ctor: '_Tuple2', _0: 4457, _1: 907},
+																																																																																																																																																			_1: {
+																																																																																																																																																				ctor: '::',
+																																																																																																																																																				_0: {ctor: '_Tuple2', _0: 4510, _1: 1426},
+																																																																																																																																																				_1: {
+																																																																																																																																																					ctor: '::',
+																																																																																																																																																					_0: {ctor: '_Tuple2', _0: 4611, _1: 1489},
+																																																																																																																																																					_1: {
+																																																																																																																																																						ctor: '::',
+																																																																																																																																																						_0: {ctor: '_Tuple2', _0: 4715, _1: 1475},
+																																																																																																																																																						_1: {
+																																																																																																																																																							ctor: '::',
+																																																																																																																																																							_0: {ctor: '_Tuple2', _0: 4767, _1: 1505},
+																																																																																																																																																							_1: {
+																																																																																																																																																								ctor: '::',
+																																																																																																																																																								_0: {ctor: '_Tuple2', _0: 4778, _1: 1441},
+																																																																																																																																																								_1: {
+																																																																																																																																																									ctor: '::',
+																																																																																																																																																									_0: {ctor: '_Tuple2', _0: 4364, _1: 1225},
+																																																																																																																																																									_1: {
+																																																																																																																																																										ctor: '::',
+																																																																																																																																																										_0: {ctor: '_Tuple2', _0: 4392, _1: 1192},
+																																																																																																																																																										_1: {
+																																																																																																																																																											ctor: '::',
+																																																																																																																																																											_0: {ctor: '_Tuple2', _0: 4335, _1: 1094},
+																																																																																																																																																											_1: {
+																																																																																																																																																												ctor: '::',
+																																																																																																																																																												_0: {ctor: '_Tuple2', _0: 4388, _1: 1144},
+																																																																																																																																																												_1: {
+																																																																																																																																																													ctor: '::',
+																																																																																																																																																													_0: {ctor: '_Tuple2', _0: 4371, _1: 1088},
+																																																																																																																																																													_1: {
+																																																																																																																																																														ctor: '::',
+																																																																																																																																																														_0: {ctor: '_Tuple2', _0: 4357, _1: 1026},
+																																																																																																																																																														_1: {
+																																																																																																																																																															ctor: '::',
+																																																																																																																																																															_0: {ctor: '_Tuple2', _0: 4337, _1: 996},
+																																																																																																																																																															_1: {
+																																																																																																																																																																ctor: '::',
+																																																																																																																																																																_0: {ctor: '_Tuple2', _0: 4321, _1: 948},
+																																																																																																																																																																_1: {
+																																																																																																																																																																	ctor: '::',
+																																																																																																																																																																	_0: {ctor: '_Tuple2', _0: 4310, _1: 878},
+																																																																																																																																																																	_1: {
+																																																																																																																																																																		ctor: '::',
+																																																																																																																																																																		_0: {ctor: '_Tuple2', _0: 4268, _1: 742},
+																																																																																																																																																																		_1: {
+																																																																																																																																																																			ctor: '::',
+																																																																																																																																																																			_0: {ctor: '_Tuple2', _0: 4259, _1: 696},
+																																																																																																																																																																			_1: {
+																																																																																																																																																																				ctor: '::',
+																																																																																																																																																																				_0: {ctor: '_Tuple2', _0: 4249, _1: 642},
+																																																																																																																																																																				_1: {
+																																																																																																																																																																					ctor: '::',
+																																																																																																																																																																					_0: {ctor: '_Tuple2', _0: 4617, _1: 2394},
+																																																																																																																																																																					_1: {
+																																																																																																																																																																						ctor: '::',
+																																																																																																																																																																						_0: {ctor: '_Tuple2', _0: 4539, _1: 2421},
+																																																																																																																																																																						_1: {
+																																																																																																																																																																							ctor: '::',
+																																																																																																																																																																							_0: {ctor: '_Tuple2', _0: 4523, _1: 2468},
+																																																																																																																																																																							_1: {
+																																																																																																																																																																								ctor: '::',
+																																																																																																																																																																								_0: {ctor: '_Tuple2', _0: 4609, _1: 2456},
+																																																																																																																																																																								_1: {
+																																																																																																																																																																									ctor: '::',
+																																																																																																																																																																									_0: {ctor: '_Tuple2', _0: 4650, _1: 2452},
+																																																																																																																																																																									_1: {
+																																																																																																																																																																										ctor: '::',
+																																																																																																																																																																										_0: {ctor: '_Tuple2', _0: 4656, _1: 2509},
+																																																																																																																																																																										_1: {
+																																																																																																																																																																											ctor: '::',
+																																																																																																																																																																											_0: {ctor: '_Tuple2', _0: 4663, _1: 2563},
+																																																																																																																																																																											_1: {
+																																																																																																																																																																												ctor: '::',
+																																																																																																																																																																												_0: {ctor: '_Tuple2', _0: 4661, _1: 2596},
+																																																																																																																																																																												_1: {
+																																																																																																																																																																													ctor: '::',
+																																																																																																																																																																													_0: {ctor: '_Tuple2', _0: 4639, _1: 2669},
+																																																																																																																																																																													_1: {
+																																																																																																																																																																														ctor: '::',
+																																																																																																																																																																														_0: {ctor: '_Tuple2', _0: 4572, _1: 2694},
+																																																																																																																																																																														_1: {
+																																																																																																																																																																															ctor: '::',
+																																																																																																																																																																															_0: {ctor: '_Tuple2', _0: 4557, _1: 2848},
+																																																																																																																																																																															_1: {
+																																																																																																																																																																																ctor: '::',
+																																																																																																																																																																																_0: {ctor: '_Tuple2', _0: 4536, _1: 2810},
+																																																																																																																																																																																_1: {
+																																																																																																																																																																																	ctor: '::',
+																																																																																																																																																																																	_0: {ctor: '_Tuple2', _0: 4537, _1: 2140},
+																																																																																																																																																																																	_1: {
+																																																																																																																																																																																		ctor: '::',
+																																																																																																																																																																																		_0: {ctor: '_Tuple2', _0: 4558, _1: 2216},
+																																																																																																																																																																																		_1: {
+																																																																																																																																																																																			ctor: '::',
+																																																																																																																																																																																			_0: {ctor: '_Tuple2', _0: 4492, _1: 2169},
+																																																																																																																																																																																			_1: {
+																																																																																																																																																																																				ctor: '::',
+																																																																																																																																																																																				_0: {ctor: '_Tuple2', _0: 4678, _1: 2205},
+																																																																																																																																																																																				_1: {
+																																																																																																																																																																																					ctor: '::',
+																																																																																																																																																																																					_0: {ctor: '_Tuple2', _0: 4685, _1: 2289},
+																																																																																																																																																																																					_1: {
+																																																																																																																																																																																						ctor: '::',
+																																																																																																																																																																																						_0: {ctor: '_Tuple2', _0: 4437, _1: 1494},
+																																																																																																																																																																																						_1: {
+																																																																																																																																																																																							ctor: '::',
+																																																																																																																																																																																							_0: {ctor: '_Tuple2', _0: 4423, _1: 1648},
+																																																																																																																																																																																							_1: {
+																																																																																																																																																																																								ctor: '::',
+																																																																																																																																																																																								_0: {ctor: '_Tuple2', _0: 4483, _1: 1739},
+																																																																																																																																																																																								_1: {
+																																																																																																																																																																																									ctor: '::',
+																																																																																																																																																																																									_0: {ctor: '_Tuple2', _0: 4508, _1: 1797},
+																																																																																																																																																																																									_1: {
+																																																																																																																																																																																										ctor: '::',
+																																																																																																																																																																																										_0: {ctor: '_Tuple2', _0: 4517, _1: 1896},
+																																																																																																																																																																																										_1: {
+																																																																																																																																																																																											ctor: '::',
+																																																																																																																																																																																											_0: {ctor: '_Tuple2', _0: 4675, _1: 1858},
+																																																																																																																																																																																											_1: {
+																																																																																																																																																																																												ctor: '::',
+																																																																																																																																																																																												_0: {ctor: '_Tuple2', _0: 4760, _1: 2616},
+																																																																																																																																																																																												_1: {ctor: '[]'}
+																																																																																																																																																																																											}
+																																																																																																																																																																																										}
+																																																																																																																																																																																									}
+																																																																																																																																																																																								}
+																																																																																																																																																																																							}
+																																																																																																																																																																																						}
+																																																																																																																																																																																					}
+																																																																																																																																																																																				}
+																																																																																																																																																																																			}
+																																																																																																																																																																																		}
+																																																																																																																																																																																	}
+																																																																																																																																																																																}
+																																																																																																																																																																															}
+																																																																																																																																																																														}
+																																																																																																																																																																													}
+																																																																																																																																																																												}
+																																																																																																																																																																											}
+																																																																																																																																																																										}
+																																																																																																																																																																									}
+																																																																																																																																																																								}
+																																																																																																																																																																							}
+																																																																																																																																																																						}
+																																																																																																																																																																					}
+																																																																																																																																																																				}
+																																																																																																																																																																			}
+																																																																																																																																																																		}
+																																																																																																																																																																	}
+																																																																																																																																																																}
+																																																																																																																																																															}
+																																																																																																																																																														}
+																																																																																																																																																													}
+																																																																																																																																																												}
+																																																																																																																																																											}
+																																																																																																																																																										}
+																																																																																																																																																									}
+																																																																																																																																																								}
+																																																																																																																																																							}
+																																																																																																																																																						}
+																																																																																																																																																					}
+																																																																																																																																																				}
+																																																																																																																																																			}
+																																																																																																																																																		}
+																																																																																																																																																	}
+																																																																																																																																																}
+																																																																																																																																															}
+																																																																																																																																														}
+																																																																																																																																													}
+																																																																																																																																												}
+																																																																																																																																											}
+																																																																																																																																										}
+																																																																																																																																									}
+																																																																																																																																								}
+																																																																																																																																							}
+																																																																																																																																						}
+																																																																																																																																					}
+																																																																																																																																				}
+																																																																																																																																			}
+																																																																																																																																		}
+																																																																																																																																	}
+																																																																																																																																}
+																																																																																																																															}
+																																																																																																																														}
+																																																																																																																													}
+																																																																																																																												}
+																																																																																																																											}
+																																																																																																																										}
+																																																																																																																									}
+																																																																																																																								}
+																																																																																																																							}
+																																																																																																																						}
+																																																																																																																					}
+																																																																																																																				}
+																																																																																																																			}
+																																																																																																																		}
+																																																																																																																	}
+																																																																																																																}
+																																																																																																															}
+																																																																																																														}
+																																																																																																													}
+																																																																																																												}
+																																																																																																											}
+																																																																																																										}
+																																																																																																									}
+																																																																																																								}
+																																																																																																							}
+																																																																																																						}
+																																																																																																					}
+																																																																																																				}
+																																																																																																			}
+																																																																																																		}
+																																																																																																	}
+																																																																																																}
+																																																																																															}
+																																																																																														}
+																																																																																													}
+																																																																																												}
+																																																																																											}
+																																																																																										}
+																																																																																									}
+																																																																																								}
+																																																																																							}
+																																																																																						}
+																																																																																					}
+																																																																																				}
+																																																																																			}
+																																																																																		}
+																																																																																	}
+																																																																																}
+																																																																															}
+																																																																														}
+																																																																													}
+																																																																												}
+																																																																											}
+																																																																										}
+																																																																									}
+																																																																								}
+																																																																							}
+																																																																						}
+																																																																					}
+																																																																				}
+																																																																			}
+																																																																		}
+																																																																	}
+																																																																}
+																																																															}
+																																																														}
+																																																													}
+																																																												}
+																																																											}
+																																																										}
+																																																									}
+																																																								}
+																																																							}
+																																																						}
+																																																					}
+																																																				}
+																																																			}
+																																																		}
+																																																	}
+																																																}
+																																															}
+																																														}
+																																													}
+																																												}
+																																											}
+																																										}
+																																									}
+																																								}
+																																							}
+																																						}
+																																					}
+																																				}
+																																			}
+																																		}
+																																	}
+																																}
+																															}
+																														}
+																													}
+																												}
+																											}
+																										}
+																									}
+																								}
+																							}
+																						}
+																					}
+																				}
+																			}
+																		}
+																	}
+																}
+															}
+														}
+													}
+												}
+											}
+										}
+									}
+								}
+							}
+						}
+					}
+				}
+			}
+		}));
+var _ayoupov$phi$Simulation_NodeList$flood5List = A2(
+	_elm_lang$core$Set$map,
+	_ayoupov$phi$Simulation_NodeList$transformTuple,
+	_elm_lang$core$Set$fromList(
+		{
+			ctor: '::',
+			_0: {ctor: '_Tuple2', _0: 3124, _1: 1819},
+			_1: {
+				ctor: '::',
+				_0: {ctor: '_Tuple2', _0: 2863, _1: 1994},
+				_1: {
+					ctor: '::',
+					_0: {ctor: '_Tuple2', _0: 2806, _1: 2029},
+					_1: {
+						ctor: '::',
+						_0: {ctor: '_Tuple2', _0: 2845, _1: 2028},
+						_1: {
+							ctor: '::',
+							_0: {ctor: '_Tuple2', _0: 2901, _1: 2064},
+							_1: {
+								ctor: '::',
+								_0: {ctor: '_Tuple2', _0: 2950, _1: 2053},
+								_1: {
+									ctor: '::',
+									_0: {ctor: '_Tuple2', _0: 3032, _1: 2034},
+									_1: {
+										ctor: '::',
+										_0: {ctor: '_Tuple2', _0: 3106, _1: 1955},
+										_1: {
+											ctor: '::',
+											_0: {ctor: '_Tuple2', _0: 3167, _1: 1931},
+											_1: {
+												ctor: '::',
+												_0: {ctor: '_Tuple2', _0: 3200, _1: 1902},
+												_1: {
+													ctor: '::',
+													_0: {ctor: '_Tuple2', _0: 3213, _1: 1939},
+													_1: {
+														ctor: '::',
+														_0: {ctor: '_Tuple2', _0: 3522, _1: 1765},
+														_1: {
+															ctor: '::',
+															_0: {ctor: '_Tuple2', _0: 3630, _1: 1776},
+															_1: {
+																ctor: '::',
+																_0: {ctor: '_Tuple2', _0: 3555, _1: 1812},
+																_1: {
+																	ctor: '::',
+																	_0: {ctor: '_Tuple2', _0: 3579, _1: 1851},
+																	_1: {
+																		ctor: '::',
+																		_0: {ctor: '_Tuple2', _0: 3657, _1: 1812},
+																		_1: {
+																			ctor: '::',
+																			_0: {ctor: '_Tuple2', _0: 3606, _1: 1822},
+																			_1: {
+																				ctor: '::',
+																				_0: {ctor: '_Tuple2', _0: 3626, _1: 1937},
+																				_1: {
+																					ctor: '::',
+																					_0: {ctor: '_Tuple2', _0: 3703, _1: 1885},
+																					_1: {
+																						ctor: '::',
+																						_0: {ctor: '_Tuple2', _0: 3676, _1: 1994},
+																						_1: {
+																							ctor: '::',
+																							_0: {ctor: '_Tuple2', _0: 3693, _1: 1941},
+																							_1: {
+																								ctor: '::',
+																								_0: {ctor: '_Tuple2', _0: 3661, _1: 1917},
+																								_1: {
+																									ctor: '::',
+																									_0: {ctor: '_Tuple2', _0: 3752, _1: 1773},
+																									_1: {
+																										ctor: '::',
+																										_0: {ctor: '_Tuple2', _0: 3689, _1: 1776},
+																										_1: {
+																											ctor: '::',
+																											_0: {ctor: '_Tuple2', _0: 3670, _1: 1628},
+																											_1: {
+																												ctor: '::',
+																												_0: {ctor: '_Tuple2', _0: 3719, _1: 1683},
+																												_1: {
+																													ctor: '::',
+																													_0: {ctor: '_Tuple2', _0: 3646, _1: 1565},
+																													_1: {
+																														ctor: '::',
+																														_0: {ctor: '_Tuple2', _0: 3684, _1: 1529},
+																														_1: {
+																															ctor: '::',
+																															_0: {ctor: '_Tuple2', _0: 4597, _1: 1121},
+																															_1: {
+																																ctor: '::',
+																																_0: {ctor: '_Tuple2', _0: 4639, _1: 1097},
+																																_1: {
+																																	ctor: '::',
+																																	_0: {ctor: '_Tuple2', _0: 2800, _1: 2116},
+																																	_1: {
+																																		ctor: '::',
+																																		_0: {ctor: '_Tuple2', _0: 2765, _1: 2136},
+																																		_1: {
+																																			ctor: '::',
+																																			_0: {ctor: '_Tuple2', _0: 2849, _1: 2116},
+																																			_1: {
+																																				ctor: '::',
+																																				_0: {ctor: '_Tuple2', _0: 2798, _1: 2174},
+																																				_1: {
+																																					ctor: '::',
+																																					_0: {ctor: '_Tuple2', _0: 2524, _1: 2274},
+																																					_1: {
+																																						ctor: '::',
+																																						_0: {ctor: '_Tuple2', _0: 2451, _1: 2211},
+																																						_1: {
+																																							ctor: '::',
+																																							_0: {ctor: '_Tuple2', _0: 2456, _1: 2310},
+																																							_1: {
+																																								ctor: '::',
+																																								_0: {ctor: '_Tuple2', _0: 2358, _1: 2347},
+																																								_1: {
+																																									ctor: '::',
+																																									_0: {ctor: '_Tuple2', _0: 2357, _1: 2287},
+																																									_1: {
+																																										ctor: '::',
+																																										_0: {ctor: '_Tuple2', _0: 2378, _1: 2257},
+																																										_1: {
+																																											ctor: '::',
+																																											_0: {ctor: '_Tuple2', _0: 2420, _1: 2247},
+																																											_1: {
+																																												ctor: '::',
+																																												_0: {ctor: '_Tuple2', _0: 2170, _1: 2371},
+																																												_1: {
+																																													ctor: '::',
+																																													_0: {ctor: '_Tuple2', _0: 2162, _1: 2467},
+																																													_1: {
+																																														ctor: '::',
+																																														_0: {ctor: '_Tuple2', _0: 2080, _1: 2432},
+																																														_1: {
+																																															ctor: '::',
+																																															_0: {ctor: '_Tuple2', _0: 2106, _1: 2492},
+																																															_1: {
+																																																ctor: '::',
+																																																_0: {ctor: '_Tuple2', _0: 2031, _1: 2464},
+																																																_1: {
+																																																	ctor: '::',
+																																																	_0: {ctor: '_Tuple2', _0: 1956, _1: 2507},
+																																																	_1: {
+																																																		ctor: '::',
+																																																		_0: {ctor: '_Tuple2', _0: 1978, _1: 2473},
+																																																		_1: {
+																																																			ctor: '::',
+																																																			_0: {ctor: '_Tuple2', _0: 1972, _1: 2403},
+																																																			_1: {
+																																																				ctor: '::',
+																																																				_0: {ctor: '_Tuple2', _0: 1903, _1: 2541},
+																																																				_1: {
+																																																					ctor: '::',
+																																																					_0: {ctor: '_Tuple2', _0: 1873, _1: 2570},
+																																																					_1: {
+																																																						ctor: '::',
+																																																						_0: {ctor: '_Tuple2', _0: 1711, _1: 2638},
+																																																						_1: {
+																																																							ctor: '::',
+																																																							_0: {ctor: '_Tuple2', _0: 1746, _1: 2643},
+																																																							_1: {
+																																																								ctor: '::',
+																																																								_0: {ctor: '_Tuple2', _0: 1656, _1: 2704},
+																																																								_1: {
+																																																									ctor: '::',
+																																																									_0: {ctor: '_Tuple2', _0: 1613, _1: 2717},
+																																																									_1: {
+																																																										ctor: '::',
+																																																										_0: {ctor: '_Tuple2', _0: 2062, _1: 2518},
+																																																										_1: {
+																																																											ctor: '::',
+																																																											_0: {ctor: '_Tuple2', _0: 2098, _1: 2531},
+																																																											_1: {
+																																																												ctor: '::',
+																																																												_0: {ctor: '_Tuple2', _0: 2022, _1: 2541},
+																																																												_1: {
+																																																													ctor: '::',
+																																																													_0: {ctor: '_Tuple2', _0: 2003, _1: 2584},
+																																																													_1: {
+																																																														ctor: '::',
+																																																														_0: {ctor: '_Tuple2', _0: 1960, _1: 2579},
+																																																														_1: {
+																																																															ctor: '::',
+																																																															_0: {ctor: '_Tuple2', _0: 1891, _1: 2621},
+																																																															_1: {
+																																																																ctor: '::',
+																																																																_0: {ctor: '_Tuple2', _0: 1858, _1: 2647},
+																																																																_1: {
+																																																																	ctor: '::',
+																																																																	_0: {ctor: '_Tuple2', _0: 1803, _1: 2674},
+																																																																	_1: {
+																																																																		ctor: '::',
+																																																																		_0: {ctor: '_Tuple2', _0: 1942, _1: 2650},
+																																																																		_1: {
+																																																																			ctor: '::',
+																																																																			_0: {ctor: '_Tuple2', _0: 1716, _1: 2729},
+																																																																			_1: {
+																																																																				ctor: '::',
+																																																																				_0: {ctor: '_Tuple2', _0: 1736, _1: 2761},
+																																																																				_1: {
+																																																																					ctor: '::',
+																																																																					_0: {ctor: '_Tuple2', _0: 1654, _1: 2773},
+																																																																					_1: {
+																																																																						ctor: '::',
+																																																																						_0: {ctor: '_Tuple2', _0: 1701, _1: 2800},
+																																																																						_1: {
+																																																																							ctor: '::',
+																																																																							_0: {ctor: '_Tuple2', _0: 2328, _1: 2366},
+																																																																							_1: {
+																																																																								ctor: '::',
+																																																																								_0: {ctor: '_Tuple2', _0: 2348, _1: 2401},
+																																																																								_1: {
+																																																																									ctor: '::',
+																																																																									_0: {ctor: '_Tuple2', _0: 2302, _1: 2297},
+																																																																									_1: {
+																																																																										ctor: '::',
+																																																																										_0: {ctor: '_Tuple2', _0: 2308, _1: 2253},
+																																																																										_1: {
+																																																																											ctor: '::',
+																																																																											_0: {ctor: '_Tuple2', _0: 2248, _1: 2332},
+																																																																											_1: {
+																																																																												ctor: '::',
+																																																																												_0: {ctor: '_Tuple2', _0: 2228, _1: 2279},
+																																																																												_1: {
+																																																																													ctor: '::',
+																																																																													_0: {ctor: '_Tuple2', _0: 2234, _1: 2421},
+																																																																													_1: {
+																																																																														ctor: '::',
+																																																																														_0: {ctor: '_Tuple2', _0: 2719, _1: 2216},
+																																																																														_1: {
+																																																																															ctor: '::',
+																																																																															_0: {ctor: '_Tuple2', _0: 2688, _1: 2180},
+																																																																															_1: {
+																																																																																ctor: '::',
+																																																																																_0: {ctor: '_Tuple2', _0: 2660, _1: 2104},
+																																																																																_1: {
+																																																																																	ctor: '::',
+																																																																																	_0: {ctor: '_Tuple2', _0: 2582, _1: 2234},
+																																																																																	_1: {
+																																																																																		ctor: '::',
+																																																																																		_0: {ctor: '_Tuple2', _0: 2624, _1: 2228},
+																																																																																		_1: {
+																																																																																			ctor: '::',
+																																																																																			_0: {ctor: '_Tuple2', _0: 2646, _1: 2192},
+																																																																																			_1: {
+																																																																																				ctor: '::',
+																																																																																				_0: {ctor: '_Tuple2', _0: 2636, _1: 2259},
+																																																																																				_1: {
+																																																																																					ctor: '::',
+																																																																																					_0: {ctor: '_Tuple2', _0: 2543, _1: 2179},
+																																																																																					_1: {
+																																																																																						ctor: '::',
+																																																																																						_0: {ctor: '_Tuple2', _0: 2528, _1: 2114},
+																																																																																						_1: {
+																																																																																							ctor: '::',
+																																																																																							_0: {ctor: '_Tuple2', _0: 3190, _1: 1672},
+																																																																																							_1: {
+																																																																																								ctor: '::',
+																																																																																								_0: {ctor: '_Tuple2', _0: 3384, _1: 1695},
+																																																																																								_1: {
+																																																																																									ctor: '::',
+																																																																																									_0: {ctor: '_Tuple2', _0: 3370, _1: 1733},
+																																																																																									_1: {
+																																																																																										ctor: '::',
+																																																																																										_0: {ctor: '_Tuple2', _0: 3294, _1: 1761},
+																																																																																										_1: {
+																																																																																											ctor: '::',
+																																																																																											_0: {ctor: '_Tuple2', _0: 3309, _1: 1720},
+																																																																																											_1: {
+																																																																																												ctor: '::',
+																																																																																												_0: {ctor: '_Tuple2', _0: 3256, _1: 1795},
+																																																																																												_1: {
+																																																																																													ctor: '::',
+																																																																																													_0: {ctor: '_Tuple2', _0: 3183, _1: 1846},
+																																																																																													_1: {
+																																																																																														ctor: '::',
+																																																																																														_0: {ctor: '_Tuple2', _0: 3048, _1: 1916},
+																																																																																														_1: {
+																																																																																															ctor: '::',
+																																																																																															_0: {ctor: '_Tuple2', _0: 2955, _1: 1929},
+																																																																																															_1: {
+																																																																																																ctor: '::',
+																																																																																																_0: {ctor: '_Tuple2', _0: 2987, _1: 1952},
+																																																																																																_1: {
+																																																																																																	ctor: '::',
+																																																																																																	_0: {ctor: '_Tuple2', _0: 3015, _1: 1999},
+																																																																																																	_1: {
+																																																																																																		ctor: '::',
+																																																																																																		_0: {ctor: '_Tuple2', _0: 3064, _1: 1980},
+																																																																																																		_1: {
+																																																																																																			ctor: '::',
+																																																																																																			_0: {ctor: '_Tuple2', _0: 3262, _1: 1864},
+																																																																																																			_1: {
+																																																																																																				ctor: '::',
+																																																																																																				_0: {ctor: '_Tuple2', _0: 3345, _1: 1880},
+																																																																																																				_1: {
+																																																																																																					ctor: '::',
+																																																																																																					_0: {ctor: '_Tuple2', _0: 3320, _1: 1834},
+																																																																																																					_1: {
+																																																																																																						ctor: '::',
+																																																																																																						_0: {ctor: '_Tuple2', _0: 3386, _1: 1802},
+																																																																																																						_1: {
+																																																																																																							ctor: '::',
+																																																																																																							_0: {ctor: '_Tuple2', _0: 3411, _1: 1776},
+																																																																																																							_1: {
+																																																																																																								ctor: '::',
+																																																																																																								_0: {ctor: '_Tuple2', _0: 3447, _1: 1776},
+																																																																																																								_1: {
+																																																																																																									ctor: '::',
+																																																																																																									_0: {ctor: '_Tuple2', _0: 3492, _1: 1615},
+																																																																																																									_1: {
+																																																																																																										ctor: '::',
+																																																																																																										_0: {ctor: '_Tuple2', _0: 3499, _1: 1656},
+																																																																																																										_1: {
+																																																																																																											ctor: '::',
+																																																																																																											_0: {ctor: '_Tuple2', _0: 3497, _1: 1721},
+																																																																																																											_1: {
+																																																																																																												ctor: '::',
+																																																																																																												_0: {ctor: '_Tuple2', _0: 3579, _1: 1575},
+																																																																																																												_1: {
+																																																																																																													ctor: '::',
+																																																																																																													_0: {ctor: '_Tuple2', _0: 3598, _1: 1600},
+																																																																																																													_1: {
+																																																																																																														ctor: '::',
+																																																																																																														_0: {ctor: '_Tuple2', _0: 3608, _1: 1739},
+																																																																																																														_1: {
+																																																																																																															ctor: '::',
+																																																																																																															_0: {ctor: '_Tuple2', _0: 3563, _1: 1767},
+																																																																																																															_1: {
+																																																																																																																ctor: '::',
+																																																																																																																_0: {ctor: '_Tuple2', _0: 3653, _1: 1716},
+																																																																																																																_1: {
+																																																																																																																	ctor: '::',
+																																																																																																																	_0: {ctor: '_Tuple2', _0: 3813, _1: 1548},
+																																																																																																																	_1: {
+																																																																																																																		ctor: '::',
+																																																																																																																		_0: {ctor: '_Tuple2', _0: 3791, _1: 1466},
+																																																																																																																		_1: {
+																																																																																																																			ctor: '::',
+																																																																																																																			_0: {ctor: '_Tuple2', _0: 3868, _1: 1550},
+																																																																																																																			_1: {
+																																																																																																																				ctor: '::',
+																																																																																																																				_0: {ctor: '_Tuple2', _0: 3905, _1: 1489},
+																																																																																																																				_1: {
+																																																																																																																					ctor: '::',
+																																																																																																																					_0: {ctor: '_Tuple2', _0: 3962, _1: 1484},
+																																																																																																																					_1: {
+																																																																																																																						ctor: '::',
+																																																																																																																						_0: {ctor: '_Tuple2', _0: 3943, _1: 1377},
+																																																																																																																						_1: {
+																																																																																																																							ctor: '::',
+																																																																																																																							_0: {ctor: '_Tuple2', _0: 4092, _1: 1414},
+																																																																																																																							_1: {
+																																																																																																																								ctor: '::',
+																																																																																																																								_0: {ctor: '_Tuple2', _0: 4115, _1: 1367},
+																																																																																																																								_1: {
+																																																																																																																									ctor: '::',
+																																																																																																																									_0: {ctor: '_Tuple2', _0: 4170, _1: 1354},
+																																																																																																																									_1: {
+																																																																																																																										ctor: '::',
+																																																																																																																										_0: {ctor: '_Tuple2', _0: 4131, _1: 1269},
+																																																																																																																										_1: {
+																																																																																																																											ctor: '::',
+																																																																																																																											_0: {ctor: '_Tuple2', _0: 4202, _1: 1315},
+																																																																																																																											_1: {
+																																																																																																																												ctor: '::',
+																																																																																																																												_0: {ctor: '_Tuple2', _0: 4261, _1: 2516},
+																																																																																																																												_1: {
+																																																																																																																													ctor: '::',
+																																																																																																																													_0: {ctor: '_Tuple2', _0: 4484, _1: 2436},
+																																																																																																																													_1: {
+																																																																																																																														ctor: '::',
+																																																																																																																														_0: {ctor: '_Tuple2', _0: 4467, _1: 2480},
+																																																																																																																														_1: {
+																																																																																																																															ctor: '::',
+																																																																																																																															_0: {ctor: '_Tuple2', _0: 4430, _1: 2454},
+																																																																																																																															_1: {
+																																																																																																																																ctor: '::',
+																																																																																																																																_0: {ctor: '_Tuple2', _0: 4403, _1: 2504},
+																																																																																																																																_1: {
+																																																																																																																																	ctor: '::',
+																																																																																																																																	_0: {ctor: '_Tuple2', _0: 4382, _1: 2470},
+																																																																																																																																	_1: {
+																																																																																																																																		ctor: '::',
+																																																																																																																																		_0: {ctor: '_Tuple2', _0: 4358, _1: 2516},
+																																																																																																																																		_1: {
+																																																																																																																																			ctor: '::',
+																																																																																																																																			_0: {ctor: '_Tuple2', _0: 4312, _1: 2492},
+																																																																																																																																			_1: {
+																																																																																																																																				ctor: '::',
+																																																																																																																																				_0: {ctor: '_Tuple2', _0: 4325, _1: 2530},
+																																																																																																																																				_1: {
+																																																																																																																																					ctor: '::',
+																																																																																																																																					_0: {ctor: '_Tuple2', _0: 4453, _1: 1206},
+																																																																																																																																					_1: {
+																																																																																																																																						ctor: '::',
+																																																																																																																																						_0: {ctor: '_Tuple2', _0: 4460, _1: 1157},
+																																																																																																																																						_1: {
+																																																																																																																																							ctor: '::',
+																																																																																																																																							_0: {ctor: '_Tuple2', _0: 4510, _1: 1168},
+																																																																																																																																							_1: {
+																																																																																																																																								ctor: '::',
+																																																																																																																																								_0: {ctor: '_Tuple2', _0: 4442, _1: 1104},
+																																																																																																																																								_1: {
+																																																																																																																																									ctor: '::',
+																																																																																																																																									_0: {ctor: '_Tuple2', _0: 4465, _1: 1076},
+																																																																																																																																									_1: {
+																																																																																																																																										ctor: '::',
+																																																																																																																																										_0: {ctor: '_Tuple2', _0: 4439, _1: 1045},
+																																																																																																																																										_1: {
+																																																																																																																																											ctor: '::',
+																																																																																																																																											_0: {ctor: '_Tuple2', _0: 4404, _1: 967},
+																																																																																																																																											_1: {
+																																																																																																																																												ctor: '::',
+																																																																																																																																												_0: {ctor: '_Tuple2', _0: 4409, _1: 818},
+																																																																																																																																												_1: {
+																																																																																																																																													ctor: '::',
+																																																																																																																																													_0: {ctor: '_Tuple2', _0: 4368, _1: 752},
+																																																																																																																																													_1: {
+																																																																																																																																														ctor: '::',
+																																																																																																																																														_0: {ctor: '_Tuple2', _0: 4356, _1: 698},
+																																																																																																																																														_1: {
+																																																																																																																																															ctor: '::',
+																																																																																																																																															_0: {ctor: '_Tuple2', _0: 4331, _1: 612},
+																																																																																																																																															_1: {
+																																																																																																																																																ctor: '::',
+																																																																																																																																																_0: {ctor: '_Tuple2', _0: 4394, _1: 882},
+																																																																																																																																																_1: {
+																																																																																																																																																	ctor: '::',
+																																																																																																																																																	_0: {ctor: '_Tuple2', _0: 4435, _1: 1008},
+																																																																																																																																																	_1: {
+																																																																																																																																																		ctor: '::',
+																																																																																																																																																		_0: {ctor: '_Tuple2', _0: 4494, _1: 882},
+																																																																																																																																																		_1: {
+																																																																																																																																																			ctor: '::',
+																																																																																																																																																			_0: {ctor: '_Tuple2', _0: 4457, _1: 907},
+																																																																																																																																																			_1: {
+																																																																																																																																																				ctor: '::',
+																																																																																																																																																				_0: {ctor: '_Tuple2', _0: 4510, _1: 1426},
+																																																																																																																																																				_1: {
+																																																																																																																																																					ctor: '::',
+																																																																																																																																																					_0: {ctor: '_Tuple2', _0: 4611, _1: 1489},
+																																																																																																																																																					_1: {
+																																																																																																																																																						ctor: '::',
+																																																																																																																																																						_0: {ctor: '_Tuple2', _0: 4715, _1: 1475},
+																																																																																																																																																						_1: {
+																																																																																																																																																							ctor: '::',
+																																																																																																																																																							_0: {ctor: '_Tuple2', _0: 4767, _1: 1505},
+																																																																																																																																																							_1: {
+																																																																																																																																																								ctor: '::',
+																																																																																																																																																								_0: {ctor: '_Tuple2', _0: 4778, _1: 1441},
+																																																																																																																																																								_1: {
+																																																																																																																																																									ctor: '::',
+																																																																																																																																																									_0: {ctor: '_Tuple2', _0: 4364, _1: 1225},
+																																																																																																																																																									_1: {
+																																																																																																																																																										ctor: '::',
+																																																																																																																																																										_0: {ctor: '_Tuple2', _0: 4392, _1: 1192},
+																																																																																																																																																										_1: {
+																																																																																																																																																											ctor: '::',
+																																																																																																																																																											_0: {ctor: '_Tuple2', _0: 4335, _1: 1094},
+																																																																																																																																																											_1: {
+																																																																																																																																																												ctor: '::',
+																																																																																																																																																												_0: {ctor: '_Tuple2', _0: 4388, _1: 1144},
+																																																																																																																																																												_1: {
+																																																																																																																																																													ctor: '::',
+																																																																																																																																																													_0: {ctor: '_Tuple2', _0: 4371, _1: 1088},
+																																																																																																																																																													_1: {
+																																																																																																																																																														ctor: '::',
+																																																																																																																																																														_0: {ctor: '_Tuple2', _0: 4357, _1: 1026},
+																																																																																																																																																														_1: {
+																																																																																																																																																															ctor: '::',
+																																																																																																																																																															_0: {ctor: '_Tuple2', _0: 4337, _1: 996},
+																																																																																																																																																															_1: {
+																																																																																																																																																																ctor: '::',
+																																																																																																																																																																_0: {ctor: '_Tuple2', _0: 4321, _1: 948},
+																																																																																																																																																																_1: {
+																																																																																																																																																																	ctor: '::',
+																																																																																																																																																																	_0: {ctor: '_Tuple2', _0: 4310, _1: 878},
+																																																																																																																																																																	_1: {
+																																																																																																																																																																		ctor: '::',
+																																																																																																																																																																		_0: {ctor: '_Tuple2', _0: 4268, _1: 742},
+																																																																																																																																																																		_1: {
+																																																																																																																																																																			ctor: '::',
+																																																																																																																																																																			_0: {ctor: '_Tuple2', _0: 4259, _1: 696},
+																																																																																																																																																																			_1: {
+																																																																																																																																																																				ctor: '::',
+																																																																																																																																																																				_0: {ctor: '_Tuple2', _0: 4249, _1: 642},
+																																																																																																																																																																				_1: {
+																																																																																																																																																																					ctor: '::',
+																																																																																																																																																																					_0: {ctor: '_Tuple2', _0: 4617, _1: 2394},
+																																																																																																																																																																					_1: {
+																																																																																																																																																																						ctor: '::',
+																																																																																																																																																																						_0: {ctor: '_Tuple2', _0: 4539, _1: 2421},
+																																																																																																																																																																						_1: {
+																																																																																																																																																																							ctor: '::',
+																																																																																																																																																																							_0: {ctor: '_Tuple2', _0: 4523, _1: 2468},
+																																																																																																																																																																							_1: {
+																																																																																																																																																																								ctor: '::',
+																																																																																																																																																																								_0: {ctor: '_Tuple2', _0: 4609, _1: 2456},
+																																																																																																																																																																								_1: {
+																																																																																																																																																																									ctor: '::',
+																																																																																																																																																																									_0: {ctor: '_Tuple2', _0: 4650, _1: 2452},
+																																																																																																																																																																									_1: {
+																																																																																																																																																																										ctor: '::',
+																																																																																																																																																																										_0: {ctor: '_Tuple2', _0: 4656, _1: 2509},
+																																																																																																																																																																										_1: {
+																																																																																																																																																																											ctor: '::',
+																																																																																																																																																																											_0: {ctor: '_Tuple2', _0: 4663, _1: 2563},
+																																																																																																																																																																											_1: {
+																																																																																																																																																																												ctor: '::',
+																																																																																																																																																																												_0: {ctor: '_Tuple2', _0: 4661, _1: 2596},
+																																																																																																																																																																												_1: {
+																																																																																																																																																																													ctor: '::',
+																																																																																																																																																																													_0: {ctor: '_Tuple2', _0: 4639, _1: 2669},
+																																																																																																																																																																													_1: {
+																																																																																																																																																																														ctor: '::',
+																																																																																																																																																																														_0: {ctor: '_Tuple2', _0: 4572, _1: 2694},
+																																																																																																																																																																														_1: {
+																																																																																																																																																																															ctor: '::',
+																																																																																																																																																																															_0: {ctor: '_Tuple2', _0: 4557, _1: 2848},
+																																																																																																																																																																															_1: {
+																																																																																																																																																																																ctor: '::',
+																																																																																																																																																																																_0: {ctor: '_Tuple2', _0: 4536, _1: 2810},
+																																																																																																																																																																																_1: {
+																																																																																																																																																																																	ctor: '::',
+																																																																																																																																																																																	_0: {ctor: '_Tuple2', _0: 4537, _1: 2140},
+																																																																																																																																																																																	_1: {
+																																																																																																																																																																																		ctor: '::',
+																																																																																																																																																																																		_0: {ctor: '_Tuple2', _0: 4558, _1: 2216},
+																																																																																																																																																																																		_1: {
+																																																																																																																																																																																			ctor: '::',
+																																																																																																																																																																																			_0: {ctor: '_Tuple2', _0: 4492, _1: 2169},
+																																																																																																																																																																																			_1: {
+																																																																																																																																																																																				ctor: '::',
+																																																																																																																																																																																				_0: {ctor: '_Tuple2', _0: 4678, _1: 2205},
+																																																																																																																																																																																				_1: {
+																																																																																																																																																																																					ctor: '::',
+																																																																																																																																																																																					_0: {ctor: '_Tuple2', _0: 4685, _1: 2289},
+																																																																																																																																																																																					_1: {
+																																																																																																																																																																																						ctor: '::',
+																																																																																																																																																																																						_0: {ctor: '_Tuple2', _0: 4437, _1: 1494},
+																																																																																																																																																																																						_1: {
+																																																																																																																																																																																							ctor: '::',
+																																																																																																																																																																																							_0: {ctor: '_Tuple2', _0: 4423, _1: 1648},
+																																																																																																																																																																																							_1: {
+																																																																																																																																																																																								ctor: '::',
+																																																																																																																																																																																								_0: {ctor: '_Tuple2', _0: 4483, _1: 1739},
+																																																																																																																																																																																								_1: {
+																																																																																																																																																																																									ctor: '::',
+																																																																																																																																																																																									_0: {ctor: '_Tuple2', _0: 4508, _1: 1797},
+																																																																																																																																																																																									_1: {
+																																																																																																																																																																																										ctor: '::',
+																																																																																																																																																																																										_0: {ctor: '_Tuple2', _0: 4517, _1: 1896},
+																																																																																																																																																																																										_1: {
+																																																																																																																																																																																											ctor: '::',
+																																																																																																																																																																																											_0: {ctor: '_Tuple2', _0: 4675, _1: 1858},
+																																																																																																																																																																																											_1: {
+																																																																																																																																																																																												ctor: '::',
+																																																																																																																																																																																												_0: {ctor: '_Tuple2', _0: 4532, _1: 1465},
+																																																																																																																																																																																												_1: {
+																																																																																																																																																																																													ctor: '::',
+																																																																																																																																																																																													_0: {ctor: '_Tuple2', _0: 4553, _1: 1506},
+																																																																																																																																																																																													_1: {
+																																																																																																																																																																																														ctor: '::',
+																																																																																																																																																																																														_0: {ctor: '_Tuple2', _0: 4554, _1: 1542},
+																																																																																																																																																																																														_1: {
+																																																																																																																																																																																															ctor: '::',
+																																																																																																																																																																																															_0: {ctor: '_Tuple2', _0: 4554, _1: 1640},
+																																																																																																																																																																																															_1: {
+																																																																																																																																																																																																ctor: '::',
+																																																																																																																																																																																																_0: {ctor: '_Tuple2', _0: 4585, _1: 1733},
+																																																																																																																																																																																																_1: {
+																																																																																																																																																																																																	ctor: '::',
+																																																																																																																																																																																																	_0: {ctor: '_Tuple2', _0: 4620, _1: 1799},
+																																																																																																																																																																																																	_1: {
+																																																																																																																																																																																																		ctor: '::',
+																																																																																																																																																																																																		_0: {ctor: '_Tuple2', _0: 4608, _1: 1840},
+																																																																																																																																																																																																		_1: {
+																																																																																																																																																																																																			ctor: '::',
+																																																																																																																																																																																																			_0: {ctor: '_Tuple2', _0: 4612, _1: 1939},
+																																																																																																																																																																																																			_1: {
+																																																																																																																																																																																																				ctor: '::',
+																																																																																																																																																																																																				_0: {ctor: '_Tuple2', _0: 4616, _1: 1977},
+																																																																																																																																																																																																				_1: {
+																																																																																																																																																																																																					ctor: '::',
+																																																																																																																																																																																																					_0: {ctor: '_Tuple2', _0: 4760, _1: 2616},
+																																																																																																																																																																																																					_1: {
+																																																																																																																																																																																																						ctor: '::',
+																																																																																																																																																																																																						_0: {ctor: '_Tuple2', _0: 4710, _1: 2694},
+																																																																																																																																																																																																						_1: {
+																																																																																																																																																																																																							ctor: '::',
+																																																																																																																																																																																																							_0: {ctor: '_Tuple2', _0: 4678, _1: 2715},
+																																																																																																																																																																																																							_1: {
+																																																																																																																																																																																																								ctor: '::',
+																																																																																																																																																																																																								_0: {ctor: '_Tuple2', _0: 4733, _1: 2804},
+																																																																																																																																																																																																								_1: {
+																																																																																																																																																																																																									ctor: '::',
+																																																																																																																																																																																																									_0: {ctor: '_Tuple2', _0: 4663, _1: 2830},
+																																																																																																																																																																																																									_1: {
+																																																																																																																																																																																																										ctor: '::',
+																																																																																																																																																																																																										_0: {ctor: '_Tuple2', _0: 4593, _1: 2848},
+																																																																																																																																																																																																										_1: {
+																																																																																																																																																																																																											ctor: '::',
+																																																																																																																																																																																																											_0: {ctor: '_Tuple2', _0: 4582, _1: 2908},
+																																																																																																																																																																																																											_1: {
+																																																																																																																																																																																																												ctor: '::',
+																																																																																																																																																																																																												_0: {ctor: '_Tuple2', _0: 4627, _1: 2894},
+																																																																																																																																																																																																												_1: {
+																																																																																																																																																																																																													ctor: '::',
+																																																																																																																																																																																																													_0: {ctor: '_Tuple2', _0: 4673, _1: 2894},
+																																																																																																																																																																																																													_1: {
+																																																																																																																																																																																																														ctor: '::',
+																																																																																																																																																																																																														_0: {ctor: '_Tuple2', _0: 4711, _1: 2875},
+																																																																																																																																																																																																														_1: {
+																																																																																																																																																																																																															ctor: '::',
+																																																																																																																																																																																																															_0: {ctor: '_Tuple2', _0: 4749, _1: 2875},
+																																																																																																																																																																																																															_1: {
+																																																																																																																																																																																																																ctor: '::',
+																																																																																																																																																																																																																_0: {ctor: '_Tuple2', _0: 4715, _1: 2847},
+																																																																																																																																																																																																																_1: {
+																																																																																																																																																																																																																	ctor: '::',
+																																																																																																																																																																																																																	_0: {ctor: '_Tuple2', _0: 4651, _1: 2863},
+																																																																																																																																																																																																																	_1: {ctor: '[]'}
+																																																																																																																																																																																																																}
+																																																																																																																																																																																																															}
+																																																																																																																																																																																																														}
+																																																																																																																																																																																																													}
+																																																																																																																																																																																																												}
+																																																																																																																																																																																																											}
+																																																																																																																																																																																																										}
+																																																																																																																																																																																																									}
+																																																																																																																																																																																																								}
+																																																																																																																																																																																																							}
+																																																																																																																																																																																																						}
+																																																																																																																																																																																																					}
+																																																																																																																																																																																																				}
+																																																																																																																																																																																																			}
+																																																																																																																																																																																																		}
+																																																																																																																																																																																																	}
+																																																																																																																																																																																																}
+																																																																																																																																																																																															}
+																																																																																																																																																																																														}
+																																																																																																																																																																																													}
+																																																																																																																																																																																												}
+																																																																																																																																																																																											}
+																																																																																																																																																																																										}
+																																																																																																																																																																																									}
+																																																																																																																																																																																								}
+																																																																																																																																																																																							}
+																																																																																																																																																																																						}
+																																																																																																																																																																																					}
+																																																																																																																																																																																				}
+																																																																																																																																																																																			}
+																																																																																																																																																																																		}
+																																																																																																																																																																																	}
+																																																																																																																																																																																}
+																																																																																																																																																																															}
+																																																																																																																																																																														}
+																																																																																																																																																																													}
+																																																																																																																																																																												}
+																																																																																																																																																																											}
+																																																																																																																																																																										}
+																																																																																																																																																																									}
+																																																																																																																																																																								}
+																																																																																																																																																																							}
+																																																																																																																																																																						}
+																																																																																																																																																																					}
+																																																																																																																																																																				}
+																																																																																																																																																																			}
+																																																																																																																																																																		}
+																																																																																																																																																																	}
+																																																																																																																																																																}
+																																																																																																																																																															}
+																																																																																																																																																														}
+																																																																																																																																																													}
+																																																																																																																																																												}
+																																																																																																																																																											}
+																																																																																																																																																										}
+																																																																																																																																																									}
+																																																																																																																																																								}
+																																																																																																																																																							}
+																																																																																																																																																						}
+																																																																																																																																																					}
+																																																																																																																																																				}
+																																																																																																																																																			}
+																																																																																																																																																		}
+																																																																																																																																																	}
+																																																																																																																																																}
+																																																																																																																																															}
+																																																																																																																																														}
+																																																																																																																																													}
+																																																																																																																																												}
+																																																																																																																																											}
+																																																																																																																																										}
+																																																																																																																																									}
+																																																																																																																																								}
+																																																																																																																																							}
+																																																																																																																																						}
+																																																																																																																																					}
+																																																																																																																																				}
+																																																																																																																																			}
+																																																																																																																																		}
+																																																																																																																																	}
+																																																																																																																																}
+																																																																																																																															}
+																																																																																																																														}
+																																																																																																																													}
+																																																																																																																												}
+																																																																																																																											}
+																																																																																																																										}
+																																																																																																																									}
+																																																																																																																								}
+																																																																																																																							}
+																																																																																																																						}
+																																																																																																																					}
+																																																																																																																				}
+																																																																																																																			}
+																																																																																																																		}
+																																																																																																																	}
+																																																																																																																}
+																																																																																																															}
+																																																																																																														}
+																																																																																																													}
+																																																																																																												}
+																																																																																																											}
+																																																																																																										}
+																																																																																																									}
+																																																																																																								}
+																																																																																																							}
+																																																																																																						}
+																																																																																																					}
+																																																																																																				}
+																																																																																																			}
+																																																																																																		}
+																																																																																																	}
+																																																																																																}
+																																																																																															}
+																																																																																														}
+																																																																																													}
+																																																																																												}
+																																																																																											}
+																																																																																										}
+																																																																																									}
+																																																																																								}
+																																																																																							}
+																																																																																						}
+																																																																																					}
+																																																																																				}
+																																																																																			}
+																																																																																		}
+																																																																																	}
+																																																																																}
+																																																																															}
+																																																																														}
+																																																																													}
+																																																																												}
+																																																																											}
+																																																																										}
+																																																																									}
+																																																																								}
+																																																																							}
+																																																																						}
+																																																																					}
+																																																																				}
+																																																																			}
+																																																																		}
+																																																																	}
+																																																																}
+																																																															}
+																																																														}
+																																																													}
+																																																												}
+																																																											}
+																																																										}
+																																																									}
+																																																								}
+																																																							}
+																																																						}
+																																																					}
+																																																				}
+																																																			}
+																																																		}
+																																																	}
+																																																}
+																																															}
+																																														}
+																																													}
+																																												}
+																																											}
+																																										}
+																																									}
+																																								}
+																																							}
+																																						}
+																																					}
+																																				}
+																																			}
+																																		}
+																																	}
+																																}
+																															}
+																														}
+																													}
+																												}
+																											}
+																										}
+																									}
+																								}
+																							}
+																						}
+																					}
+																				}
+																			}
+																		}
+																	}
+																}
+															}
+														}
+													}
+												}
+											}
+										}
+									}
+								}
+							}
+						}
+					}
+				}
+			}
+		}));
+
+var _ayoupov$phi$Simulation_Helpers$toHousing = function (_p0) {
+	var _p1 = _p0;
+	var _p2 = _p1.label;
+	if (_p2.ctor === 'HousingNode') {
+		return _elm_lang$core$Maybe$Just(_p2._0);
+	} else {
+		return _elm_lang$core$Maybe$Nothing;
+	}
+};
+var _ayoupov$phi$Simulation_Helpers$isHousingNode = function (node) {
+	var _p3 = node.label;
+	if (_p3.ctor === 'HousingNode') {
+		return _elm_lang$core$Maybe$Just(node);
+	} else {
+		return _elm_lang$core$Maybe$Nothing;
+	}
+};
+var _ayoupov$phi$Simulation_Helpers$housingNodeNetwork = function (network) {
+	return function (idList) {
+		return A2(_elm_community$graph$Graph$inducedSubgraph, idList, network);
+	}(
+		A2(
+			_elm_lang$core$List$filterMap,
+			function (_p4) {
+				return A2(
+					_elm_lang$core$Maybe$map,
+					function (_) {
+						return _.id;
+					},
+					_ayoupov$phi$Simulation_Helpers$isHousingNode(_p4));
+			},
+			_elm_community$graph$Graph$nodes(network)));
+};
+var _ayoupov$phi$Simulation_Helpers$findFlooded = F2(
+	function (floodLevel, network) {
+		var housing = _ayoupov$phi$Simulation_Helpers$housingNodeNetwork(network);
+		var housingNodes = _elm_community$graph$Graph$nodes(housing);
+		var allFlooded = function () {
+			var _p5 = floodLevel;
+			switch (_p5) {
+				case 1:
+					return _ayoupov$phi$Simulation_NodeList$flood1List;
+				case 2:
+					return _ayoupov$phi$Simulation_NodeList$flood2List;
+				case 3:
+					return _ayoupov$phi$Simulation_NodeList$flood3List;
+				case 4:
+					return _ayoupov$phi$Simulation_NodeList$flood4List;
+				case 5:
+					return _ayoupov$phi$Simulation_NodeList$flood5List;
+				default:
+					return _elm_lang$core$Set$fromList(
+						{ctor: '[]'});
+			}
+		}();
+		var isInFlooded = function (_p6) {
+			var _p7 = _p6;
+			var _p10 = _p7.label;
+			var _p8 = _p10;
+			if (_p8.ctor === 'HousingNode') {
+				var _p9 = _p8._0;
+				return A2(
+					_elm_lang$core$Set$member,
+					{
+						ctor: '_Tuple2',
+						_0: _elm_lang$core$Basics$ceiling(_p9.pos.x),
+						_1: _elm_lang$core$Basics$ceiling(_p9.pos.y)
+					},
+					allFlooded) ? _elm_lang$core$Maybe$Just(_p10) : _elm_lang$core$Maybe$Nothing;
+			} else {
+				return _elm_lang$core$Maybe$Nothing;
+			}
+		};
+		return A2(
+			_elm_lang$core$List$filterMap,
+			isInFlooded,
+			_elm_community$graph$Graph$nodes(housing));
+	});
+var _ayoupov$phi$Simulation_Helpers$isLiveNode = function (node) {
+	var _p11 = node.label;
+	if (_p11.ctor === 'PotentialNode') {
+		return _elm_lang$core$Maybe$Nothing;
+	} else {
+		return _elm_lang$core$Maybe$Just(node);
+	}
+};
+var _ayoupov$phi$Simulation_Helpers$liveNodeNetwork = function (network) {
+	return function (idList) {
+		return A2(_elm_community$graph$Graph$inducedSubgraph, idList, network);
+	}(
+		A2(
+			_elm_lang$core$List$filterMap,
+			function (_p12) {
+				return A2(
+					_elm_lang$core$Maybe$map,
+					function (_) {
+						return _.id;
+					},
+					_ayoupov$phi$Simulation_Helpers$isLiveNode(_p12));
+			},
+			_elm_community$graph$Graph$nodes(network)));
+};
+var _ayoupov$phi$Simulation_Helpers$getCoords = function (nodeLabel) {
+	var _p13 = nodeLabel;
+	switch (_p13.ctor) {
+		case 'GeneratorNode':
+			return _p13._0.pos;
+		case 'BatNode':
+			return _p13._0.pos;
+		case 'HousingNode':
+			return _p13._0.pos;
+		case 'ResilientHousingNode':
+			return _p13._0.pos;
+		default:
+			return _p13._0.pos;
+	}
+};
+var _ayoupov$phi$Simulation_Helpers$distBetweenNodes = F2(
+	function (nodeA, nodeB) {
+		var bPos = _ayoupov$phi$Simulation_Helpers$getCoords(nodeB.label);
+		var aPos = _ayoupov$phi$Simulation_Helpers$getCoords(nodeA.label);
+		return _elm_lang$core$Basics$sqrt(
+			Math.pow(bPos.x - aPos.x, 2) + Math.pow(bPos.y - aPos.y, 2));
+	});
 
 var _ayoupov$phi$Simulation_GraphUpdates$potentialNodesList = function () {
 	var housingList = A2(
@@ -20547,7 +23119,7 @@ var _ayoupov$phi$Simulation_Simulation$tradingPhase = function (network) {
 	}();
 	return updateNetwork;
 };
-var _ayoupov$phi$Simulation_Simulation$networkGeneratedEnergy = function (network) {
+var _ayoupov$phi$Simulation_Simulation$networkGeneratedWater = function (network) {
 	var nodeGeneratedEnergy = function (_p29) {
 		var _p30 = _p29;
 		var _p31 = _p30.label;
@@ -20611,7 +23183,7 @@ var _ayoupov$phi$Simulation_Simulation$distributeGeneratedWater = F3(
 			function (housing, negawattsFactor) {
 				return negawattsFactor * _ayoupov$phi$ListHelpers$takeFirstElementWithDefault0(housing.negawatts);
 			});
-		var totalGeneratedEnergy = _ayoupov$phi$Simulation_Simulation$networkGeneratedEnergy(network);
+		var totalGeneratedEnergy = _ayoupov$phi$Simulation_Simulation$networkGeneratedWater(network);
 		var allocatedWater = function (housing) {
 			return ((weightConstant * housing.water.desiredConsumption) * reputationRating(housing)) * totalGeneratedEnergy;
 		};
@@ -20733,6 +23305,36 @@ var _ayoupov$phi$Simulation_Simulation$waterToGenerators = F2(
 			}
 		};
 		return A2(_elm_community$graph$Graph$mapNodes, updateNode, network);
+	});
+var _ayoupov$phi$Simulation_Simulation$processFlood = F2(
+	function (weather, network) {
+		var updateNetwork = F2(
+			function (source, target) {
+				return A2(
+					_ayoupov$phi$Simulation_GraphUpdates$updateNodes,
+					_elm_community$graph$Graph$nodes(source),
+					target);
+			});
+		var downgradeNode = function (node) {
+			var _p48 = node;
+			if (_p48.ctor === 'HousingNode') {
+				return _ayoupov$phi$Simulation_Model$PotentialNode(
+					A2(_ayoupov$phi$Simulation_Model$Potential, _ayoupov$phi$Simulation_Model$PotentialHousing, _p48._0.pos));
+			} else {
+				return node;
+			}
+		};
+		var flooded = A2(_ayoupov$phi$Simulation_Helpers$findFlooded, weather.floodLevel, network);
+		var downgradedNetwork = A2(_elm_lang$core$List$map, downgradeNode, flooded);
+		return A2(
+			updateNetwork,
+			_ayoupov$phi$Simulation_GraphUpdates$graphFromNodeList(downgradedNetwork),
+			network);
+	});
+var _ayoupov$phi$Simulation_Simulation$changeFloodLevel = _elm_lang$core$Native_Platform.outgoingPort(
+	'changeFloodLevel',
+	function (v) {
+		return v;
 	});
 var _ayoupov$phi$Simulation_Simulation$renderPhiNetwork = _elm_lang$core$Native_Platform.outgoingPort(
 	'renderPhiNetwork',
@@ -20886,7 +23488,7 @@ var _ayoupov$phi$Chat_Narrative$cycleGenerated = function (network) {
 	var totalStored = _ayoupov$phi$View_Helpers$floatFmt(
 		_ayoupov$phi$Simulation_Simulation$networkStoredEnergy(network));
 	var generatedEnergy = _ayoupov$phi$View_Helpers$floatFmt(
-		_ayoupov$phi$Simulation_Simulation$networkGeneratedEnergy(network));
+		_ayoupov$phi$Simulation_Simulation$networkGeneratedWater(network));
 	var text = A2(
 		_elm_lang$core$Basics_ops['++'],
 		'',
@@ -20993,7 +23595,7 @@ var _ayoupov$phi$Chat_Narrative$cycleSummary = function (network) {
 	var totalConsumed = _ayoupov$phi$View_Helpers$floatFmt(
 		_ayoupov$phi$Simulation_Simulation$networkConsumedEnergy(network));
 	var generatedEnergy = _ayoupov$phi$View_Helpers$floatFmt(
-		_ayoupov$phi$Simulation_Simulation$networkGeneratedEnergy(network));
+		_ayoupov$phi$Simulation_Simulation$networkGeneratedWater(network));
 	var text = A2(
 		_elm_lang$core$Basics_ops['++'],
 		'Daily Briefing: ',
@@ -21926,31 +24528,31 @@ var _ayoupov$phi$Simulation_WeatherList$weatherTupleToWeather = function (_p0) {
 var _ayoupov$phi$Simulation_WeatherList$restWeather = function (list) {
 	var initialList = {
 		ctor: '::',
-		_0: {ctor: '_Tuple2', _0: 0.29, _1: 5},
+		_0: {ctor: '_Tuple2', _0: 0.29, _1: 2},
 		_1: {
 			ctor: '::',
-			_0: {ctor: '_Tuple2', _0: 0.155, _1: 0},
+			_0: {ctor: '_Tuple2', _0: 0.155, _1: 2},
 			_1: {
 				ctor: '::',
-				_0: {ctor: '_Tuple2', _0: 0.58, _1: 0},
+				_0: {ctor: '_Tuple2', _0: 0.58, _1: 3},
 				_1: {
 					ctor: '::',
-					_0: {ctor: '_Tuple2', _0: 0.29, _1: 0},
+					_0: {ctor: '_Tuple2', _0: 0.29, _1: 4},
 					_1: {
 						ctor: '::',
-						_0: {ctor: '_Tuple2', _0: 0.385, _1: 0},
+						_0: {ctor: '_Tuple2', _0: 0.385, _1: 5},
 						_1: {
 							ctor: '::',
-							_0: {ctor: '_Tuple2', _0: 0.645, _1: 0},
+							_0: {ctor: '_Tuple2', _0: 0.645, _1: 4},
 							_1: {
 								ctor: '::',
-								_0: {ctor: '_Tuple2', _0: 0.435, _1: 0},
+								_0: {ctor: '_Tuple2', _0: 0.435, _1: 3},
 								_1: {
 									ctor: '::',
-									_0: {ctor: '_Tuple2', _0: 0.435, _1: 0},
+									_0: {ctor: '_Tuple2', _0: 0.435, _1: 2},
 									_1: {
 										ctor: '::',
-										_0: {ctor: '_Tuple2', _0: 0.665, _1: 0},
+										_0: {ctor: '_Tuple2', _0: 0.665, _1: 1},
 										_1: {
 											ctor: '::',
 											_0: {ctor: '_Tuple2', _0: 0.415, _1: 0},
@@ -22016,25 +24618,25 @@ var _ayoupov$phi$Simulation_WeatherList$restWeather = function (list) {
 																															_0: {ctor: '_Tuple2', _0: 0.445, _1: 0},
 																															_1: {
 																																ctor: '::',
-																																_0: {ctor: '_Tuple2', _0: 0.78, _1: 0},
+																																_0: {ctor: '_Tuple2', _0: 0.78, _1: 2},
 																																_1: {
 																																	ctor: '::',
-																																	_0: {ctor: '_Tuple2', _0: 0.76, _1: 0},
+																																	_0: {ctor: '_Tuple2', _0: 0.76, _1: 3},
 																																	_1: {
 																																		ctor: '::',
-																																		_0: {ctor: '_Tuple2', _0: 0.695, _1: 0},
+																																		_0: {ctor: '_Tuple2', _0: 0.695, _1: 5},
 																																		_1: {
 																																			ctor: '::',
-																																			_0: {ctor: '_Tuple2', _0: 0.76, _1: 0},
+																																			_0: {ctor: '_Tuple2', _0: 0.76, _1: 3},
 																																			_1: {
 																																				ctor: '::',
-																																				_0: {ctor: '_Tuple2', _0: 0.425, _1: 0},
+																																				_0: {ctor: '_Tuple2', _0: 0.425, _1: 2},
 																																				_1: {
 																																					ctor: '::',
 																																					_0: {ctor: '_Tuple2', _0: 0.145, _1: 0},
 																																					_1: {
 																																						ctor: '::',
-																																						_0: {ctor: '_Tuple2', _0: 8.0e-2, _1: 0},
+																																						_0: {ctor: '_Tuple2', _0: 8.0e-2, _1: 1},
 																																						_1: {
 																																							ctor: '::',
 																																							_0: {ctor: '_Tuple2', _0: 0.435, _1: 0},
@@ -22085,25 +24687,25 @@ var _ayoupov$phi$Simulation_WeatherList$restWeather = function (list) {
 																																																						_0: {ctor: '_Tuple2', _0: 0.57, _1: 0},
 																																																						_1: {
 																																																							ctor: '::',
-																																																							_0: {ctor: '_Tuple2', _0: 0.79, _1: 0},
+																																																							_0: {ctor: '_Tuple2', _0: 0.79, _1: 3},
 																																																							_1: {
 																																																								ctor: '::',
-																																																								_0: {ctor: '_Tuple2', _0: 0.57, _1: 0},
+																																																								_0: {ctor: '_Tuple2', _0: 0.57, _1: 4},
 																																																								_1: {
 																																																									ctor: '::',
-																																																									_0: {ctor: '_Tuple2', _0: 0.695, _1: 0},
+																																																									_0: {ctor: '_Tuple2', _0: 0.695, _1: 5},
 																																																									_1: {
 																																																										ctor: '::',
-																																																										_0: {ctor: '_Tuple2', _0: 0.77, _1: 0},
+																																																										_0: {ctor: '_Tuple2', _0: 0.77, _1: 3},
 																																																										_1: {
 																																																											ctor: '::',
-																																																											_0: {ctor: '_Tuple2', _0: 0.77, _1: 0},
+																																																											_0: {ctor: '_Tuple2', _0: 0.77, _1: 2},
 																																																											_1: {
 																																																												ctor: '::',
-																																																												_0: {ctor: '_Tuple2', _0: 0.53, _1: 0},
+																																																												_0: {ctor: '_Tuple2', _0: 0.53, _1: 1},
 																																																												_1: {
 																																																													ctor: '::',
-																																																													_0: {ctor: '_Tuple2', _0: 1.0e-2, _1: 0},
+																																																													_0: {ctor: '_Tuple2', _0: 1.0e-2, _1: 1},
 																																																													_1: {
 																																																														ctor: '::',
 																																																														_0: {ctor: '_Tuple2', _0: 8.0e-2, _1: 0},
@@ -22172,28 +24774,28 @@ var _ayoupov$phi$Simulation_WeatherList$restWeather = function (list) {
 																																																																																			_0: {ctor: '_Tuple2', _0: 0.425, _1: 0},
 																																																																																			_1: {
 																																																																																				ctor: '::',
-																																																																																				_0: {ctor: '_Tuple2', _0: 0.32, _1: 0},
+																																																																																				_0: {ctor: '_Tuple2', _0: 0.32, _1: 1},
 																																																																																				_1: {
 																																																																																					ctor: '::',
 																																																																																					_0: {ctor: '_Tuple2', _0: 2.0e-2, _1: 0},
 																																																																																					_1: {
 																																																																																						ctor: '::',
-																																																																																						_0: {ctor: '_Tuple2', _0: 0.32, _1: 0},
+																																																																																						_0: {ctor: '_Tuple2', _0: 0.32, _1: 3},
 																																																																																						_1: {
 																																																																																							ctor: '::',
-																																																																																							_0: {ctor: '_Tuple2', _0: 0.58, _1: 0},
+																																																																																							_0: {ctor: '_Tuple2', _0: 0.58, _1: 4},
 																																																																																							_1: {
 																																																																																								ctor: '::',
-																																																																																								_0: {ctor: '_Tuple2', _0: 0.205, _1: 0},
+																																																																																								_0: {ctor: '_Tuple2', _0: 0.205, _1: 5},
 																																																																																								_1: {
 																																																																																									ctor: '::',
-																																																																																									_0: {ctor: '_Tuple2', _0: 0.185, _1: 0},
+																																																																																									_0: {ctor: '_Tuple2', _0: 0.185, _1: 3},
 																																																																																									_1: {
 																																																																																										ctor: '::',
-																																																																																										_0: {ctor: '_Tuple2', _0: 2.0e-2, _1: 0},
+																																																																																										_0: {ctor: '_Tuple2', _0: 2.0e-2, _1: 2},
 																																																																																										_1: {
 																																																																																											ctor: '::',
-																																																																																											_0: {ctor: '_Tuple2', _0: 0.28, _1: 0},
+																																																																																											_0: {ctor: '_Tuple2', _0: 0.28, _1: 1},
 																																																																																											_1: {
 																																																																																												ctor: '::',
 																																																																																												_0: {ctor: '_Tuple2', _0: 0.155, _1: 0},
@@ -22217,7 +24819,7 @@ var _ayoupov$phi$Simulation_WeatherList$restWeather = function (list) {
 																																																																																																		_0: {ctor: '_Tuple2', _0: 6.0e-2, _1: 0},
 																																																																																																		_1: {
 																																																																																																			ctor: '::',
-																																																																																																			_0: {ctor: '_Tuple2', _0: 0.185, _1: 0},
+																																																																																																			_0: {ctor: '_Tuple2', _0: 0.185, _1: 1},
 																																																																																																			_1: {
 																																																																																																				ctor: '::',
 																																																																																																				_0: {ctor: '_Tuple2', _0: 4.0e-2, _1: 0},
@@ -22241,40 +24843,40 @@ var _ayoupov$phi$Simulation_WeatherList$restWeather = function (list) {
 																																																																																																										_0: {ctor: '_Tuple2', _0: 0.145, _1: 0},
 																																																																																																										_1: {
 																																																																																																											ctor: '::',
-																																																																																																											_0: {ctor: '_Tuple2', _0: 0.29, _1: 0},
+																																																																																																											_0: {ctor: '_Tuple2', _0: 0.29, _1: 1},
 																																																																																																											_1: {
 																																																																																																												ctor: '::',
-																																																																																																												_0: {ctor: '_Tuple2', _0: 0.445, _1: 0},
+																																																																																																												_0: {ctor: '_Tuple2', _0: 0.445, _1: 2},
 																																																																																																												_1: {
 																																																																																																													ctor: '::',
-																																																																																																													_0: {ctor: '_Tuple2', _0: 6.0e-2, _1: 0},
+																																																																																																													_0: {ctor: '_Tuple2', _0: 6.0e-2, _1: 3},
 																																																																																																													_1: {
 																																																																																																														ctor: '::',
-																																																																																																														_0: {ctor: '_Tuple2', _0: 0.165, _1: 0},
+																																																																																																														_0: {ctor: '_Tuple2', _0: 0.165, _1: 3},
 																																																																																																														_1: {
 																																																																																																															ctor: '::',
-																																																																																																															_0: {ctor: '_Tuple2', _0: 1.0e-2, _1: 0},
+																																																																																																															_0: {ctor: '_Tuple2', _0: 1.0e-2, _1: 4},
 																																																																																																															_1: {
 																																																																																																																ctor: '::',
-																																																																																																																_0: {ctor: '_Tuple2', _0: 0.185, _1: 0},
+																																																																																																																_0: {ctor: '_Tuple2', _0: 0.185, _1: 5},
 																																																																																																																_1: {
 																																																																																																																	ctor: '::',
-																																																																																																																	_0: {ctor: '_Tuple2', _0: 0.685, _1: 0},
+																																																																																																																	_0: {ctor: '_Tuple2', _0: 0.685, _1: 3},
 																																																																																																																	_1: {
 																																																																																																																		ctor: '::',
-																																																																																																																		_0: {ctor: '_Tuple2', _0: 0.32, _1: 0},
+																																																																																																																		_0: {ctor: '_Tuple2', _0: 0.32, _1: 2},
 																																																																																																																		_1: {
 																																																																																																																			ctor: '::',
-																																																																																																																			_0: {ctor: '_Tuple2', _0: 3.0e-2, _1: 0},
+																																																																																																																			_0: {ctor: '_Tuple2', _0: 3.0e-2, _1: 2},
 																																																																																																																			_1: {
 																																																																																																																				ctor: '::',
-																																																																																																																				_0: {ctor: '_Tuple2', _0: 2.0e-2, _1: 0},
+																																																																																																																				_0: {ctor: '_Tuple2', _0: 2.0e-2, _1: 1},
 																																																																																																																				_1: {
 																																																																																																																					ctor: '::',
-																																																																																																																					_0: {ctor: '_Tuple2', _0: 8.0e-2, _1: 0},
+																																																																																																																					_0: {ctor: '_Tuple2', _0: 8.0e-2, _1: 1},
 																																																																																																																					_1: {
 																																																																																																																						ctor: '::',
-																																																																																																																						_0: {ctor: '_Tuple2', _0: 7.0e-2, _1: 0},
+																																																																																																																						_0: {ctor: '_Tuple2', _0: 7.0e-2, _1: 1},
 																																																																																																																						_1: {
 																																																																																																																							ctor: '::',
 																																																																																																																							_0: {ctor: '_Tuple2', _0: 3.0e-2, _1: 0},
@@ -22337,31 +24939,31 @@ var _ayoupov$phi$Simulation_WeatherList$restWeather = function (list) {
 																																																																																																																																										_0: {ctor: '_Tuple2', _0: 0.385, _1: 0},
 																																																																																																																																										_1: {
 																																																																																																																																											ctor: '::',
-																																																																																																																																											_0: {ctor: '_Tuple2', _0: 7.0e-2, _1: 0},
+																																																																																																																																											_0: {ctor: '_Tuple2', _0: 7.0e-2, _1: 1},
 																																																																																																																																											_1: {
 																																																																																																																																												ctor: '::',
-																																																																																																																																												_0: {ctor: '_Tuple2', _0: 1.0e-2, _1: 0},
+																																																																																																																																												_0: {ctor: '_Tuple2', _0: 1.0e-2, _1: 2},
 																																																																																																																																												_1: {
 																																																																																																																																													ctor: '::',
-																																																																																																																																													_0: {ctor: '_Tuple2', _0: 6.0e-2, _1: 0},
+																																																																																																																																													_0: {ctor: '_Tuple2', _0: 6.0e-2, _1: 3},
 																																																																																																																																													_1: {
 																																																																																																																																														ctor: '::',
-																																																																																																																																														_0: {ctor: '_Tuple2', _0: 8.0e-2, _1: 0},
+																																																																																																																																														_0: {ctor: '_Tuple2', _0: 8.0e-2, _1: 4},
 																																																																																																																																														_1: {
 																																																																																																																																															ctor: '::',
-																																																																																																																																															_0: {ctor: '_Tuple2', _0: 7.0e-2, _1: 0},
+																																																																																																																																															_0: {ctor: '_Tuple2', _0: 7.0e-2, _1: 5},
 																																																																																																																																															_1: {
 																																																																																																																																																ctor: '::',
-																																																																																																																																																_0: {ctor: '_Tuple2', _0: 4.0e-2, _1: 0},
+																																																																																																																																																_0: {ctor: '_Tuple2', _0: 4.0e-2, _1: 3},
 																																																																																																																																																_1: {
 																																																																																																																																																	ctor: '::',
-																																																																																																																																																	_0: {ctor: '_Tuple2', _0: 0.205, _1: 0},
+																																																																																																																																																	_0: {ctor: '_Tuple2', _0: 0.205, _1: 2},
 																																																																																																																																																	_1: {
 																																																																																																																																																		ctor: '::',
-																																																																																																																																																		_0: {ctor: '_Tuple2', _0: 3.0e-2, _1: 0},
+																																																																																																																																																		_0: {ctor: '_Tuple2', _0: 3.0e-2, _1: 1},
 																																																																																																																																																		_1: {
 																																																																																																																																																			ctor: '::',
-																																																																																																																																																			_0: {ctor: '_Tuple2', _0: 8.0e-2, _1: 0},
+																																																																																																																																																			_0: {ctor: '_Tuple2', _0: 8.0e-2, _1: 1},
 																																																																																																																																																			_1: {
 																																																																																																																																																				ctor: '::',
 																																																																																																																																																				_0: {ctor: '_Tuple2', _0: 6.0e-2, _1: 0},
@@ -22448,31 +25050,31 @@ var _ayoupov$phi$Simulation_WeatherList$restWeather = function (list) {
 																																																																																																																																																																															_0: {ctor: '_Tuple2', _0: 0.455, _1: 0},
 																																																																																																																																																																															_1: {
 																																																																																																																																																																																ctor: '::',
-																																																																																																																																																																																_0: {ctor: '_Tuple2', _0: 5.0e-2, _1: 0},
+																																																																																																																																																																																_0: {ctor: '_Tuple2', _0: 5.0e-2, _1: 1},
 																																																																																																																																																																																_1: {
 																																																																																																																																																																																	ctor: '::',
 																																																																																																																																																																																	_0: {ctor: '_Tuple2', _0: 8.0e-2, _1: 0},
 																																																																																																																																																																																	_1: {
 																																																																																																																																																																																		ctor: '::',
-																																																																																																																																																																																		_0: {ctor: '_Tuple2', _0: 6.0e-2, _1: 0},
+																																																																																																																																																																																		_0: {ctor: '_Tuple2', _0: 6.0e-2, _1: 1},
 																																																																																																																																																																																		_1: {
 																																																																																																																																																																																			ctor: '::',
-																																																																																																																																																																																			_0: {ctor: '_Tuple2', _0: 8.0e-2, _1: 0},
+																																																																																																																																																																																			_0: {ctor: '_Tuple2', _0: 8.0e-2, _1: 2},
 																																																																																																																																																																																			_1: {
 																																																																																																																																																																																				ctor: '::',
-																																																																																																																																																																																				_0: {ctor: '_Tuple2', _0: 8.0e-2, _1: 0},
+																																																																																																																																																																																				_0: {ctor: '_Tuple2', _0: 8.0e-2, _1: 3},
 																																																																																																																																																																																				_1: {
 																																																																																																																																																																																					ctor: '::',
-																																																																																																																																																																																					_0: {ctor: '_Tuple2', _0: 0.3, _1: 0},
+																																																																																																																																																																																					_0: {ctor: '_Tuple2', _0: 0.3, _1: 4},
 																																																																																																																																																																																					_1: {
 																																																																																																																																																																																						ctor: '::',
-																																																																																																																																																																																						_0: {ctor: '_Tuple2', _0: 0.395, _1: 0},
+																																																																																																																																																																																						_0: {ctor: '_Tuple2', _0: 0.395, _1: 2},
 																																																																																																																																																																																						_1: {
 																																																																																																																																																																																							ctor: '::',
-																																																																																																																																																																																							_0: {ctor: '_Tuple2', _0: 8.0e-2, _1: 0},
+																																																																																																																																																																																							_0: {ctor: '_Tuple2', _0: 8.0e-2, _1: 1},
 																																																																																																																																																																																							_1: {
 																																																																																																																																																																																								ctor: '::',
-																																																																																																																																																																																								_0: {ctor: '_Tuple2', _0: 0.195, _1: 0},
+																																																																																																																																																																																								_0: {ctor: '_Tuple2', _0: 0.195, _1: 1},
 																																																																																																																																																																																								_1: {
 																																																																																																																																																																																									ctor: '::',
 																																																																																																																																																																																									_0: {ctor: '_Tuple2', _0: 0.195, _1: 0},
@@ -22526,13 +25128,13 @@ var _ayoupov$phi$Simulation_WeatherList$restWeather = function (list) {
 																																																																																																																																																																																																									_0: {ctor: '_Tuple2', _0: 3.0e-2, _1: 0},
 																																																																																																																																																																																																									_1: {
 																																																																																																																																																																																																										ctor: '::',
-																																																																																																																																																																																																										_0: {ctor: '_Tuple2', _0: 6.0e-2, _1: 0},
+																																																																																																																																																																																																										_0: {ctor: '_Tuple2', _0: 6.0e-2, _1: 1},
 																																																																																																																																																																																																										_1: {
 																																																																																																																																																																																																											ctor: '::',
-																																																																																																																																																																																																											_0: {ctor: '_Tuple2', _0: 7.0e-2, _1: 0},
+																																																																																																																																																																																																											_0: {ctor: '_Tuple2', _0: 7.0e-2, _1: 2},
 																																																																																																																																																																																																											_1: {
 																																																																																																																																																																																																												ctor: '::',
-																																																																																																																																																																																																												_0: {ctor: '_Tuple2', _0: 7.0e-2, _1: 0},
+																																																																																																																																																																																																												_0: {ctor: '_Tuple2', _0: 7.0e-2, _1: 1},
 																																																																																																																																																																																																												_1: {
 																																																																																																																																																																																																													ctor: '::',
 																																																																																																																																																																																																													_0: {ctor: '_Tuple2', _0: 6.0e-2, _1: 0},
@@ -22565,28 +25167,28 @@ var _ayoupov$phi$Simulation_WeatherList$restWeather = function (list) {
 																																																																																																																																																																																																																						_0: {ctor: '_Tuple2', _0: 0.905, _1: 0},
 																																																																																																																																																																																																																						_1: {
 																																																																																																																																																																																																																							ctor: '::',
-																																																																																																																																																																																																																							_0: {ctor: '_Tuple2', _0: 0.885, _1: 0},
+																																																																																																																																																																																																																							_0: {ctor: '_Tuple2', _0: 0.885, _1: 1},
 																																																																																																																																																																																																																							_1: {
 																																																																																																																																																																																																																								ctor: '::',
-																																																																																																																																																																																																																								_0: {ctor: '_Tuple2', _0: 0.905, _1: 0},
+																																																																																																																																																																																																																								_0: {ctor: '_Tuple2', _0: 0.905, _1: 1},
 																																																																																																																																																																																																																								_1: {
 																																																																																																																																																																																																																									ctor: '::',
-																																																																																																																																																																																																																									_0: {ctor: '_Tuple2', _0: 0.445, _1: 0},
+																																																																																																																																																																																																																									_0: {ctor: '_Tuple2', _0: 0.445, _1: 2},
 																																																																																																																																																																																																																									_1: {
 																																																																																																																																																																																																																										ctor: '::',
-																																																																																																																																																																																																																										_0: {ctor: '_Tuple2', _0: 0.185, _1: 0},
+																																																																																																																																																																																																																										_0: {ctor: '_Tuple2', _0: 0.185, _1: 2},
 																																																																																																																																																																																																																										_1: {
 																																																																																																																																																																																																																											ctor: '::',
-																																																																																																																																																																																																																											_0: {ctor: '_Tuple2', _0: 0.395, _1: 0},
+																																																																																																																																																																																																																											_0: {ctor: '_Tuple2', _0: 0.395, _1: 3},
 																																																																																																																																																																																																																											_1: {
 																																																																																																																																																																																																																												ctor: '::',
-																																																																																																																																																																																																																												_0: {ctor: '_Tuple2', _0: 8.0e-2, _1: 0},
+																																																																																																																																																																																																																												_0: {ctor: '_Tuple2', _0: 8.0e-2, _1: 2},
 																																																																																																																																																																																																																												_1: {
 																																																																																																																																																																																																																													ctor: '::',
-																																																																																																																																																																																																																													_0: {ctor: '_Tuple2', _0: 3.0e-2, _1: 0},
+																																																																																																																																																																																																																													_0: {ctor: '_Tuple2', _0: 3.0e-2, _1: 2},
 																																																																																																																																																																																																																													_1: {
 																																																																																																																																																																																																																														ctor: '::',
-																																																																																																																																																																																																																														_0: {ctor: '_Tuple2', _0: 8.0e-2, _1: 0},
+																																																																																																																																																																																																																														_0: {ctor: '_Tuple2', _0: 8.0e-2, _1: 1},
 																																																																																																																																																																																																																														_1: {
 																																																																																																																																																																																																																															ctor: '::',
 																																																																																																																																																																																																																															_0: {ctor: '_Tuple2', _0: 4.0e-2, _1: 0},
@@ -22646,28 +25248,28 @@ var _ayoupov$phi$Simulation_WeatherList$restWeather = function (list) {
 																																																																																																																																																																																																																																																	_0: {ctor: '_Tuple2', _0: 0.77, _1: 0},
 																																																																																																																																																																																																																																																	_1: {
 																																																																																																																																																																																																																																																		ctor: '::',
-																																																																																																																																																																																																																																																		_0: {ctor: '_Tuple2', _0: 0.31, _1: 0},
+																																																																																																																																																																																																																																																		_0: {ctor: '_Tuple2', _0: 0.31, _1: 1},
 																																																																																																																																																																																																																																																		_1: {
 																																																																																																																																																																																																																																																			ctor: '::',
-																																																																																																																																																																																																																																																			_0: {ctor: '_Tuple2', _0: 7.0e-2, _1: 0},
+																																																																																																																																																																																																																																																			_0: {ctor: '_Tuple2', _0: 7.0e-2, _1: 2},
 																																																																																																																																																																																																																																																			_1: {
 																																																																																																																																																																																																																																																				ctor: '::',
-																																																																																																																																																																																																																																																				_0: {ctor: '_Tuple2', _0: 0.52, _1: 0},
+																																																																																																																																																																																																																																																				_0: {ctor: '_Tuple2', _0: 0.52, _1: 1},
 																																																																																																																																																																																																																																																				_1: {
 																																																																																																																																																																																																																																																					ctor: '::',
-																																																																																																																																																																																																																																																					_0: {ctor: '_Tuple2', _0: 0.58, _1: 0},
+																																																																																																																																																																																																																																																					_0: {ctor: '_Tuple2', _0: 0.58, _1: 3},
 																																																																																																																																																																																																																																																					_1: {
 																																																																																																																																																																																																																																																						ctor: '::',
-																																																																																																																																																																																																																																																						_0: {ctor: '_Tuple2', _0: 0.77, _1: 0},
+																																																																																																																																																																																																																																																						_0: {ctor: '_Tuple2', _0: 0.77, _1: 4},
 																																																																																																																																																																																																																																																						_1: {
 																																																																																																																																																																																																																																																							ctor: '::',
-																																																																																																																																																																																																																																																							_0: {ctor: '_Tuple2', _0: 1.07, _1: 0},
+																																																																																																																																																																																																																																																							_0: {ctor: '_Tuple2', _0: 1.07, _1: 5},
 																																																																																																																																																																																																																																																							_1: {
 																																																																																																																																																																																																																																																								ctor: '::',
-																																																																																																																																																																																																																																																								_0: {ctor: '_Tuple2', _0: 0.455, _1: 0},
+																																																																																																																																																																																																																																																								_0: {ctor: '_Tuple2', _0: 0.455, _1: 3},
 																																																																																																																																																																																																																																																								_1: {
 																																																																																																																																																																																																																																																									ctor: '::',
-																																																																																																																																																																																																																																																									_0: {ctor: '_Tuple2', _0: 8.0e-2, _1: 0},
+																																																																																																																																																																																																																																																									_0: {ctor: '_Tuple2', _0: 8.0e-2, _1: 1},
 																																																																																																																																																																																																																																																									_1: {
 																																																																																																																																																																																																																																																										ctor: '::',
 																																																																																																																																																																																																																																																										_0: {ctor: '_Tuple2', _0: 6.0e-2, _1: 0},
@@ -22739,25 +25341,25 @@ var _ayoupov$phi$Simulation_WeatherList$restWeather = function (list) {
 																																																																																																																																																																																																																																																																																_0: {ctor: '_Tuple2', _0: 0.205, _1: 0},
 																																																																																																																																																																																																																																																																																_1: {
 																																																																																																																																																																																																																																																																																	ctor: '::',
-																																																																																																																																																																																																																																																																																	_0: {ctor: '_Tuple2', _0: 5.0e-2, _1: 0},
+																																																																																																																																																																																																																																																																																	_0: {ctor: '_Tuple2', _0: 5.0e-2, _1: 1},
 																																																																																																																																																																																																																																																																																	_1: {
 																																																																																																																																																																																																																																																																																		ctor: '::',
-																																																																																																																																																																																																																																																																																		_0: {ctor: '_Tuple2', _0: 2.0e-2, _1: 0},
+																																																																																																																																																																																																																																																																																		_0: {ctor: '_Tuple2', _0: 2.0e-2, _1: 2},
 																																																																																																																																																																																																																																																																																		_1: {
 																																																																																																																																																																																																																																																																																			ctor: '::',
-																																																																																																																																																																																																																																																																																			_0: {ctor: '_Tuple2', _0: 7.0e-2, _1: 0},
+																																																																																																																																																																																																																																																																																			_0: {ctor: '_Tuple2', _0: 7.0e-2, _1: 3},
 																																																																																																																																																																																																																																																																																			_1: {
 																																																																																																																																																																																																																																																																																				ctor: '::',
-																																																																																																																																																																																																																																																																																				_0: {ctor: '_Tuple2', _0: 5.0e-2, _1: 0},
+																																																																																																																																																																																																																																																																																				_0: {ctor: '_Tuple2', _0: 5.0e-2, _1: 3},
 																																																																																																																																																																																																																																																																																				_1: {
 																																																																																																																																																																																																																																																																																					ctor: '::',
-																																																																																																																																																																																																																																																																																					_0: {ctor: '_Tuple2', _0: 0.52, _1: 0},
+																																																																																																																																																																																																																																																																																					_0: {ctor: '_Tuple2', _0: 0.52, _1: 3},
 																																																																																																																																																																																																																																																																																					_1: {
 																																																																																																																																																																																																																																																																																						ctor: '::',
-																																																																																																																																																																																																																																																																																						_0: {ctor: '_Tuple2', _0: 0.53, _1: 0},
+																																																																																																																																																																																																																																																																																						_0: {ctor: '_Tuple2', _0: 0.53, _1: 2},
 																																																																																																																																																																																																																																																																																						_1: {
 																																																																																																																																																																																																																																																																																							ctor: '::',
-																																																																																																																																																																																																																																																																																							_0: {ctor: '_Tuple2', _0: 0.83, _1: 0},
+																																																																																																																																																																																																																																																																																							_0: {ctor: '_Tuple2', _0: 0.83, _1: 1},
 																																																																																																																																																																																																																																																																																							_1: {
 																																																																																																																																																																																																																																																																																								ctor: '::',
 																																																																																																																																																																																																																																																																																								_0: {ctor: '_Tuple2', _0: 0.205, _1: 0},
@@ -22829,7 +25431,7 @@ var _ayoupov$phi$Simulation_WeatherList$restWeather = function (list) {
 																																																																																																																																																																																																																																																																																																														_0: {ctor: '_Tuple2', _0: 0.165, _1: 0},
 																																																																																																																																																																																																																																																																																																														_1: {
 																																																																																																																																																																																																																																																																																																															ctor: '::',
-																																																																																																																																																																																																																																																																																																															_0: {ctor: '_Tuple2', _0: 1.0e-2, _1: 0},
+																																																																																																																																																																																																																																																																																																															_0: {ctor: '_Tuple2', _0: 1.0e-2, _1: 1},
 																																																																																																																																																																																																																																																																																																															_1: {
 																																																																																																																																																																																																																																																																																																																ctor: '::',
 																																																																																																																																																																																																																																																																																																																_0: {ctor: '_Tuple2', _0: 6.0e-2, _1: 0},
@@ -22844,22 +25446,22 @@ var _ayoupov$phi$Simulation_WeatherList$restWeather = function (list) {
 																																																																																																																																																																																																																																																																																																																			_0: {ctor: '_Tuple2', _0: 0.29, _1: 0},
 																																																																																																																																																																																																																																																																																																																			_1: {
 																																																																																																																																																																																																																																																																																																																				ctor: '::',
-																																																																																																																																																																																																																																																																																																																				_0: {ctor: '_Tuple2', _0: 0.26, _1: 0},
+																																																																																																																																																																																																																																																																																																																				_0: {ctor: '_Tuple2', _0: 0.26, _1: 1},
 																																																																																																																																																																																																																																																																																																																				_1: {
 																																																																																																																																																																																																																																																																																																																					ctor: '::',
-																																																																																																																																																																																																																																																																																																																					_0: {ctor: '_Tuple2', _0: 2.0e-2, _1: 0},
+																																																																																																																																																																																																																																																																																																																					_0: {ctor: '_Tuple2', _0: 2.0e-2, _1: 2},
 																																																																																																																																																																																																																																																																																																																					_1: {
 																																																																																																																																																																																																																																																																																																																						ctor: '::',
-																																																																																																																																																																																																																																																																																																																						_0: {ctor: '_Tuple2', _0: 0.425, _1: 0},
+																																																																																																																																																																																																																																																																																																																						_0: {ctor: '_Tuple2', _0: 0.425, _1: 3},
 																																																																																																																																																																																																																																																																																																																						_1: {
 																																																																																																																																																																																																																																																																																																																							ctor: '::',
-																																																																																																																																																																																																																																																																																																																							_0: {ctor: '_Tuple2', _0: 0.205, _1: 0},
+																																																																																																																																																																																																																																																																																																																							_0: {ctor: '_Tuple2', _0: 0.205, _1: 4},
 																																																																																																																																																																																																																																																																																																																							_1: {
 																																																																																																																																																																																																																																																																																																																								ctor: '::',
-																																																																																																																																																																																																																																																																																																																								_0: {ctor: '_Tuple2', _0: 0.52, _1: 0},
+																																																																																																																																																																																																																																																																																																																								_0: {ctor: '_Tuple2', _0: 0.52, _1: 2},
 																																																																																																																																																																																																																																																																																																																								_1: {
 																																																																																																																																																																																																																																																																																																																									ctor: '::',
-																																																																																																																																																																																																																																																																																																																									_0: {ctor: '_Tuple2', _0: 0.3, _1: 0},
+																																																																																																																																																																																																																																																																																																																									_0: {ctor: '_Tuple2', _0: 0.3, _1: 1},
 																																																																																																																																																																																																																																																																																																																									_1: {
 																																																																																																																																																																																																																																																																																																																										ctor: '::',
 																																																																																																																																																																																																																																																																																																																										_0: {ctor: '_Tuple2', _0: 0.135, _1: 0},
@@ -22961,34 +25563,34 @@ var _ayoupov$phi$Simulation_WeatherList$restWeather = function (list) {
 																																																																																																																																																																																																																																																																																																																																																										_0: {ctor: '_Tuple2', _0: 0.925, _1: 0},
 																																																																																																																																																																																																																																																																																																																																																										_1: {
 																																																																																																																																																																																																																																																																																																																																																											ctor: '::',
-																																																																																																																																																																																																																																																																																																																																																											_0: {ctor: '_Tuple2', _0: 0.55, _1: 0},
+																																																																																																																																																																																																																																																																																																																																																											_0: {ctor: '_Tuple2', _0: 0.55, _1: 1},
 																																																																																																																																																																																																																																																																																																																																																											_1: {
 																																																																																																																																																																																																																																																																																																																																																												ctor: '::',
-																																																																																																																																																																																																																																																																																																																																																												_0: {ctor: '_Tuple2', _0: 5.0e-2, _1: 0},
+																																																																																																																																																																																																																																																																																																																																																												_0: {ctor: '_Tuple2', _0: 5.0e-2, _1: 2},
 																																																																																																																																																																																																																																																																																																																																																												_1: {
 																																																																																																																																																																																																																																																																																																																																																													ctor: '::',
-																																																																																																																																																																																																																																																																																																																																																													_0: {ctor: '_Tuple2', _0: 8.0e-2, _1: 0},
+																																																																																																																																																																																																																																																																																																																																																													_0: {ctor: '_Tuple2', _0: 8.0e-2, _1: 3},
 																																																																																																																																																																																																																																																																																																																																																													_1: {
 																																																																																																																																																																																																																																																																																																																																																														ctor: '::',
-																																																																																																																																																																																																																																																																																																																																																														_0: {ctor: '_Tuple2', _0: 0.78, _1: 0},
+																																																																																																																																																																																																																																																																																																																																																														_0: {ctor: '_Tuple2', _0: 0.78, _1: 4},
 																																																																																																																																																																																																																																																																																																																																																														_1: {
 																																																																																																																																																																																																																																																																																																																																																															ctor: '::',
-																																																																																																																																																																																																																																																																																																																																																															_0: {ctor: '_Tuple2', _0: 0.53, _1: 0},
+																																																																																																																																																																																																																																																																																																																																																															_0: {ctor: '_Tuple2', _0: 0.53, _1: 5},
 																																																																																																																																																																																																																																																																																																																																																															_1: {
 																																																																																																																																																																																																																																																																																																																																																																ctor: '::',
-																																																																																																																																																																																																																																																																																																																																																																_0: {ctor: '_Tuple2', _0: 0.27, _1: 0},
+																																																																																																																																																																																																																																																																																																																																																																_0: {ctor: '_Tuple2', _0: 0.27, _1: 5},
 																																																																																																																																																																																																																																																																																																																																																																_1: {
 																																																																																																																																																																																																																																																																																																																																																																	ctor: '::',
-																																																																																																																																																																																																																																																																																																																																																																	_0: {ctor: '_Tuple2', _0: 0.175, _1: 0},
+																																																																																																																																																																																																																																																																																																																																																																	_0: {ctor: '_Tuple2', _0: 0.175, _1: 4},
 																																																																																																																																																																																																																																																																																																																																																																	_1: {
 																																																																																																																																																																																																																																																																																																																																																																		ctor: '::',
-																																																																																																																																																																																																																																																																																																																																																																		_0: {ctor: '_Tuple2', _0: 0.53, _1: 0},
+																																																																																																																																																																																																																																																																																																																																																																		_0: {ctor: '_Tuple2', _0: 0.53, _1: 3},
 																																																																																																																																																																																																																																																																																																																																																																		_1: {
 																																																																																																																																																																																																																																																																																																																																																																			ctor: '::',
-																																																																																																																																																																																																																																																																																																																																																																			_0: {ctor: '_Tuple2', _0: 0.385, _1: 0},
+																																																																																																																																																																																																																																																																																																																																																																			_0: {ctor: '_Tuple2', _0: 0.385, _1: 2},
 																																																																																																																																																																																																																																																																																																																																																																			_1: {
 																																																																																																																																																																																																																																																																																																																																																																				ctor: '::',
-																																																																																																																																																																																																																																																																																																																																																																				_0: {ctor: '_Tuple2', _0: 0.55, _1: 0},
+																																																																																																																																																																																																																																																																																																																																																																				_0: {ctor: '_Tuple2', _0: 0.55, _1: 1},
 																																																																																																																																																																																																																																																																																																																																																																				_1: {
 																																																																																																																																																																																																																																																																																																																																																																					ctor: '::',
 																																																																																																																																																																																																																																																																																																																																																																					_0: {ctor: '_Tuple2', _0: 0.145, _1: 0},
@@ -24795,6 +27397,12 @@ var _ayoupov$phi$Update$update = F2(
 					msg = _v14;
 					model = _v15;
 					continue update;
+				case 'UpdateFloodMap':
+					return {
+						ctor: '_Tuple2',
+						_0: model,
+						_1: _ayoupov$phi$Simulation_Simulation$changeFloodLevel(_p0._0)
+					};
 				case 'UpdateSiteName':
 					var setName = F2(
 						function (name, info) {
@@ -25015,7 +27623,10 @@ var _ayoupov$phi$Update$runDay = function (model) {
 					_ayoupov$phi$Simulation_Simulation$distributeGeneratedWater,
 					100,
 					model.reputationRatio,
-					A2(_ayoupov$phi$Simulation_Simulation$waterToGenerators, model.weather, network))));
+					A2(
+						_ayoupov$phi$Simulation_Simulation$waterToGenerators,
+						model.weather,
+						A2(_ayoupov$phi$Simulation_Simulation$processFlood, model.weather, network)))));
 	};
 	var newNetworkList = function (nw) {
 		return A2(
@@ -25051,8 +27662,12 @@ var _ayoupov$phi$Update$runDay = function (model) {
 				A3(
 					_ccapndave$elm_update_extra$Update_Extra$andThen,
 					_ayoupov$phi$Update$update,
-					_ayoupov$phi$Action$ChangeBuildMode('none'),
-					A2(_ayoupov$phi$Update$generateWeather, model.weatherList, newModel)))));
+					_ayoupov$phi$Action$UpdateFloodMap(model.weather.floodLevel),
+					A3(
+						_ccapndave$elm_update_extra$Update_Extra$andThen,
+						_ayoupov$phi$Update$update,
+						_ayoupov$phi$Action$ChangeBuildMode('none'),
+						A2(_ayoupov$phi$Update$generateWeather, model.weatherList, newModel))))));
 };
 var _ayoupov$phi$Update$generateWeather = function (list) {
 	var currentList = _ayoupov$phi$Simulation_WeatherList$restWeather(list);

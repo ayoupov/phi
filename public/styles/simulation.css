@@ -256,3 +256,7 @@ line.link {
 .scaleText {
   font-size: 10px;
 }
+
+.hidden {
+  display: none;
+}

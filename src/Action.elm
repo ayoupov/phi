@@ -41,6 +41,7 @@ type Msg
     | AnimationFinished AnimationPhase
     | ChangeBuildMode String
     | UpdateWeather Weather
+    | UpdateFloodMap Int
     | CallTurn
     | StatsUpdate
     | UpdateSiteName String

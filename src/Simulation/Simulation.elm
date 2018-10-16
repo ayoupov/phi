@@ -7,15 +7,42 @@ import IntDict
 import Json.Encode as Json
 import List exposing (repeat)
 import ListHelpers exposing (takeFirstElementWithDefault0, takeFirstElementWithDefault1, takeTailDefaultEmpty)
-import Simulation.GraphUpdates exposing (updateNodes)
-import Simulation.Helpers exposing (toHousing)
+import Simulation.GraphUpdates exposing (updateNodes, graphFromNodeList)
+import Simulation.Helpers exposing (toHousing,findFlooded)
 import Simulation.Model exposing (..)
 import Svg exposing (..)
 import Svg.Attributes as SVG
 import Update.Extra exposing (andThen)
 
-
 -- UPDATE
+
+processFlood : Weather -> PhiNetwork -> PhiNetwork
+processFlood weather network =
+    let
+
+        flooded : List NodeLabel
+        flooded =
+            findFlooded weather.floodLevel network
+
+        downgradeNode: NodeLabel -> NodeLabel
+        downgradeNode node =
+            case node of
+                HousingNode node ->
+                    (PotentialNode (Potential PotentialHousing  node.pos))
+                _ ->
+                    node
+
+        downgradedNetwork =
+            flooded
+                |> List.map downgradeNode
+
+        updateNetwork : PhiNetwork -> PhiNetwork -> PhiNetwork
+        updateNetwork source target =
+            updateNodes (Graph.nodes source) target
+
+    in
+        updateNetwork (graphFromNodeList downgradedNetwork) network
+
 
 
 waterToGenerators : Weather -> PhiNetwork -> PhiNetwork
@@ -99,8 +126,8 @@ networkTradedEnergy network =
         |> List.sum
 
 
-networkGeneratedEnergy : PhiNetwork -> Water
-networkGeneratedEnergy network =
+networkGeneratedWater : PhiNetwork -> Water
+networkGeneratedWater network =
     let
         nodeGeneratedEnergy { label, id } =
             case label of
@@ -178,7 +205,7 @@ distributeGeneratedWater : MapLimit -> ReputationRatio -> PhiNetwork -> PhiNetwo
 distributeGeneratedWater limit ratio network =
     let
         totalGeneratedEnergy =
-            networkGeneratedEnergy network
+            networkGeneratedWater network
 
         weightedNegawatts housing negawattsFactor =
             negawattsFactor * takeFirstElementWithDefault0 housing.negawatts
@@ -461,6 +488,8 @@ updateBudget network budget =
 
 -- PORTS
 
+
+port changeFloodLevel : Int -> Cmd msg
 
 port renderPhiNetwork : ( List (Node Json.Value), List EncodedEdge ) -> Cmd msg
 

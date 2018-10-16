@@ -175,7 +175,7 @@ function initFirebase() {
 //    });
 
 }
-var currentTransform = {k: 1.0, x: 0, y: 0};
+var currentTransform = {k: 0.25, x: 0, y: 0};
 
 function zoomed() {
     var transform = d3.zoomTransform(this);
@@ -221,7 +221,7 @@ d3.xml("assets/Barje-map-for-sim-big-01.svg").get(function (error, documentFragm
 
     container.node().appendChild(svgNode);
 
-    container.select("svg")
+    container.select("svg#Layer1")
         .attr("class", "map");
 
     container.append("g")
@@ -235,8 +235,11 @@ d3.xml("assets/Barje-map-for-sim-big-01.svg").get(function (error, documentFragm
 
     function initTransform() {
         return d3.zoomIdentity
-            .translate(-1140, -760)
-            .scale(0.75);
+//            .translate(-1140, -760)
+//            .scale(0.75);
+// 0.302498522304823, x: -205.92389416352853, y: -135.6175056505412
+              .translate(-205, -135)
+              .scale(0.3)
     }
 
 
@@ -832,5 +835,28 @@ d3.xml("assets/Barje-map-for-sim-big-01.svg").get(function (error, documentFragm
 
     });
 
+    app.ports.changeFloodLevel.subscribe(function (floodLevel) {
+        console.log("fl: " + floodLevel);
+        if (prevFloodLevel)
+            $(".flood").hide(300);
+        if (floodLevel)
+            $("#floods"+floodLevel).show(300);
+        prevFloodLevel = floodLevel;
+    });
+
+
+
 });
+
+    for (var i = 1; i < 6; i++)
+    {
+        d3.xml("assets/floods"+i+"-01.svg").get(function (error, documentFragment) {
+            if (error) throw error;
+            var svgNode = documentFragment.getElementsByTagName("svg")[0];
+            $(svgNode).addClass("flood").hide();
+            container.node().appendChild(svgNode);
+        });
+    }
 });
+
+var prevFloodLevel = 0;

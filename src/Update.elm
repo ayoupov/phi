@@ -15,7 +15,7 @@ import Model exposing (Model, initNetworkGenerators)
 import Simulation.BuildingMode exposing (changeBuildMode, handleConvertNode, handleNewLineRequest)
 import Simulation.Encoding exposing (encodeEdge, encodeGraph, encodeNodeLabel)
 import Simulation.GraphUpdates exposing (addEdge, addNode, addNodeWithEdges, updateNodes)
-import Simulation.Helpers exposing (liveNodeNetwork)
+import Simulation.Helpers exposing (liveNodeNetwork, findFlooded)
 import Simulation.Init.Generators as Generators exposing (..)
 import Simulation.Model exposing (..)
 import Simulation.Simulation as Simulation exposing (..)
@@ -111,7 +111,6 @@ update msg model =
             runDay model
                 |> andThen update IncrementCycleCount
 
-        --|> andThen update DaySummary
         DescribeNode n ->
             model
                 |> (Graph.get n model.network
@@ -169,6 +168,9 @@ update msg model =
 
         UpdateWeather weather ->
             update RenderPhiNetwork { model | weather = weather, weatherList = restWeather model.weatherList }
+
+        UpdateFloodMap floodLevel ->
+            (model, changeFloodLevel floodLevel)
 
         UpdateSiteName name ->
             let
@@ -281,6 +283,7 @@ runDay model =
         applyPhases : PhiNetwork -> PhiNetwork
         applyPhases network =
             network
+                |> Simulation.processFlood model.weather
                 |> Simulation.waterToGenerators model.weather
                 |> Simulation.distributeGeneratedWater 100 model.reputationRatio
                 |> Graph.mapNodes Simulation.consumeFromStorage
@@ -320,6 +323,7 @@ runDay model =
     newModel
         |> generateWeather model.weatherList
         |> andThen update (ChangeBuildMode "none")
+        |> andThen update (UpdateFloodMap model.weather.floodLevel)
         |> andThen update StatsUpdate
         |> andThen update RenderPhiNetwork
         |> andThen update AnimateGeneration
