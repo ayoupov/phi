@@ -5,7 +5,7 @@ import Chat.Helpers exposing (delayMessage)
 import Chat.Model exposing (BotChatItem(..), MultiChoiceAction(..), MultiChoiceMessage, defaultMcaList)
 import Html exposing (Html)
 import Simulation.Model exposing (PhiNetwork)
-import Simulation.Simulation exposing (networkConsumedEnergy, networkGeneratedWater, networkStoredEnergy, networkTradedEnergy)
+import Simulation.Simulation exposing (networkConsumedWater, networkGeneratedWater, networkStoredWater, networkTradedWater)
 import View.Helpers exposing (floatFmt)
 
 
@@ -103,10 +103,10 @@ cycleSummary network =
             floatFmt <| networkGeneratedWater network
 
         totalConsumed =
-            floatFmt <| networkConsumedEnergy network
+            floatFmt <| networkConsumedWater network
 
         totalStored =
-            floatFmt <| networkStoredEnergy network
+            floatFmt <| networkStoredWater network
 
         text =
             "Daily Briefing: "
@@ -198,7 +198,7 @@ cycleGenerated network =
             floatFmt <| networkGeneratedWater network
 
         totalStored =
-            floatFmt <| networkStoredEnergy network
+            floatFmt <| networkStoredWater network
 
         text =
             ""
@@ -214,7 +214,7 @@ cycleConsumed : PhiNetwork -> BotChatItem
 cycleConsumed network =
     let
         totalConsumed =
-            floatFmt <| networkConsumedEnergy network
+            floatFmt <| networkConsumedWater network
 
         text =
             ""
@@ -228,7 +228,7 @@ cycleTraded : PhiNetwork -> BotChatItem
 cycleTraded network =
     let
         totalTraded =
-            floatFmt <| networkTradedEnergy network
+            floatFmt <| networkTradedWater network
 
         text =
             ""

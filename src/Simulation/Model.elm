@@ -159,7 +159,7 @@ type alias WaterPurificator =
 defaultGenerator : WaterPurificator
 defaultGenerator =
     { dailyGeneration = [ 0 ]
-    , maxGeneration = 0.7
+    , maxGeneration = 6.0
     , pos = { x = 0, y = 0 }
     }
 
@@ -211,7 +211,7 @@ defaultResilientHousing =
     { water = defaultHousingWater
     , reputation = [ 0 ]
     , dailyGeneration =  [ 0 ]
-    , maxGeneration = 0.7
+    , maxGeneration = 0.6
     , pos = { x = 0, y = 0 }
     }
 

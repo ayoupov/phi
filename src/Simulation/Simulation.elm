@@ -67,11 +67,13 @@ waterToGenerators weather network =
                 * weatherFactor
             )
                 :: node.dailyGeneration
+--                |> Debug.log "ndg"
 
         updateNode node =
             case node of
                 GeneratorNode node ->
                     GeneratorNode { node | dailyGeneration = newDailyGeneration node water }
+--                    |> Debug.log "gennode"
 
                 ResilientHousingNode node ->
                     ResilientHousingNode { node | dailyGeneration = newDailyGeneration node water }
@@ -80,12 +82,13 @@ waterToGenerators weather network =
                     node
     in
     Graph.mapNodes updateNode network
+--    |> Debug.log "watertogen"
 
 
-networkStoredEnergy : PhiNetwork -> Water
-networkStoredEnergy network =
+networkStoredWater : PhiNetwork -> Water
+networkStoredWater network =
     let
-        nodeStoredEnergy { label, id } =
+        nodeStoredWater { label, id } =
             case label of
                 HousingNode node ->
                     List.head node.water.storedWater
@@ -94,14 +97,14 @@ networkStoredEnergy network =
                     Nothing
     in
     Graph.nodes network
-        |> List.filterMap nodeStoredEnergy
+        |> List.filterMap nodeStoredWater
         |> List.sum
 
 
-networkConsumedEnergy : PhiNetwork -> Water
-networkConsumedEnergy network =
+networkConsumedWater : PhiNetwork -> Water
+networkConsumedWater network =
     let
-        nodeConsumedEnergy { label, id } =
+        nodeConsumedWater { label, id } =
             case label of
                 HousingNode node ->
                     List.head node.water.actualConsumption
@@ -110,14 +113,15 @@ networkConsumedEnergy network =
                     Nothing
     in
     Graph.nodes network
-        |> List.filterMap nodeConsumedEnergy
+        |> List.filterMap nodeConsumedWater
         |> List.sum
+        |> Debug.log "consumed"
 
 
-networkTradedEnergy : PhiNetwork -> Water
-networkTradedEnergy network =
+networkTradedWater : PhiNetwork -> Water
+networkTradedWater network =
     let
-        nodeTradedEnergy { label, id } =
+        nodeTradedWater { label, id } =
             case label of
                 HousingNode node ->
                     let
@@ -133,28 +137,30 @@ networkTradedEnergy network =
                     Nothing
     in
     Graph.nodes network
-        |> List.filterMap nodeTradedEnergy
+        |> List.filterMap nodeTradedWater
         |> List.sum
 
 
 networkGeneratedWater : PhiNetwork -> Water
 networkGeneratedWater network =
     let
-        nodeGeneratedEnergy { label, id } =
+        nodeGeneratedWater { label, id } =
             case label of
                 GeneratorNode node ->
+                    List.head node.dailyGeneration
+
+                ResilientHousingNode node ->
                     List.head node.dailyGeneration
 
                 _ ->
                     Nothing
     in
     Graph.nodes network
-        |> List.filterMap nodeGeneratedEnergy
+        |> List.filterMap nodeGeneratedWater
         |> List.sum
+        |> Debug.log "network generated"
 
 
-
---        |> Debug.log "nge"
 -- update helpers
 
 
@@ -215,58 +221,62 @@ setWaterActualConsumptionAndBalance ( newAC, newTB ) housing =
 distributeGeneratedWater : MapLimit -> ReputationRatio -> PhiNetwork -> PhiNetwork
 distributeGeneratedWater limit ratio network =
     let
-        totalGeneratedEnergy =
+        totalGeneratedWater =
             networkGeneratedWater network
-
-        weightedNegawatts housing negawattsFactor =
-            negawattsFactor * takeFirstElementWithDefault0 housing.negawatts
+            |> Debug.log "total gen water"
 
         weightedSeed housing seedFactor =
-            seedFactor * 0
+            seedFactor * 0.3
 
         reputationRating housing =
-            1
-            --+ weightedNegawatts housing ratio.a + weightedSeed housing ratio.b
+            1 + weightedSeed housing ratio.b
+--            1 + weightedNegawatts housing ratio.a + weightedSeed housing ratio.b
 
         weightConstant =
+--            1
             Graph.nodes network
-                --                |> Debug.log "nodes"
+--                                |> Debug.log "nodes"
                 |> List.filterMap (toHousing >> Maybe.map (\x -> x.water.desiredConsumption * reputationRating x))
-                --                |> Debug.log "map"
+--                                |> Debug.log "map"
                 |> List.sum
-                --                |> Debug.log "sum"
+--                                |> Debug.log "sum"
                 |> (/) 1
+--                |> Debug.log "wc"
 
-        --                |> Debug.log "wc"
         networkDesiredEnergy =
             Graph.nodes network
                 |> List.filterMap (toHousing >> Maybe.map (.water >> .desiredConsumption))
                 |> List.sum
+                |> Debug.log "network desired "
 
         allocatedWater : Housing -> Water
         allocatedWater housing =
             weightConstant
-                * housing.water.desiredConsumption
-                * reputationRating housing
-                * totalGeneratedEnergy
+                * (Debug.log "hwdc" housing.water.desiredConsumption)
+                * totalGeneratedWater
+            |> Debug.log "alloc water"
 
-        --                |> Debug.log "aj"
         updateHousing : Housing -> Housing
         updateHousing housing =
             let
                 myAllocatedWater =
                     allocatedWater housing
+                    |> Debug.log "my alloc water"
+
 
                 waterForStorage =
                     myAllocatedWater
                         - housing.water.desiredConsumption
                         |> Basics.max 0
+                        |> Debug.log "water for storage"
 
                 newStoredWater =
                     waterForStorage + takeFirstElementWithDefault0 housing.water.storedWater
+                    |> Debug.log "new stored water"
 
                 newConsumption =
                     myAllocatedWater - waterForStorage
+                    |> Debug.log "new consumption "
 
             in
             housing.water
@@ -387,7 +397,6 @@ tradingPhase network =
         newSupplyChanges : Float -> Housing -> ( List Water, List Water )
         newSupplyChanges tradeRatio housing =
             let
-
                 currentSW =
                     takeFirstElementWithDefault0 housing.water.storedWater
             in
@@ -398,11 +407,11 @@ tradingPhase network =
         updateNodeSupplyReward : Float -> Housing -> Housing
         updateNodeSupplyReward tradeRatio housing =
             let
-                ( newSJ, newTB ) =
+                ( newSW, newTB ) =
                     newSupplyChanges tradeRatio housing
 
                 updatedHousing =
-                    setStoredWaterAndBalance ( newSJ, newTB ) housing
+                    setStoredWaterAndBalance ( newSW, newTB ) housing
             in
             updatedHousing
 
@@ -459,6 +468,7 @@ tradingPhase network =
             let
                 initialPool =
                     getInitialPool
+                    |> Debug.log "initial pool"
 
                 demandList =
                     nodesInDistress
@@ -472,7 +482,8 @@ tradingPhase network =
                             0
 
                         _ ->
-                            (initialPool - poolLeft) / initialPool
+--                            (initialPool - poolLeft) / initialPool
+                            0.01
 
                 ( poolLeft, updatedDemandNodes ) =
                     updateNodeListDemand initialPool demandList
@@ -493,7 +504,7 @@ updateBudget network budget =
         waterToPhiQuotient =
             2
     in
-    (networkTradedEnergy network * waterToPhiQuotient + takeFirstElementWithDefault0 budget) :: budget
+    (networkTradedWater network * waterToPhiQuotient + takeFirstElementWithDefault0 budget) :: budget
 
 
 

@@ -293,26 +293,33 @@ runDay model =
         updateNetwork source target =
             updateNodes (Graph.nodes source) target
 
-        joinNetworks : List PhiNetwork -> PhiNetwork -> PhiNetwork
-        joinNetworks list network =
-            List.foldr updateNetwork network list
+--        joinNetworks : List PhiNetwork -> PhiNetwork -> PhiNetwork
+--        joinNetworks list network =
+--            List.foldr updateNetwork network list
 
-        makeBidirectional : PhiNetwork -> PhiNetwork
-        makeBidirectional nw =
-            Graph.edges (Graph.reverseEdges nw)
-                |> List.append (Graph.edges nw)
-                |> Graph.fromNodesAndEdges (Graph.nodes nw)
+--        makeBidirectional : PhiNetwork -> PhiNetwork
+--        makeBidirectional nw =
+--            Graph.edges (Graph.reverseEdges nw)
+--                |> List.append (Graph.edges nw)
+--                |> Graph.fromNodesAndEdges (Graph.nodes nw)
+--
+--        newNetworkList nw =
+--            makeBidirectional nw
+--                |> Graph.stronglyConnectedComponents
+--                |> List.map applyPhases
+--
+--        newNetwork =
+--            joinNetworks (newNetworkList <| liveNodeNetwork model.network) model.network
 
-        newNetworkList nw =
-            makeBidirectional nw
-                |> Graph.stronglyConnectedComponents
-                |> List.map applyPhases
+--        modelWithUpdatedNetwork =
+--            { model | network = newNetwork }
 
-        newNetwork =
-            joinNetworks (newNetworkList <| liveNodeNetwork model.network) model.network
+        newSimpleNetwork =
+            model.network
+            |> applyPhases
 
         modelWithUpdatedNetwork =
-            { model | network = newNetwork }
+            { model | network = newSimpleNetwork }
 
         newBudget =
             Simulation.updateBudget modelWithUpdatedNetwork.network modelWithUpdatedNetwork.budget

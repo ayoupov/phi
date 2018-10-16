@@ -17138,7 +17138,7 @@ var _ayoupov$phi$Simulation_Model$defaultGenerator = {
 		_0: 0,
 		_1: {ctor: '[]'}
 	},
-	maxGeneration: 0.7,
+	maxGeneration: 6.0,
 	pos: {x: 0, y: 0}
 };
 var _ayoupov$phi$Simulation_Model$tupleToCoords = function (_p0) {
@@ -17240,7 +17240,7 @@ var _ayoupov$phi$Simulation_Model$defaultResilientHousing = {
 		_0: 0,
 		_1: {ctor: '[]'}
 	},
-	maxGeneration: 0.7,
+	maxGeneration: 0.6,
 	pos: {x: 0, y: 0}
 };
 var _ayoupov$phi$Simulation_Model$Housing = F3(
@@ -22957,11 +22957,11 @@ var _ayoupov$phi$Simulation_Simulation$tradingPhase = function (network) {
 	var updateNodeSupplyReward = F2(
 		function (tradeRatio, housing) {
 			var _p13 = A2(newSupplyChanges, tradeRatio, housing);
-			var newSJ = _p13._0;
+			var newSW = _p13._0;
 			var newTB = _p13._1;
 			var updatedHousing = A2(
 				_ayoupov$phi$Simulation_Simulation$setStoredWaterAndBalance,
-				{ctor: '_Tuple2', _0: newSJ, _1: newTB},
+				{ctor: '_Tuple2', _0: newSW, _1: newTB},
 				housing);
 			return updatedHousing;
 		});
@@ -23091,21 +23091,21 @@ var _ayoupov$phi$Simulation_Simulation$tradingPhase = function (network) {
 			},
 			_elm_community$graph$Graph$nodes(network)));
 	var updateNetwork = function () {
-		var supplyList = supplyNodes;
-		var demandList = nodesInDistress;
-		var initialPool = getInitialPool;
-		var _p27 = A2(updateNodeListDemand, initialPool, demandList);
-		var poolLeft = _p27._0;
-		var updatedDemandNodes = _p27._1;
 		var tradeRatioValue = F2(
 			function (initialPool, actualPool) {
-				var _p28 = initialPool;
-				if (_p28 === 0) {
+				var _p27 = initialPool;
+				if (_p27 === 0) {
 					return 0;
 				} else {
-					return (initialPool - poolLeft) / initialPool;
+					return 1.0e-2;
 				}
 			});
+		var supplyList = supplyNodes;
+		var demandList = nodesInDistress;
+		var initialPool = A2(_elm_lang$core$Debug$log, 'initial pool', getInitialPool);
+		var _p28 = A2(updateNodeListDemand, initialPool, demandList);
+		var poolLeft = _p28._0;
+		var updatedDemandNodes = _p28._1;
 		var updatedSupplyNodes = A2(
 			updateNodeListSupply,
 			A2(tradeRatioValue, initialPool, poolLeft),
@@ -23118,42 +23118,55 @@ var _ayoupov$phi$Simulation_Simulation$tradingPhase = function (network) {
 	return updateNetwork;
 };
 var _ayoupov$phi$Simulation_Simulation$networkGeneratedWater = function (network) {
-	var nodeGeneratedEnergy = function (_p29) {
+	var nodeGeneratedWater = function (_p29) {
 		var _p30 = _p29;
 		var _p31 = _p30.label;
-		if (_p31.ctor === 'GeneratorNode') {
-			return _elm_lang$core$List$head(_p31._0.dailyGeneration);
-		} else {
-			return _elm_lang$core$Maybe$Nothing;
+		switch (_p31.ctor) {
+			case 'GeneratorNode':
+				return _elm_lang$core$List$head(_p31._0.dailyGeneration);
+			case 'ResilientHousingNode':
+				return _elm_lang$core$List$head(_p31._0.dailyGeneration);
+			default:
+				return _elm_lang$core$Maybe$Nothing;
 		}
 	};
-	return _elm_lang$core$List$sum(
-		A2(
-			_elm_lang$core$List$filterMap,
-			nodeGeneratedEnergy,
-			_elm_community$graph$Graph$nodes(network)));
+	return A2(
+		_elm_lang$core$Debug$log,
+		'network generated',
+		_elm_lang$core$List$sum(
+			A2(
+				_elm_lang$core$List$filterMap,
+				nodeGeneratedWater,
+				_elm_community$graph$Graph$nodes(network))));
 };
 var _ayoupov$phi$Simulation_Simulation$distributeGeneratedWater = F3(
 	function (limit, ratio, network) {
-		var networkDesiredEnergy = _elm_lang$core$List$sum(
-			A2(
-				_elm_lang$core$List$filterMap,
-				function (_p32) {
-					return A2(
-						_elm_lang$core$Maybe$map,
-						function (_p33) {
-							return function (_) {
-								return _.desiredConsumption;
-							}(
-								function (_) {
-									return _.water;
-								}(_p33));
-						},
-						_ayoupov$phi$Simulation_Helpers$toHousing(_p32));
-				},
-				_elm_community$graph$Graph$nodes(network)));
+		var networkDesiredEnergy = A2(
+			_elm_lang$core$Debug$log,
+			'network desired ',
+			_elm_lang$core$List$sum(
+				A2(
+					_elm_lang$core$List$filterMap,
+					function (_p32) {
+						return A2(
+							_elm_lang$core$Maybe$map,
+							function (_p33) {
+								return function (_) {
+									return _.desiredConsumption;
+								}(
+									function (_) {
+										return _.water;
+									}(_p33));
+							},
+							_ayoupov$phi$Simulation_Helpers$toHousing(_p32));
+					},
+					_elm_community$graph$Graph$nodes(network))));
+		var weightedSeed = F2(
+			function (housing, seedFactor) {
+				return seedFactor * 0.3;
+			});
 		var reputationRating = function (housing) {
-			return 1;
+			return 1 + A2(weightedSeed, housing, ratio.b);
 		};
 		var weightConstant = A2(
 			F2(
@@ -23173,23 +23186,30 @@ var _ayoupov$phi$Simulation_Simulation$distributeGeneratedWater = F3(
 							_ayoupov$phi$Simulation_Helpers$toHousing(_p34));
 					},
 					_elm_community$graph$Graph$nodes(network))));
-		var weightedSeed = F2(
-			function (housing, seedFactor) {
-				return seedFactor * 0;
-			});
-		var weightedNegawatts = F2(
-			function (housing, negawattsFactor) {
-				return negawattsFactor * _ayoupov$phi$ListHelpers$takeFirstElementWithDefault0(housing.negawatts);
-			});
-		var totalGeneratedEnergy = _ayoupov$phi$Simulation_Simulation$networkGeneratedWater(network);
+		var totalGeneratedWater = A2(
+			_elm_lang$core$Debug$log,
+			'total gen water',
+			_ayoupov$phi$Simulation_Simulation$networkGeneratedWater(network));
 		var allocatedWater = function (housing) {
-			return ((weightConstant * housing.water.desiredConsumption) * reputationRating(housing)) * totalGeneratedEnergy;
+			return A2(
+				_elm_lang$core$Debug$log,
+				'alloc water',
+				(weightConstant * A2(_elm_lang$core$Debug$log, 'hwdc', housing.water.desiredConsumption)) * totalGeneratedWater);
 		};
 		var updateHousing = function (housing) {
-			var myAllocatedWater = allocatedWater(housing);
-			var waterForStorage = A2(_elm_lang$core$Basics$max, 0, myAllocatedWater - housing.water.desiredConsumption);
-			var newStoredWater = waterForStorage + _ayoupov$phi$ListHelpers$takeFirstElementWithDefault0(housing.water.storedWater);
-			var newConsumption = myAllocatedWater - waterForStorage;
+			var myAllocatedWater = A2(
+				_elm_lang$core$Debug$log,
+				'my alloc water',
+				allocatedWater(housing));
+			var waterForStorage = A2(
+				_elm_lang$core$Debug$log,
+				'water for storage',
+				A2(_elm_lang$core$Basics$max, 0, myAllocatedWater - housing.water.desiredConsumption));
+			var newStoredWater = A2(
+				_elm_lang$core$Debug$log,
+				'new stored water',
+				waterForStorage + _ayoupov$phi$ListHelpers$takeFirstElementWithDefault0(housing.water.storedWater));
+			var newConsumption = A2(_elm_lang$core$Debug$log, 'new consumption ', myAllocatedWater - waterForStorage);
 			return A2(
 				_ayoupov$phi$Simulation_Simulation$asWaterIn,
 				housing,
@@ -23212,8 +23232,8 @@ var _ayoupov$phi$Simulation_Simulation$distributeGeneratedWater = F3(
 		};
 		return A2(_elm_community$graph$Graph$mapNodes, updateNode, network);
 	});
-var _ayoupov$phi$Simulation_Simulation$networkTradedEnergy = function (network) {
-	var nodeTradedEnergy = function (_p36) {
+var _ayoupov$phi$Simulation_Simulation$networkTradedWater = function (network) {
+	var nodeTradedWater = function (_p36) {
 		var _p37 = _p36;
 		var _p38 = _p37.label;
 		if (_p38.ctor === 'HousingNode') {
@@ -23228,7 +23248,7 @@ var _ayoupov$phi$Simulation_Simulation$networkTradedEnergy = function (network) 
 	return _elm_lang$core$List$sum(
 		A2(
 			_elm_lang$core$List$filterMap,
-			nodeTradedEnergy,
+			nodeTradedWater,
 			_elm_community$graph$Graph$nodes(network)));
 };
 var _ayoupov$phi$Simulation_Simulation$updateBudget = F2(
@@ -23236,12 +23256,12 @@ var _ayoupov$phi$Simulation_Simulation$updateBudget = F2(
 		var waterToPhiQuotient = 2;
 		return {
 			ctor: '::',
-			_0: (_ayoupov$phi$Simulation_Simulation$networkTradedEnergy(network) * waterToPhiQuotient) + _ayoupov$phi$ListHelpers$takeFirstElementWithDefault0(budget),
+			_0: (_ayoupov$phi$Simulation_Simulation$networkTradedWater(network) * waterToPhiQuotient) + _ayoupov$phi$ListHelpers$takeFirstElementWithDefault0(budget),
 			_1: budget
 		};
 	});
-var _ayoupov$phi$Simulation_Simulation$networkConsumedEnergy = function (network) {
-	var nodeConsumedEnergy = function (_p39) {
+var _ayoupov$phi$Simulation_Simulation$networkConsumedWater = function (network) {
+	var nodeConsumedWater = function (_p39) {
 		var _p40 = _p39;
 		var _p41 = _p40.label;
 		if (_p41.ctor === 'HousingNode') {
@@ -23250,14 +23270,17 @@ var _ayoupov$phi$Simulation_Simulation$networkConsumedEnergy = function (network
 			return _elm_lang$core$Maybe$Nothing;
 		}
 	};
-	return _elm_lang$core$List$sum(
-		A2(
-			_elm_lang$core$List$filterMap,
-			nodeConsumedEnergy,
-			_elm_community$graph$Graph$nodes(network)));
+	return A2(
+		_elm_lang$core$Debug$log,
+		'consumed',
+		_elm_lang$core$List$sum(
+			A2(
+				_elm_lang$core$List$filterMap,
+				nodeConsumedWater,
+				_elm_community$graph$Graph$nodes(network))));
 };
-var _ayoupov$phi$Simulation_Simulation$networkStoredEnergy = function (network) {
-	var nodeStoredEnergy = function (_p42) {
+var _ayoupov$phi$Simulation_Simulation$networkStoredWater = function (network) {
+	var nodeStoredWater = function (_p42) {
 		var _p43 = _p42;
 		var _p44 = _p43.label;
 		if (_p44.ctor === 'HousingNode') {
@@ -23269,7 +23292,7 @@ var _ayoupov$phi$Simulation_Simulation$networkStoredEnergy = function (network) 
 	return _elm_lang$core$List$sum(
 		A2(
 			_elm_lang$core$List$filterMap,
-			nodeStoredEnergy,
+			nodeStoredWater,
 			_elm_community$graph$Graph$nodes(network)));
 };
 var _ayoupov$phi$Simulation_Simulation$waterToGenerators = F2(
@@ -23473,7 +23496,7 @@ var _ayoupov$phi$View_Helpers$intFmt = function (num) {
 
 var _ayoupov$phi$Chat_Narrative$cycleTraded = function (network) {
 	var totalTraded = _ayoupov$phi$View_Helpers$floatFmt(
-		_ayoupov$phi$Simulation_Simulation$networkTradedEnergy(network));
+		_ayoupov$phi$Simulation_Simulation$networkTradedWater(network));
 	var text = A2(
 		_elm_lang$core$Basics_ops['++'],
 		'',
@@ -23502,7 +23525,7 @@ var _ayoupov$phi$Chat_Narrative$cycleTraded = function (network) {
 };
 var _ayoupov$phi$Chat_Narrative$cycleConsumed = function (network) {
 	var totalConsumed = _ayoupov$phi$View_Helpers$floatFmt(
-		_ayoupov$phi$Simulation_Simulation$networkConsumedEnergy(network));
+		_ayoupov$phi$Simulation_Simulation$networkConsumedWater(network));
 	var text = A2(
 		_elm_lang$core$Basics_ops['++'],
 		'',
@@ -23511,7 +23534,7 @@ var _ayoupov$phi$Chat_Narrative$cycleConsumed = function (network) {
 };
 var _ayoupov$phi$Chat_Narrative$cycleGenerated = function (network) {
 	var totalStored = _ayoupov$phi$View_Helpers$floatFmt(
-		_ayoupov$phi$Simulation_Simulation$networkStoredEnergy(network));
+		_ayoupov$phi$Simulation_Simulation$networkStoredWater(network));
 	var generatedEnergy = _ayoupov$phi$View_Helpers$floatFmt(
 		_ayoupov$phi$Simulation_Simulation$networkGeneratedWater(network));
 	var text = A2(
@@ -23616,9 +23639,9 @@ var _ayoupov$phi$Chat_Narrative$enterBuildModeHousing = function () {
 }();
 var _ayoupov$phi$Chat_Narrative$cycleSummary = function (network) {
 	var totalStored = _ayoupov$phi$View_Helpers$floatFmt(
-		_ayoupov$phi$Simulation_Simulation$networkStoredEnergy(network));
+		_ayoupov$phi$Simulation_Simulation$networkStoredWater(network));
 	var totalConsumed = _ayoupov$phi$View_Helpers$floatFmt(
-		_ayoupov$phi$Simulation_Simulation$networkConsumedEnergy(network));
+		_ayoupov$phi$Simulation_Simulation$networkConsumedWater(network));
 	var generatedEnergy = _ayoupov$phi$View_Helpers$floatFmt(
 		_ayoupov$phi$Simulation_Simulation$networkGeneratedWater(network));
 	var text = A2(
@@ -26169,7 +26192,7 @@ var _ayoupov$phi$Model$initMap = {
 		{ctor: '[]'}),
 	narrative: _ayoupov$phi$Model$initNarrative,
 	initialBudget: {ctor: '[]'},
-	initialReputationRatio: {a: 1, b: 0},
+	initialReputationRatio: {a: 0.7, b: 0.3},
 	initialStats: {
 		ctor: '::',
 		_0: _ayoupov$phi$Model$defaultStats,
@@ -27619,26 +27642,12 @@ var _ayoupov$phi$Update$update = F2(
 		}
 	});
 var _ayoupov$phi$Update$runDay = function (model) {
-	var makeBidirectional = function (nw) {
-		return A2(
-			_elm_community$graph$Graph$fromNodesAndEdges,
-			_elm_community$graph$Graph$nodes(nw),
-			A2(
-				_elm_lang$core$List$append,
-				_elm_community$graph$Graph$edges(nw),
-				_elm_community$graph$Graph$edges(
-					_elm_community$graph$Graph$reverseEdges(nw))));
-	};
 	var updateNetwork = F2(
 		function (source, target) {
 			return A2(
 				_ayoupov$phi$Simulation_GraphUpdates$updateNodes,
 				_elm_community$graph$Graph$nodes(source),
 				target);
-		});
-	var joinNetworks = F2(
-		function (list, network) {
-			return A3(_elm_lang$core$List$foldr, updateNetwork, network, list);
 		});
 	var applyPhases = function (network) {
 		return _ayoupov$phi$Simulation_Simulation$tradingPhase(
@@ -27654,21 +27663,10 @@ var _ayoupov$phi$Update$runDay = function (model) {
 						model.weather,
 						A2(_ayoupov$phi$Simulation_Simulation$processFlood, model.weather, network)))));
 	};
-	var newNetworkList = function (nw) {
-		return A2(
-			_elm_lang$core$List$map,
-			applyPhases,
-			_elm_community$graph$Graph$stronglyConnectedComponents(
-				makeBidirectional(nw)));
-	};
-	var newNetwork = A2(
-		joinNetworks,
-		newNetworkList(
-			_ayoupov$phi$Simulation_Helpers$liveNodeNetwork(model.network)),
-		model.network);
+	var newSimpleNetwork = applyPhases(model.network);
 	var modelWithUpdatedNetwork = _elm_lang$core$Native_Utils.update(
 		model,
-		{network: newNetwork});
+		{network: newSimpleNetwork});
 	var newBudget = A2(_ayoupov$phi$Simulation_Simulation$updateBudget, modelWithUpdatedNetwork.network, modelWithUpdatedNetwork.budget);
 	var newModel = _elm_lang$core$Native_Utils.update(
 		modelWithUpdatedNetwork,

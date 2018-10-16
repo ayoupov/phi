@@ -76,7 +76,7 @@ initMap =
     , initialWeatherList = restWeather []
     , narrative = initNarrative
     , initialBudget = []
-    , initialReputationRatio = { a = 1, b = 0 }
+    , initialReputationRatio = { a = 0.7, b = 0.3 }
     , initialStats = [ defaultStats ]
     }
 
