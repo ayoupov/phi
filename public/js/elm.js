@@ -7857,17 +7857,17 @@ var _ayoupov$phi$Chat_Model$mcaName = function (action) {
 		case 'McaWeatherForecast':
 			return 'Weather';
 		case 'McaBuildHousing':
-			return 'Housing';
+			return 'Simple housing';
 		case 'McaUpgradeHousing':
 			return 'Upgrade';
 		case 'McaAddWP':
-			return 'Water Purificators';
+			return 'WPS';
 		case 'McaRunWeek':
 			return 'Next Week';
 		case 'McaLeaveBuildMode':
 			return 'Leave Build Mode';
-		case 'McaLaunchLjubljana':
-			return 'Load Ljubljana';
+		case 'McaLaunchBarje':
+			return 'Load Barje';
 		case 'McaSkipIntro':
 			return 'Skip Intro';
 		case 'McaIntro1':
@@ -7901,7 +7901,7 @@ var _ayoupov$phi$Chat_Model$McaAboutHealth = {ctor: 'McaAboutHealth'};
 var _ayoupov$phi$Chat_Model$McaIntro2 = {ctor: 'McaIntro2'};
 var _ayoupov$phi$Chat_Model$McaIntro1 = {ctor: 'McaIntro1'};
 var _ayoupov$phi$Chat_Model$McaSkipIntro = {ctor: 'McaSkipIntro'};
-var _ayoupov$phi$Chat_Model$McaLaunchLjubljana = {ctor: 'McaLaunchLjubljana'};
+var _ayoupov$phi$Chat_Model$McaLaunchBarje = {ctor: 'McaLaunchBarje'};
 var _ayoupov$phi$Chat_Model$initChat = _ayoupov$phi$Chat_Model$BotItem(
 	_ayoupov$phi$Chat_Model$MultiChoiceItem(
 		A2(
@@ -7909,7 +7909,7 @@ var _ayoupov$phi$Chat_Model$initChat = _ayoupov$phi$Chat_Model$BotItem(
 			'Welcome to Φ Chat! I only respond to commands for now.\nCurrent available commands are:\n\n/weather (i tell you abt the weather today)\n/turn (i move to the next day)\n/describe [nodeId] (i tell you some info about a specific node)\n',
 			{
 				ctor: '::',
-				_0: _ayoupov$phi$Chat_Model$McaLaunchLjubljana,
+				_0: _ayoupov$phi$Chat_Model$McaLaunchBarje,
 				_1: {
 					ctor: '::',
 					_0: _ayoupov$phi$Chat_Model$McaSkipIntro,
@@ -23618,24 +23618,24 @@ var _ayoupov$phi$Chat_Narrative$cycleSummary = function (network) {
 		_ayoupov$phi$Simulation_Simulation$networkStoredWater(network));
 	var totalConsumed = _ayoupov$phi$View_Helpers$floatFmt(
 		_ayoupov$phi$Simulation_Simulation$networkConsumedWater(network));
-	var generatedEnergy = _ayoupov$phi$View_Helpers$floatFmt(
+	var generatedWater = _ayoupov$phi$View_Helpers$floatFmt(
 		_ayoupov$phi$Simulation_Simulation$networkGeneratedWater(network));
 	var text = A2(
 		_elm_lang$core$Basics_ops['++'],
 		'Daily Briefing: ',
 		A2(
 			_elm_lang$core$Basics_ops['++'],
-			generatedEnergy,
+			generatedWater,
 			A2(
 				_elm_lang$core$Basics_ops['++'],
-				' Joules created.',
+				' water purified.',
 				A2(
 					_elm_lang$core$Basics_ops['++'],
 					totalConsumed,
 					A2(
 						_elm_lang$core$Basics_ops['++'],
-						' Joules burned.',
-						A2(_elm_lang$core$Basics_ops['++'], totalStored, ' surplus stored in batteries.'))))));
+						' water consumed.',
+						A2(_elm_lang$core$Basics_ops['++'], totalStored, ' surplus stored in canisters.'))))));
 	return _ayoupov$phi$Chat_Model$MultiChoiceItem(
 		A2(
 			_ayoupov$phi$Chat_Model$MultiChoiceMessage,
@@ -23770,7 +23770,7 @@ var _ayoupov$phi$Chat_Narrative$getStartedNarrative = {
 					'Please click the location below to launch your simulation.',
 					{
 						ctor: '::',
-						_0: _ayoupov$phi$Chat_Model$McaLaunchLjubljana,
+						_0: _ayoupov$phi$Chat_Model$McaLaunchBarje,
 						_1: {ctor: '[]'}
 					}))),
 		_1: {ctor: '[]'}
@@ -23790,7 +23790,7 @@ var _ayoupov$phi$Chat_Narrative$siteNarrative = {
 				_0: _ayoupov$phi$Action$ShowMap,
 				_1: {ctor: '[]'}
 			},
-			_ayoupov$phi$Chat_Model$BotMessage('Dobrodošli v Ljubljano')),
+			_ayoupov$phi$Chat_Model$BotMessage('Dobrodošli v Barje')),
 		_1: {
 			ctor: '::',
 			_0: A3(
@@ -23798,10 +23798,10 @@ var _ayoupov$phi$Chat_Narrative$siteNarrative = {
 				1,
 				{
 					ctor: '::',
-					_0: _ayoupov$phi$Action$UpdateSiteName('Ljubljana'),
+					_0: _ayoupov$phi$Action$UpdateSiteName('Barje'),
 					_1: {
 						ctor: '::',
-						_0: _ayoupov$phi$Action$UpdateSitePopulation(280310),
+						_0: _ayoupov$phi$Action$UpdateSitePopulation(10429),
 						_1: {
 							ctor: '::',
 							_0: _ayoupov$phi$Action$IncrementCycleCount,
@@ -23809,7 +23809,7 @@ var _ayoupov$phi$Chat_Narrative$siteNarrative = {
 						}
 					}
 				},
-				_ayoupov$phi$Chat_Model$BotMessage('Welcome to Ljubljana, a remote off-grid community located in southeast Russian region with great potential for solar power.')),
+				_ayoupov$phi$Chat_Model$BotMessage('Welcome to Barje, a remote off-grid community located in southeast Russian region with great potential for solar power.')),
 			_1: {
 				ctor: '::',
 				_0: A3(
@@ -23820,7 +23820,7 @@ var _ayoupov$phi$Chat_Narrative$siteNarrative = {
 						_0: _ayoupov$phi$Action$InitializeBudget,
 						_1: {ctor: '[]'}
 					},
-					_ayoupov$phi$Chat_Model$BotMessage('You\'ve received a Φ10,000 investment to further develop the renewable energy network in Ljubljana.')),
+					_ayoupov$phi$Chat_Model$BotMessage('You\'ve received a Φ10,000 investment to further develop the renewable energy network in Barje.')),
 				_1: {
 					ctor: '::',
 					_0: A3(
@@ -23832,7 +23832,7 @@ var _ayoupov$phi$Chat_Narrative$siteNarrative = {
 							_1: {ctor: '[]'}
 						},
 						_ayoupov$phi$Chat_Model$BotMessage(
-							A2(_elm_lang$core$Basics_ops['++'], 'On the map to the right, you\'ll see the local Phi network in Ljubljana. Phi networks are made up of ', 'four types of components. $$_PEER_$$ peers, $$_PANEL_$$ solar panels, $$_TURBINE_$$ wind turbines, and cables.'))),
+							A2(_elm_lang$core$Basics_ops['++'], 'On the map to the right, you\'ll see the local Phi network in Barje. Phi networks are made up of ', 'four types of components. $$_PEER_$$ peers, $$_PANEL_$$ solar panels, $$_TURBINE_$$ wind turbines, and cables.'))),
 					_1: {
 						ctor: '::',
 						_0: A3(
@@ -24552,34 +24552,34 @@ var _ayoupov$phi$Simulation_WeatherList$weatherTupleToWeather = function (_p0) {
 var _ayoupov$phi$Simulation_WeatherList$restWeather = function (list) {
 	var initialList = {
 		ctor: '::',
-		_0: {ctor: '_Tuple2', _0: 0.29, _1: 1},
+		_0: {ctor: '_Tuple2', _0: 0.29, _1: 0},
 		_1: {
 			ctor: '::',
-			_0: {ctor: '_Tuple2', _0: 0.155, _1: 2},
+			_0: {ctor: '_Tuple2', _0: 0.155, _1: 1},
 			_1: {
 				ctor: '::',
-				_0: {ctor: '_Tuple2', _0: 0.58, _1: 3},
+				_0: {ctor: '_Tuple2', _0: 0.58, _1: 2},
 				_1: {
 					ctor: '::',
-					_0: {ctor: '_Tuple2', _0: 0.29, _1: 4},
+					_0: {ctor: '_Tuple2', _0: 0.29, _1: 3},
 					_1: {
 						ctor: '::',
-						_0: {ctor: '_Tuple2', _0: 0.385, _1: 5},
+						_0: {ctor: '_Tuple2', _0: 0.385, _1: 4},
 						_1: {
 							ctor: '::',
-							_0: {ctor: '_Tuple2', _0: 0.645, _1: 4},
+							_0: {ctor: '_Tuple2', _0: 0.645, _1: 5},
 							_1: {
 								ctor: '::',
-								_0: {ctor: '_Tuple2', _0: 0.435, _1: 3},
+								_0: {ctor: '_Tuple2', _0: 0.435, _1: 4},
 								_1: {
 									ctor: '::',
-									_0: {ctor: '_Tuple2', _0: 0.435, _1: 2},
+									_0: {ctor: '_Tuple2', _0: 0.435, _1: 3},
 									_1: {
 										ctor: '::',
-										_0: {ctor: '_Tuple2', _0: 0.665, _1: 1},
+										_0: {ctor: '_Tuple2', _0: 0.665, _1: 2},
 										_1: {
 											ctor: '::',
-											_0: {ctor: '_Tuple2', _0: 0.415, _1: 0},
+											_0: {ctor: '_Tuple2', _0: 0.415, _1: 1},
 											_1: {
 												ctor: '::',
 												_0: {ctor: '_Tuple2', _0: 0.435, _1: 0},
@@ -26273,7 +26273,7 @@ var _ayoupov$phi$Chat_Chat$handleMultiChoiceMessage = function (action) {
 						_1: {ctor: '[]'}
 					}
 				});
-		case 'McaLaunchLjubljana':
+		case 'McaLaunchBarje':
 			return _ayoupov$phi$Chat_Narrative$processNarrative(_ayoupov$phi$Chat_Narrative$siteNarrative);
 		case 'McaSkipIntro':
 			return _elm_lang$core$Platform_Cmd$batch(
@@ -26284,7 +26284,7 @@ var _ayoupov$phi$Chat_Chat$handleMultiChoiceMessage = function (action) {
 						0.5,
 						_ayoupov$phi$Action$SendBotChatItem(
 							_ayoupov$phi$Chat_Model$MultiChoiceItem(
-								A2(_ayoupov$phi$Chat_Model$MultiChoiceMessage, 'Dobrodošli v Ljubljano | Welcome to Ljubljana.', _ayoupov$phi$Chat_Model$defaultMcaList)))),
+								A2(_ayoupov$phi$Chat_Model$MultiChoiceMessage, 'Dobrodošli v Barje | Welcome to Barje.', _ayoupov$phi$Chat_Model$defaultMcaList)))),
 					_1: {
 						ctor: '::',
 						_0: _ayoupov$phi$Chat_Narrative$showMap(
@@ -26294,13 +26294,13 @@ var _ayoupov$phi$Chat_Chat$handleMultiChoiceMessage = function (action) {
 							_0: A2(
 								_ayoupov$phi$Chat_Helpers$delayMessage,
 								0,
-								_ayoupov$phi$Action$UpdateSiteName('Ljubljana')),
+								_ayoupov$phi$Action$UpdateSiteName('Barje')),
 							_1: {
 								ctor: '::',
 								_0: A2(
 									_ayoupov$phi$Chat_Helpers$delayMessage,
 									0,
-									_ayoupov$phi$Action$UpdateSitePopulation(280310)),
+									_ayoupov$phi$Action$UpdateSitePopulation(10429)),
 								_1: {
 									ctor: '::',
 									_0: A2(_ayoupov$phi$Chat_Helpers$delayMessage, 0, _ayoupov$phi$Action$IncrementCycleCount),
@@ -27079,13 +27079,10 @@ var _ayoupov$phi$Simulation_Stats$hCount = function (network) {
 	var reducer = F2(
 		function (node, sum) {
 			var _p3 = node.label;
-			switch (_p3.ctor) {
-				case 'HousingNode':
-					return 1 + sum;
-				case 'ResilientHousingNode':
-					return 1 + sum;
-				default:
-					return sum;
+			if (_p3.ctor === 'HousingNode') {
+				return 1 + sum;
+			} else {
+				return sum;
 			}
 		});
 	return A3(
@@ -27096,7 +27093,7 @@ var _ayoupov$phi$Simulation_Stats$hCount = function (network) {
 };
 var _ayoupov$phi$Simulation_Stats$communityCoverage = function (network) {
 	return _elm_lang$core$Basics$toFloat(
-		_ayoupov$phi$Simulation_Stats$hCount(network)) / _elm_lang$core$Basics$toFloat(
+		_ayoupov$phi$Simulation_Stats$hCount(network) + _ayoupov$phi$Simulation_Stats$rhCount(network)) / _elm_lang$core$Basics$toFloat(
 		_elm_lang$core$Set$size(_ayoupov$phi$Simulation_NodeList$housingList));
 };
 var _ayoupov$phi$Simulation_Stats$updateStats = function (model) {
@@ -28097,7 +28094,7 @@ var _ayoupov$phi$View_ChatHeader$viewChatHeader = function (model) {
 																	_0: A2(_ayoupov$phi$View_ChatHeader$renderShape, _ayoupov$phi$View_ChatHeader$HIcon, 10),
 																	_1: {
 																		ctor: '::',
-																		_0: _elm_lang$html$Html$text('Housing'),
+																		_0: _elm_lang$html$Html$text('Simple housing'),
 																		_1: {
 																			ctor: '::',
 																			_0: renderNodeCount(
@@ -28143,7 +28140,7 @@ var _ayoupov$phi$View_ChatHeader$viewChatHeader = function (model) {
 																			_0: A2(_ayoupov$phi$View_ChatHeader$renderShape, _ayoupov$phi$View_ChatHeader$WPSIcon, 10),
 																			_1: {
 																				ctor: '::',
-																				_0: _elm_lang$html$Html$text('Water processing'),
+																				_0: _elm_lang$html$Html$text('WPS'),
 																				_1: {
 																					ctor: '::',
 																					_0: renderNodeCount(

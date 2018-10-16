@@ -114,9 +114,9 @@ viewChatHeader model =
                     []
                 , div
                     [ class "node_counts" ]
-                    [ div [ class "node_count_row" ] [ renderShape HIcon 10, text "Housing", renderNodeCount (hCount model.network) ]
+                    [ div [ class "node_count_row" ] [ renderShape HIcon 10, text "Simple housing", renderNodeCount (hCount model.network) ]
                     , div [ class "node_count_row" ] [ renderShape ResilientIcon 12, text "Resilient housing", renderNodeCount (rhCount model.network) ]
-                    , div [ class "node_count_row" ] [ renderShape WPSIcon 10, text "Water processing", renderNodeCount (wpCount model.network) ]
+                    , div [ class "node_count_row" ] [ renderShape WPSIcon 10, text "WPS", renderNodeCount (wpCount model.network) ]
                     ]
                 , div [ class "hline" ] []
                 , div [ class "budget_status" ]

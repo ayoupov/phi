@@ -37,7 +37,7 @@ type MultiChoiceAction
     | McaUpgradeHousing
     | McaAddWP
     | McaLeaveBuildMode
-    | McaLaunchLjubljana
+    | McaLaunchBarje
     | McaSkipIntro
     | McaIntro1
     | McaIntro2
@@ -56,13 +56,13 @@ mcaName action =
         --        McaChangeDesign ->
         --            "Change Design"
         McaBuildHousing ->
-            "Housing"
+            "Simple housing"
 
         McaUpgradeHousing ->
             "Upgrade"
 
         McaAddWP ->
-            "Water Purificators"
+            "WPS"
 
         McaRunWeek ->
             "Next Week"
@@ -70,8 +70,8 @@ mcaName action =
         McaLeaveBuildMode ->
             "Leave Build Mode"
 
-        McaLaunchLjubljana ->
-            "Load Ljubljana"
+        McaLaunchBarje ->
+            "Load Barje"
 
         McaSkipIntro ->
             "Skip Intro"
@@ -110,4 +110,4 @@ Current available commands are:
 /turn (i move to the next day)
 /describe [nodeId] (i tell you some info about a specific node)
 """
-                [ McaLaunchLjubljana, McaSkipIntro ]
+                [ McaLaunchBarje, McaSkipIntro ]

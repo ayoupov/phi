@@ -56,7 +56,7 @@ function nodeShape(d) {
 
 function peerSize(d) {
     if (d.label.nodeType == "housing") {
-        return 8 + 2 * (d.label.desiredConsumption || 0);
+        return 12 + 2 * (d.label.desiredConsumption || 0);
     } else {
         return 0;
     }
@@ -64,13 +64,13 @@ function peerSize(d) {
 
 function peerOutlineOuter(d) {
     if (d.label.nodeType == "housing") {
-        return 9.5 + 2 * (d.label.desiredConsumption || 0);
+        return 13.5 + 2 * (d.label.desiredConsumption || 0);
     }
 }
 
 function peerOutlineInner(d) {
     if (d.label.nodeType == "housing") {
-        return 6.5 + 2 * (d.label.desiredConsumption || 0);
+        return 10.5 + 2 * (d.label.desiredConsumption || 0);
     }
 }
 

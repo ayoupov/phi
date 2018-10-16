@@ -77,7 +77,7 @@ handleMultiChoiceMessage action =
             ]
                 |> Cmd.batch
 
-        McaLaunchLjubljana ->
+        McaLaunchBarje ->
             processNarrative siteNarrative
 
         McaSkipIntro ->
@@ -85,12 +85,12 @@ handleMultiChoiceMessage action =
                 (SendBotChatItem <|
                     MultiChoiceItem <|
                         MultiChoiceMessage
-                            "Dobrodošli v Ljubljano | Welcome to Ljubljana."
+                            "Dobrodošli v Barje | Welcome to Barje."
                             defaultMcaList
                 )
             , showMap ()
-            , delayMessage 0 (UpdateSiteName "Ljubljana")
-            , delayMessage 0 (UpdateSitePopulation 280310)
+            , delayMessage 0 (UpdateSiteName "Barje")
+            , delayMessage 0 (UpdateSitePopulation 10429)
             , delayMessage 0 IncrementCycleCount
             , delayMessage 0.5 InitializeNetwork
             , delayMessage 0.5 InitializeBudget

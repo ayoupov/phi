@@ -238,8 +238,12 @@ d3.xml("assets/Barje-map-for-sim-big-river-01.svg").get(function (error, documen
 //            .translate(-1140, -760)
 //            .scale(0.75);
 // 0.302498522304823, x: -205.92389416352853, y: -135.6175056505412
-              .translate(-205, -135)
-              .scale(0.3)
+//              .translate(-205, -135)
+//              .scale(0.3)
+
+// k: 0.6094308365585795 x: -1590.068485421783 y: -550.3223522249108
+              .translate(-1590, -550)
+              .scale(0.6)
     }
 
 
@@ -646,7 +650,7 @@ d3.xml("assets/Barje-map-for-sim-big-river-01.svg").get(function (error, documen
                 .append("circle")
                 .attr('cx', setX)
                 .attr('cy', setY)
-                .attr('r', 10)
+                .attr('r', 20)
                 .attr('style', function(d) {
                   return "transform-origin: " + setX(d) + "px " + setY(d) + "px;";
                 })
@@ -715,7 +719,7 @@ d3.xml("assets/Barje-map-for-sim-big-river-01.svg").get(function (error, documen
 
             //add baseNode
             nodeEnter.append("path")
-                .attr("d", addBaseNode(10))
+                .attr("d", addBaseNode(20))
                 .attr('transform', function (d) {
                     return "translate(" + (setX(d)) + "," + (setY(d)) + ")";
                 })

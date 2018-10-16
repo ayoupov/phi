@@ -19,9 +19,6 @@ hCount network =
                 HousingNode _ ->
                     1 + sum
 
-                ResilientHousingNode _ ->
-                    1 + sum
-
                 _ ->
                     sum
     in
@@ -83,7 +80,7 @@ health network =
 -- todo: change total node count
 communityCoverage : PhiNetwork -> Float
 communityCoverage network =
-    toFloat (hCount network) / (toFloat (Set.size housingList))
+    toFloat ((hCount network) + (rhCount network)) / (toFloat (Set.size housingList))
 
 
 setStats : List Stats -> Model -> Model

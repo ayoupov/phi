@@ -49,7 +49,7 @@ getStartedNarrative =
     , (MultiChoiceItem <|
         MultiChoiceMessage
             "Please click the location below to launch your simulation."
-            [ McaLaunchLjubljana ]
+            [ McaLaunchBarje ]
       )
         |> chatWithDelay 2.5 [ ToggleInputAvailable True ]
     ]
@@ -58,16 +58,16 @@ getStartedNarrative =
 siteNarrative : List NarrativeElement
 siteNarrative =
     [ initMsg (ToggleInputAvailable False)
-    , BotMessage "Dobrodošli v Ljubljano"
+    , BotMessage "Dobrodošli v Barje"
         |> chatWithDelay 1 [ ShowMap ]
-    , BotMessage "Welcome to Ljubljana, a remote off-grid community located in southeast Russian region with great potential for solar power."
-        |> chatWithDelay 1 [ UpdateSiteName "Ljubljana", UpdateSitePopulation 280310, IncrementCycleCount ]
+    , BotMessage "Welcome to Barje, a remote off-grid community located in southeast Russian region with great potential for solar power."
+        |> chatWithDelay 1 [ UpdateSiteName "Barje", UpdateSitePopulation 10429, IncrementCycleCount ]
     , (BotMessage <|
-        "You've received a Φ10,000 investment to further develop the renewable energy network in Ljubljana."
+        "You've received a Φ10,000 investment to further develop the renewable energy network in Barje."
       )
         |> chatWithDelay 3 [ InitializeBudget ]
     , BotMessage
-        ("On the map to the right, you'll see the local Phi network in Ljubljana. Phi networks are made up of "
+        ("On the map to the right, you'll see the local Phi network in Barje. Phi networks are made up of "
             ++ "four types of components. $$_PEER_$$ peers, $$_PANEL_$$ solar panels, $$_TURBINE_$$ wind turbines, and cables."
         )
         |> chatWithDelay 5 [ InitializeNetwork ]
@@ -99,7 +99,7 @@ processNarrative list =
 cycleSummary : PhiNetwork -> BotChatItem
 cycleSummary network =
     let
-        generatedEnergy =
+        generatedWater =
             floatFmt <| networkGeneratedWater network
 
         totalConsumed =
@@ -110,12 +110,12 @@ cycleSummary network =
 
         text =
             "Daily Briefing: "
-                ++ generatedEnergy
-                ++ " Joules created."
+                ++ generatedWater
+                ++ " water purified."
                 ++ totalConsumed
-                ++ " Joules burned."
+                ++ " water consumed."
                 ++ totalStored
-                ++ " surplus stored in batteries."
+                ++ " surplus stored in canisters."
     in
     MultiChoiceItem <|
         MultiChoiceMessage text
