@@ -22939,17 +22939,17 @@ var _ayoupov$phi$Simulation_Simulation$tradingPhase = function (network) {
 		_elm_community$graph$Graph$nodes(network));
 	var newSupplyChanges = F2(
 		function (tradeRatio, housing) {
-			var currentSJ = _ayoupov$phi$ListHelpers$takeFirstElementWithDefault0(housing.water.storedWater);
+			var currentSW = _ayoupov$phi$ListHelpers$takeFirstElementWithDefault0(housing.water.storedWater);
 			return {
 				ctor: '_Tuple2',
 				_0: {
 					ctor: '::',
-					_0: currentSJ - (currentSJ * tradeRatio),
+					_0: currentSW - (currentSW * tradeRatio),
 					_1: _ayoupov$phi$ListHelpers$takeTailDefaultEmpty(housing.water.storedWater)
 				},
 				_1: {
 					ctor: '::',
-					_0: currentSJ * tradeRatio,
+					_0: currentSW * tradeRatio,
 					_1: _ayoupov$phi$ListHelpers$takeTailDefaultEmpty(housing.water.tradeBalance)
 				}
 			};
@@ -23233,7 +23233,7 @@ var _ayoupov$phi$Simulation_Simulation$networkTradedEnergy = function (network) 
 };
 var _ayoupov$phi$Simulation_Simulation$updateBudget = F2(
 	function (network, budget) {
-		var waterToPhiQuotient = 150;
+		var waterToPhiQuotient = 2;
 		return {
 			ctor: '::',
 			_0: (_ayoupov$phi$Simulation_Simulation$networkTradedEnergy(network) * waterToPhiQuotient) + _ayoupov$phi$ListHelpers$takeFirstElementWithDefault0(budget),
@@ -23342,15 +23342,12 @@ var _ayoupov$phi$Simulation_Simulation$processFlood = F2(
 		var downgradeNode = function (node) {
 			var _p51 = node.label;
 			if (_p51.ctor === 'HousingNode') {
-				return A2(
-					_elm_lang$core$Debug$log,
-					'downgrading: ',
-					_elm_lang$core$Native_Utils.update(
-						node,
-						{
-							label: _ayoupov$phi$Simulation_Model$PotentialNode(
-								A2(_ayoupov$phi$Simulation_Model$Potential, _ayoupov$phi$Simulation_Model$PotentialHousing, _p51._0.pos))
-						}));
+				return _elm_lang$core$Native_Utils.update(
+					node,
+					{
+						label: _ayoupov$phi$Simulation_Model$PotentialNode(
+							A2(_ayoupov$phi$Simulation_Model$Potential, _ayoupov$phi$Simulation_Model$PotentialHousing, _p51._0.pos))
+					});
 			} else {
 				return node;
 			}
