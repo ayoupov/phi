@@ -82,7 +82,7 @@ toHousing { label, id } =
             Nothing
 
 
-findFlooded : Int -> PhiNetwork -> List NodeLabel
+findFlooded : Int -> PhiNetwork -> List (Node NodeLabel)
 findFlooded floodLevel network =
     let
         allFlooded =
@@ -102,12 +102,12 @@ findFlooded floodLevel network =
                     Set.fromList
                         []
 
-        isInFlooded: (Node NodeLabel) -> Maybe NodeLabel
-        isInFlooded {id, label} =
-            case label of
+        isInFlooded: (Node NodeLabel) -> Maybe (Node NodeLabel)
+        isInFlooded node =
+            case node.label of
                 HousingNode n ->
                     if (Set.member (ceiling n.pos.x, ceiling n.pos.y) allFlooded) then
-                        Just (label)
+                        Just (node)
                     else
                         Nothing
                 _ ->

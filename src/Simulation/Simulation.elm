@@ -20,15 +20,15 @@ processFlood : Weather -> PhiNetwork -> PhiNetwork
 processFlood weather network =
     let
 
-        flooded : List NodeLabel
+        flooded : List (Node NodeLabel)
         flooded =
             findFlooded weather.floodLevel network
 
-        downgradeNode: NodeLabel -> NodeLabel
+        downgradeNode: Node NodeLabel -> Node NodeLabel
         downgradeNode node =
-            case node of
-                HousingNode node ->
-                    Debug.log "downgrading: " (PotentialNode (Potential PotentialHousing  node.pos))
+            case node.label of
+                HousingNode l ->
+                    Debug.log "downgrading: " ({node | label = PotentialNode (Potential PotentialHousing  l.pos)})
                 _ ->
                     node
 
@@ -36,12 +36,25 @@ processFlood weather network =
             flooded
                 |> List.map downgradeNode
 
-        updateNetwork : PhiNetwork -> PhiNetwork -> PhiNetwork
-        updateNetwork source target =
-            updateNodes (Graph.nodes source) target
+        nodeUpdater n foundCtx =
+            case foundCtx of
+                Just ctx ->
+                    Just { ctx | node = n }
 
+                Nothing ->
+                    Nothing
+
+        updateNetwork : List (Node NodeLabel) -> PhiNetwork -> PhiNetwork
+        updateNetwork nodes network =
+            case nodes of
+                [] -> network
+
+                node :: tail ->
+                    network
+                    |> Graph.update node.id (node |> nodeUpdater)
+                    |> updateNetwork tail
     in
-        updateNetwork (graphFromNodeList downgradedNetwork) network
+        updateNetwork downgradedNetwork network
 
 waterToGenerators : Weather -> PhiNetwork -> PhiNetwork
 waterToGenerators weather network =

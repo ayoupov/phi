@@ -22514,20 +22514,18 @@ var _ayoupov$phi$Simulation_Helpers$findFlooded = F2(
 						{ctor: '[]'});
 			}
 		}();
-		var isInFlooded = function (_p6) {
-			var _p7 = _p6;
-			var _p10 = _p7.label;
-			var _p8 = _p10;
-			if (_p8.ctor === 'HousingNode') {
-				var _p9 = _p8._0;
+		var isInFlooded = function (node) {
+			var _p6 = node.label;
+			if (_p6.ctor === 'HousingNode') {
+				var _p7 = _p6._0;
 				return A2(
 					_elm_lang$core$Set$member,
 					{
 						ctor: '_Tuple2',
-						_0: _elm_lang$core$Basics$ceiling(_p9.pos.x),
-						_1: _elm_lang$core$Basics$ceiling(_p9.pos.y)
+						_0: _elm_lang$core$Basics$ceiling(_p7.pos.x),
+						_1: _elm_lang$core$Basics$ceiling(_p7.pos.y)
 					},
-					allFlooded) ? _elm_lang$core$Maybe$Just(_p10) : _elm_lang$core$Maybe$Nothing;
+					allFlooded) ? _elm_lang$core$Maybe$Just(node) : _elm_lang$core$Maybe$Nothing;
 			} else {
 				return _elm_lang$core$Maybe$Nothing;
 			}
@@ -22538,8 +22536,8 @@ var _ayoupov$phi$Simulation_Helpers$findFlooded = F2(
 			_elm_community$graph$Graph$nodes(housing));
 	});
 var _ayoupov$phi$Simulation_Helpers$isLiveNode = function (node) {
-	var _p11 = node.label;
-	if (_p11.ctor === 'PotentialNode') {
+	var _p8 = node.label;
+	if (_p8.ctor === 'PotentialNode') {
 		return _elm_lang$core$Maybe$Nothing;
 	} else {
 		return _elm_lang$core$Maybe$Just(node);
@@ -22551,29 +22549,29 @@ var _ayoupov$phi$Simulation_Helpers$liveNodeNetwork = function (network) {
 	}(
 		A2(
 			_elm_lang$core$List$filterMap,
-			function (_p12) {
+			function (_p9) {
 				return A2(
 					_elm_lang$core$Maybe$map,
 					function (_) {
 						return _.id;
 					},
-					_ayoupov$phi$Simulation_Helpers$isLiveNode(_p12));
+					_ayoupov$phi$Simulation_Helpers$isLiveNode(_p9));
 			},
 			_elm_community$graph$Graph$nodes(network)));
 };
 var _ayoupov$phi$Simulation_Helpers$getCoords = function (nodeLabel) {
-	var _p13 = nodeLabel;
-	switch (_p13.ctor) {
+	var _p10 = nodeLabel;
+	switch (_p10.ctor) {
 		case 'GeneratorNode':
-			return _p13._0.pos;
+			return _p10._0.pos;
 		case 'BatNode':
-			return _p13._0.pos;
+			return _p10._0.pos;
 		case 'HousingNode':
-			return _p13._0.pos;
+			return _p10._0.pos;
 		case 'ResilientHousingNode':
-			return _p13._0.pos;
+			return _p10._0.pos;
 		default:
-			return _p13._0.pos;
+			return _p10._0.pos;
 	}
 };
 var _ayoupov$phi$Simulation_Helpers$distBetweenNodes = F2(
@@ -23308,31 +23306,58 @@ var _ayoupov$phi$Simulation_Simulation$waterToGenerators = F2(
 	});
 var _ayoupov$phi$Simulation_Simulation$processFlood = F2(
 	function (weather, network) {
+		var nodeUpdater = F2(
+			function (n, foundCtx) {
+				var _p48 = foundCtx;
+				if (_p48.ctor === 'Just') {
+					return _elm_lang$core$Maybe$Just(
+						_elm_lang$core$Native_Utils.update(
+							_p48._0,
+							{node: n}));
+				} else {
+					return _elm_lang$core$Maybe$Nothing;
+				}
+			});
 		var updateNetwork = F2(
-			function (source, target) {
-				return A2(
-					_ayoupov$phi$Simulation_GraphUpdates$updateNodes,
-					_elm_community$graph$Graph$nodes(source),
-					target);
+			function (nodes, network) {
+				updateNetwork:
+				while (true) {
+					var _p49 = nodes;
+					if (_p49.ctor === '[]') {
+						return network;
+					} else {
+						var _p50 = _p49._0;
+						var _v28 = _p49._1,
+							_v29 = A3(
+							_elm_community$graph$Graph$update,
+							_p50.id,
+							nodeUpdater(_p50),
+							network);
+						nodes = _v28;
+						network = _v29;
+						continue updateNetwork;
+					}
+				}
 			});
 		var downgradeNode = function (node) {
-			var _p48 = node;
-			if (_p48.ctor === 'HousingNode') {
+			var _p51 = node.label;
+			if (_p51.ctor === 'HousingNode') {
 				return A2(
 					_elm_lang$core$Debug$log,
 					'downgrading: ',
-					_ayoupov$phi$Simulation_Model$PotentialNode(
-						A2(_ayoupov$phi$Simulation_Model$Potential, _ayoupov$phi$Simulation_Model$PotentialHousing, _p48._0.pos)));
+					_elm_lang$core$Native_Utils.update(
+						node,
+						{
+							label: _ayoupov$phi$Simulation_Model$PotentialNode(
+								A2(_ayoupov$phi$Simulation_Model$Potential, _ayoupov$phi$Simulation_Model$PotentialHousing, _p51._0.pos))
+						}));
 			} else {
 				return node;
 			}
 		};
 		var flooded = A2(_ayoupov$phi$Simulation_Helpers$findFlooded, weather.floodLevel, network);
 		var downgradedNetwork = A2(_elm_lang$core$List$map, downgradeNode, flooded);
-		return A2(
-			updateNetwork,
-			_ayoupov$phi$Simulation_GraphUpdates$graphFromNodeList(downgradedNetwork),
-			network);
+		return A2(updateNetwork, downgradedNetwork, network);
 	});
 var _ayoupov$phi$Simulation_Simulation$changeFloodLevel = _elm_lang$core$Native_Platform.outgoingPort(
 	'changeFloodLevel',
