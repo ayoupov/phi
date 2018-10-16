@@ -28,7 +28,7 @@ processFlood weather network =
         downgradeNode node =
             case node of
                 HousingNode node ->
-                    (PotentialNode (Potential PotentialHousing  node.pos))
+                    Debug.log "downgrading: " (PotentialNode (Potential PotentialHousing  node.pos))
                 _ ->
                     node
 
@@ -42,8 +42,6 @@ processFlood weather network =
 
     in
         updateNetwork (graphFromNodeList downgradedNetwork) network
-
-
 
 waterToGenerators : Weather -> PhiNetwork -> PhiNetwork
 waterToGenerators weather network =

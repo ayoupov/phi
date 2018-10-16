@@ -7,6 +7,8 @@ import Model exposing (Model)
 import Simulation.Helpers exposing (toHousing)
 import Simulation.Model exposing (..)
 import Tuple exposing (first, second)
+import Simulation.NodeList exposing (housingList)
+import Set as Set
 
 
 hCount : PhiNetwork -> Int
@@ -78,7 +80,7 @@ health network =
 -- todo: change total node count
 communityCoverage : PhiNetwork -> Float
 communityCoverage network =
-    toFloat (hCount network) / 156
+    toFloat (hCount network) / (toFloat (Set.size housingList))
 
 
 setStats : List Stats -> Model -> Model

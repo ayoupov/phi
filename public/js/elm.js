@@ -23318,8 +23318,11 @@ var _ayoupov$phi$Simulation_Simulation$processFlood = F2(
 		var downgradeNode = function (node) {
 			var _p48 = node;
 			if (_p48.ctor === 'HousingNode') {
-				return _ayoupov$phi$Simulation_Model$PotentialNode(
-					A2(_ayoupov$phi$Simulation_Model$Potential, _ayoupov$phi$Simulation_Model$PotentialHousing, _p48._0.pos));
+				return A2(
+					_elm_lang$core$Debug$log,
+					'downgrading: ',
+					_ayoupov$phi$Simulation_Model$PotentialNode(
+						A2(_ayoupov$phi$Simulation_Model$Potential, _ayoupov$phi$Simulation_Model$PotentialHousing, _p48._0.pos)));
 			} else {
 				return node;
 			}
@@ -27069,7 +27072,8 @@ var _ayoupov$phi$Simulation_Stats$hCount = function (network) {
 };
 var _ayoupov$phi$Simulation_Stats$communityCoverage = function (network) {
 	return _elm_lang$core$Basics$toFloat(
-		_ayoupov$phi$Simulation_Stats$hCount(network)) / 156;
+		_ayoupov$phi$Simulation_Stats$hCount(network)) / _elm_lang$core$Basics$toFloat(
+		_elm_lang$core$Set$size(_ayoupov$phi$Simulation_NodeList$housingList));
 };
 var _ayoupov$phi$Simulation_Stats$updateStats = function (model) {
 	var updatedStats = {
