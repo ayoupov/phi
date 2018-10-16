@@ -23715,14 +23715,14 @@ var _ayoupov$phi$Chat_Narrative$introNarrative = {
 			_ayoupov$phi$Chat_Narrative$chatWithDelay,
 			2.25,
 			{ctor: '[]'},
-			_ayoupov$phi$Chat_Model$BotMessage('Your interface to peer-to-peer energy.')),
+			_ayoupov$phi$Chat_Model$BotMessage('Your interface to decentralized systems.')),
 		_1: {
 			ctor: '::',
 			_0: A3(
 				_ayoupov$phi$Chat_Narrative$chatWithDelay,
 				2.25,
 				{ctor: '[]'},
-				_ayoupov$phi$Chat_Model$BotMessage('I can help you design, simulate, and manage renewable energy resources and biosensors.')),
+				_ayoupov$phi$Chat_Model$BotMessage('Here I can help you design, simulate, and manage clean water resources and resilient to floods infrastructure.')),
 			_1: {ctor: '[]'}
 		}
 	}
@@ -23737,7 +23737,7 @@ var _ayoupov$phi$Chat_Narrative$aboutHealthNarrative = {
 			_0: _ayoupov$phi$Action$ToggleInputAvailable(true),
 			_1: {ctor: '[]'}
 		},
-		_ayoupov$phi$Chat_Model$BotMessage('The Health meter compares the water requested by the Community with the water available.')),
+		_ayoupov$phi$Chat_Model$BotMessage('You can decide how to spend your investment: on building simple housing [symbol], upgrading it to a resilient one [symbol], or buying WPS [symbol]. But remember, the goal of the simulation is to make the community of Barje resilient to upcoming floods. You can check your simulation performance with the Health and Coverage parameters in the up-left corner. ')),
 	_1: {
 		ctor: '::',
 		_0: A3(
@@ -23751,7 +23751,7 @@ var _ayoupov$phi$Chat_Narrative$aboutHealthNarrative = {
 				_ayoupov$phi$Chat_Narrative$chatWithDelay,
 				3,
 				{ctor: '[]'},
-				_ayoupov$phi$Chat_Model$BotMessage('Click the button below to load the map.')),
+				_ayoupov$phi$Chat_Model$BotMessage('Please click the location below to launch your simulation.')),
 			_1: {ctor: '[]'}
 		}
 	}
@@ -23815,7 +23815,7 @@ var _ayoupov$phi$Chat_Narrative$siteNarrative = {
 						}
 					}
 				},
-				_ayoupov$phi$Chat_Model$BotMessage('Welcome to Barje, a remote off-grid community located in southeast Russian region with great potential for solar power.')),
+				_ayoupov$phi$Chat_Model$BotMessage('Welcome to Barje, a southern region of Ljubljana with the unexplored potential of water resources.')),
 			_1: {
 				ctor: '::',
 				_0: A3(
@@ -23826,39 +23826,47 @@ var _ayoupov$phi$Chat_Narrative$siteNarrative = {
 						_0: _ayoupov$phi$Action$InitializeBudget,
 						_1: {ctor: '[]'}
 					},
-					_ayoupov$phi$Chat_Model$BotMessage('You\'ve received a Φ10,000 investment to further develop the renewable energy network in Barje.')),
+					_ayoupov$phi$Chat_Model$BotMessage('Expecting an upcoming flood you\'ve been given a Φ10,000 investment to construct and further develop the decentralized water management system and resilient to floods housing in Barje area.')),
 				_1: {
 					ctor: '::',
 					_0: A3(
 						_ayoupov$phi$Chat_Narrative$chatWithDelay,
-						5,
+						6,
 						{
 							ctor: '::',
 							_0: _ayoupov$phi$Action$InitializeNetwork,
 							_1: {ctor: '[]'}
 						},
 						_ayoupov$phi$Chat_Model$BotMessage(
-							A2(_elm_lang$core$Basics_ops['++'], 'On the map to the right, you\'ll see the local Phi network in Barje. Phi networks are made up of ', 'four types of components. $$_PEER_$$ peers, $$_PANEL_$$ solar panels, $$_TURBINE_$$ wind turbines, and cables.'))),
+							A2(_elm_lang$core$Basics_ops['++'], 'On the map to the right, you\'ll see the map of Barje, where you can start to build a local Phi network. The Phi network is made up of four types of components: ', ' $$_PEER_$$ simple housing, $$_TURBINE_$$ resilient housing and $$_PANEL_$$ Water Purification Stations (WPS).'))),
 					_1: {
 						ctor: '::',
 						_0: A3(
 							_ayoupov$phi$Chat_Narrative$chatWithDelay,
-							7,
-							{
-								ctor: '::',
-								_0: _ayoupov$phi$Action$ToggleInputAvailable(true),
-								_1: {ctor: '[]'}
-							},
-							_ayoupov$phi$Chat_Model$MultiChoiceItem(
-								A2(_ayoupov$phi$Chat_Model$MultiChoiceMessage, 'To begin building your network, select from the buttons below.', _ayoupov$phi$Chat_Model$defaultMcaList))),
+							4,
+							{ctor: '[]'},
+							_ayoupov$phi$Chat_Model$BotMessage('You can decide how to spend your investment: on building simple housing $$_PEER_$$, upgrading it to a resilient one $$_TURBINE_$$, or buying WPS $$_PANEL_$$. But remember, the goal of the simulation is to make the community of Barje resilient to upcoming floods. You can check your simulation performance with the Health and Coverage parameters in the up-left corner. ')),
 						_1: {
 							ctor: '::',
 							_0: A3(
 								_ayoupov$phi$Chat_Narrative$chatWithDelay,
-								3,
-								{ctor: '[]'},
-								_ayoupov$phi$Chat_Model$BotMessage('Don\'t forget, you can always ask me anything if you have specific questions.')),
-							_1: {ctor: '[]'}
+								7,
+								{
+									ctor: '::',
+									_0: _ayoupov$phi$Action$ToggleInputAvailable(true),
+									_1: {ctor: '[]'}
+								},
+								_ayoupov$phi$Chat_Model$MultiChoiceItem(
+									A2(_ayoupov$phi$Chat_Model$MultiChoiceMessage, 'To begin building your network, select from the buttons below. You can also zoom in and out the map.', _ayoupov$phi$Chat_Model$defaultMcaList))),
+							_1: {
+								ctor: '::',
+								_0: A3(
+									_ayoupov$phi$Chat_Narrative$chatWithDelay,
+									3,
+									{ctor: '[]'},
+									_ayoupov$phi$Chat_Model$BotMessage('Don\'t forget, you can always ask me anything if you have specific questions.')),
+								_1: {ctor: '[]'}
+							}
 						}
 					}
 				}

@@ -25,20 +25,20 @@ introNarrative : List NarrativeElement
 introNarrative =
     [ BotMessage "Hello, I'm Phi."
         |> chatWithDelay 1.5 []
-    , BotMessage "Your interface to peer-to-peer energy."
+    , BotMessage "Your interface to decentralized systems."
         |> chatWithDelay 2.25 []
-    , BotMessage "I can help you design, simulate, and manage renewable energy resources and biosensors."
+    , BotMessage "Here I can help you design, simulate, and manage clean water resources and resilient to floods infrastructure."
         |> chatWithDelay 2.25 []
     ]
 
 
 aboutHealthNarrative : List NarrativeElement
 aboutHealthNarrative =
-    [ BotMessage "The Health meter compares the water requested by the Community with the water available."
+    [ BotMessage "You can decide how to spend your investment: on building simple housing [symbol], upgrading it to a resilient one [symbol], or buying WPS [symbol]. But remember, the goal of the simulation is to make the community of Barje resilient to upcoming floods. You can check your simulation performance with the Health and Coverage parameters in the up-left corner. "
         |> chatWithDelay 1.5 [ ToggleInputAvailable True ]
     , BotMessage "The Coverage meter compares the size of your Community with the population of the area."
         |> chatWithDelay 2 []
-    , BotMessage "Click the button below to load the map."
+    , BotMessage "Please click the location below to launch your simulation."
         |> chatWithDelay 3 []
     ]
 
@@ -60,20 +60,23 @@ siteNarrative =
     [ initMsg (ToggleInputAvailable False)
     , BotMessage "Dobrodošli v Barje"
         |> chatWithDelay 1 [ ShowMap ]
-    , BotMessage "Welcome to Barje, a remote off-grid community located in southeast Russian region with great potential for solar power."
+    , BotMessage "Welcome to Barje, a southern region of Ljubljana with the unexplored potential of water resources."
         |> chatWithDelay 1 [ UpdateSiteName "Barje", UpdateSitePopulation 10429, IncrementCycleCount ]
     , (BotMessage <|
-        "You've received a Φ10,000 investment to further develop the renewable energy network in Barje."
+        "Expecting an upcoming flood you've been given a Φ10,000 investment to construct and further develop the decentralized water management system and resilient to floods housing in Barje area."
       )
         |> chatWithDelay 3 [ InitializeBudget ]
     , BotMessage
-        ("On the map to the right, you'll see the local Phi network in Barje. Phi networks are made up of "
-            ++ "four types of components. $$_PEER_$$ peers, $$_PANEL_$$ solar panels, $$_TURBINE_$$ wind turbines, and cables."
+        ("On the map to the right, you'll see the map of Barje, where you can start to build a local Phi network. The Phi network is made up of four types of components: "
+            ++ " $$_PEER_$$ simple housing, $$_TURBINE_$$ resilient housing and $$_PANEL_$$ Water Purification Stations (WPS)."
         )
-        |> chatWithDelay 5 [ InitializeNetwork ]
+        |> chatWithDelay 6 [ InitializeNetwork ]
+    , BotMessage
+        "You can decide how to spend your investment: on building simple housing $$_PEER_$$, upgrading it to a resilient one $$_TURBINE_$$, or buying WPS $$_PANEL_$$. But remember, the goal of the simulation is to make the community of Barje resilient to upcoming floods. You can check your simulation performance with the Health and Coverage parameters in the up-left corner. "
+        |> chatWithDelay 4 []
     , (MultiChoiceItem <|
         MultiChoiceMessage
-            "To begin building your network, select from the buttons below."
+            "To begin building your network, select from the buttons below. You can also zoom in and out the map."
             defaultMcaList
       )
         |> chatWithDelay 7 [ ToggleInputAvailable True ]
