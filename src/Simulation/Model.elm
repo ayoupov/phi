@@ -159,7 +159,7 @@ type alias WaterPurificator =
 defaultGenerator : WaterPurificator
 defaultGenerator =
     { dailyGeneration = [ 0 ]
-    , maxGeneration = 6.0
+    , maxGeneration = 20.0
     , pos = { x = 0, y = 0 }
     }
 

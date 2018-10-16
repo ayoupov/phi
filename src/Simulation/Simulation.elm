@@ -115,7 +115,7 @@ networkConsumedWater network =
     Graph.nodes network
         |> List.filterMap nodeConsumedWater
         |> List.sum
-        |> Debug.log "consumed"
+--        |> Debug.log "consumed"
 
 
 networkTradedWater : PhiNetwork -> Water
@@ -140,7 +140,6 @@ networkTradedWater network =
         |> List.filterMap nodeTradedWater
         |> List.sum
 
-
 networkGeneratedWater : PhiNetwork -> Water
 networkGeneratedWater network =
     let
@@ -158,7 +157,7 @@ networkGeneratedWater network =
     Graph.nodes network
         |> List.filterMap nodeGeneratedWater
         |> List.sum
-        |> Debug.log "network generated"
+--        |> Debug.log "network generated"
 
 
 -- update helpers
@@ -223,7 +222,7 @@ distributeGeneratedWater limit ratio network =
     let
         totalGeneratedWater =
             networkGeneratedWater network
-            |> Debug.log "total gen water"
+--            |> Debug.log "total gen water"
 
         weightedSeed housing seedFactor =
             seedFactor * 0.3
@@ -247,36 +246,37 @@ distributeGeneratedWater limit ratio network =
             Graph.nodes network
                 |> List.filterMap (toHousing >> Maybe.map (.water >> .desiredConsumption))
                 |> List.sum
-                |> Debug.log "network desired "
+--                |> Debug.log "network desired "
 
         allocatedWater : Housing -> Water
         allocatedWater housing =
             weightConstant
-                * (Debug.log "hwdc" housing.water.desiredConsumption)
+--                * (Debug.log "hwdc" housing.water.desiredConsumption)
+                * housing.water.desiredConsumption
                 * totalGeneratedWater
-            |> Debug.log "alloc water"
+--            |> Debug.log "alloc water"
 
         updateHousing : Housing -> Housing
         updateHousing housing =
             let
                 myAllocatedWater =
                     allocatedWater housing
-                    |> Debug.log "my alloc water"
+--                    |> Debug.log "my alloc water"
 
 
                 waterForStorage =
                     myAllocatedWater
                         - housing.water.desiredConsumption
                         |> Basics.max 0
-                        |> Debug.log "water for storage"
+--                        |> Debug.log "water for storage"
 
                 newStoredWater =
                     waterForStorage + takeFirstElementWithDefault0 housing.water.storedWater
-                    |> Debug.log "new stored water"
+--                    |> Debug.log "new stored water"
 
                 newConsumption =
                     myAllocatedWater - waterForStorage
-                    |> Debug.log "new consumption "
+--                    |> Debug.log "new consumption "
 
             in
             housing.water
@@ -468,7 +468,7 @@ tradingPhase network =
             let
                 initialPool =
                     getInitialPool
-                    |> Debug.log "initial pool"
+--                    |> Debug.log "initial pool"
 
                 demandList =
                     nodesInDistress
@@ -482,8 +482,8 @@ tradingPhase network =
                             0
 
                         _ ->
---                            (initialPool - poolLeft) / initialPool
-                            0.01
+                            Basics.max ((initialPool - poolLeft) / initialPool) 0.05
+--                            0.01
 
                 ( poolLeft, updatedDemandNodes ) =
                     updateNodeListDemand initialPool demandList

@@ -19,6 +19,9 @@ hCount network =
                 HousingNode _ ->
                     1 + sum
 
+                ResilientHousingNode _ ->
+                    1 + sum
+
                 _ ->
                     sum
     in

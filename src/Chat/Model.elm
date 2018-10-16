@@ -56,13 +56,13 @@ mcaName action =
         --        McaChangeDesign ->
         --            "Change Design"
         McaBuildHousing ->
-            "Build Housing"
+            "Housing"
 
         McaUpgradeHousing ->
-            "Upgrade Housing"
+            "Upgrade"
 
         McaAddWP ->
-            "Water Purificator"
+            "Water Purificators"
 
         McaRunWeek ->
             "Next Week"

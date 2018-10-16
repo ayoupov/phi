@@ -7857,11 +7857,11 @@ var _ayoupov$phi$Chat_Model$mcaName = function (action) {
 		case 'McaWeatherForecast':
 			return 'Weather';
 		case 'McaBuildHousing':
-			return 'Build Housing';
+			return 'Housing';
 		case 'McaUpgradeHousing':
-			return 'Upgrade Housing';
+			return 'Upgrade';
 		case 'McaAddWP':
-			return 'Water Purificator';
+			return 'Water Purificators';
 		case 'McaRunWeek':
 			return 'Next Week';
 		case 'McaLeaveBuildMode':
@@ -17138,7 +17138,7 @@ var _ayoupov$phi$Simulation_Model$defaultGenerator = {
 		_0: 0,
 		_1: {ctor: '[]'}
 	},
-	maxGeneration: 6.0,
+	maxGeneration: 20.0,
 	pos: {x: 0, y: 0}
 };
 var _ayoupov$phi$Simulation_Model$tupleToCoords = function (_p0) {
@@ -23091,21 +23091,21 @@ var _ayoupov$phi$Simulation_Simulation$tradingPhase = function (network) {
 			},
 			_elm_community$graph$Graph$nodes(network)));
 	var updateNetwork = function () {
-		var tradeRatioValue = F2(
-			function (initialPool, actualPool) {
-				var _p27 = initialPool;
-				if (_p27 === 0) {
-					return 0;
-				} else {
-					return 1.0e-2;
-				}
-			});
 		var supplyList = supplyNodes;
 		var demandList = nodesInDistress;
-		var initialPool = A2(_elm_lang$core$Debug$log, 'initial pool', getInitialPool);
-		var _p28 = A2(updateNodeListDemand, initialPool, demandList);
-		var poolLeft = _p28._0;
-		var updatedDemandNodes = _p28._1;
+		var initialPool = getInitialPool;
+		var _p27 = A2(updateNodeListDemand, initialPool, demandList);
+		var poolLeft = _p27._0;
+		var updatedDemandNodes = _p27._1;
+		var tradeRatioValue = F2(
+			function (initialPool, actualPool) {
+				var _p28 = initialPool;
+				if (_p28 === 0) {
+					return 0;
+				} else {
+					return A2(_elm_lang$core$Basics$max, (initialPool - poolLeft) / initialPool, 5.0e-2);
+				}
+			});
 		var updatedSupplyNodes = A2(
 			updateNodeListSupply,
 			A2(tradeRatioValue, initialPool, poolLeft),
@@ -23130,37 +23130,31 @@ var _ayoupov$phi$Simulation_Simulation$networkGeneratedWater = function (network
 				return _elm_lang$core$Maybe$Nothing;
 		}
 	};
-	return A2(
-		_elm_lang$core$Debug$log,
-		'network generated',
-		_elm_lang$core$List$sum(
-			A2(
-				_elm_lang$core$List$filterMap,
-				nodeGeneratedWater,
-				_elm_community$graph$Graph$nodes(network))));
+	return _elm_lang$core$List$sum(
+		A2(
+			_elm_lang$core$List$filterMap,
+			nodeGeneratedWater,
+			_elm_community$graph$Graph$nodes(network)));
 };
 var _ayoupov$phi$Simulation_Simulation$distributeGeneratedWater = F3(
 	function (limit, ratio, network) {
-		var networkDesiredEnergy = A2(
-			_elm_lang$core$Debug$log,
-			'network desired ',
-			_elm_lang$core$List$sum(
-				A2(
-					_elm_lang$core$List$filterMap,
-					function (_p32) {
-						return A2(
-							_elm_lang$core$Maybe$map,
-							function (_p33) {
-								return function (_) {
-									return _.desiredConsumption;
-								}(
-									function (_) {
-										return _.water;
-									}(_p33));
-							},
-							_ayoupov$phi$Simulation_Helpers$toHousing(_p32));
-					},
-					_elm_community$graph$Graph$nodes(network))));
+		var networkDesiredEnergy = _elm_lang$core$List$sum(
+			A2(
+				_elm_lang$core$List$filterMap,
+				function (_p32) {
+					return A2(
+						_elm_lang$core$Maybe$map,
+						function (_p33) {
+							return function (_) {
+								return _.desiredConsumption;
+							}(
+								function (_) {
+									return _.water;
+								}(_p33));
+						},
+						_ayoupov$phi$Simulation_Helpers$toHousing(_p32));
+				},
+				_elm_community$graph$Graph$nodes(network)));
 		var weightedSeed = F2(
 			function (housing, seedFactor) {
 				return seedFactor * 0.3;
@@ -23186,30 +23180,15 @@ var _ayoupov$phi$Simulation_Simulation$distributeGeneratedWater = F3(
 							_ayoupov$phi$Simulation_Helpers$toHousing(_p34));
 					},
 					_elm_community$graph$Graph$nodes(network))));
-		var totalGeneratedWater = A2(
-			_elm_lang$core$Debug$log,
-			'total gen water',
-			_ayoupov$phi$Simulation_Simulation$networkGeneratedWater(network));
+		var totalGeneratedWater = _ayoupov$phi$Simulation_Simulation$networkGeneratedWater(network);
 		var allocatedWater = function (housing) {
-			return A2(
-				_elm_lang$core$Debug$log,
-				'alloc water',
-				(weightConstant * A2(_elm_lang$core$Debug$log, 'hwdc', housing.water.desiredConsumption)) * totalGeneratedWater);
+			return (weightConstant * housing.water.desiredConsumption) * totalGeneratedWater;
 		};
 		var updateHousing = function (housing) {
-			var myAllocatedWater = A2(
-				_elm_lang$core$Debug$log,
-				'my alloc water',
-				allocatedWater(housing));
-			var waterForStorage = A2(
-				_elm_lang$core$Debug$log,
-				'water for storage',
-				A2(_elm_lang$core$Basics$max, 0, myAllocatedWater - housing.water.desiredConsumption));
-			var newStoredWater = A2(
-				_elm_lang$core$Debug$log,
-				'new stored water',
-				waterForStorage + _ayoupov$phi$ListHelpers$takeFirstElementWithDefault0(housing.water.storedWater));
-			var newConsumption = A2(_elm_lang$core$Debug$log, 'new consumption ', myAllocatedWater - waterForStorage);
+			var myAllocatedWater = allocatedWater(housing);
+			var waterForStorage = A2(_elm_lang$core$Basics$max, 0, myAllocatedWater - housing.water.desiredConsumption);
+			var newStoredWater = waterForStorage + _ayoupov$phi$ListHelpers$takeFirstElementWithDefault0(housing.water.storedWater);
+			var newConsumption = myAllocatedWater - waterForStorage;
 			return A2(
 				_ayoupov$phi$Simulation_Simulation$asWaterIn,
 				housing,
@@ -23270,14 +23249,11 @@ var _ayoupov$phi$Simulation_Simulation$networkConsumedWater = function (network)
 			return _elm_lang$core$Maybe$Nothing;
 		}
 	};
-	return A2(
-		_elm_lang$core$Debug$log,
-		'consumed',
-		_elm_lang$core$List$sum(
-			A2(
-				_elm_lang$core$List$filterMap,
-				nodeConsumedWater,
-				_elm_community$graph$Graph$nodes(network))));
+	return _elm_lang$core$List$sum(
+		A2(
+			_elm_lang$core$List$filterMap,
+			nodeConsumedWater,
+			_elm_community$graph$Graph$nodes(network)));
 };
 var _ayoupov$phi$Simulation_Simulation$networkStoredWater = function (network) {
 	var nodeStoredWater = function (_p42) {
@@ -27103,10 +27079,13 @@ var _ayoupov$phi$Simulation_Stats$hCount = function (network) {
 	var reducer = F2(
 		function (node, sum) {
 			var _p3 = node.label;
-			if (_p3.ctor === 'HousingNode') {
-				return 1 + sum;
-			} else {
-				return sum;
+			switch (_p3.ctor) {
+				case 'HousingNode':
+					return 1 + sum;
+				case 'ResilientHousingNode':
+					return 1 + sum;
+				default:
+					return sum;
 			}
 		});
 	return A3(
