@@ -846,17 +846,18 @@ d3.xml("assets/Barje-map-for-sim-big-river-02.svg").get(function (error, documen
             location.reload(true);
     });
 
-});
-
     for (var i = 1; i < 6; i++)
     {
-        d3.xml("assets/floods"+i+"-01.svg").get(function (error, documentFragment) {
+        d3.xml("assets/floods"+i+"-02.svg").get(function (error, documentFragment) {
             if (error) throw error;
             var svgNode = documentFragment.getElementsByTagName("svg")[0];
             $(svgNode).addClass("flood").hide();
             container.node().appendChild(svgNode);
         });
     }
+
+});
+
 });
 
 var prevFloodLevel = 0;
