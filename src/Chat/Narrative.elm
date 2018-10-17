@@ -67,7 +67,7 @@ siteNarrative =
       )
         |> chatWithDelay 3 [ InitializeBudget ]
     , BotMessage
-        ("On the map to the right, you'll see the map of Barje, where you can start to build a local Phi network. The Phi network is made up of four types of components: "
+        ("On the map to the right, you'll see the map of Barje, where you can start to build a local Phi network. The Phi network is made up of three types of components: "
             ++ " $$_PEER_$$ simple housing, $$_TURBINE_$$ resilient housing and $$_PANEL_$$ Water Purification Stations (WPS)."
         )
         |> chatWithDelay 6 [ InitializeNetwork ]

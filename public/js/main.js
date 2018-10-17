@@ -215,7 +215,7 @@ $(function () {
 // Load SVG Map from file, append to container
 // and set container with graph elements
 
-d3.xml("assets/Barje-map-for-sim-big-river-01.svg").get(function (error, documentFragment) {
+d3.xml("assets/Barje-map-for-sim-big-river-02.svg").get(function (error, documentFragment) {
     if (error) throw error;
     var svgNode = documentFragment.getElementsByTagName("svg")[0];
 

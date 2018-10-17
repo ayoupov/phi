@@ -23838,7 +23838,7 @@ var _ayoupov$phi$Chat_Narrative$siteNarrative = {
 							_1: {ctor: '[]'}
 						},
 						_ayoupov$phi$Chat_Model$BotMessage(
-							A2(_elm_lang$core$Basics_ops['++'], 'On the map to the right, you\'ll see the map of Barje, where you can start to build a local Phi network. The Phi network is made up of four types of components: ', ' $$_PEER_$$ simple housing, $$_TURBINE_$$ resilient housing and $$_PANEL_$$ Water Purification Stations (WPS).'))),
+							A2(_elm_lang$core$Basics_ops['++'], 'On the map to the right, you\'ll see the map of Barje, where you can start to build a local Phi network. The Phi network is made up of three types of components: ', ' $$_PEER_$$ simple housing, $$_TURBINE_$$ resilient housing and $$_PANEL_$$ Water Purification Stations (WPS).'))),
 					_1: {
 						ctor: '::',
 						_0: A3(
