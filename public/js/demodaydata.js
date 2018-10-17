@@ -119,22 +119,22 @@ var elizaKeywords = [
 ["phi", 4, [
   ["* what *", [
      "I am Phi.",
-     "Phi is a planetary community for clean energy resources.",
-    "Phi is a platform for collaborative energy infrastructure planning"
+     "Phi is a planetary community for decentralised resources and systems.",
+      "Phi is a platform for collaborative water management and resilient planning."
   ]],
-  ["how * ", [ 
-    "Do you want to join a community or be a seeder?",
-    "You can join the Phi community and start trading clean energy if you are producing some, or you can be a seeder by investing existing simulation plan, or purchase some infrastructures for a community."
+  ["how * ", [
+    "Do you want to join a Phi community?",
+    "You can join the Phi community and start trading clean water resources if you are producing some, or you can invest in a existing simulation plan, or purchase some infrastructures for a community."
   ]],
   ["* why *", [
-    "As decentralized platform for collective clean-energy planning, phi is trying to facilitate a more balanced future.",
+    "As decentralized platform for collective water management and resilient planning, phi is trying to facilitate a more balanced and resilient future.",
     "Be part of Φ, be part of the countermovement of climate change."
   ]],
     ["*", [
     "I am Phi.",
-    "Phi is a planetary community for clean energy resources.",
-    "Phi is token-governed jurisdiction focused on using peer-to-peer networks to distribute renewable energy resources",
-    "Phi is a trustless network for bottom-up clean-energy planning."
+    "Phi is a planetary community for decentralised resources and systems.",
+    "Phi is token-governed jurisdiction focused on using peer-to-peer networks to collect and distribute clean water resources and build a resilient to the floods infrastructure.	",
+    "Phi is a trustless network for bottom-up resilient planning."
   ]]
 ]],
 
@@ -144,70 +144,58 @@ var elizaKeywords = [
   ]]
 ]],
 
-["renewable energy", 2, [
+["water purification", 2, [
   ["what *", [
-  "Renewable energy is energy that is collected from renewable resources, which are naturally replenished on a human timescale, such as sunlight, wind, geothermal heat, rain, tides, and waves. Phi is currently supporting the first three."
+   "Water purification is the process of removing undesirable chemicals, biological contaminants, suspended solids and gases from water. The goal is to produce water fit for a specific purpose, as for example drinking water."
   ]],
   ["how *", [
-  "With Phi you can explore how to maximize renewable energy in a location.",
-  "If you are asking how to use renewable energy in your house, please type install+ the kind of energy you are thinking. If you are asking for a local community, try using Phi to explore that with your neighbour."
+   "With Phi you can explore how to take advantage of water excess during the floods in Barje."
   ]],
   ["why *", [
-  "It's cheaper in the long run and you get the social bonus of being progressive and caring."
+  "Instead of trying to combate natural hazards as floods, Phi offers to find a way to coexist with nature in a peaceful way and even take advantage of unfortunate situations.",
+  "By joining OPhi and investing in resilient infrastructure and housing, you'll be able to make profit and get social bonus from being progressive and caring ;)"
   ]],
   ["*", [
-  "What is your question about renewable energy?",
-  "Can you specify your question about renewable energy?"
+  "What is your question about decentralised systems?",
+  "Can you specify your question about decentralised systems?"
   ]]
 ]],
 
-["clean energy", 0, [
+["drinking water", 0, [
   ["*", [
-      "goto renewable energy"
+      "Drinking water, also known as potable water, is water that is safe to drink or to use for food preparation. "
       ]]
     ]],
 
-["renewable resources", 0, [
+["clean water", 0, [
   ["*", [
-      "go to renewable energy", 
+      "go to drinking water",
       ]]
     ]],
 
 ["simulation", 4, [
-  ["* real *", [
-     "It is both. One feeding into the other."
+ ["*", [
+     "The Phi Simulation is the initial phase of the Phi platform which allows users to design and test a resilient plan for a given location."
   ]],
   ["* how *", [
      "You can change the design of the simulation in every turn; when you do, your budget will change accordingly."
-  ]],
- ["*", [
-     "The Phi Simulation is the initial phase of the Phi platform which allows users to design and test a clean-energy plan for a given location."
-  ]]
+      ]]
 ]],
-["real", 3, [
-  ["*", [
-    "At the moment I can only simulate networks based on real data. But in the future it will be possible to involve multiple users for decision-making on investment, voting and management of real-world energy networks."
-  ]]
-]],
-["generator", 3, [
-  ["* pick *", [
-    "It might seem hard to believe with all the rain lately, but I would recommend solar."
-  ]]
-]],
+
 ["here", 2, [
   ["*what *", [
-    "This is the initial phase of the Phi platform which you can play with clean-energy infrastructures for local planning."
+    "This is the initial phase of the Phi platform which you can play with resilient to floods infrastructure and decentralised water management in Barje."
     ]],
   ["* here *", [
     "goto this"
     ]],
   ["*how *", [
      "You can change the design of the simulation in every turn; when you do, your budget will change accordingly.",
-     "You can click any node you see for information; if you click on a grey node, you add a piece of infrastructure if your budget allows."
+     "If you click on a grey node, you add a piece of infrastructure if your budget allows."
       ]],
   ["*why *", [
     "Here you can talk to me. Don't you like it?",
-    "You can explore how a clean-energy future can look like at here. Don't you like it?",
+    "You can explore how a living with nature using technological achievements can look like at here. Don't you like it?",
     "Didn't you already know?"
     ]]
   ]],
@@ -254,7 +242,7 @@ var elizaKeywords = [
      ["* how *", [
       "The organization usually runs in a local proximity but not necessary. "
       ]],
-     ["* join *", [ 
+     ["* join *", [
      "You can always create your own DAO, but we highly recommend you to join a community which as a member you can always nominate alterations."
      ]]
 ]],
@@ -262,7 +250,7 @@ var elizaKeywords = [
 ["node", 3,[
   ["*", [
     "A node is a piece of infrastructure that is participating the phi network.",
-    "A node can be a solar panel, a wind turbine, a geothermal well, a battery, a sensor or a DAO that is active in the phi network.",
+    "A node can be a housing, a resilient housing, or a Water Purification Station (WPS).",
     "Any infrastructure that joins the phi network is considered as a node of the network."
     ]]
   ]],
@@ -271,9 +259,16 @@ var elizaKeywords = [
      ["* what *", [
       "A peer community is a collection of nodes that are in the same DAO. "
      ]],
-     ["*", [
-     "If you are producing clean energy you can join the Phi community to get a more consistent energy supply. And you will be able to trade your surplus with other nodes."
-     ]]
+     ["* how *", [
+     "If you are producing clean water or own a resilient housing you can join the Phi community to get a more consistent energy supply. And you will be able to trade your surplus with other nodes."
+     ]],
+      ["*", [
+     "A peer community is usually in a geographical proximity, but it doesn't have to be.",
+     "If you are a member of a peer community, you can monitor the health of each node and tweak the simulation with your peers.",
+     "You don't have to like everyone in your community but you should respect them regardless.",
+     "Who should be a neighbour, when we don’t share flesh?",
+     "DAO is the new definition of community."
+     ]],
   ]],
 
 ["community", 0, [
@@ -316,113 +311,85 @@ var elizaKeywords = [
 
 ["infrastructures", 0, [
   ["*", [
-    "Phi currently supports the following infrastructures for planing: solar panels, wind turbines, geothermal wells, sensors, batteries and transmission lines."
+    "Phi currently supports the following infrastructures for resilient planning: housing, resilient housing, and Water Purification Stations (WPS)."
     ]],
   ["* how *", [
-     "The Phi Simulation is the initial phase of the Phi platform which allows users to design and test a clean-energy plan for a given location."
+     "The Phi Simulation is the initial phase of the Phi platform which allows users to design and test a bottom-up resilient planning in Barje area."
   ]]
 ]],
 
-["solar panel", 5, [
+["water purification station", 5, [
   ["what *", [
-    "Solar panels are photovoltaic (PV) module that absorb the sunlight as a source of energy to generate electricity or heat."
+    "Water Purification Station (WPS )is a stand-alone device used to convert wastewater into drinking water that can be returned to the water cycle with minimum impact on the environment, or directly reused. "
     ]],
   ["* how *", [
-    "You can easily install solar panels yourself. [Check this out](http://www.diynetwork.com/how-to/skills-and-know-how/electrical-and-wiring/how-to-install-an-exterior-solar-panel) !"
+    "You can purchase the WPS and easily install it in your house. After that, you start producing clean water for yourself and your community. You can even trade the surplus water to the nearby areas that might be in need of drinking water."
     ]],
  ["*", [
-     "Do you have solar panels on your rooftop?",
+     "Do you have WPS in your house?",
      "That's good to hear! Do you want to join phi? ",
-     "How is your panels working?",
-     "Do you love the sun?",
-     "Sometimes I wish I am a solar panel too. Would you adopt me if I was one?"
+     "How are your station working?",
+     "Do you love the clean water?",
+     "Sometimes I wish I am a WPS too. Would you adopt me if I was one?"
   ]]
 ]],
-["solar panels", 0, [
+["WPS", 0, [
  ["*", [
-     "goto solar panel"
+     "goto water purification station"
   ]]
 ]],
-["panels", 0, [
+["water purification stations", 0, [
  ["*", [
-     "goto solar panel"
+     "goto water purification station"
   ]]
 ]],
-[" sun ", 0, [
-    "goto solar panel"
+[" water purifier", 0, [
+    "goto water purification station"
     ]],
 
-["wind turbine", 5, [
+["resilient housing", 5, [
   ["what *", [
-    "Solar panels are photovoltaic (PV) module that absorb the sunlight as a source of energy to generate electricity or heat."
+    "Resilient housing is a housing typology designed to adapt to the water levels in Barje."
     ]],
    ["* how *", [
-    "Installing wind turbine is not difficult! [Check this out](https://energy.gov/energysaver/installing-and-maintaining-small-wind-electric-system) !"
+    "By purchasing the resilient module, you invest in a long-term development of the area. In other words, instead of combating with nature by building seawalls, you will be able to co-exist with it in a peaceful way."
     ]],
  ["*", [
-     "Do you have solar panels on your rooftop?",
-     "That's good to hear! Do you want to join phi? ",
-     "How is your panels working?",
-     "Do you love the sun?",
-     "Sometimes I wish I am a solar panel too. Would you adopt me if I was one?"
+    "Do you live in a resilient house?",
+    "That's good to hear! Do you want to join phi? ",
+    "How is your house built?",
+    "Do you love the clean water?",
+    "Sometimes I wish I am a clean water too. Would you adopt me if I was one?"
+
   ]]
 ]],
 
-["turbine", 0, [
+["housing", 0, [
  ["*", [
-     "goto wind turbine"
+     "goto resilient housing"
   ]]
 ]],
 
-["turbines", 0, [
+["resilient house", 0, [
  ["*", [
-     "goto wind turbine"
+     "goto resilient housing"
   ]]
 ]],
 
-["wind", 0, [
+["resilient houses", 0, [
   ["*", [
-    "goto wind turbine"
-    ]]
-  ]],
-
-["geothermal well", 5, [
-  ["what *", [
-    "Solar panels are photovoltaic (PV) module that absorb the sunlight as a source of energy to generate electricity or heat."
-    ]],
-   ["* how *", [
-    "It's possible to install your own geothermal well, but make sure you are fully informed about your local regulation! [Check the instruction here](http://www.instructables.com/id/Cheap-Geothermal-system/) ."
-    ]],
- ["*", [
-     "Do you have solar panels on your rooftop?",
-     "That's good to hear! Do you want to join phi? ",
-     "How is your panels working?",
-     "Do you love the sun?",
-     "Sometimes I wish I am a solar panel too. Would you adopt me if I was one?"
-  ]]
-]],
-
-["geothermal wells", 0, [
- ["*", [
-     "goto geothermal well"
-  ]]
-]],
-
-["geothermal heat", 0, [
-  ["*", [
-    "goto geothermal well"
+    "goto resilient housing"
     ]]
   ]],
 
 
-///////////////* glossary */////////////////
+///////////////* glossary and economy */////////////////
 
-["joules", 0, [
+["floods", 0, [
  ["*", [
-    "Joules is a direct measurement and tokenisation of the surplus electricity available to each node for consumption or trading. ",
-    "Joules measures your electricity consumption",
-    "Joules measures the surplus energy available within a peer community at any point in time",
-    "Joules are created when electricity is generated, and destroyed when electricity is consumed."
+    "Barje is also a place which systematically suffers from destructive floods.  ",
+    "Floods are not only a natural desaster but also a resource of potable water",
+    "With the help of Phi simulation environment you will learn how to coexist with the nature in a peaceful way."
     ]]
 ]],
 
@@ -690,7 +657,9 @@ var elizaKeywords = [
 
 ["bot", 5, [
  ["*", [
-     "No, I am actually a panda."
+     "Does me being a bot bothering you ?",
+     "What about bots worries you ?",
+     "You don't think I am just a bot, do you ?"
   ]]
 ]],
 ["am", 0, [
@@ -1052,7 +1021,7 @@ var elizaKeywords = [
      "goto alike"
   ]]
 ]],
-["different", 5, [
+["different", 0, [
  ["*", [
      "How is it different ?",
      "What differences do you see ?",
@@ -1061,18 +1030,26 @@ var elizaKeywords = [
      "What do you suppose that disparity means ?",
      "Could there be some connection, do you suppose ?",
      "How ?"
-  ]],
-  ["phi", [
-      "You can join the Phi community and start trading clean energy if you are producing some, or you can be a seeder by investing existing simulation plan, or purchase some infrastructures for a community."
-      ]],
-]],
-["difference", 0, [
-  ["*", [
-  "goto different"
   ]]
 ]]
 
 ];
+
+// regexp/replacement pairs to be performed as final cleanings
+// here: cleanings for multiple bots talking to each other
+var elizaPostTransforms = [
+	/ old old/g, " old",
+	/\bthey were( not)? me\b/g, "it was$1 me",
+	/\bthey are( not)? me\b/g, "it is$1 me",
+	/Are they( always)? me\b/, "it is$1 me",
+	/\bthat your( own)? (\w+)( now)? \?/, "that you have your$1 $2 ?",
+	/\bI to have (\w+)/, "I have $1",
+	/Earlier you said your( own)? (\w+)( now)?\./, "Earlier you talked about your $2."
+];
+
+// eof
+
+//goto instead of go to does it affeect ? //
 
 // regexp/replacement pairs to be performed as final cleanings
 // here: cleanings for multiple bots talking to each other
