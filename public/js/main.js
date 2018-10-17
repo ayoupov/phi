@@ -637,9 +637,6 @@ d3.xml("assets/Barje-map-for-sim-big-river-02.svg").get(function (error, documen
             var nodeEnter = nodes.enter().append("g")
                 .attr("class", function (d) {
                     var classStr = "node " + d.label.nodeType;
-                    if (d.label.nodeType == "wps") {
-                        classStr += (" wps");
-                    }
                     return classStr;
                 });
 
@@ -719,7 +716,7 @@ d3.xml("assets/Barje-map-for-sim-big-river-02.svg").get(function (error, documen
 
             //add baseNode
             nodeEnter.append("path")
-                .attr("d", addBaseNode(20))
+                .attr("d", addBaseNode(60))
                 .attr('transform', function (d) {
                     return "translate(" + (setX(d)) + "," + (setY(d)) + ")";
                 })

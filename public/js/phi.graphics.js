@@ -108,7 +108,7 @@ function peerEnergyOutline() {
 
 function addBaseNode(size) {
     return d3.symbol()
-        .size(size)
+        .size(size + 500)
         .type(nodeShape);
 }
 
