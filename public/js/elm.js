@@ -23722,7 +23722,7 @@ var _ayoupov$phi$Chat_Narrative$introNarrative = {
 				_ayoupov$phi$Chat_Narrative$chatWithDelay,
 				2.25,
 				{ctor: '[]'},
-				_ayoupov$phi$Chat_Model$BotMessage('Here I can help you design, simulate, and manage clean water resources and resilient to floods infrastructure.')),
+				_ayoupov$phi$Chat_Model$BotMessage('Here I can help you design, simulate, and manage clean water resources and flood-resilient infrastructure.')),
 			_1: {ctor: '[]'}
 		}
 	}
@@ -23815,7 +23815,7 @@ var _ayoupov$phi$Chat_Narrative$siteNarrative = {
 						}
 					}
 				},
-				_ayoupov$phi$Chat_Model$BotMessage('Welcome to Barje, a southern region of Ljubljana with the unexplored potential of water resources.')),
+				_ayoupov$phi$Chat_Model$BotMessage('Welcome to Barje, a region in the south of Ljubljana with plenty of unexplored potential in its vast water resources.')),
 			_1: {
 				ctor: '::',
 				_0: A3(
@@ -23826,7 +23826,7 @@ var _ayoupov$phi$Chat_Narrative$siteNarrative = {
 						_0: _ayoupov$phi$Action$InitializeBudget,
 						_1: {ctor: '[]'}
 					},
-					_ayoupov$phi$Chat_Model$BotMessage('Expecting an upcoming flood you\'ve been given a Φ10,000 investment to construct and further develop the decentralized water management system and resilient to floods housing in Barje area.')),
+					_ayoupov$phi$Chat_Model$BotMessage('Expecting an oncoming flood you\'ve been given Φ10,000 to construct and further develop a decentralized and flood-resilient water management system for housing in the Barje area.')),
 				_1: {
 					ctor: '::',
 					_0: A3(
@@ -23838,14 +23838,14 @@ var _ayoupov$phi$Chat_Narrative$siteNarrative = {
 							_1: {ctor: '[]'}
 						},
 						_ayoupov$phi$Chat_Model$BotMessage(
-							A2(_elm_lang$core$Basics_ops['++'], 'On the map to the right, you\'ll see the map of Barje, where you can start to build a local Phi network. The Phi network is made up of three types of components: ', ' $$_PEER_$$ simple housing, $$_TURBINE_$$ resilient housing and $$_PANEL_$$ Water Purification Stations (WPS).'))),
+							A2(_elm_lang$core$Basics_ops['++'], 'On the map to the right, you\'ll find the map of Barje, where you can start to build a local Phi network. The Phi network is made up of three types of components: ', ' $$_PEER_$$ simple housing, $$_TURBINE_$$ resilient housing and $$_PANEL_$$ Water Purification Stations (WPS).'))),
 					_1: {
 						ctor: '::',
 						_0: A3(
 							_ayoupov$phi$Chat_Narrative$chatWithDelay,
 							4,
 							{ctor: '[]'},
-							_ayoupov$phi$Chat_Model$BotMessage('You can decide how to spend your investment: on building simple housing $$_PEER_$$, upgrading it to a resilient one $$_TURBINE_$$, or buying WPS $$_PANEL_$$. But remember, the goal of the simulation is to make the community of Barje resilient to upcoming floods. You can check your simulation performance with the Health and Coverage parameters in the up-left corner. ')),
+							_ayoupov$phi$Chat_Model$BotMessage('You can decide how to spend your investment: on building simple housing $$_PEER_$$, upgrading it to a resilient one $$_TURBINE_$$, or buying a WPS $$_PANEL_$$. But remember, the goal of the simulation is to make the community of Barje resilient to oncoming floods. You can check your simulation performance with the Health and Coverage parameters in the up-left corner.')),
 						_1: {
 							ctor: '::',
 							_0: A3(
@@ -23857,15 +23857,27 @@ var _ayoupov$phi$Chat_Narrative$siteNarrative = {
 									_1: {ctor: '[]'}
 								},
 								_ayoupov$phi$Chat_Model$MultiChoiceItem(
-									A2(_ayoupov$phi$Chat_Model$MultiChoiceMessage, 'To begin building your network, select from the buttons below. You can also zoom in and out the map.', _ayoupov$phi$Chat_Model$defaultMcaList))),
+									A2(_ayoupov$phi$Chat_Model$MultiChoiceMessage, 'To begin building your network, select from the buttons below. You can also zoom in and out on the map.', _ayoupov$phi$Chat_Model$defaultMcaList))),
 							_1: {
 								ctor: '::',
 								_0: A3(
 									_ayoupov$phi$Chat_Narrative$chatWithDelay,
 									3,
 									{ctor: '[]'},
-									_ayoupov$phi$Chat_Model$BotMessage('Don\'t forget, you can always ask me anything if you have specific questions.')),
-								_1: {ctor: '[]'}
+									_ayoupov$phi$Chat_Model$BotMessage(
+										A2(
+											_elm_lang$core$Basics_ops['++'],
+											'You can also use the following commands: \n',
+											A2(_elm_lang$core$Basics_ops['++'], '/weather (to get info on the weather and expected floods)\n', '/reload (to start the simulation over)')))),
+								_1: {
+									ctor: '::',
+									_0: A3(
+										_ayoupov$phi$Chat_Narrative$chatWithDelay,
+										2,
+										{ctor: '[]'},
+										_ayoupov$phi$Chat_Model$BotMessage('And don\'t forget, you can always ask me anything if you have any specific questions.')),
+									_1: {ctor: '[]'}
+								}
 							}
 						}
 					}

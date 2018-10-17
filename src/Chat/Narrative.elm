@@ -27,7 +27,7 @@ introNarrative =
         |> chatWithDelay 1.5 []
     , BotMessage "Your interface to decentralized systems."
         |> chatWithDelay 2.25 []
-    , BotMessage "Here I can help you design, simulate, and manage clean water resources and resilient to floods infrastructure."
+    , BotMessage "Here I can help you design, simulate, and manage clean water resources and flood-resilient infrastructure."
         |> chatWithDelay 2.25 []
     ]
 
@@ -60,29 +60,36 @@ siteNarrative =
     [ initMsg (ToggleInputAvailable False)
     , BotMessage "Dobrodošli v Barje"
         |> chatWithDelay 1 [ ShowMap ]
-    , BotMessage "Welcome to Barje, a southern region of Ljubljana with the unexplored potential of water resources."
+    , BotMessage "Welcome to Barje, a region in the south of Ljubljana with plenty of unexplored potential in its vast water resources."
         |> chatWithDelay 1 [ UpdateSiteName "Barje", UpdateSitePopulation 10429, IncrementCycleCount ]
     , (BotMessage <|
-        "Expecting an upcoming flood you've been given a Φ10,000 investment to construct and further develop the decentralized water management system and resilient to floods housing in Barje area."
+        "Expecting an oncoming flood you've been given Φ10,000 to construct and further develop a decentralized and flood-resilient water management system for housing in the Barje area."
       )
         |> chatWithDelay 3 [ InitializeBudget ]
     , BotMessage
-        ("On the map to the right, you'll see the map of Barje, where you can start to build a local Phi network. The Phi network is made up of three types of components: "
+        ("On the map to the right, you'll find the map of Barje, where you can start to build a local Phi network. The Phi network is made up of three types of components: "
             ++ " $$_PEER_$$ simple housing, $$_TURBINE_$$ resilient housing and $$_PANEL_$$ Water Purification Stations (WPS)."
         )
         |> chatWithDelay 6 [ InitializeNetwork ]
     , BotMessage
-        "You can decide how to spend your investment: on building simple housing $$_PEER_$$, upgrading it to a resilient one $$_TURBINE_$$, or buying WPS $$_PANEL_$$. But remember, the goal of the simulation is to make the community of Barje resilient to upcoming floods. You can check your simulation performance with the Health and Coverage parameters in the up-left corner. "
+        "You can decide how to spend your investment: on building simple housing $$_PEER_$$, upgrading it to a resilient one $$_TURBINE_$$, or buying a WPS $$_PANEL_$$. But remember, the goal of the simulation is to make the community of Barje resilient to oncoming floods. You can check your simulation performance with the Health and Coverage parameters in the up-left corner."
         |> chatWithDelay 4 []
     , (MultiChoiceItem <|
         MultiChoiceMessage
-            "To begin building your network, select from the buttons below. You can also zoom in and out the map."
+            "To begin building your network, select from the buttons below. You can also zoom in and out on the map."
             defaultMcaList
       )
         |> chatWithDelay 7 [ ToggleInputAvailable True ]
     , BotMessage
-        "Don't forget, you can always ask me anything if you have specific questions."
+        (
+        "You can also use the following commands: \n" ++
+        "/weather (to get info on the weather and expected floods)\n" ++
+        "/reload (to start the simulation over)"
+        )
         |> chatWithDelay 3 []
+    , BotMessage
+        "And don't forget, you can always ask me anything if you have any specific questions."
+        |> chatWithDelay 2 []
     ]
 
 
