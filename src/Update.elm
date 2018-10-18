@@ -332,7 +332,7 @@ runDay model =
 
         floodMessageAction =
             let
-                floodLevel = Debug.log "fl in fla" model.weather.floodLevel
+                floodLevel = model.weather.floodLevel
             in
                 if floodLevel > 1 then
                     let
