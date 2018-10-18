@@ -27650,6 +27650,34 @@ var _ayoupov$phi$Update$update = F2(
 		}
 	});
 var _ayoupov$phi$Update$runDay = function (model) {
+	var floodMessageAction = function () {
+		var floodLevel = A2(_elm_lang$core$Debug$log, 'fl in fla', model.weather.floodLevel);
+		if (_elm_lang$core$Native_Utils.cmp(floodLevel, 1) > 0) {
+			var floodLevelGrade = function () {
+				var _p8 = floodLevel;
+				switch (_p8) {
+					case 2:
+						return 'low';
+					case 3:
+						return 'average';
+					case 4:
+						return 'high';
+					case 5:
+						return 'extreme';
+					default:
+						return 'illusional';
+				}
+			}();
+			return _ayoupov$phi$Action$SendBotChatItem(
+				_ayoupov$phi$Chat_Model$BotMessage(
+					A2(
+						_elm_lang$core$Basics_ops['++'],
+						'The flood level is ',
+						A2(_elm_lang$core$Basics_ops['++'], floodLevelGrade, '. Simple housing may not sustain it.'))));
+		} else {
+			return _ayoupov$phi$Action$NoOp;
+		}
+	}();
 	var updateNetwork = F2(
 		function (source, target) {
 			return A2(
@@ -27698,8 +27726,12 @@ var _ayoupov$phi$Update$runDay = function (model) {
 					A3(
 						_ccapndave$elm_update_extra$Update_Extra$andThen,
 						_ayoupov$phi$Update$update,
-						_ayoupov$phi$Action$ChangeBuildMode('none'),
-						A2(_ayoupov$phi$Update$generateWeather, model.weatherList, newModel))))));
+						floodMessageAction,
+						A3(
+							_ccapndave$elm_update_extra$Update_Extra$andThen,
+							_ayoupov$phi$Update$update,
+							_ayoupov$phi$Action$ChangeBuildMode('none'),
+							A2(_ayoupov$phi$Update$generateWeather, model.weatherList, newModel)))))));
 };
 var _ayoupov$phi$Update$generateWeather = function (list) {
 	var currentList = _ayoupov$phi$Simulation_WeatherList$restWeather(list);

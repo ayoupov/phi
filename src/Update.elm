@@ -329,10 +329,30 @@ runDay model =
 
         newModel =
             { modelWithUpdatedNetwork | budget = newBudget }
+
+        floodMessageAction =
+            let
+                floodLevel = Debug.log "fl in fla" model.weather.floodLevel
+            in
+                if floodLevel > 1 then
+                    let
+                      floodLevelGrade =
+                        case floodLevel of
+                            2 -> "low"
+                            3 -> "average"
+                            4 -> "high"
+                            5 -> "extreme"
+                            _ -> "illusional"
+                    in
+                    SendBotChatItem <| BotMessage ("The flood level is " ++ floodLevelGrade ++ ". Simple housing may not sustain it.")
+                else
+                    NoOp
+
     in
     newModel
         |> generateWeather model.weatherList
         |> andThen update (ChangeBuildMode "none")
+        |> andThen update floodMessageAction
         |> andThen update (UpdateFloodMap model.weather.floodLevel)
         |> andThen update StatsUpdate
         |> andThen update RenderPhiNetwork
