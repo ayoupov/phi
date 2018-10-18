@@ -855,6 +855,22 @@ d3.xml("assets/Barje-map-for-sim-big-river-02.svg").get(function (error, documen
 
 });
 
+// autoreload on inactivity
+    var time = new Date().getTime();
+     $(document.body).bind("mousemove keypress touchstart touchend touch", function(e) {
+         time = new Date().getTime();
+     });
+
+     function refresh() {
+     // 120000 = 2 min
+         if(new Date().getTime() - time >= 120000)
+             window.location.reload(true);
+         else
+             setTimeout(refresh, 10000);
+     }
+
+     setTimeout(refresh, 10000);
+
 });
 
 var prevFloodLevel = 0;
