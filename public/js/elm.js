@@ -27651,7 +27651,7 @@ var _ayoupov$phi$Update$update = F2(
 	});
 var _ayoupov$phi$Update$runDay = function (model) {
 	var floodMessageAction = function () {
-		var floodLevel = A2(_elm_lang$core$Debug$log, 'fl in fla', model.weather.floodLevel);
+		var floodLevel = model.weather.floodLevel;
 		if (_elm_lang$core$Native_Utils.cmp(floodLevel, 1) > 0) {
 			var floodLevelGrade = function () {
 				var _p8 = floodLevel;

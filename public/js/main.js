@@ -863,13 +863,13 @@ d3.xml("assets/Barje-map-for-sim-big-river-02.svg").get(function (error, documen
 
      function refresh() {
      // 120000 = 2 min
-         if(new Date().getTime() - time >= 120000)
+         if(new Date().getTime() - time >= 40000)
              window.location.reload(true);
          else
-             setTimeout(refresh, 10000);
+             setTimeout(refresh, 5000);
      }
 
-     setTimeout(refresh, 10000);
+     setTimeout(refresh, 5000);
 
 });
 
